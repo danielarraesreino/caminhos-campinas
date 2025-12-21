@@ -1,0 +1,82 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { useServices } from "@/contexts/ServicesContext";
+import { NearbyList } from "./NearbyList";
+
+const MapCore = dynamic(() => import("./MapCore"), {
+	loading: () => (
+		<p className="text-center p-10">Carregando mapa interativo...</p>
+	),
+	ssr: false,
+});
+
+export function SurvivalMap() {
+	const [userPosition, setUserPosition] = useState<[number, number] | null>(
+		null,
+	);
+	const [loadingLocation, setLoadingLocation] = useState(false);
+
+	// Use ServicesContext for real data
+	const { services } = useServices();
+
+	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
+	const resources = services.map((s) => ({
+		id: s.id,
+		name: s.name,
+		type: s.type,
+		lat: s.coords[0],
+		lng: s.coords[1],
+	}));
+
+	useEffect(() => {
+		setLoadingLocation(true);
+		if ("geolocation" in navigator) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					setUserPosition([
+						position.coords.latitude,
+						position.coords.longitude,
+					]);
+					setLoadingLocation(false);
+				},
+				(error) => {
+					console.error("Erro de geolocalização:", error);
+					setLoadingLocation(false);
+				},
+			);
+		} else {
+			setLoadingLocation(false);
+		}
+	}, []);
+
+	return (
+		<div className="flex flex-col h-full w-full bg-slate-100">
+			<div className="relative w-full h-[55%] flex-none border-b-2 border-slate-200 shadow-inner overflow-hidden">
+				{loadingLocation && (
+					<div className="absolute top-2 right-2 z-[1000] bg-white/90 px-3 py-1 rounded-full shadow text-xs font-bold text-blue-600 animate-pulse">
+						Buscando sua localização...
+					</div>
+				)}
+
+				{/* Floating SOS Button */}
+				<a
+					href={`https://wa.me/?text=SOS! Estou em situação de emergência. Minha localização aproximada: ${userPosition ? `${userPosition[0]},${userPosition[1]}` : "Desconhecida"}`}
+					target="_blank"
+					rel="noopener noreferrer"
+					className="absolute top-4 left-4 z-[1000] bg-red-600 text-white font-bold px-4 py-2 rounded-full shadow-lg hover:bg-red-700 transition-transform hover:scale-105 flex items-center gap-2"
+				>
+					🚨 SOS EMERGÊNCIA
+				</a>
+
+				<MapCore userPosition={userPosition} resources={resources} />
+			</div>
+
+			{/* Nearby List Area - Scrollable */}
+			<div className="flex-1 overflow-y-auto p-4 bg-slate-900 border-t border-slate-800">
+				<NearbyList userPosition={userPosition} />
+			</div>
+		</div>
+	);
+}

@@ -1,0 +1,17 @@
+# .aiexclude - Redução de Ruído Semântico para o Gemini
+node_modules/
+dist/
+build/
+.git/
+.cache/
+coverage/
+*.log
+*.lock
+package-lock.json
+yarn.lock
+# Exclua assets binários pesados que confundem o modelo
+*.png
+*.jpg
+*.mp3
+*.wav
+*.mp4

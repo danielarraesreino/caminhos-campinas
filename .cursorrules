@@ -1,0 +1,20 @@
+# REGRAS DO PROJETO (LEIA ANTES DE CODAR)
+
+## 1. Gerenciamento de Estado
+- **Obrigatório:** Use apenas a **React Context API** nativa.
+- **Hook Principal:** `useGameContext` (importado de `@/contexts/GameContext`).
+- **Proibido:** Não use Zustand, Redux ou MobX. Reverter qualquer tentativa de introduzir estas libs.
+- **Persistência:** O estado deve persistir no `localStorage` via lógica interna do Context.
+
+## 2. Design: "Realismo Sóbrio"
+- **Filosofia:** Minimalismo tático, urgência e crueza.
+- **HUD:** "Survival Strip" fixa no topo. Sem sombras, sem gradientes excessivos.
+- **Cores:** Use apenas a paleta Slate/Zinc com acentos funcionais (Rose para perigo, Emerald para vida alta, Amber para alerta).
+- **Ícones:** Use `lucide-react` de forma sóbria.
+- **Efeitos:** Use filtros de `grayscale`, `blur` e bordas internas (`ring-inset`) para comunicar deterioração de status (saúde/sanidade baixa).
+
+## 3. Desenvolvimento & Arquitetura
+- **Estrutura:** Siga o padrão de pastas existente (features, contexts, components).
+- **Importações:** Sempre use *absolute imports* (`@/...`). Verifique importações antes de salvar.
+- **Qualidade:** TypeScript estrito. Use `clsx` e `tailwind-merge` para classes.
+- **Sem Placeholders:** Nomes reais de serviços de Campinas (SAMIM, CAPS AD, etc).

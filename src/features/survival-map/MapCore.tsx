@@ -1,0 +1,103 @@
+"use client";
+
+import L from "leaflet";
+import { useEffect } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+
+// Fix for default marker icon
+// @ts-expect-error
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+	iconRetinaUrl:
+		"https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+	iconUrl:
+		"https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+	shadowUrl:
+		"https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+});
+
+// Custom Icons
+const UserIcon = new L.Icon({
+	iconUrl:
+		"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
+	shadowUrl:
+		"https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+	iconSize: [25, 41],
+	iconAnchor: [12, 41],
+	popupAnchor: [1, -34],
+	shadowSize: [41, 41],
+});
+
+const ResourceIcon = new L.Icon({
+	iconUrl:
+		"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+	shadowUrl:
+		"https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+	iconSize: [25, 41],
+	iconAnchor: [12, 41],
+	popupAnchor: [1, -34],
+	shadowSize: [41, 41],
+});
+
+function MapController({ center }: { center: [number, number] }) {
+	const map = useMap();
+	useEffect(() => {
+		if (center) {
+			map.flyTo(center, 15);
+		}
+	}, [center, map]);
+	return null;
+}
+
+interface MapCoreProps {
+	userPosition: [number, number] | null;
+	resources: {
+		id: string | number;
+		name: string;
+		type: string;
+		lat: number;
+		lng: number;
+	}[];
+}
+
+export default function MapCore({ userPosition, resources }: MapCoreProps) {
+	// Default to Campinas center if no user position
+	const defaultPosition: [number, number] = [-22.90556, -47.06083];
+	const initialPosition = userPosition || defaultPosition;
+
+	return (
+		<MapContainer
+			center={initialPosition}
+			zoom={13}
+			scrollWheelZoom={true}
+			className="h-full w-full z-0"
+		>
+			<TileLayer
+				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+			/>
+
+			<MapController center={initialPosition} />
+
+			{/* User Marker */}
+			{userPosition && (
+				<Marker position={userPosition} icon={UserIcon}>
+					<Popup>
+						<strong>Você está aqui</strong>
+					</Popup>
+				</Marker>
+			)}
+
+			{/* Resources Markers */}
+			{resources.map((res) => (
+				<Marker key={res.id} position={[res.lat, res.lng]} icon={ResourceIcon}>
+					<Popup>
+						<strong>{res.name}</strong>
+						<br />
+						<span className="text-xs text-gray-600">{res.type}</span>
+					</Popup>
+				</Marker>
+			))}
+		</MapContainer>
+	);
+}

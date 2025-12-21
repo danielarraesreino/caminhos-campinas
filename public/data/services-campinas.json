@@ -1,0 +1,100 @@
+[
+	{
+		"id": "samim",
+		"name": "SAMIM (Pernoite)",
+		"type": "shelter",
+		"coords": [
+			-22.9038,
+			-47.0652
+		],
+		"opening_hours": "18:00 - 19:00 (Entrada)",
+		"address": "R. Francisco Elisiário, 312 - Centro",
+		"description": "Serviço de Acolhimento Municipal (Pernoite). Regras rígidas, não entra ferramenta de trabalho volumosa.",
+		"effects": {
+			"health": 15,
+			"energy": 40,
+			"dignity": -5
+		}
+	},
+	{
+		"id": "caritas",
+		"name": "Casa de Passagem Cáritas",
+		"type": "shelter",
+		"coords": [
+			-22.9120,
+			-47.0580
+		],
+		"opening_hours": "24h (Encaminhamento)",
+		"address": "Próximo à Estação",
+		"description": "Foco em autonomia e reinserção social. Ajuda com documentos.",
+		"effects": {
+			"health": 10,
+			"sanity": 10,
+			"stabilityGap": -5
+		}
+	},
+	{
+		"id": "bp_centro",
+		"name": "Bom Prato Centro",
+		"type": "food",
+		"coords": [
+			-22.9102,
+			-47.0605
+		],
+		"opening_hours": "10:30 - 14:00 (Almoço), 17:00 - 18:00 (Jantar)",
+		"address": "Av. Dr. Moraes Sales, 384 - Centro",
+		"description": "Refeições a R$ 1,00. Sustento básico e barato.",
+		"effects": {
+			"hunger": 80,
+			"money": -1
+		}
+	},
+	{
+		"id": "ref_metodista",
+		"name": "Refeitório Metodista",
+		"type": "food",
+		"coords": [
+			-22.9075,
+			-47.0595
+		],
+		"opening_hours": "11:30 - 13:00",
+		"address": "Rua José Paulino x Ferreira Penteado",
+		"description": "Refeição servida em mesa com talheres. Dignidade e acolhimento.",
+		"effects": {
+			"hunger": 80,
+			"dignity": 15
+		}
+	},
+	{
+		"id": "saude_rua",
+		"name": "Consultório na Rua",
+		"type": "health",
+		"coords": [
+			-22.9085,
+			-47.0585
+		],
+		"opening_hours": "08:00 - 17:00",
+		"address": "Itinerante - Praças do Centro",
+		"description": "Equipe multidisciplinar para atendimento de saúde na rua. Sem burocracia.",
+		"effects": {
+			"health": 30,
+			"sanity": 5
+		}
+	},
+	{
+		"id": "caps_ad",
+		"name": "CAPS AD Reviver",
+		"type": "health",
+		"coords": [
+			-22.9180,
+			-47.0620
+		],
+		"opening_hours": "08:00 - 18:00",
+		"address": "Centro",
+		"description": "Cuidado especializado para álcool e drogas. Atendimento humanizado.",
+		"effects": {
+			"sanity": 20,
+			"addBuff": "SEDADO_CAPS"
+		}
+	}
+]
