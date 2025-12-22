@@ -1,6 +1,6 @@
-import { type NextRequest, NextResponse } from "next/server";
 import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
+import { type NextRequest, NextResponse } from "next/server";
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY; // SEM NEXT_PUBLIC
 
@@ -68,7 +68,9 @@ export async function POST(req: NextRequest) {
 		}
 
 		// Chamada à API Groq usando AI SDK
-		console.log(`[Groq API] Processando prompt - IP: ${ip}, Type: ${type || "none"}`);
+		console.log(
+			`[Groq API] Processando prompt - IP: ${ip}, Type: ${type || "none"}`,
+		);
 
 		const startTime = Date.now();
 		const result = await generateText({
@@ -133,7 +135,8 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json(
 			{
 				success: false,
-				error: "Erro ao processar requisição. Tente novamente em alguns instantes."
+				error:
+					"Erro ao processar requisição. Tente novamente em alguns instantes.",
 			},
 			{ status: 500 },
 		);

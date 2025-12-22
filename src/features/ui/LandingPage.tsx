@@ -1,6 +1,7 @@
 import {
 	AlertCircle,
 	ArrowRight,
+	BarChart3,
 	Check,
 	Copy,
 	Cpu,
@@ -15,20 +16,18 @@ import {
 	Target,
 	Users,
 	X,
-	BarChart3,
 } from "lucide-react";
-import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { SurvivalMap } from "../survival-map/SurvivalMap";
-import { AvatarCreation } from "./AvatarCreation";
+import { useState } from "react";
 import { DilemmaCache } from "@/utils/dilemmaCache";
+import { AvatarCreation } from "./AvatarCreation";
 
 export default function LandingPage() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [copied, setCopied] = useState(false);
 
 	// Map State
-	const [showMap, setShowMap] = useState(false);
+	const [_showMap, setShowMap] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [mode, setMode] = useState<"landing" | "creation">("landing");
 
@@ -291,10 +290,14 @@ export default function LandingPage() {
 						</div>
 						<h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
 							A Rua tem Voz: <br />
-							<span className="text-blue-400">Cidadania</span> contra a <span className="text-pink-500">Invisibilidade</span>.
+							<span className="text-blue-400">Cidadania</span> contra a{" "}
+							<span className="text-pink-500">Invisibilidade</span>.
 						</h1>
 						<p className="text-lg text-slate-300 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-sans">
-							Baseado na teoria de Milton Santos e Paulo Freire, o projeto <strong>A Rua Tem Voz</strong> usa a tecnologia social para romper a desafiliação e reconstruir vínculos de cidadania na Região Metropolitana de Campinas.
+							Baseado na teoria de Milton Santos e Paulo Freire, o projeto{" "}
+							<strong>A Rua Tem Voz</strong> usa a tecnologia social para romper
+							a desafiliação e reconstruir vínculos de cidadania na Região
+							Metropolitana de Campinas.
 						</p>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
 							<button
@@ -315,7 +318,9 @@ export default function LandingPage() {
 								className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-green-500/25 flex items-center justify-center gap-2 transform hover:-translate-y-1"
 							>
 								<ArrowRight className="h-5 w-5" />
-								{status === "authenticated" ? "CONTINUAR JOGANDO" : "INICIAR JORNADA"}
+								{status === "authenticated"
+									? "CONTINUAR JOGANDO"
+									: "INICIAR JORNADA"}
 							</button>
 							<button
 								type="button"
@@ -397,16 +402,30 @@ export default function LandingPage() {
 							Legitimar o Pertencimento.
 						</h2>
 						<p className="text-xl text-slate-600 leading-relaxed font-sans">
-							Segundo <strong>Santos (2006)</strong>, a pobreza estrutural no Brasil é uma dívida social deliberada. Nosso projeto atua na intersecção entre a tecnologia e a consciência libertadora de <strong>Paulo Freire</strong>, transformando o "invisível" em um sujeito ativo de sua própria história.
+							Segundo <strong>Santos (2006)</strong>, a pobreza estrutural no
+							Brasil é uma dívida social deliberada. Nosso projeto atua na
+							intersecção entre a tecnologia e a consciência libertadora de{" "}
+							<strong>Paulo Freire</strong>, transformando o "invisível" em um
+							sujeito ativo de sua própria história.
 						</p>
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
 							<div className="space-y-2">
-								<h4 className="font-black text-slate-800 uppercase tracking-tight">Combate à Desafiliação</h4>
-								<p className="text-sm text-slate-500">Reconstrução de vínculos em estruturas que fazem sentido para a vida.</p>
+								<h4 className="font-black text-slate-800 uppercase tracking-tight">
+									Combate à Desafiliação
+								</h4>
+								<p className="text-sm text-slate-500">
+									Reconstrução de vínculos em estruturas que fazem sentido para
+									a vida.
+								</p>
 							</div>
 							<div className="space-y-2">
-								<h4 className="font-black text-slate-800 uppercase tracking-tight">Apartação Social</h4>
-								<p className="text-sm text-slate-500">O reconhecimento do outro como um semelhante, não apenas um objeto de caridade.</p>
+								<h4 className="font-black text-slate-800 uppercase tracking-tight">
+									Apartação Social
+								</h4>
+								<p className="text-sm text-slate-500">
+									O reconhecimento do outro como um semelhante, não apenas um
+									objeto de caridade.
+								</p>
 							</div>
 						</div>
 					</div>
@@ -414,12 +433,16 @@ export default function LandingPage() {
 						<div className="absolute top-0 right-0 p-8 opacity-5">
 							<BarChart3 className="w-64 h-64" />
 						</div>
-						<h3 className="text-2xl font-black italic uppercase tracking-tighter">Portal do Parceiro Institucional</h3>
+						<h3 className="text-2xl font-black italic uppercase tracking-tighter">
+							Portal do Parceiro Institucional
+						</h3>
 						<p className="text-slate-400 font-sans">
-							Para gestores públicos, empresas ESG e acadêmicos. Acesse a telemetria em tempo real das violações de direitos e demandas por ODS em Campinas.
+							Para gestores públicos, empresas ESG e acadêmicos. Acesse a
+							telemetria em tempo real das violações de direitos e demandas por
+							ODS em Campinas.
 						</p>
 						<button
-							onClick={() => window.location.href = '/impacto'}
+							onClick={() => (window.location.href = "/impacto")}
 							className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-500/20"
 						>
 							Acessar Dashboard de Impacto <ArrowRight size={20} />
@@ -440,7 +463,10 @@ export default function LandingPage() {
 								Jornada da Autonomia
 							</h3>
 							<p className="text-slate-600 font-sans leading-relaxed">
-								Um utilitário gamificado que transforma a burocracia em missões claras. O app orienta onde comer, como tirar documentos e onde encontrar abrigo, oferecendo recompensas reais por cada passo de autonomia conquistado.
+								Um utilitário gamificado que transforma a burocracia em missões
+								claras. O app orienta onde comer, como tirar documentos e onde
+								encontrar abrigo, oferecendo recompensas reais por cada passo de
+								autonomia conquistado.
 							</p>
 						</div>
 						<div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 hover:border-pink-200 transition-all group">
@@ -451,7 +477,10 @@ export default function LandingPage() {
 								Simulador de Empatia
 							</h3>
 							<p className="text-slate-600 font-sans leading-relaxed">
-								Colocamos a sociedade civil diante da <strong>desqualificação social</strong> (Gohn, 2021). O jogo combate o estigma ao humanizar os dilemas de quem vive à margem, gerando consciência universal.
+								Colocamos a sociedade civil diante da{" "}
+								<strong>desqualificação social</strong> (Gohn, 2021). O jogo
+								combate o estigma ao humanizar os dilemas de quem vive à margem,
+								gerando consciência universal.
 							</p>
 						</div>
 					</div>
@@ -809,91 +838,93 @@ export default function LandingPage() {
 						<p>
 							&copy; 2025 Coletivo A Rua Tem Voz. Todos os direitos reservados.
 						</p>
-						<p className="mt-2">Desenvolvido com Antigravity IDE & Groq Llama 3.3.</p>
+						<p className="mt-2">
+							Desenvolvido com Antigravity IDE & Groq Llama 3.3.
+						</p>
 					</div>
 				</div>
 			</footer>
 
 			{/* Login Modal */}
-			{
-				showLoginModal && (
-					<div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-						<div className="bg-white rounded-2xl w-full max-w-sm relative flex flex-col p-8 shadow-2xl overflow-hidden">
-							{/* Background Detail */}
-							<div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-50 rounded-full"></div>
-							<div className="absolute -bottom-12 -left-12 w-32 h-32 bg-purple-50 rounded-full"></div>
+			{showLoginModal && (
+				<div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+					<div className="bg-white rounded-2xl w-full max-w-sm relative flex flex-col p-8 shadow-2xl overflow-hidden">
+						{/* Background Detail */}
+						<div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-50 rounded-full"></div>
+						<div className="absolute -bottom-12 -left-12 w-32 h-32 bg-purple-50 rounded-full"></div>
+
+						<button
+							type="button"
+							onClick={() => setShowLoginModal(false)}
+							className="absolute top-4 right-4 z-10 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all"
+						>
+							<X className="h-5 w-5" />
+						</button>
+
+						<div className="relative text-center mb-8">
+							<div className="mx-auto w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
+								<MapPin className="h-6 w-6 text-white" />
+							</div>
+							<h3 className="text-2xl font-bold text-slate-800">
+								Boas-vindas!
+							</h3>
+							<p className="text-slate-500 text-sm mt-1">
+								Escolha como deseja iniciar sua jornada.
+							</p>
+						</div>
+
+						<div className="space-y-4 relative">
+							<button
+								type="button"
+								onClick={() => signIn("google", { callbackUrl: "/jogar" })}
+								className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 py-3.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-blue-300 transition-all shadow-sm group"
+							>
+								<svg className="w-5 h-5" viewBox="0 0 24 24">
+									<path
+										fill="currentColor"
+										d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+									/>
+									<path
+										fill="currentColor"
+										d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+									/>
+									<path
+										fill="currentColor"
+										d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"
+									/>
+									<path
+										fill="currentColor"
+										d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+									/>
+								</svg>
+								Entrar com Google
+							</button>
+
+							<div className="relative flex items-center justify-center py-2">
+								<div className="absolute inset-0 flex items-center">
+									<div className="w-full border-t border-slate-100"></div>
+								</div>
+								<span className="relative px-3 bg-white text-xs font-bold text-slate-400 uppercase tracking-widest">
+									Ou
+								</span>
+							</div>
 
 							<button
 								type="button"
-								onClick={() => setShowLoginModal(false)}
-								className="absolute top-4 right-4 z-10 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all"
+								onClick={() => signIn("credentials", { callbackUrl: "/jogar" })}
+								className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-3.5 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10"
 							>
-								<X className="h-5 w-5" />
+								Acesso Anônimo
+								<ArrowRight className="h-4 w-4 opacity-50" />
 							</button>
-
-							<div className="relative text-center mb-8">
-								<div className="mx-auto w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
-									<MapPin className="h-6 w-6 text-white" />
-								</div>
-								<h3 className="text-2xl font-bold text-slate-800">Boas-vindas!</h3>
-								<p className="text-slate-500 text-sm mt-1">
-									Escolha como deseja iniciar sua jornada.
-								</p>
-							</div>
-
-							<div className="space-y-4 relative">
-								<button
-									type="button"
-									onClick={() => signIn("google", { callbackUrl: "/jogar" })}
-									className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 py-3.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-blue-300 transition-all shadow-sm group"
-								>
-									<svg className="w-5 h-5" viewBox="0 0 24 24">
-										<path
-											fill="currentColor"
-											d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-										/>
-										<path
-											fill="currentColor"
-											d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-										/>
-										<path
-											fill="currentColor"
-											d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"
-										/>
-										<path
-											fill="currentColor"
-											d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-										/>
-									</svg>
-									Entrar com Google
-								</button>
-
-								<div className="relative flex items-center justify-center py-2">
-									<div className="absolute inset-0 flex items-center">
-										<div className="w-full border-t border-slate-100"></div>
-									</div>
-									<span className="relative px-3 bg-white text-xs font-bold text-slate-400 uppercase tracking-widest">
-										Ou
-									</span>
-								</div>
-
-								<button
-									type="button"
-									onClick={() => signIn("credentials", { callbackUrl: "/jogar" })}
-									className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-3.5 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10"
-								>
-									Acesso Anônimo
-									<ArrowRight className="h-4 w-4 opacity-50" />
-								</button>
-								<p className="text-[10px] text-center text-slate-400 mt-4 leading-relaxed">
-									Ao entrar, você concorda em utilizar a plataforma para fins
-									educativos e de impacto social positivo.
-								</p>
-							</div>
+							<p className="text-[10px] text-center text-slate-400 mt-4 leading-relaxed">
+								Ao entrar, você concorda em utilizar a plataforma para fins
+								educativos e de impacto social positivo.
+							</p>
 						</div>
 					</div>
-				)
-			}
-		</div >
+				</div>
+			)}
+		</div>
 	);
 }

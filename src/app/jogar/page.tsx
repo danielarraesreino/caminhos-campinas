@@ -2,14 +2,14 @@
 
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useGameContext } from "@/contexts/GameContext";
+import { useGameLoop } from "@/features/game-loop/useGameLoop";
 import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
 import { DilemmaModal } from "@/features/ui/DilemmaModal";
 import { GameChat } from "@/features/ui/GameChat";
 import { GameHUD } from "@/features/ui/GameHUD";
 import { SurvivalToggle } from "@/features/ui/SurvivalToggle";
 import { useEventEngine } from "@/hooks/useEventEngine";
-import { useGameContext } from "@/contexts/GameContext";
-import { useGameLoop } from "@/features/game-loop/useGameLoop";
 
 export default function GamePage() {
 	// Initialize Game Loop (Time progression)

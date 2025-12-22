@@ -122,16 +122,16 @@ export default function ResourcesPage() {
 
 				{/* Resource Lists */}
 				<div className="space-y-12">
-					{resources.map((section, idx) => (
-						<div key={idx}>
+					{resources.map((section) => (
+						<div key={section.category}>
 							<h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
 								<BookOpen className="h-6 w-6 text-blue-600" />
 								{section.category}
 							</h2>
 							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-								{section.items.map((item, i) => (
+								{section.items.map((item) => (
 									<div
-										key={i}
+										key={item.title}
 										className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow group cursor-pointer relative overflow-hidden"
 									>
 										<div className="absolute top-0 left-0 w-1 h-full bg-blue-500 group-hover:bg-blue-600 transition-colors"></div>

@@ -11,7 +11,7 @@ export interface TelemetryEvent {
 	id: string;
 	timestamp: number;
 	action_type: TelemetryAction;
-	metadata: Record<string, any>;
+	metadata: Record<string, unknown>;
 	synced: number; // 0 = false, 1 = true (booleans are not always valid keys in TS definitions)
 }
 
@@ -70,7 +70,7 @@ class TelemetryService {
 
 	public async track(
 		action_type: TelemetryAction,
-		metadata: Record<string, any> = {},
+		metadata: Record<string, unknown> = {},
 	): Promise<void> {
 		try {
 			const db = await this.initDB();

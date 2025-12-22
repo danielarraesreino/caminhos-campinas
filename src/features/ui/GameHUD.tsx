@@ -3,13 +3,13 @@
 import {
 	Activity,
 	Brain,
-	ShieldAlert,
 	Clock,
-	Wallet,
 	Package,
+	ShieldAlert,
+	Wallet,
 } from "lucide-react";
-import { useGameContext } from "@/contexts/GameContext";
 import Image from "next/image";
+import { useGameContext } from "@/contexts/GameContext";
 
 export function GameHUD() {
 	const {
@@ -76,7 +76,9 @@ export function GameHUD() {
 					{workTool.type ? (
 						<div className="flex items-center gap-2">
 							<Package className="h-3 w-3" />
-							<span>{workTool.type.replace("_", " ")} // {workTool.condition}%</span>
+							<span>
+								{workTool.type.replace("_", " ")} // {workTool.condition}%
+							</span>
 						</div>
 					) : (
 						<span className="italic text-slate-800">NO_PRODUCTION_TOOL</span>
@@ -96,7 +98,9 @@ export function GameHUD() {
 						</div>
 						<div className="flex items-center gap-2 font-mono text-[9px] text-slate-600 tracking-tighter uppercase">
 							<Clock className="h-3 w-3" />
-							<span>D{day} // {time.toString().padStart(2, "0")}:00</span>
+							<span>
+								D{day} // {time.toString().padStart(2, "0")}:00
+							</span>
 						</div>
 					</div>
 				</div>
@@ -122,19 +126,27 @@ function BiometricItem({
 
 	return (
 		<div className="flex items-center gap-2 group">
-			<div className={`p-1 border ${isAlarm ? 'border-red-900/50 bg-red-950/20' : 'border-slate-900 bg-black'}`}>
-				<Icon className={`h-3.5 w-3.5 ${isAlarm ? 'text-red-600 animate-pulse' : 'text-slate-700'}`} />
+			<div
+				className={`p-1 border ${isAlarm ? "border-red-900/50 bg-red-950/20" : "border-slate-900 bg-black"}`}
+			>
+				<Icon
+					className={`h-3.5 w-3.5 ${isAlarm ? "text-red-600 animate-pulse" : "text-slate-700"}`}
+				/>
 			</div>
 			<div className="flex flex-col">
 				<div className="flex items-center justify-between gap-4">
-					<span className="text-[8px] font-mono font-bold text-slate-600 tracking-wider leading-none">{label}</span>
-					<span className={`text-[9px] font-mono leading-none ${isAlarm ? 'text-red-600' : 'text-slate-500'}`}>
+					<span className="text-[8px] font-mono font-bold text-slate-600 tracking-wider leading-none">
+						{label}
+					</span>
+					<span
+						className={`text-[9px] font-mono leading-none ${isAlarm ? "text-red-600" : "text-slate-500"}`}
+					>
 						{Math.round(value)}
 					</span>
 				</div>
 				<div className="h-0.5 w-16 bg-slate-950 mt-1">
 					<div
-						className={`h-full transition-all duration-1000 ${isAlarm ? 'bg-red-800' : 'bg-slate-700'}`}
+						className={`h-full transition-all duration-1000 ${isAlarm ? "bg-red-800" : "bg-slate-700"}`}
 						style={{ width: `${type === "NORMAL" ? value : value}%` }}
 					/>
 				</div>

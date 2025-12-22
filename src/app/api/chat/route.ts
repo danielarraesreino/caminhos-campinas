@@ -1,5 +1,5 @@
 import { groq } from "@ai-sdk/groq";
-import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { convertToModelMessages, streamText, type UIMessage } from "ai";
 
 export const maxDuration = 30;
 
@@ -7,20 +7,36 @@ export async function POST(req: Request) {
 	try {
 		// Check if API key is configured
 		const apiKey = process.env.GROQ_API_KEY;
-		console.log("🔑 Groq API Key status:", apiKey ? "✅ Configured" : "❌ Missing");
+		console.log(
+			"🔑 Groq API Key status:",
+			apiKey ? "✅ Configured" : "❌ Missing",
+		);
 
 		if (!apiKey) {
 			console.error("❌ GROQ_API_KEY is not set!");
 			return new Response(
 				JSON.stringify({
 					error: "API key not configured",
-					message: "Please add GROQ_API_KEY to .env.local - Get your free key at https://console.groq.com/keys",
+					message:
+						"Please add GROQ_API_KEY to .env.local - Get your free key at https://console.groq.com/keys",
 				}),
 				{ status: 500, headers: { "Content-Type": "application/json" } },
 			);
 		}
 
-		const { messages, gameState }: { messages: UIMessage[]; gameState?: any } = await req.json();
+		interface GameState {
+			health?: number;
+			hunger?: number;
+			hygiene?: number;
+			money?: number;
+			time?: number;
+			[key: string]: unknown;
+		}
+
+		const {
+			messages,
+			gameState,
+		}: { messages: UIMessage[]; gameState?: GameState } = await req.json();
 		console.log("📨 Received messages:", messages?.length || 0);
 		console.log("🎮 Game state:", gameState);
 
@@ -55,7 +71,10 @@ export async function POST(req: Request) {
 		return result.toUIMessageStreamResponse();
 	} catch (error) {
 		console.error("❌ API Error DETAILS:", error);
-		console.error("Error stack:", error instanceof Error ? error.stack : "No stack");
+		console.error(
+			"Error stack:",
+			error instanceof Error ? error.stack : "No stack",
+		);
 		return new Response(
 			JSON.stringify({
 				error: "Internal Server Error",

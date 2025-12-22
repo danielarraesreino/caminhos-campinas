@@ -3,8 +3,8 @@
 import { useMemo } from "react";
 import { EcoButton } from "@/components/ui/EcoButton";
 import { EcoCard } from "@/components/ui/EcoCard";
-import { useServices } from "@/contexts/ServicesContext";
 import { useGameContext } from "@/contexts/GameContext";
+import { useServices } from "@/contexts/ServicesContext";
 
 interface NearbyListProps {
 	userPosition: [number, number] | null;

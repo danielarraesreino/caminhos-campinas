@@ -1,6 +1,10 @@
 import type { GameState } from "@/contexts/GameContext";
 
-export type TriggerType = "HUNGER_LOW" | "HYGIENE_LOW" | "RANDOM" | "SOCIAL_STIGMA_HIGH";
+export type TriggerType =
+	| "HUNGER_LOW"
+	| "HYGIENE_LOW"
+	| "RANDOM"
+	| "SOCIAL_STIGMA_HIGH";
 
 export interface DilemmaOption {
 	label: string;

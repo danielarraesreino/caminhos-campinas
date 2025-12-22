@@ -12,6 +12,16 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 
+interface SupportCardProps {
+	title: string;
+	price: string;
+	description: string;
+	icon: React.ElementType;
+	tier: string;
+	loading: string | null;
+	onClick: (tier: string) => void;
+}
+
 export default function ApoiePage() {
 	const [loading, setLoading] = useState<string | null>(null);
 
@@ -86,7 +96,7 @@ function SupportCard({
 	tier,
 	loading,
 	onClick,
-}: any) {
+}: SupportCardProps) {
 	return (
 		<Card>
 			<CardHeader>

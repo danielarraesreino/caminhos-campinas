@@ -17,7 +17,7 @@ export function GameChat() {
 			console.error("Error details:", {
 				message: error.message,
 				stack: error.stack,
-				name: error.name
+				name: error.name,
 			});
 			alert(`Erro no chat: ${error.message}`);
 		},
@@ -73,12 +73,14 @@ export function GameChat() {
 							time: gameState.time,
 						},
 					},
-				}
+				},
 			);
 			console.log("✅ Append completed");
 		} catch (error) {
 			console.error("❌ Error in handleSubmit:", error);
-			alert(`Erro ao enviar mensagem: ${error instanceof Error ? error.message : String(error)}`);
+			alert(
+				`Erro ao enviar mensagem: ${error instanceof Error ? error.message : String(error)}`,
+			);
 			setInput(userMessage); // Restore the message
 		}
 	};
@@ -99,10 +101,11 @@ export function GameChat() {
 						className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
 					>
 						<div
-							className={`max-w-[80%] rounded-lg p-3 text-sm ${m.role === "user"
-								? "bg-blue-600 text-white"
-								: "bg-white dark:bg-gray-800 border shadow-sm"
-								}`}
+							className={`max-w-[80%] rounded-lg p-3 text-sm ${
+								m.role === "user"
+									? "bg-blue-600 text-white"
+									: "bg-white dark:bg-gray-800 border shadow-sm"
+							}`}
 						>
 							{m.content}
 						</div>

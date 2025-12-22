@@ -3,11 +3,11 @@
 import React from "react";
 import { EcoButton } from "@/components/ui/EcoButton";
 import { EcoCard } from "@/components/ui/EcoCard";
+import { type Item, useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
 import { NearbyList } from "@/features/survival-map/NearbyList";
 import { useTelemetry } from "@/hooks/useTelemetry";
 import { TelemetryAction } from "@/services/telemetry";
-import { useGameContext, type Item } from "@/contexts/GameContext";
 
 export default function TestFeaturesPage() {
 	const { services, loading, error, refreshServices } = useServices();
@@ -26,7 +26,7 @@ export default function TestFeaturesPage() {
 	const [isOnline, setIsOnline] = React.useState(true);
 
 	const mockItem: Item = {
-		id: "test-item-" + Date.now(),
+		id: `test-item-${Date.now()}`,
 		name: "Papelão Coletado",
 		weight: 2.5,
 		type: "valioso",

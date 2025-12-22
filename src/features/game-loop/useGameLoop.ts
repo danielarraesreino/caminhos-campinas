@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { useSurvivalLogic } from "@/hooks/useSurvivalLogic";
-import { processRandomEvents, applyWeatherEffects } from "./eventEngine";
 import { GAME_DILEMMAS } from "./dilemmas";
+import { applyWeatherEffects, processRandomEvents } from "./eventEngine";
 
 export function useGameLoop() {
 	const {
@@ -51,15 +51,15 @@ export function useGameLoop() {
 			}
 
 			// Decadência passiva suavizada (ritmo de Campinas)
-			let hngDecay = 0.2;   // Reduzido: -0.5 → -0.2 (60% menor)
-			let hygDecay = 0.08;  // Reduzido: -0.2 → -0.08 (60% menor)
-			let enrDecay = 0.08;  // Reduzido: -0.2 → -0.08 (60% menor)
-			let snyDecay = 0.08 * getSanityDecayMultiplier();  // Reduzido: -0.2 → -0.08 (60% menor)
+			let hngDecay = 0.2; // Reduzido: -0.5 → -0.2 (60% menor)
+			let hygDecay = 0.08; // Reduzido: -0.2 → -0.08 (60% menor)
+			let enrDecay = 0.08; // Reduzido: -0.2 → -0.08 (60% menor)
+			const snyDecay = 0.08 * getSanityDecayMultiplier(); // Reduzido: -0.2 → -0.08 (60% menor)
 
 			if (avatar) {
-				if (avatar.ageRange === "jovem") hngDecay += 0.04;    // Proporcional
-				if (avatar.ageRange === "idoso") enrDecay += 0.04;    // Proporcional
-				if (avatar.timeOnStreet === "recente") hygDecay += 0.04;  // Proporcional
+				if (avatar.ageRange === "jovem") hngDecay += 0.04; // Proporcional
+				if (avatar.ageRange === "idoso") enrDecay += 0.04; // Proporcional
+				if (avatar.timeOnStreet === "recente") hygDecay += 0.04; // Proporcional
 			}
 
 			// 2. Refatoração de Inventário (Peso)
@@ -69,22 +69,35 @@ export function useGameLoop() {
 			}
 
 			// 3. Efeitos Atmosféricos e Eventos Randômicos
-			const stateSnap = { health, hunger, hygiene, sanity, energy, socialStigma, workTool, inventory, isAtShelter } as any;
+			const stateSnap = {
+				health,
+				hunger,
+				hygiene,
+				sanity,
+				energy,
+				socialStigma,
+				workTool,
+				inventory,
+				isAtShelter,
+			} as any;
 
 			// Eventos de Clima
 			const weatherEffects = applyWeatherEffects(stateSnap, isRaining);
-			if (weatherEffects.health) modifyStat("health", weatherEffects.health - health);
+			if (weatherEffects.health)
+				modifyStat("health", weatherEffects.health - health);
 			if (weatherEffects.workTool) setWorkTool(weatherEffects.workTool);
 
 			// Eventos Randômicos (O Rapa, etc)
 			const randomEventEffects = processRandomEvents(stateSnap);
 			if (randomEventEffects) {
-				if (randomEventEffects.workTool !== undefined) setWorkTool(randomEventEffects.workTool);
+				if (randomEventEffects.workTool !== undefined)
+					setWorkTool(randomEventEffects.workTool);
 				if (randomEventEffects.inventory !== undefined) {
 					// Simplificado: assume que se mudou inventário, ele foi limpo
 					for (const item of inventory) removeFromInventory(item.id);
 				}
-				if (randomEventEffects.dignity) modifyStat("dignity", randomEventEffects.dignity - stateSnap.dignity);
+				if (randomEventEffects.dignity)
+					modifyStat("dignity", randomEventEffects.dignity - stateSnap.dignity);
 			}
 
 			modifyStat("hunger", -hngDecay);
@@ -195,10 +208,10 @@ export function useGameLoop() {
 		hygiene,
 		activeBuffs,
 		isAtShelter,
-		workTool,
 		inventory,
 		setActiveDilemma,
 		modifyStat,
 		checkShelterBarrier,
+		socialStigma,
 	]);
 }

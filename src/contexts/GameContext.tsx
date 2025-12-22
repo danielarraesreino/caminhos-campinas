@@ -3,14 +3,14 @@
 import type React from "react";
 import {
 	createContext,
+	useCallback,
 	useContext,
 	useEffect,
-	useState,
-	useCallback,
 	useMemo,
+	useState,
 } from "react";
 import { useOfflineDB } from "@/features/offline-db/useOfflineDB";
-import { telemetryService, TelemetryAction } from "@/services/telemetry";
+import { TelemetryAction, telemetryService } from "@/services/telemetry";
 
 export interface Avatar {
 	name: string;
@@ -161,12 +161,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		}
 
 		loadState();
-		return () => { isMounted = false; };
+		return () => {
+			isMounted = false;
+		};
 	}, [db]);
 
 	// Debounced Save to PouchDB
 	useEffect(() => {
-		let isMounted = true;
+		const isMounted = true;
 		if (!hasHydrated || !db) return;
 
 		const timeoutId = setTimeout(async () => {
@@ -182,7 +184,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					if (e.status !== 404) {
 						if (!isMounted) return;
 						// If it's a connection error, skip this save
-						if (e.name === "InvalidStateError" || e.message?.includes("closing")) {
+						if (
+							e.name === "InvalidStateError" ||
+							e.message?.includes("closing")
+						) {
 							console.warn("Database connection is closing, skipping save");
 							return;
 						}
@@ -202,7 +207,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					e.message?.includes("closing") ||
 					e.message?.includes("connection is closing")
 				) {
-					console.warn("Database connection already closed or closing - temporary state preserved in RAM");
+					console.warn(
+						"Database connection already closed or closing - temporary state preserved in RAM",
+					);
 				} else {
 					console.error("Critical failure saving game state to PouchDB", e);
 				}
@@ -248,7 +255,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 	const addMoney = useCallback((amount: number) => {
 		setState((prev) => ({
 			...prev,
-			money: Math.max(0, prev.money + amount)
+			money: Math.max(0, prev.money + amount),
 		}));
 	}, []);
 
@@ -402,7 +409,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			try {
 				const doc = await db.get(DOC_ID);
 				await db.remove(doc);
-			} catch (e) {
+			} catch (_e) {
 				// ignore if doc not found
 			}
 		}

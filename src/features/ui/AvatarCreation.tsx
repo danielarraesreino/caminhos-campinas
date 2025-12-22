@@ -1,21 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import {
-	User,
-	Shield,
-	Info,
-	ArrowRight,
 	ArrowLeft,
-	Heart,
-	Target,
-	Sparkles,
+	ArrowRight,
 	Camera,
+	Info,
+	Shield,
+	Sparkles,
+	Target,
+	User,
 } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useGameContext, type Avatar } from "@/contexts/GameContext";
-import Image from "next/image";
+import { type Avatar, useGameContext } from "@/contexts/GameContext";
 
 interface AvatarCreationProps {
 	onComplete: () => void;
@@ -23,8 +22,18 @@ interface AvatarCreationProps {
 }
 
 const AVATAR_OPTIONS = [
-	{ id: "/avatars/avatar_1.png", label: "Identidade A", gender: "masculino", age: "maduro" },
-	{ id: "/avatars/avatar_2.png", label: "Identidade B", gender: "trans", age: "adulto" },
+	{
+		id: "/avatars/avatar_1.png",
+		label: "Identidade A",
+		gender: "masculino",
+		age: "maduro",
+	},
+	{
+		id: "/avatars/avatar_2.png",
+		label: "Identidade B",
+		gender: "trans",
+		age: "adulto",
+	},
 ];
 
 export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
@@ -37,7 +46,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 		ageRange: "adulto",
 		timeOnStreet: "recente",
 		startingSkill: "nenhuma",
-		avatarImage: AVATAR_OPTIONS[0].id
+		avatarImage: AVATAR_OPTIONS[0].id,
 	});
 
 	const handleNext = () => {
@@ -73,7 +82,9 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 				<h2 className="text-4xl font-black text-white mb-2 italic tracking-tighter">
 					Quem é você nesta jornada?
 				</h2>
-				<p className="text-slate-400 text-sm font-sans">Cada detalhe molda as interações e desafios que virão.</p>
+				<p className="text-slate-400 text-sm font-sans">
+					Cada detalhe molda as interações e desafios que virão.
+				</p>
 
 				<div className="flex justify-center gap-2 mt-8">
 					{[1, 2, 3, 4, 5].map((s) => (
@@ -159,9 +170,11 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 										fill
 										className={`object-cover ${formData.avatarImage === opt.id ? "opacity-100" : "opacity-40 hover:opacity-100"} transition-opacity`}
 									/>
-									<div className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent transition-transform
+									<div
+										className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent transition-transform
 										${formData.avatarImage === opt.id ? "translate-y-0" : "translate-y-full group-hover:translate-y-0"}
-									`}>
+									`}
+									>
 										<span className="text-white font-black text-xs uppercase tracking-tighter">
 											{opt.label}
 										</span>
@@ -184,9 +197,15 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 									onClick={() => updateField("ethnicity", eth)}
 									className={`p-6 rounded-2xl border-2 text-left transition-all relative group ${formData.ethnicity === eth ? "bg-blue-600 border-blue-400 scale-[1.02] shadow-xl" : "bg-slate-800/40 border-slate-800 hover:border-slate-600"}`}
 								>
-									<span className={`capitalize font-black text-lg ${formData.ethnicity === eth ? "text-white" : "text-slate-300"}`}>{eth}</span>
+									<span
+										className={`capitalize font-black text-lg ${formData.ethnicity === eth ? "text-white" : "text-slate-300"}`}
+									>
+										{eth}
+									</span>
 									{eth === "preto" || eth === "pardo" ? (
-										<p className={`text-[10px] font-bold mt-2 flex items-center gap-1 uppercase ${formData.ethnicity === eth ? "text-blue-100" : "text-blue-500"}`}>
+										<p
+											className={`text-[10px] font-bold mt-2 flex items-center gap-1 uppercase ${formData.ethnicity === eth ? "text-blue-100" : "text-blue-500"}`}
+										>
 											<Shield className="h-4 w-4" /> Maior risco de abordagem
 										</p>
 									) : (
@@ -211,13 +230,16 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								className={`p-8 rounded-3xl border-2 text-left transition-all ${formData.timeOnStreet === "recente" ? "bg-blue-600 border-blue-400 shadow-2xl" : "bg-slate-800/40 border-slate-800"}`}
 							>
 								<div className="flex justify-between items-center mb-3">
-									<span className={`font-black uppercase tracking-tight text-xl ${formData.timeOnStreet === "recente" ? "text-white" : "text-slate-200"}`}>
+									<span
+										className={`font-black uppercase tracking-tight text-xl ${formData.timeOnStreet === "recente" ? "text-white" : "text-slate-200"}`}
+									>
 										Recém-chegado
 									</span>
 									<Sparkles className="h-6 w-6 text-yellow-400" />
 								</div>
 								<p className="text-sm text-blue-100/80 font-sans italic">
-									"A memória da casa ainda é viva, mas as noites são frias e confusas."
+									"A memória da casa ainda é viva, mas as noites são frias e
+									confusas."
 								</p>
 								<div className="mt-6 flex gap-3">
 									<span className="text-[10px] bg-white/20 px-3 py-1 rounded-full text-white font-black uppercase tracking-widest">
@@ -233,11 +255,16 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								className={`p-8 rounded-3xl border-2 text-left transition-all ${formData.timeOnStreet === "veterano" ? "bg-blue-600 border-blue-400 shadow-2xl" : "bg-slate-800/40 border-slate-800"}`}
 							>
 								<div className="flex justify-between items-center mb-3">
-									<span className={`font-black uppercase tracking-tight text-xl ${formData.timeOnStreet === "veterano" ? "text-white" : "text-slate-200"}`}>Veterano</span>
+									<span
+										className={`font-black uppercase tracking-tight text-xl ${formData.timeOnStreet === "veterano" ? "text-white" : "text-slate-200"}`}
+									>
+										Veterano
+									</span>
 									<Target className="h-6 w-6 text-orange-500" />
 								</div>
 								<p className="text-sm text-blue-100/80 font-sans italic">
-									"Conheço cada marquise de Campinas, mas o corpo pede descanso."
+									"Conheço cada marquise de Campinas, mas o corpo pede
+									descanso."
 								</p>
 								<div className="mt-6 flex gap-3">
 									<span className="text-[10px] bg-white/20 px-3 py-1 rounded-full text-white font-black uppercase tracking-widest">
@@ -256,10 +283,17 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 					<div className="space-y-10 animate-slide-up">
 						<div className="flex flex-col md:flex-row gap-10 items-center bg-blue-600/10 border border-blue-500/20 p-10 rounded-[40px]">
 							<div className="relative w-40 h-40 rounded-3xl overflow-hidden border-4 border-blue-500 shadow-2xl flex-none">
-								<Image src={formData.avatarImage || AVATAR_OPTIONS[0].id} alt="Avatar Final" fill className="object-cover" />
+								<Image
+									src={formData.avatarImage || AVATAR_OPTIONS[0].id}
+									alt="Avatar Final"
+									fill
+									className="object-cover"
+								/>
 							</div>
 							<div className="space-y-4 flex-1 text-left w-full">
-								<h3 className="text-3xl font-black text-white italic">{formData.name}</h3>
+								<h3 className="text-3xl font-black text-white italic">
+									{formData.name}
+								</h3>
 								<div className="grid grid-cols-2 gap-4">
 									<InfoItem label="Gênero" value={formData.gender} />
 									<InfoItem label="Etnia" value={formData.ethnicity} />
@@ -273,7 +307,10 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								<Info className="h-6 w-6 text-yellow-400 shrink-0" />
 							</div>
 							<p className="text-sm text-yellow-200/80 leading-relaxed font-sans">
-								<strong>Importante:</strong> Suas características baseadas em fatos sociológicos da Região de Campinas determinarão como instituições (SOS Rua, Guarda Municipal) e cidadãos interagem com você.
+								<strong>Importante:</strong> Suas características baseadas em
+								fatos sociológicos da Região de Campinas determinarão como
+								instituições (SOS Rua, Guarda Municipal) e cidadãos interagem
+								com você.
 							</p>
 						</div>
 					</div>
@@ -302,10 +339,12 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 	);
 }
 
-function InfoItem({ label, value }: { label: string, value: string }) {
+function InfoItem({ label, value }: { label: string; value: string }) {
 	return (
 		<div className="space-y-1">
-			<span className="text-[10px] font-black text-blue-400 uppercase tracking-widest block">{label}</span>
+			<span className="text-[10px] font-black text-blue-400 uppercase tracking-widest block">
+				{label}
+			</span>
 			<span className="text-white font-bold capitalize">{value}</span>
 		</div>
 	);
