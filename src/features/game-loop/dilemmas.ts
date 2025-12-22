@@ -1,6 +1,6 @@
 import type { GameState } from "@/contexts/GameContext";
 
-export type TriggerType = "HUNGER_LOW" | "HYGIENE_LOW" | "RANDOM";
+export type TriggerType = "HUNGER_LOW" | "HYGIENE_LOW" | "RANDOM" | "SOCIAL_STIGMA_HIGH";
 
 export interface DilemmaOption {
 	label: string;
@@ -96,7 +96,7 @@ export const GAME_DILEMMAS: Dilemma[] = [
 		title: "Abordagem do Rapa",
 		description:
 			"A fiscalização urbana ('Rapa') parou ao seu lado. Eles não querem te prender, querem limpar a calçada. Seus pertences e sua ferramenta de trabalho estão em risco.",
-		trigger: { type: "RANDOM", value: 0.2 }, // Gatilho baseado em Estigma Social seria ideal
+		trigger: { type: "SOCIAL_STIGMA_HIGH", value: 60 },
 		options: [
 			{
 				label: "Tentar Negociar",

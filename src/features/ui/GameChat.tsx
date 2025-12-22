@@ -11,38 +11,76 @@ export function GameChat() {
 	const gameState = useGameContext();
 	const [input, setInput] = useState("");
 
-	const { messages, sendMessage, status } = useChat({
+	const chatHelpers = useChat({
 		onError: (error) => {
-			console.error("Chat Error:", error);
+			console.error("❌ Chat Error:", error);
+			console.error("Error details:", {
+				message: error.message,
+				stack: error.stack,
+				name: error.name
+			});
 			alert(`Erro no chat: ${error.message}`);
 		},
 		onFinish: (message) => {
-			console.log("Chat Finished:", message);
+			console.log("✅ Chat Finished:", message);
 		},
 	});
+	const { messages, append, status, error } = chatHelpers as any;
 
 	const isLoading = status === "submitted" || status === "streaming";
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!input.trim() || isLoading) return;
+		console.log("📝 Form submitted");
 
-		// Use sendMessage with custom body fields (per @ai-sdk/react docs)
-		await sendMessage(
-			{ text: input },
-			{
-				body: {
-					gameState: {
-						health: gameState.health,
-						hunger: gameState.hunger,
-						hygiene: gameState.hygiene,
-						money: gameState.money,
-						time: gameState.time,
-					},
-				},
-			}
-		);
+		if (!input.trim()) {
+			console.warn("⚠️ Empty input, ignoring");
+			return;
+		}
+
+		if (isLoading) {
+			console.warn("⚠️ Already loading, ignoring");
+			return;
+		}
+
+		const userMessage = input;
+		console.log("💬 Sending message:", userMessage);
+		console.log("🎮 Game state:", {
+			health: gameState.health,
+			hunger: gameState.hunger,
+			hygiene: gameState.hygiene,
+			money: gameState.money,
+			time: gameState.time,
+		});
+
 		setInput("");
+
+		try {
+			// Use append with proper message format
+			console.log("🚀 Calling append...");
+			await append(
+				{
+					role: "user",
+					content: userMessage,
+				},
+				{
+					body: {
+						gameState: {
+							health: gameState.health,
+							hunger: gameState.hunger,
+							hygiene: gameState.hygiene,
+							money: gameState.money,
+							time: gameState.time,
+						},
+					},
+				}
+			);
+			console.log("✅ Append completed");
+		} catch (error) {
+			console.error("❌ Error in handleSubmit:", error);
+			alert(`Erro ao enviar mensagem: ${error instanceof Error ? error.message : String(error)}`);
+			setInput(userMessage); // Restore the message
+		}
 	};
 
 	return (
@@ -73,6 +111,11 @@ export function GameChat() {
 				{isLoading && (
 					<div className="text-xs text-gray-400 animate-pulse ml-4">
 						O Mestre está escrevendo...
+					</div>
+				)}
+				{error && (
+					<div className="text-xs text-red-500 ml-4 mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
+						❌ Erro: {error.message}
 					</div>
 				)}
 			</div>

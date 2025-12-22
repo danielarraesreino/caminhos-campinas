@@ -19,6 +19,7 @@ export interface Avatar {
 	ageRange: "jovem" | "adulto" | "idoso";
 	timeOnStreet: "recente" | "veterano";
 	startingSkill: "reciclagem" | "artesao" | "vendedor" | "nenhuma";
+	avatarImage?: string;
 }
 
 export interface Item {
@@ -80,7 +81,7 @@ interface GameContextProps extends GameState {
 	setWorkTool: (tool: GameState["workTool"]) => void;
 	addBuff: (buff: string) => void;
 	removeBuff: (buff: string) => void;
-	addToInventory: (item: Item) => void;
+	addToInventory: (item: Item | string) => void;
 	removeFromInventory: (itemId: string) => void;
 	setAvatar: (avatar: Avatar) => void;
 	setPaused: (value: boolean) => void;
@@ -130,11 +131,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
 	// Load from PouchDB
 	useEffect(() => {
+		let isMounted = true;
 		if (!db) return;
 
 		async function loadState() {
+			if (!db || !isMounted) return;
 			try {
 				const doc: any = await db.get(DOC_ID);
+				if (!isMounted) return;
+
 				// biome-ignore lint/performance/noDelete: we want to strip PouchDB metadata
 				delete doc._id;
 				// biome-ignore lint/performance/noDelete: we want to strip PouchDB metadata
@@ -147,29 +152,42 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					isPaused: doc.activeDilemmaId !== null,
 				}));
 			} catch (e: any) {
-				if (e.status !== 404) {
+				if (e.status !== 404 && isMounted) {
 					console.error("Failed to load game state from PouchDB", e);
 				}
 			} finally {
-				setHasHydrated(true);
+				if (isMounted) setHasHydrated(true);
 			}
 		}
 
 		loadState();
+		return () => { isMounted = false; };
 	}, [db]);
 
 	// Debounced Save to PouchDB
 	useEffect(() => {
+		let isMounted = true;
 		if (!hasHydrated || !db) return;
 
 		const timeoutId = setTimeout(async () => {
 			try {
+				if (!db || !isMounted) return;
+
 				let rev: string | undefined;
 				try {
 					const existing: any = await db.get(DOC_ID);
+					if (!isMounted) return;
 					rev = existing._rev;
 				} catch (e: any) {
-					if (e.status !== 404) throw e;
+					if (e.status !== 404) {
+						if (!isMounted) return;
+						// If it's a connection error, skip this save
+						if (e.name === "InvalidStateError" || e.message?.includes("closing")) {
+							console.warn("Database connection is closing, skipping save");
+							return;
+						}
+						throw e;
+					}
 				}
 
 				await db.put({
@@ -177,8 +195,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					_rev: rev,
 					...state,
 				});
-			} catch (e) {
-				console.error("Failed to save game state to PouchDB", e);
+			} catch (e: any) {
+				// Silently handle closing connection errors or common IndexedDB failures
+				if (
+					e.name === "InvalidStateError" ||
+					e.message?.includes("closing") ||
+					e.message?.includes("connection is closing")
+				) {
+					console.warn("Database connection already closed or closing - temporary state preserved in RAM");
+				} else {
+					console.error("Critical failure saving game state to PouchDB", e);
+				}
 			}
 		}, 1000); // 1-second debounce
 
@@ -219,7 +246,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 	}, []);
 
 	const addMoney = useCallback((amount: number) => {
-		setState((prev) => ({ ...prev, money: prev.money + amount }));
+		setState((prev) => ({
+			...prev,
+			money: Math.max(0, prev.money + amount)
+		}));
 	}, []);
 
 	const advanceTime = useCallback((hours: number) => {

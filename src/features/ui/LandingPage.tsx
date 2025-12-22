@@ -15,11 +15,13 @@ import {
 	Target,
 	Users,
 	X,
+	BarChart3,
 } from "lucide-react";
 import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { SurvivalMap } from "../survival-map/SurvivalMap";
 import { AvatarCreation } from "./AvatarCreation";
+import { DilemmaCache } from "@/utils/dilemmaCache";
 
 export default function LandingPage() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,9 +59,9 @@ export default function LandingPage() {
 		setIsMenuOpen(false);
 	};
 
-	// Gemini API Call Helper - Agora usa API Route segura
-	const callGemini = async (prompt: string) => {
-		const response = await fetch("/api/gemini", {
+	// Groq API Call Helper - API Route segura
+	const callGroq = async (prompt: string) => {
+		const response = await fetch("/api/groq", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ prompt }),
@@ -80,6 +82,20 @@ export default function LandingPage() {
 		setDilemma(null);
 		setAiFeedback(null);
 
+		// Tentar cache primeiro
+		const cacheKey = "demo_scenario";
+		const cached = DilemmaCache.get(cacheKey);
+
+		if (cached) {
+			console.log("📦 Usando dilema do cache (instantâneo)");
+			setDilemma({
+				scenario: cached.scenario,
+				options: cached.options,
+			});
+			setAiLoading(false);
+			return;
+		}
+
 		const systemPrompt = `Você é o motor narrativo de um 'Serious Game' sobre a população em situação de rua.
         Gere um cenário curto (máx 50 palavras) e urgente.
         Forneça exatamente 3 opções de ação curtas (máx 5 palavras cada).
@@ -90,12 +106,19 @@ export default function LandingPage() {
         }`;
 
 		try {
-			const text = await callGemini(systemPrompt);
+			console.log("🌐 Chamando API Groq (primeira vez ou cache expirado)");
+			const text = await callGroq(systemPrompt);
 			const cleanText = text?.replace(/```json|```/g, "").trim();
 			const json = JSON.parse(cleanText || "{}");
 
 			if (json.scenario && Array.isArray(json.options)) {
 				setDilemma(json);
+				// Salvar no cache
+				DilemmaCache.set(cacheKey, {
+					scenario: json.scenario,
+					options: json.options,
+				});
+				console.log("💾 Dilema salvo no cache");
 			} else {
 				throw new Error("Formato inválido da IA");
 			}
@@ -118,7 +141,7 @@ export default function LandingPage() {
         Analise a consequência (máx 40 palavras). Seja realista e educativo.`;
 
 		try {
-			const text = await callGemini(systemPrompt);
+			const text = await callGroq(systemPrompt);
 			setAiFeedback(text || "Sem resposta.");
 		} catch (_err) {
 			setError("Erro ao processar ação.");
@@ -147,61 +170,48 @@ export default function LandingPage() {
 							<button
 								type="button"
 								onClick={() => scrollToSection("projeto")}
-								className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
+								className="text-slate-600 hover:text-blue-600 font-bold transition-colors uppercase tracking-widest text-xs"
 							>
-								O Projeto
+								A Rua Tem Voz
+							</button>
+							<button
+								type="button"
+								onClick={() => (window.location.href = "/impacto")}
+								className="text-blue-600 hover:text-blue-800 font-bold transition-colors flex items-center gap-1 uppercase tracking-widest text-xs"
+							>
+								<BarChart3 className="w-4 h-4" /> Painel de Impacto
 							</button>
 							<button
 								type="button"
 								onClick={() => setShowMap(true)}
-								className="text-slate-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1"
+								className="text-slate-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1 uppercase tracking-widest text-xs"
 							>
 								<MapPin className="w-4 h-4 text-green-600" /> Mapa de Apoio
 							</button>
 							<button
 								type="button"
 								onClick={() => scrollToSection("demo-ia")}
-								className="text-slate-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1"
+								className="text-slate-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1 uppercase tracking-widest text-xs"
 							>
 								<Sparkles className="w-4 h-4 text-purple-500" /> Demo IA
 							</button>
-							<button
-								type="button"
-								onClick={() => scrollToSection("tecnologia")}
-								className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
-							>
-								Tecnologia
-							</button>
-							<a
-								href="/recursos"
-								className="text-slate-600 hover:text-blue-600 font-medium transition-colors border border-blue-100 px-3 py-1 rounded-full hover:bg-blue-50"
-							>
-								Recursos
-							</a>
 							{status === "authenticated" ? (
 								<button
 									type="button"
 									onClick={() => (window.location.href = "/jogar")}
-									className="text-blue-600 hover:text-blue-700 font-bold transition-colors"
+									className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full font-bold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
 								>
-									Jogar
+									Continuar Jornada
 								</button>
 							) : (
 								<button
 									type="button"
 									onClick={() => setShowLoginModal(true)}
-									className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
+									className="text-slate-600 hover:text-blue-600 font-bold uppercase tracking-widest text-xs"
 								>
 									Entrar
 								</button>
 							)}
-							<button
-								type="button"
-								onClick={() => scrollToSection("doar")}
-								className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full font-bold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-							>
-								Apoiar Agora
-							</button>
 						</div>
 
 						{/* Mobile Menu Button */}
@@ -280,15 +290,11 @@ export default function LandingPage() {
 							</span>
 						</div>
 						<h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-							Reintegrando vidas através da{" "}
-							<span className="text-blue-400">tecnologia</span> e{" "}
-							<span className="text-pink-500">empatia</span>.
+							A Rua tem Voz: <br />
+							<span className="text-blue-400">Cidadania</span> contra a <span className="text-pink-500">Invisibilidade</span>.
 						</h1>
-						<p className="text-lg text-slate-300 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-							Um jogo digital inovador desenvolvido em Campinas para conectar a
-							sociedade civil à realidade da população em situação de rua,
-							facilitando o acesso a direitos e estimulando a solidariedade
-							real.
+						<p className="text-lg text-slate-300 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-sans">
+							Baseado na teoria de Milton Santos e Paulo Freire, o projeto <strong>A Rua Tem Voz</strong> usa a tecnologia social para romper a desafiliação e reconstruir vínculos de cidadania na Região Metropolitana de Campinas.
 						</p>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
 							<button
@@ -377,50 +383,75 @@ export default function LandingPage() {
 				</div>
 			</section>
 
-			{/* The Problem & Solution Section */}
 			<section
 				id="projeto"
-				className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
+				className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-20"
 			>
-				<div className="text-center max-w-3xl mx-auto mb-16">
-					<h2 className="text-3xl font-bold text-slate-900 mb-4">
-						Por que um jogo?
-					</h2>
-					<p className="text-lg text-slate-600">
-						A população em situação de rua em Campinas cresceu cerca de 40% nos
-						últimos anos. As barreiras não são apenas a falta de teto, mas a
-						burocracia, a falta de informação e a invisibilidade social.
-					</p>
+				<div className="flex flex-col lg:flex-row gap-16 items-center">
+					<div className="lg:w-1/2 space-y-8">
+						<div className="inline-block bg-blue-100 text-blue-700 px-4 py-1 rounded-full font-black text-xs uppercase tracking-widest">
+							Fundamentação Teórica
+						</div>
+						<h2 className="text-4xl font-black text-slate-900 leading-tight">
+							Denunciar Práticas Brutais. <br />
+							Legitimar o Pertencimento.
+						</h2>
+						<p className="text-xl text-slate-600 leading-relaxed font-sans">
+							Segundo <strong>Santos (2006)</strong>, a pobreza estrutural no Brasil é uma dívida social deliberada. Nosso projeto atua na intersecção entre a tecnologia e a consciência libertadora de <strong>Paulo Freire</strong>, transformando o "invisível" em um sujeito ativo de sua própria história.
+						</p>
+						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+							<div className="space-y-2">
+								<h4 className="font-black text-slate-800 uppercase tracking-tight">Combate à Desafiliação</h4>
+								<p className="text-sm text-slate-500">Reconstrução de vínculos em estruturas que fazem sentido para a vida.</p>
+							</div>
+							<div className="space-y-2">
+								<h4 className="font-black text-slate-800 uppercase tracking-tight">Apartação Social</h4>
+								<p className="text-sm text-slate-500">O reconhecimento do outro como um semelhante, não apenas um objeto de caridade.</p>
+							</div>
+						</div>
+					</div>
+					<div className="lg:w-1/2 bg-[#0c0c0f] p-10 rounded-[40px] shadow-2xl border border-slate-800 text-white space-y-8 relative overflow-hidden">
+						<div className="absolute top-0 right-0 p-8 opacity-5">
+							<BarChart3 className="w-64 h-64" />
+						</div>
+						<h3 className="text-2xl font-black italic uppercase tracking-tighter">Portal do Parceiro Institucional</h3>
+						<p className="text-slate-400 font-sans">
+							Para gestores públicos, empresas ESG e acadêmicos. Acesse a telemetria em tempo real das violações de direitos e demandas por ODS em Campinas.
+						</p>
+						<button
+							onClick={() => window.location.href = '/impacto'}
+							className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-500/20"
+						>
+							Acessar Dashboard de Impacto <ArrowRight size={20} />
+						</button>
+						<p className="text-[10px] text-slate-500 text-center uppercase font-bold tracking-[0.2em]">
+							Dados processados via Protocolo Anti-Chacina (K-5)
+						</p>
+					</div>
 				</div>
 
-				<div className="grid md:grid-cols-2 gap-12 items-center">
+				<div className="grid md:grid-cols-2 gap-12 items-center pt-20 border-t border-slate-200">
 					<div className="space-y-8">
-						<div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-100 transition-colors">
-							<div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-								<Target className="h-6 w-6 text-red-600" />
+						<div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 hover:border-blue-200 transition-all group">
+							<div className="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mb-6 border border-red-200 group-hover:scale-110 transition-transform">
+								<Target className="h-7 w-7 text-red-600" />
 							</div>
-							<h3 className="text-xl font-bold text-slate-900 mb-2">
-								Para a População de Rua
+							<h3 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">
+								Jornada da Autonomia
 							</h3>
-							<p className="text-slate-600">
-								Um utilitário gamificado que transforma a burocracia em missões
-								claras. O app orienta onde comer, como tirar documentos e onde
-								encontrar abrigo, oferecendo recompensas reais por cada passo de
-								autonomia conquistado.
+							<p className="text-slate-600 font-sans leading-relaxed">
+								Um utilitário gamificado que transforma a burocracia em missões claras. O app orienta onde comer, como tirar documentos e onde encontrar abrigo, oferecendo recompensas reais por cada passo de autonomia conquistado.
 							</p>
 						</div>
-						<div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-100 transition-colors">
-							<div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-								<Heart className="h-6 w-6 text-blue-600" />
+						<div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 hover:border-pink-200 transition-all group">
+							<div className="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center mb-6 border border-pink-200 group-hover:scale-110 transition-transform">
+								<Heart className="h-7 w-7 text-pink-600" />
 							</div>
-							<h3 className="text-xl font-bold text-slate-900 mb-2">
-								Para a Sociedade Civil
+							<h3 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">
+								Simulador de Empatia
 							</h3>
-							<p className="text-slate-600">
-								Um simulador de empatia que coloca o cidadão diante dos dilemas
-								reais da rua, combatendo o preconceito. Além disso, funciona
-								como um "Hub de Doações Inteligentes", mostrando onde sua ajuda
-								é mais necessária.
+							<p className="text-slate-600 font-sans leading-relaxed">
+								Colocamos a sociedade civil diante da <strong>desqualificação social</strong> (Gohn, 2021). O jogo combate o estigma ao humanizar os dilemas de quem vive à margem, gerando consciência universal.
 							</p>
 						</div>
 					</div>
@@ -481,7 +512,7 @@ export default function LandingPage() {
 					<div className="text-center mb-10">
 						<div className="inline-flex items-center gap-2 bg-purple-500/20 border border-purple-400/30 px-3 py-1 rounded-full text-purple-200 text-sm font-bold mb-4">
 							<Sparkles className="h-4 w-4" />
-							Powered by Gemini API
+							Powered by Groq API (Llama 3.3)
 						</div>
 						<h2 className="text-3xl md:text-4xl font-bold mb-4">
 							Teste o Simulador de Empatia
@@ -536,7 +567,7 @@ export default function LandingPage() {
 									<div className="flex items-center gap-2">
 										<div className="h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
 										<span className="text-sm font-mono text-green-400">
-											GEMINI-LIVE-FEED
+											GROQ-LIVE-FEED
 										</span>
 									</div>
 									<button
@@ -625,7 +656,7 @@ export default function LandingPage() {
 							<p className="text-slate-600 mb-6 text-lg">
 								Diferente de apps tradicionais que custam milhões, utilizamos a
 								plataforma <strong>Google Antigravity</strong> e o modelo{" "}
-								<strong>Gemini 3</strong>.
+								<strong>Groq Llama 3.3 70B</strong>.
 							</p>
 							<ul className="space-y-4">
 								<li className="flex items-center gap-3">
@@ -778,89 +809,91 @@ export default function LandingPage() {
 						<p>
 							&copy; 2025 Coletivo A Rua Tem Voz. Todos os direitos reservados.
 						</p>
-						<p className="mt-2">Desenvolvido com Antigravity IDE & Gemini 3.</p>
+						<p className="mt-2">Desenvolvido com Antigravity IDE & Groq Llama 3.3.</p>
 					</div>
 				</div>
 			</footer>
 
 			{/* Login Modal */}
-			{showLoginModal && (
-				<div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-					<div className="bg-white rounded-2xl w-full max-w-sm relative flex flex-col p-8 shadow-2xl overflow-hidden">
-						{/* Background Detail */}
-						<div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-50 rounded-full"></div>
-						<div className="absolute -bottom-12 -left-12 w-32 h-32 bg-purple-50 rounded-full"></div>
+			{
+				showLoginModal && (
+					<div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+						<div className="bg-white rounded-2xl w-full max-w-sm relative flex flex-col p-8 shadow-2xl overflow-hidden">
+							{/* Background Detail */}
+							<div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-50 rounded-full"></div>
+							<div className="absolute -bottom-12 -left-12 w-32 h-32 bg-purple-50 rounded-full"></div>
 
-						<button
-							type="button"
-							onClick={() => setShowLoginModal(false)}
-							className="absolute top-4 right-4 z-10 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all"
-						>
-							<X className="h-5 w-5" />
-						</button>
-
-						<div className="relative text-center mb-8">
-							<div className="mx-auto w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
-								<MapPin className="h-6 w-6 text-white" />
-							</div>
-							<h3 className="text-2xl font-bold text-slate-800">Boas-vindas!</h3>
-							<p className="text-slate-500 text-sm mt-1">
-								Escolha como deseja iniciar sua jornada.
-							</p>
-						</div>
-
-						<div className="space-y-4 relative">
 							<button
 								type="button"
-								onClick={() => signIn("google", { callbackUrl: "/jogar" })}
-								className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 py-3.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-blue-300 transition-all shadow-sm group"
+								onClick={() => setShowLoginModal(false)}
+								className="absolute top-4 right-4 z-10 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all"
 							>
-								<svg className="w-5 h-5" viewBox="0 0 24 24">
-									<path
-										fill="currentColor"
-										d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-									/>
-									<path
-										fill="currentColor"
-										d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-									/>
-									<path
-										fill="currentColor"
-										d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"
-									/>
-									<path
-										fill="currentColor"
-										d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-									/>
-								</svg>
-								Entrar com Google
+								<X className="h-5 w-5" />
 							</button>
 
-							<div className="relative flex items-center justify-center py-2">
-								<div className="absolute inset-0 flex items-center">
-									<div className="w-full border-t border-slate-100"></div>
+							<div className="relative text-center mb-8">
+								<div className="mx-auto w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
+									<MapPin className="h-6 w-6 text-white" />
 								</div>
-								<span className="relative px-3 bg-white text-xs font-bold text-slate-400 uppercase tracking-widest">
-									Ou
-								</span>
+								<h3 className="text-2xl font-bold text-slate-800">Boas-vindas!</h3>
+								<p className="text-slate-500 text-sm mt-1">
+									Escolha como deseja iniciar sua jornada.
+								</p>
 							</div>
 
-							<button
-								type="button"
-								onClick={() => signIn("credentials", { callbackUrl: "/jogar" })}
-								className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-3.5 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10"
-							>
-								Acesso Anônimo
-								<ArrowRight className="h-4 w-4 opacity-50" />
-							</button>
-							<p className="text-[10px] text-center text-slate-400 mt-4 leading-relaxed">
-								Ao entrar, você concorda em utilizar a plataforma para fins
-								educativos e de impacto social positivo.
-							</p>
+							<div className="space-y-4 relative">
+								<button
+									type="button"
+									onClick={() => signIn("google", { callbackUrl: "/jogar" })}
+									className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 py-3.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-blue-300 transition-all shadow-sm group"
+								>
+									<svg className="w-5 h-5" viewBox="0 0 24 24">
+										<path
+											fill="currentColor"
+											d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+										/>
+										<path
+											fill="currentColor"
+											d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+										/>
+										<path
+											fill="currentColor"
+											d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"
+										/>
+										<path
+											fill="currentColor"
+											d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+										/>
+									</svg>
+									Entrar com Google
+								</button>
+
+								<div className="relative flex items-center justify-center py-2">
+									<div className="absolute inset-0 flex items-center">
+										<div className="w-full border-t border-slate-100"></div>
+									</div>
+									<span className="relative px-3 bg-white text-xs font-bold text-slate-400 uppercase tracking-widest">
+										Ou
+									</span>
+								</div>
+
+								<button
+									type="button"
+									onClick={() => signIn("credentials", { callbackUrl: "/jogar" })}
+									className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-3.5 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10"
+								>
+									Acesso Anônimo
+									<ArrowRight className="h-4 w-4 opacity-50" />
+								</button>
+								<p className="text-[10px] text-center text-slate-400 mt-4 leading-relaxed">
+									Ao entrar, você concorda em utilizar a plataforma para fins
+									educativos e de impacto social positivo.
+								</p>
+							</div>
 						</div>
 					</div>
-				</div>
-			)}
-		</div>
+				)
+			}
+		</div >
 	);
 }

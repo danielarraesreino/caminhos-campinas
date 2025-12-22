@@ -51,21 +51,21 @@ export function useGameLoop() {
 			}
 
 			// Decadência passiva suavizada (ritmo de Campinas)
-			let hngDecay = 0.5;
-			let hygDecay = 0.2;
-			let enrDecay = 0.2;
-			let snyDecay = 0.2 * getSanityDecayMultiplier();
+			let hngDecay = 0.2;   // Reduzido: -0.5 → -0.2 (60% menor)
+			let hygDecay = 0.08;  // Reduzido: -0.2 → -0.08 (60% menor)
+			let enrDecay = 0.08;  // Reduzido: -0.2 → -0.08 (60% menor)
+			let snyDecay = 0.08 * getSanityDecayMultiplier();  // Reduzido: -0.2 → -0.08 (60% menor)
 
 			if (avatar) {
-				if (avatar.ageRange === "jovem") hngDecay += 0.1;
-				if (avatar.ageRange === "idoso") enrDecay += 0.1;
-				if (avatar.timeOnStreet === "recente") hygDecay += 0.1;
+				if (avatar.ageRange === "jovem") hngDecay += 0.04;    // Proporcional
+				if (avatar.ageRange === "idoso") enrDecay += 0.04;    // Proporcional
+				if (avatar.timeOnStreet === "recente") hygDecay += 0.04;  // Proporcional
 			}
 
 			// 2. Refatoração de Inventário (Peso)
 			const totalWeight = inventory.reduce((acc, i) => acc + i.weight, 0);
 			if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM") {
-				enrDecay += 0.3; // Sobrecarga física
+				enrDecay += 0.12; // Sobrecarga física (reduzido proporcionalmente)
 			}
 
 			// 3. Efeitos Atmosféricos e Eventos Randômicos
@@ -170,6 +170,9 @@ export function useGameLoop() {
 						break;
 					case "HYGIENE_LOW":
 						if (hygiene < value) triggered = true;
+						break;
+					case "SOCIAL_STIGMA_HIGH":
+						if (socialStigma > value) triggered = true;
 						break;
 				}
 
