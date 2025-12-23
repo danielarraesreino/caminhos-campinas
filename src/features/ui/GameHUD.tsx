@@ -14,7 +14,6 @@ import { useGameContext } from "@/contexts/GameContext";
 export function GameHUD() {
 	const {
 		health,
-		hunger,
 		sanity,
 		money,
 		time,
@@ -77,7 +76,7 @@ export function GameHUD() {
 						<div className="flex items-center gap-2">
 							<Package className="h-3 w-3" />
 							<span>
-								{workTool.type.replace("_", " ")} // {workTool.condition}%
+								{workTool.type.replace("_", " ")} {workTool.condition}%
 							</span>
 						</div>
 					) : (
@@ -99,9 +98,21 @@ export function GameHUD() {
 						<div className="flex items-center gap-2 font-mono text-[9px] text-slate-600 tracking-tighter uppercase">
 							<Clock className="h-3 w-3" />
 							<span>
-								D{day} // {time.toString().padStart(2, "0")}:00
+								D{day} {time.toString().padStart(2, "0")}:00
 							</span>
 						</div>
+					</div>
+
+					{/* Menu de Recursos e Apoio */}
+					<div className="hidden lg:flex">
+						<a
+							href="/recursos"
+							target="_blank"
+							className="text-[10px] text-slate-500 hover:text-blue-400 transition-colors uppercase font-bold tracking-widest border border-slate-800 px-3 py-1 rounded-sm"
+							rel="noopener"
+						>
+							RECURSOS
+						</a>
 					</div>
 				</div>
 			</div>
@@ -116,7 +127,7 @@ function BiometricItem({
 	status,
 	type = "NORMAL",
 }: {
-	icon: any;
+	icon: React.ElementType;
 	value: number;
 	label: string;
 	status: "OK" | "CRITICAL";

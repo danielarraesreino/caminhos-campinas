@@ -9,7 +9,6 @@ import {
 	Instagram,
 	Loader2,
 	MapPin,
-	Menu,
 	Shield,
 	Smartphone,
 	Sparkles,
@@ -23,15 +22,15 @@ import { DilemmaCache } from "@/utils/dilemmaCache";
 import { AvatarCreation } from "./AvatarCreation";
 
 export default function LandingPage() {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	// const [isMenuOpen, setIsMenuOpen] = useState(false); // Removed local menu state
 	const [copied, setCopied] = useState(false);
 
 	// Map State
-	const [_showMap, setShowMap] = useState(false);
+	const [_showMap, _setShowMap] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [mode, setMode] = useState<"landing" | "creation">("landing");
 
-	const { data: session, status } = useSession();
+	const { data: _session, status } = useSession();
 
 	// AI State
 	const [aiLoading, setAiLoading] = useState(false);
@@ -55,7 +54,6 @@ export default function LandingPage() {
 		if (element) {
 			element.scrollIntoView({ behavior: "smooth" });
 		}
-		setIsMenuOpen(false);
 	};
 
 	// Groq API Call Helper - API Route segura
@@ -152,131 +150,7 @@ export default function LandingPage() {
 	return (
 		<div className="min-h-screen bg-slate-50 font-sans text-slate-900">
 			{/* Navigation */}
-			<nav className="fixed w-full bg-white/90 backdrop-blur-sm z-50 border-b border-slate-200 shadow-sm">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex justify-between items-center h-16">
-						<div className="flex items-center gap-2">
-							<div className="bg-blue-600 p-2 rounded-lg">
-								<MapPin className="h-6 w-6 text-white" />
-							</div>
-							<span className="font-bold text-xl tracking-tight text-slate-800">
-								Caminhos <span className="text-blue-600">Campinas</span>
-							</span>
-						</div>
-
-						{/* Desktop Menu */}
-						<div className="hidden md:flex items-center space-x-8">
-							<button
-								type="button"
-								onClick={() => scrollToSection("projeto")}
-								className="text-slate-600 hover:text-blue-600 font-bold transition-colors uppercase tracking-widest text-xs"
-							>
-								A Rua Tem Voz
-							</button>
-							<button
-								type="button"
-								onClick={() => (window.location.href = "/impacto")}
-								className="text-blue-600 hover:text-blue-800 font-bold transition-colors flex items-center gap-1 uppercase tracking-widest text-xs"
-							>
-								<BarChart3 className="w-4 h-4" /> Painel de Impacto
-							</button>
-							<button
-								type="button"
-								onClick={() => setShowMap(true)}
-								className="text-slate-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1 uppercase tracking-widest text-xs"
-							>
-								<MapPin className="w-4 h-4 text-green-600" /> Mapa de Apoio
-							</button>
-							<button
-								type="button"
-								onClick={() => scrollToSection("demo-ia")}
-								className="text-slate-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1 uppercase tracking-widest text-xs"
-							>
-								<Sparkles className="w-4 h-4 text-purple-500" /> Demo IA
-							</button>
-							{status === "authenticated" ? (
-								<button
-									type="button"
-									onClick={() => (window.location.href = "/jogar")}
-									className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full font-bold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-								>
-									Continuar Jornada
-								</button>
-							) : (
-								<button
-									type="button"
-									onClick={() => setShowLoginModal(true)}
-									className="text-slate-600 hover:text-blue-600 font-bold uppercase tracking-widest text-xs"
-								>
-									Entrar
-								</button>
-							)}
-						</div>
-
-						{/* Mobile Menu Button */}
-						<div className="md:hidden">
-							<button
-								type="button"
-								onClick={() => setIsMenuOpen(!isMenuOpen)}
-								className="text-slate-600 p-2"
-							>
-								{isMenuOpen ? (
-									<X className="h-6 w-6" />
-								) : (
-									<Menu className="h-6 w-6" />
-								)}
-							</button>
-						</div>
-					</div>
-				</div>
-
-				{/* Mobile Menu */}
-				{isMenuOpen && (
-					<div className="md:hidden bg-white border-b border-slate-200 animate-fade-in">
-						<div className="px-4 pt-2 pb-6 space-y-2">
-							<button
-								type="button"
-								onClick={() => scrollToSection("projeto")}
-								className="block w-full text-left px-3 py-3 text-slate-600 font-medium border-b border-slate-100"
-							>
-								O Projeto
-							</button>
-							<button
-								type="button"
-								onClick={() => scrollToSection("demo-ia")}
-								className="block w-full text-left px-3 py-3 text-slate-600 font-medium border-b border-slate-100 flex items-center gap-2"
-							>
-								<Sparkles className="w-4 h-4 text-purple-500" /> Demo IA
-							</button>
-							<button
-								type="button"
-								onClick={() => scrollToSection("tecnologia")}
-								className="block w-full text-left px-3 py-3 text-slate-600 font-medium border-b border-slate-100"
-							>
-								Tecnologia
-							</button>
-							<button
-								type="button"
-								onClick={() =>
-									status === "authenticated"
-										? (window.location.href = "/jogar")
-										: setShowLoginModal(true)
-								}
-								className="block w-full text-left px-3 py-3 text-slate-600 font-medium border-b border-slate-100"
-							>
-								{status === "authenticated" ? "Jogar" : "Entrar"}
-							</button>
-							<button
-								type="button"
-								onClick={() => scrollToSection("doar")}
-								className="block w-full mt-4 text-center bg-blue-600 text-white px-3 py-3 rounded-lg font-bold"
-							>
-								Apoiar Agora
-							</button>
-						</div>
-					</div>
-				)}
-			</nav>
+			{/* Navigation removed - now in global layout */}
 
 			{/* Hero Section */}
 			<section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden">
@@ -310,11 +184,13 @@ export default function LandingPage() {
 							</button>
 							<button
 								type="button"
-								onClick={() =>
-									status === "authenticated"
-										? (window.location.href = "/jogar")
-										: setShowLoginModal(true)
-								}
+								onClick={() => {
+									if (status === "authenticated") {
+										window.location.href = "/jogar";
+									} else {
+										setShowLoginModal(true);
+									}
+								}}
 								className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-green-500/25 flex items-center justify-center gap-2 transform hover:-translate-y-1"
 							>
 								<ArrowRight className="h-5 w-5" />
@@ -335,7 +211,9 @@ export default function LandingPage() {
 					<div className="lg:w-1/2 mt-12 lg:mt-0">
 						{mode === "creation" ? (
 							<AvatarCreation
-								onComplete={() => (window.location.href = "/jogar")}
+								onComplete={() => {
+									window.location.href = "/jogar";
+								}}
 								onBack={() => setMode("landing")}
 							/>
 						) : (
@@ -442,7 +320,10 @@ export default function LandingPage() {
 							ODS em Campinas.
 						</p>
 						<button
-							onClick={() => (window.location.href = "/impacto")}
+							type="button"
+							onClick={() => {
+								window.location.href = "/impacto";
+							}}
 							className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-500/20"
 						>
 							Acessar Dashboard de Impacto <ArrowRight size={20} />
@@ -622,14 +503,12 @@ export default function LandingPage() {
 								{/* Interaction Area */}
 								{!aiFeedback ? (
 									<div className="mt-auto space-y-4">
-										<label className="text-sm text-slate-400">
-											Escolha sua ação:
-										</label>
+										<p className="text-sm text-slate-400">Escolha sua ação:</p>
 										<div className="flex flex-col gap-3">
-											{dilemma?.options?.map((option, idx) => (
+											{dilemma?.options?.map((option, _idx) => (
 												<button
 													type="button"
-													key={idx}
+													key={option}
 													onClick={() => solveDilemma(option)}
 													disabled={aiLoading}
 													className="w-full text-left bg-slate-700/50 hover:bg-blue-600/20 hover:border-blue-500 border border-slate-600 p-4 rounded-xl transition-all group"
@@ -857,6 +736,7 @@ export default function LandingPage() {
 							type="button"
 							onClick={() => setShowLoginModal(false)}
 							className="absolute top-4 right-4 z-10 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all"
+							title="Fechar"
 						>
 							<X className="h-5 w-5" />
 						</button>
@@ -879,7 +759,13 @@ export default function LandingPage() {
 								onClick={() => signIn("google", { callbackUrl: "/jogar" })}
 								className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 py-3.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-blue-300 transition-all shadow-sm group"
 							>
-								<svg className="w-5 h-5" viewBox="0 0 24 24">
+								<svg
+									className="w-5 h-5"
+									viewBox="0 0 24 24"
+									aria-labelledby="google-icon-title"
+									role="img"
+								>
+									<title id="google-icon-title">Google</title>
 									<path
 										fill="currentColor"
 										d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

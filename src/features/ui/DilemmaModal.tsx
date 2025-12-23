@@ -51,7 +51,7 @@ export function DilemmaModal({
 				if (!open) handleContinue();
 			}}
 		>
-			<DialogContent className="sm:max-w-[500px] border border-slate-800 bg-black text-slate-300 relative rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)]">
+			<DialogContent className="sm:max-w-[500px] border border-slate-800 bg-black text-slate-300 rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)]">
 				{/* Header decorativo técnico */}
 				<div className="h-1 w-full bg-slate-900" />
 
@@ -82,7 +82,7 @@ export function DilemmaModal({
 							<div className="flex flex-col gap-2">
 								{dilemma.options.map((option, index) => (
 									<Button
-										key={index}
+										key={option.label}
 										type="button"
 										variant="outline"
 										className="justify-start h-auto py-3 px-4 text-left whitespace-normal border-slate-900 bg-black text-slate-500 hover:bg-slate-900 hover:text-white transition-all font-mono text-xs uppercase tracking-widest rounded-none group"

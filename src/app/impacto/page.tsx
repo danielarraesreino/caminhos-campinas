@@ -10,10 +10,13 @@ export default function ImpactPage() {
 			<div className="max-w-[1400px] mx-auto relative">
 				<Link
 					href="/"
-					className="absolute top-8 left-8 z-50 p-2 border border-slate-900 bg-slate-950 text-slate-500 hover:text-white transition-colors"
+					className="fixed top-6 left-6 z-[100] p-3 border border-slate-800 bg-black/80 backdrop-blur-md text-slate-300 hover:text-white hover:border-blue-500 transition-all rounded-full shadow-lg group"
 					title="Voltar para a Landing Page"
 				>
-					<ArrowLeft size={16} />
+					<ArrowLeft
+						size={20}
+						className="group-hover:-translate-x-1 transition-transform"
+					/>
 				</Link>
 				<ImpactDashboard />
 			</div>

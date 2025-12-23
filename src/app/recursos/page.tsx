@@ -61,15 +61,15 @@ export default function ResourcesPage() {
 	];
 
 	return (
-		<div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
+		<div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20 pt-16">
 			{/* Header */}
 			<header className="bg-blue-600 text-white py-12 px-4 shadow-lg">
 				<div className="max-w-5xl mx-auto">
 					<Link
 						href="/"
-						className="inline-flex items-center text-blue-200 hover:text-white mb-6 transition-colors"
+						className="inline-flex items-center text-white/90 hover:text-white mb-6 transition-colors font-semibold"
 					>
-						<ArrowRight className="h-4 w-4 rotate-180 mr-2" /> Voltar para
+						<ArrowRight className="h-5 w-5 rotate-180 mr-2" /> Voltar para
 						Início
 					</Link>
 					<h1 className="text-3xl md:text-5xl font-bold mb-4">

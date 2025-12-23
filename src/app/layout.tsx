@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GameProvider } from "@/contexts/GameContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
 import { SurvivalModeProvider } from "@/features/ui/SurvivalModeContext";
@@ -33,6 +35,8 @@ export const viewport: Viewport = {
 
 import { Providers } from "@/components/Providers";
 
+import { Navbar } from "@/components/ui/Navbar";
+
 export default function RootLayout({
 	children,
 }: Readonly<{
@@ -47,7 +51,12 @@ export default function RootLayout({
 				<Providers>
 					<SurvivalModeProvider>
 						<GameProvider>
-							<ServicesProvider>{children}</ServicesProvider>
+							<ServicesProvider>
+								<Navbar />
+								{children}
+								<SpeedInsights />
+								<Analytics />
+							</ServicesProvider>
 						</GameProvider>
 					</SurvivalModeProvider>
 				</Providers>
