@@ -38,6 +38,7 @@ export interface Dilemma {
 		type: TriggerType;
 		value: number;
 	};
+	audioId?: string;
 	prerequisite?: string;
 	options: DilemmaOption[];
 }

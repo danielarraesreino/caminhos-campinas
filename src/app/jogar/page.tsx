@@ -2,12 +2,15 @@
 
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+// import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+// import { checkGameOver, type GameOverResult } from "@/features/game-loop/gameOverConditions";
 import { useGameLoop } from "@/features/game-loop/useGameLoop";
 import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
 import { DilemmaModal } from "@/features/ui/DilemmaModal";
 import { GameChat } from "@/features/ui/GameChat";
 import { GameHUD } from "@/features/ui/GameHUD";
+// import { GameOverModal } from "@/features/ui/GameOverModal";
 import { SurvivalToggle } from "@/features/ui/SurvivalToggle";
 import { useEventEngine } from "@/hooks/useEventEngine";
 
@@ -19,7 +22,25 @@ export default function GamePage() {
 	const { activeDilemma, resolveDilemma, clearActiveDilemma } =
 		useEventEngine();
 
-	const { criticalHealth, sanity } = useGameContext();
+	const gameState = useGameContext();
+	const { criticalHealth, sanity } = gameState; // resetGame removido temporariamente
+
+	// Game Over State - TEMPORARIAMENTE DESABILITADO
+	// const [gameOverResult, setGameOverResult] = useState<GameOverResult | null>(null);
+
+	// Check for Game Over conditions every time state changes
+	// useEffect(() => {
+	// 	const result = checkGameOver(gameState);
+	// 	if (result.isGameOver && !gameOverResult) {
+	// 		setGameOverResult(result);
+	// 	}
+	// }, [gameState, gameOverResult]);
+
+	// Handle restart from Game Over
+	// const handleRestart = () => {
+	// 	setGameOverResult(null);
+	// 	resetGame();
+	// };
 
 	const degradationClasses = [
 		criticalHealth
@@ -73,6 +94,14 @@ export default function GamePage() {
 				onResolve={resolveDilemma}
 				onClose={clearActiveDilemma}
 			/>
+
+			{/* Game  Over Modal - TEMPORARIAMENTE DESABILITADO */}
+			{/* {gameOverResult?.isGameOver && (
+				<GameOverModal
+					gameOverResult={gameOverResult}
+					onRestart={handleRestart}
+				/>
+			)} */}
 		</div>
 	);
 }

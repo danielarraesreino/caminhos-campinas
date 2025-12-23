@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -11,7 +11,9 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { InteractiveText } from "@/components/ui/InteractiveText";
 import type { Dilemma } from "@/features/game-loop/dilemmas";
+import { useAudio } from "@/hooks/useAudio";
 
 interface DilemmaModalProps {
 	dilemma: Dilemma | null;
@@ -25,6 +27,20 @@ export function DilemmaModal({
 	onClose,
 }: DilemmaModalProps) {
 	const [selectedOption, setSelectedOption] = useState<number | null>(null);
+	const { playAmbience, stopAll } = useAudio();
+
+	// Effect to manage audio
+	useEffect(() => {
+		if (dilemma?.audioId) {
+			playAmbience(dilemma.audioId);
+		}
+
+		return () => {
+			if (dilemma?.audioId) {
+				stopAll();
+			}
+		};
+	}, [dilemma, playAmbience, stopAll]);
 
 	if (!dilemma) return null;
 
@@ -39,6 +55,7 @@ export function DilemmaModal({
 			onClose();
 		}
 		setSelectedOption(null);
+		stopAll(); // Ensure audio stops when closing/continuing
 	};
 
 	const currentOption =
@@ -73,7 +90,11 @@ export function DilemmaModal({
 								: dilemma.title.replace(" ", "_")}
 						</DialogTitle>
 						<DialogDescription className="text-slate-400 text-base leading-relaxed font-serif italic pt-2">
-							{currentOption ? currentOption.consequence : dilemma.description}
+							{currentOption ? (
+								<InteractiveText content={currentOption.consequence} />
+							) : (
+								<InteractiveText content={dilemma.description} />
+							)}
 						</DialogDescription>
 					</DialogHeader>
 

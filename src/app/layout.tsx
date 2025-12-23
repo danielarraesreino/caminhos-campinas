@@ -35,6 +35,7 @@ export const viewport: Viewport = {
 };
 
 import { Providers } from "@/components/Providers";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 import { Navbar } from "@/components/ui/Navbar";
 
@@ -57,6 +58,7 @@ export default function RootLayout({
 								{children}
 								<SpeedInsights />
 								<Analytics />
+								<ServiceWorkerRegister />
 							</ServicesProvider>
 						</GameProvider>
 					</SurvivalModeProvider>
