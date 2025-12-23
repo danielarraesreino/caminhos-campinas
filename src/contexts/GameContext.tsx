@@ -29,21 +29,46 @@ export interface Item {
 	type: "valioso" | "sobrevivencia";
 }
 
+/**
+ * Interface para eventos sérios baseados na realidade da população de rua
+ * Baseado em SOCIOLOGIA_BRASILEIRA_E_CAMPINAS.md e eventos reais
+ */
+export interface SeriousEvent {
+	id: string;
+	title: string;
+	description: string; // Narrativa visceral da realidade
+	triggerCondition: (state: GameState) => boolean;
+	choices: {
+		label: string;
+		risk: number; // % de falha (0-100)
+		socialImpact: "POSITIVE" | "NEGATIVE"; // Afeta socialStigma
+		outcome: (state: GameState) => Partial<GameState>;
+	}[];
+	audioId?: string; // Para imersão sonora
+	glossaryTerms?: string[]; // Termos técnicos grifados (ex: "LOAS", "Pop Rua")
+}
+
 export interface GameState {
 	health: number;
 	hunger: number;
 	hygiene: number;
-	sanity: number;
+	sanity: number; // TODO: Renomear para mentalHealth em refatoração futura
 	energy: number;
-	dignity: number;
-	socialStigma: number;
+	dignity: number; // 0 = Game Over por desistência
+	socialStigma: number; // Quanto maior, mais preconceito
 	stabilityGap: number;
 	money: number;
 	workTool: {
 		type: "CARRINHO_RECICLAGEM" | "SACO_PRETO" | null;
-		condition: number; // 0-100
+		condition: number; // 0-100 (Afeta quanto peso pode carregar)
 		capacity: number; // kg
 		riskFactor: number;
+		isConfiscated: boolean; // Se foi levado pelo "Rapa"
+	};
+	documents: {
+		hasRG: boolean;
+		hasCPF: boolean;
+		hasComprovanteResidencia: boolean; // Item raro/difícil de conseguir
 	};
 	activeBuffs: string[];
 	isAtShelter: boolean;
@@ -106,6 +131,12 @@ const INITIAL_STATE: GameState = {
 		condition: 100,
 		capacity: 0,
 		riskFactor: 0,
+		isConfiscated: false, // Não foi confiscado inicialmente
+	},
+	documents: {
+		hasRG: false, // Maioria não tem documentos no início
+		hasCPF: false,
+		hasComprovanteResidencia: false, // Raramente possui
 	},
 	activeBuffs: [],
 	isAtShelter: false,
@@ -356,6 +387,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					condition: 50,
 					capacity: 100,
 					riskFactor: 30,
+					isConfiscated: false, // Ainda tem o carrinho
 				};
 			}
 

@@ -26,6 +26,7 @@ export function processRandomEvents(
 					condition: 100,
 					capacity: 0,
 					riskFactor: 0,
+					isConfiscated: true, // Foi confiscado pelo Rapa!
 				},
 				inventory: [], // Perda total
 				dignity: Math.max(0, state.dignity - 20),

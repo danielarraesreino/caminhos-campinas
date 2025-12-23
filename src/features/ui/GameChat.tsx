@@ -9,7 +9,6 @@ import { useGameContext } from "@/contexts/GameContext";
 export function GameChat() {
 	const gameState = useGameContext();
 	// Configuração do useChat com o endpoint correto e tratamento de erros
-	// @ts-expect-error - Ignorando erro de tipo temporário para garantir build, lógica validada runtime
 	// biome-ignore lint/suspicious/noExplicitAny: Temporary fix for build
 	const { messages, input, handleInputChange, handleSubmit, status, error } =
 		useChat({
