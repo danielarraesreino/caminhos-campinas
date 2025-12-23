@@ -76,12 +76,25 @@ Acesse [http://localhost:3000](http://localhost:3000) no navegador.
 
 ## 🚀 Como Fazer Deploy
 
+## 🚀 Como Fazer Deploy
+
 A maneira mais fácil de publicar este projeto é usando a [Vercel](https://vercel.com) (criadores do Next.js).
 
 1. Faça um fork deste repositório para o seu GitHub.
 2. Crie uma conta na Vercel e importe o projeto do GitHub.
-3. Configure as variáveis de ambiente necessárias (`GROQ_API_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`).
+3. Configure as **Variáveis de Ambiente** (Settings > Environment Variables):
+
+   | Nome | Descrição | Exemplo |
+   |------|-----------|---------|
+   | `AUTH_SECRET` | **Obrigatório**. Chave para criptografia da sessão. | Gere no terminal: `openssl rand -base64 32` |
+   | `GROQ_API_KEY` | **Obrigatório**. API da IA. | `gsk_...` |
+   | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | **Obrigatório**. Mapa. | `AIza...` |
+   | `AUTH_GOOGLE_ID` | (Opcional) Para login com Google. | `...apps.googleusercontent.com` |
+   | `AUTH_GOOGLE_SECRET` | (Opcional) Para login com Google. | `GOCSPX-...` |
+
 4. Clique em "Deploy".
+
+> **Nota:** Se o login apresentar erro 500, verifique se `AUTH_SECRET` foi adicionado corretamente.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSEU_USUARIO%2Fcaminhos-campinas)
 
