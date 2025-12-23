@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
@@ -21,9 +21,14 @@ export const metadata: Metadata = {
 	description:
 		"Serious Game sobre a realidade da população de rua em Campinas.",
 	manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
 	themeColor: "#000000",
-	viewport:
-		"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+	width: "device-width",
+	initialScale: 1,
+	maximumScale: 1,
+	userScalable: false,
 };
 
 import { Providers } from "@/components/Providers";

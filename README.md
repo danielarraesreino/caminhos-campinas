@@ -45,13 +45,13 @@ git clone https://github.com/SEU_USUARIO/caminhos-campinas.git
 cd caminhos-campinas
 ```
 
-2. **Instale as dependências**
+1. **Instale as dependências**
 
 ```bash
 npm install
 ```
 
-3. **Configure as variáveis de ambiente**
+1. **Configure as variáveis de ambiente**
 
 Copie o arquivo `.env.example` para `.env.local`:
 
@@ -66,13 +66,24 @@ GROQ_API_KEY=sua_chave_groq_aqui
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=sua_chave_google_maps_aqui
 ```
 
-4. **Execute o servidor de desenvolvimento**
+1. **Execute o servidor de desenvolvimento**
 
 ```bash
 npm run dev
 ```
 
 Acesse [http://localhost:3000](http://localhost:3000) no navegador.
+
+## 🚀 Como Fazer Deploy
+
+A maneira mais fácil de publicar este projeto é usando a [Vercel](https://vercel.com) (criadores do Next.js).
+
+1. Faça um fork deste repositório para o seu GitHub.
+2. Crie uma conta na Vercel e importe o projeto do GitHub.
+3. Configure as variáveis de ambiente necessárias (`GROQ_API_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`).
+4. Clique em "Deploy".
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSEU_USUARIO%2Fcaminhos-campinas)
 
 ## 📁 Estrutura do Projeto
 
