@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo, useTransition } from "react";
 import { EcoButton } from "@/components/ui/EcoButton";
 import { EcoCard } from "@/components/ui/EcoCard";
 import { useGameContext } from "@/contexts/GameContext";
@@ -38,6 +38,7 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 	const { services } = useServices();
 	const { modifyStat, addMoney, addBuff, advanceTime, socialStigma, hygiene } =
 		useGameContext();
+	const [_isPending, startTransition] = useTransition();
 
 	const sortedServices = useMemo(() => {
 		if (!userPosition) return services;
@@ -55,32 +56,39 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 			.sort((a, b) => (a.distance || 0) - (b.distance || 0));
 	}, [services, userPosition]);
 
-	const handleUseService = (service: any) => {
-		if (!service.effects) {
-			alert(
-				"Este serviço não possui efeitos imediatos, mas você pode ir até lá.",
-			);
-			return;
-		}
-
-		// Aplicar efeitos
-		Object.entries(service.effects).forEach(([key, value]) => {
-			if (typeof value === "number") {
-				if (key === "money") {
-					addMoney(value);
-				} else {
-					modifyStat(key as any, value);
-				}
-			} else if (key === "addBuff" && typeof value === "string") {
-				addBuff(value);
+	// Optimize with useCallback and useTransition to avoid blocking UI
+	const handleUseService = useCallback(
+		(service: any) => {
+			if (!service.effects) {
+				alert(
+					"Este serviço não possui efeitos imediatos, mas você pode ir até lá.",
+				);
+				return;
 			}
-		});
 
-		// Custo de tempo padrão: 1 hora
-		advanceTime(1);
+			// Use startTransition to avoid blocking the UI thread
+			startTransition(() => {
+				// Aplicar efeitos
+				Object.entries(service.effects).forEach(([key, value]) => {
+					if (typeof value === "number") {
+						if (key === "money") {
+							addMoney(value);
+						} else {
+							modifyStat(key as any, value);
+						}
+					} else if (key === "addBuff" && typeof value === "string") {
+						addBuff(value);
+					}
+				});
 
-		alert(`${service.name} utilizado. Efeitos aplicados.`);
-	};
+				// Custo de tempo padrão: 1 hora
+				advanceTime(1);
+
+				alert(`${service.name} utilizado. Efeitos aplicados.`);
+			});
+		},
+		[addMoney, modifyStat, addBuff, advanceTime],
+	);
 
 	return (
 		<div className="space-y-4">
@@ -135,6 +143,7 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 								<EcoButton
 									variant="ghost"
 									size="sm"
+									aria-label={`Traçar rota para ${service.name}`}
 									className="flex-1 text-[10px] uppercase font-bold h-9 bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
 									onClick={() => {
 										const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
@@ -146,6 +155,7 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 								<EcoButton
 									variant="primary"
 									size="sm"
+									aria-label={`Utilizar serviço ${service.name}`}
 									disabled={
 										(service.type === "comércio" ||
 											service.type === "privado") &&

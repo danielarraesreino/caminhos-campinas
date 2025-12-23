@@ -29,8 +29,9 @@ export const viewport: Viewport = {
 	themeColor: "#000000",
 	width: "device-width",
 	initialScale: 1,
-	maximumScale: 1,
-	userScalable: false,
+	// Accessibility: Allow users to zoom for better readability
+	// maximumScale: 1,
+	// userScalable: false,
 };
 
 import { Providers } from "@/components/Providers";
