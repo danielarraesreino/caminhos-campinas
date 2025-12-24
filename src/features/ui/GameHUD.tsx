@@ -157,6 +157,7 @@ function StatCard({
 	type,
 	alertThreshold,
 }: {
+	// biome-ignore lint/suspicious/noExplicitAny: generic icon component
 	icon: any;
 	value: number;
 	label: string;
