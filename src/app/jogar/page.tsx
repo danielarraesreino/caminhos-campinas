@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MessageCircle, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
@@ -22,6 +22,7 @@ import { useEventEngine } from "@/hooks/useEventEngine";
 export default function GamePage() {
 	// Initialize Game Loop (Time progression)
 	const { isRaining } = useGameLoop();
+	const [isChatOpen, setIsChatOpen] = useState(false);
 
 	// Audio System
 	const { playAmbience, stopAmbience, initAudio } = useAudioSystem();
@@ -143,16 +144,30 @@ export default function GamePage() {
 			</header>
 
 			{/* Main Game Area */}
-			<main className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-				{/* Left Column: Map */}
-				<section className="h-[40%] md:h-full md:w-1/2 border-b md:border-b-0 md:border-r border-slate-900 relative z-0">
+			<main className="flex-1 flex flex-col overflow-hidden relative">
+				{/* Full Screen Map */}
+				<section className="w-full h-full relative z-0">
 					<SurvivalMap />
 				</section>
 
-				{/* Right Column: Chat */}
-				<section className="h-[60%] md:h-full md:w-1/2 bg-slate-950">
-					<GameChat />
-				</section>
+				{/* Floating Action Button */}
+				<div className="absolute bottom-6 right-6 z-20">
+					<button
+						type="button"
+						onClick={() => setIsChatOpen(!isChatOpen)}
+						className="bg-blue-600 hover:bg-blue-500 text-white p-4 rounded-full shadow-lg border-2 border-slate-900 transition-transform hover:scale-110 flex items-center justify-center"
+						aria-label="Abrir Chat de Ação"
+					>
+						{isChatOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+					</button>
+				</div>
+
+				{/* Chat Overlay */}
+				{isChatOpen && (
+					<div className="absolute bottom-24 right-6 w-[90vw] md:w-[400px] h-[60vh] md:h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-20 overflow-hidden flex flex-col animate-in slide-in-from-bottom-5">
+						<GameChat />
+					</div>
+				)}
 			</main>
 
 			{/* Dilemma Modal */}

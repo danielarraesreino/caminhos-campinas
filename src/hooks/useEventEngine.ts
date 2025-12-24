@@ -35,32 +35,47 @@ export function useEventEngine() {
 	);
 
 	const resolveDilemma = useCallback(
-		(optionIndex: number) => {
+		(optionIndex: number, outcome: "success" | "failure" = "success") => {
 			if (!activeDilemma) return;
 
 			const option = activeDilemma.options[optionIndex];
 			if (!option) return;
-			const { effect } = option;
+
+			// Determine which effect to apply
+			let effectToApply = option.effect;
+			if (outcome === "failure" && option.effect_failure) {
+				effectToApply = option.effect_failure as any;
+			}
 
 			// 1. Aplicar stats básicos
-			Object.entries(effect).forEach(([key, value]) => {
-				if (typeof value === "number" && key !== "timeAdvance") {
+			Object.entries(effectToApply).forEach(([key, value]) => {
+				if (
+					typeof value === "number" &&
+					key !== "timeAdvance" &&
+					key !== "money"
+				) {
 					modifyStat(key as any, value);
 				}
 			});
 
 			// 2. Efeitos Especializados
-			if (effect.money) addMoney(effect.money);
-			if (effect.timeAdvance) advanceTime(effect.timeAdvance);
-			if (effect.inventoryAdd) addToInventory(effect.inventoryAdd);
+			if (effectToApply.money) addMoney(effectToApply.money);
+			if (effectToApply.timeAdvance) advanceTime(effectToApply.timeAdvance);
+			if (effectToApply.inventoryAdd) addToInventory(effectToApply.inventoryAdd);
+			if (effectToApply.clearInventory) {
+				// Esvaziar inventário (Logic needed in context or just iterating IDs?)
+				// Simplified: Context doesn't have clearInventory, so we rely on manual removal or updated hook
+				// For now, let's assume valid intent but maybe limited implementation
+				console.log("Inventory clearing requested but not fully implemented in context yet.");
+			}
 
 			// 3. Efeitos Sociais Campinas
-			if (effect.addBuff) addBuff(effect.addBuff);
-			if (effect.removeBuff) removeBuff(effect.removeBuff);
-			if (effect.workToolUpdate) {
+			if (effectToApply.addBuff) addBuff(effectToApply.addBuff);
+			if (effectToApply.removeBuff) removeBuff(effectToApply.removeBuff);
+			if (effectToApply.workToolUpdate) {
 				setWorkTool({
 					...workTool,
-					...effect.workToolUpdate,
+					...effectToApply.workToolUpdate,
 				} as any);
 			}
 

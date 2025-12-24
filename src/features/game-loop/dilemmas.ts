@@ -1,14 +1,18 @@
 import type { GameState } from "@/contexts/GameContext";
+import { REAL_DILEMMAS } from "./dilemmas-real";
 
 export type TriggerType =
 	| "HUNGER_LOW"
 	| "HYGIENE_LOW"
 	| "RANDOM"
-	| "SOCIAL_STIGMA_HIGH";
+	| "SOCIAL_STIGMA_HIGH"
+	| "LOCATION";
 
 export interface DilemmaOption {
 	label: string;
 	consequence: string;
+	consequence_failure?: string;
+	risk?: number; // 0-100
 	effect: Partial<
 		Omit<
 			GameState,
@@ -27,6 +31,28 @@ export interface DilemmaOption {
 		removeBuff?: string;
 		workToolUpdate?: Partial<GameState["workTool"]>;
 		timeAdvance?: number;
+		// Special handling for inventory clear or specific changes
+		clearInventory?: boolean;
+	};
+	effect_failure?: Partial<
+		Omit<
+			GameState,
+			| "inventory"
+			| "day"
+			| "time"
+			| "resolvedDilemmas"
+			| "activeDilemmaId"
+			| "activeBuffs"
+			| "workTool"
+			| "criticalHealth"
+		>
+	> & {
+		inventoryAdd?: string;
+		addBuff?: string;
+		removeBuff?: string;
+		workToolUpdate?: Partial<GameState["workTool"]>;
+		timeAdvance?: number;
+		clearInventory?: boolean;
 	};
 	telemetryTag?: {
 		ods: string;
@@ -42,6 +68,13 @@ export interface Dilemma {
 	trigger: {
 		type: TriggerType;
 		value: number;
+		locationId?: string;
+	};
+	tags?: string[];
+	location_trigger?: {
+		lat: number;
+		lng: number;
+		radius: number; // em metros
 	};
 	audioId?: string;
 	ambience?: string;
@@ -52,116 +85,100 @@ export interface Dilemma {
 
 // --- REALITY INJECTED DILEMMAS (SOCIOLOGIA_BRASILEIRA_E_CAMPINAS) ---
 export const GAME_DILEMMAS: Dilemma[] = [
-	// 1. SOBREVIVÊNCIA BÁSICA
+	// MODELO 1: FOME (Refeitório Metodista vs Bom Prato)
 	{
-		id: "hunger-emergency",
-		title: "Fome Apertando",
+		id: "fome_centro_01",
+		title: "A Escolha do Alimento",
 		description:
-			"O dia está acabando e sua barriga dói de fome. Você precisa encontrar algo para comer logo ou sua saúde começará a declinar rapidamente.",
+			"Sua barriga dói. Você tem pouco dinheiro. O Bom Prato tem fila mas é garantido por R$1. O Refeitório Metodista é de graça, mas exige cadastro e tem horário rígido.",
 		trigger: { type: "HUNGER_LOW", value: 30 },
+		tags: ["fome", "comida", "almoço", "jantar", "alimentação"],
+		location_trigger: { lat: -22.9075, lng: -47.0595, radius: 2000 },
 		ambience: "rain_heavy",
 		options: [
 			{
-				label: "Bom Prato Centro (R$ 1)",
+				label: "Ir ao Bom Prato (R$ 1,00)",
 				consequence:
-					"O Bom Prato garante alimentação de qualidade por um preço simbólico. Você comeu bem e economizou. (Disponível apenas entre 10h e 14h)",
-				effect: { hunger: 80, money: -1 },
-				telemetryTag: {
-					ods: "ODS_2_FOME",
-					action: "BUSCA_SERVICO_PUBLICO",
-					outcome: "SUCESSO",
-				},
+					"Você comeu bem. O purê estava quente. Gastou seu dinheiro, mas garantiu a energia do dia.",
+				consequence_failure:
+					"A fila estava enorme e a comida acabou bem na sua vez. Você perdeu tempo na fila.",
+				risk: 10,
+				effect: { hunger: 100, money: -1, energy: 20 },
+				effect_failure: { energy: -10, timeAdvance: 1 },
 			},
 			{
-				label: "Refeitório Metodista (Grátis)",
+				label: "Tentar o Refeitório Metodista (Grátis)",
 				consequence:
-					"O Refeitório Metodista oferece comida com dignidade e você se sente respeitado. A fila estava longa (-2h), mas valeu a pena pela conversa e segurança.",
-				effect: { hunger: 60, dignity: 15, timeAdvance: 2 },
-				telemetryTag: {
-					ods: "ODS_2_FOME",
-					action: "BUSCA_REDE_APOIO",
-					outcome: "SUCESSO_DIGNIDADE",
-				},
-			},
-			{
-				label: "Revirar Lixo",
-				consequence:
-					"A fome falou mais alto. O risco de infecção é alto e a vergonha é inevitável.",
-				effect: { hunger: 20, health: -15, sanity: -5, dignity: -25 },
-				telemetryTag: {
-					ods: "ODS_2_FOME",
-					action: "BUSCA_INFORMAL_RISCO",
-					outcome: "DEGRADACAO",
-				},
+					"Eles te acolheram bem. Comer sentado à mesa, com talheres de metal, recuperou sua dignidade.",
+				consequence_failure:
+					"Você chegou atrasado. O portão fechou às 13h em ponto. Só restou a fome.",
+				risk: 30,
+				effect: { hunger: 100, dignity: 15, money: 0 },
 			},
 		],
 	},
+	// MODELO 2: SAÚDE (Consultório na Rua)
 	{
-		id: "hygiene-barrier",
-		title: "A Barreira Invisível da Higiene",
+		id: "saude_vicio_01",
+		title: "A Dor e o Medo",
 		description:
-			"Você tenta entrar no mercado para comprar água, mas o segurança bloqueia sua entrada apenas com o olhar. 'Aqui não', ele diz. Sua aparência/higiene (Status Crítico) está impedindo o acesso.",
-		trigger: { type: "HYGIENE_LOW", value: 15 },
+			"Você tem uma ferida na perna que não cicatriza. O Consultório na Rua (a van do SUS) estacionou na praça. Você sabe que eles não exigem abstinência, mas tem medo de ser internado à força.",
+		trigger: { type: "RANDOM", value: 0.2 },
+		tags: ["dor", "ferida", "abstinencia", "médico", "ajuda", "saude"],
+		location_trigger: { lat: -22.9085, lng: -47.0585, radius: 5000 }, // Mobile roughly center
 		options: [
 			{
-				label: "Ir ao Centro Pop (Banho)",
+				label: "Aproximar-se da Van",
+				risk: 0,
 				consequence:
-					"Você caminha até o Centro Pop. O banho renova não apenas o corpo, mas a alma. Você se sente humano novamente.",
-				effect: { hygiene: 90, sanity: 10, dignity: 10, timeAdvance: 2 },
-				telemetryTag: {
-					ods: "ODS_6_SANEAMENTO",
-					action: "BUSCA_SERVICO_PUBLICO",
-					outcome: "SUCESSO",
-				},
+					"A enfermeira fez o curativo ali mesmo na calçada. Ninguém te julgou. Você ganhou um kit de higiene.",
+				effect: { health: 20, sanity: 10, hygiene: 30 },
 			},
 			{
-				label: "Discutir com Segurança",
-				consequence:
-					"A discussão chama a atenção da polícia. Você é humilhado e expulso do local, aumentando seu Estigma Social.",
-				effect: { socialStigma: 15, sanity: -10, dignity: -10 },
-				telemetryTag: {
-					ods: "ODS_10_DESIGUALDADE",
-					action: "CONFLITO_SOCIAL",
-					outcome: "ESTIGMA_AUMENTADO",
-				},
+				label: "Esconder-se e aguentar a dor",
+				risk: 80,
+				consequence: "Você evitou o médico, mas a dor continua.",
+				consequence_failure:
+					"A infecção piorou drasticamente. A dor agora impede você de caminhar para buscar reciclagem.",
+				effect: { health: -5 },
+				effect_failure: { health: -20, energy: -30 },
 			},
 		],
 	},
-
-	// 2. DILEMAS DO CARRINHO (A FERRAMENTA DE TRABALHO)
+	// MODELO 3: ABRIGO (SAMIM vs Carrinho)
 	{
-		id: "barreira-samim",
+		id: "abrigo_samim_01",
 		title: "A Barreira do SAMIM",
 		description:
-			"Você chegou ao SAMIM para o pernoite, mas está com seu carrinho de reciclagem. As regras são claras: não é permitida a entrada de 'objetos volumosos'.",
+			"A noite caiu e está frio. Você está na porta do SAMIM. Você tem seu carrinho de reciclagem cheio (R$ 40 em material). A regra é clara: o carrinho não entra.",
 		trigger: { type: "RANDOM", value: 0.3 },
+		tags: ["samim", "albergue", "dormir", "carrinho", "reciclagem", "barreira"],
+		location_trigger: { lat: -22.9038, lng: -47.0652, radius: 1000 },
 		options: [
 			{
-				label: "Abandonar Carrinho na Rua",
-				consequence:
-					"Você entrou e dormiu seguro. Ao acordar, o Caminhão do Rapa havia passado. Sua ferramenta de trabalho e seus pertences foram apreendidos como 'lixo'.",
-				effect: {
-					health: 20,
-					dignity: 5,
-					workToolUpdate: { type: null, capacity: 0, riskFactor: 0 },
-					sanity: -20,
-				},
-				telemetryTag: {
-					ods: "ODS_11_CIDADES",
-					action: "ACEITE_INSTITUCIONAL",
-					outcome: "PERDA_BENS",
+				label: "Entrar e abandonar o carrinho",
+				risk: 100, // Perda certa (converted from user input)
+				consequence: "N/A - 100% Risk",
+				consequence_failure:
+					"Você dormiu no quente e tomou banho. Mas ao sair, seu carrinho sumiu. Você está limpo, mas falido.",
+				effect: { energy: 100, hygiene: 100, money: 0 }, // Unreachable?
+				effect_failure: {
+					energy: 100,
+					hygiene: 100,
+					money: 0,
+					clearInventory: true,
+					workToolUpdate: { type: null },
 				},
 			},
 			{
-				label: "Dormir na Rua (Defender o Carrinho)",
+				label: "Dormir na rua vigiando o carrinho",
+				risk: 50,
 				consequence:
-					"Você escolheu proteger seu sustento. A noite na calçada foi fria e tensa, vigilância constante. Você manteve o carrinho, mas sua saúde cobrou o preço.",
-				effect: { health: -15, sanity: -15, energy: -30, dignity: -5 },
-				telemetryTag: {
-					ods: "ODS_1_POBREZA",
-					action: "RECUSA_INSTITUCIONAL",
-					outcome: "PRESERVACAO_TRABALHO",
-				},
+					"Foi uma noite terrível, acordando a cada hora. Mas seu sustento está garantido.",
+				consequence_failure:
+					"Você cochilou e alguém levou seus papelões. Agora você está com frio, cansado e sem dinheiro.",
+				effect: { energy: 40, health: -10, sanity: -10 },
+				effect_failure: { energy: 30, health: -15, sanity: -20, money: 0 },
 			},
 		],
 	},
@@ -317,6 +334,7 @@ export const GAME_DILEMMAS: Dilemma[] = [
 		description:
 			"Uma viatura da Guarda Municipal para ao seu lado. O agente desce com a mão no coldre. 'Mãos na cabeça, encosta na parede'. Você sente os olhares dos passantes.",
 		trigger: { type: "RANDOM", value: 0.1 }, // 10% chance
+		tags: ["policia", "guarda", "gcm", "segurança", "enquadro", "abordagem"],
 		audioId: "siren", // Assuming siren sfx exists or just silent tension
 		options: [
 			{
@@ -352,3 +370,5 @@ export const GAME_DILEMMAS: Dilemma[] = [
 		],
 	},
 ];
+
+export const ALL_DILEMMAS: Dilemma[] = [...GAME_DILEMMAS, ...REAL_DILEMMAS];

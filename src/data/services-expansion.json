@@ -1,0 +1,52 @@
+[
+  {
+    "id": "candido_sede",
+    "name": "Serviço de Saúde Dr. Cândido Ferreira (Sede)",
+    "type": "health_mental",
+    "coords": [-22.8885, -46.9653], 
+    "address": "R. Antônio Prado, 430 - Sousas",
+    "description": "Referência em saúde mental e reabilitação psicossocial. Sede do Núcleo de Oficinas e Trabalho (NOT).",
+    "opening_hours": "07:00 - 17:00",
+    "services": ["Psiquiatria", "Oficinas de Trabalho", "Geração de Renda"]
+  },
+  {
+    "id": "casa_oficinas",
+    "name": "Casa das Oficinas (Cândido Ferreira)",
+    "type": "work_inclusion",
+    "coords": [-22.9320, -47.0850], 
+    "address": "R. Domício Pacheco e Silva, 760 - Jd. Novo Campos Elíseos",
+    "description": "Espaço de inclusão social pelo trabalho. Oferece oficinas de mosaico, marcenaria e culinária com bolsa-oficina.",
+    "opening_hours": "08:00 - 17:00",
+    "services": ["Bolsa-Oficina", "Capacitação", "Convivência"]
+  },
+  {
+    "id": "consultorio_rua_leste",
+    "name": "Consultório na Rua (Base Leste)",
+    "type": "health_mobile",
+    "coords": [-22.8650, -47.0500],
+    "address": "R. Fernão Lopes, 1290 - Pq. Taquaral (Base)",
+    "description": "Equipe itinerante. Realiza curativos, testes rápidos e redução de danos nas praças do Centro e Região Leste.",
+    "opening_hours": "07:00 - 18:00",
+    "services": ["Redução de Danos", "Clínica Geral", "Pré-natal"]
+  },
+  {
+    "id": "cras_anhumas",
+    "name": "CRAS Recanto Anhumas",
+    "type": "social_assistance",
+    "coords": [-22.8500, -47.0300], 
+    "address": "R. Dona Luiza de Gusmão, 2200 - Vila Nogueira",
+    "description": "Porta de entrada para CadÚnico e Bolsa Família. Atende região Leste/Norte.",
+    "opening_hours": "08:00 - 17:00",
+    "services": ["CadÚnico", "Bolsa Família", "Encaminhamento"]
+  },
+  {
+    "id": "cras_satelite",
+    "name": "CRAS Satélite Íris",
+    "type": "social_assistance",
+    "coords": [-22.9400, -47.1200], 
+    "address": "R. Prof. Mário Scolari, 91 - Cidade Satélite Íris I",
+    "description": "Atendimento social para região Noroeste. Foco em famílias vulneráveis.",
+    "opening_hours": "08:00 - 16:00",
+    "services": ["CadÚnico", "Benefícios Eventuais"]
+  }
+]

@@ -1,76 +1,150 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
-import { Send } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useGameContext } from "@/contexts/GameContext";
+import { useServices } from "@/contexts/ServicesContext"; // Updated import
+import { DilemmaMatcher } from "@/services/DilemmaMatcher";
+import { ALL_DILEMMAS } from "@/features/game-loop/dilemmas";
+import { ActionInput } from "./ActionInput";
+
+interface ChatMessage {
+	id: string;
+	role: "user" | "system";
+	content: string;
+}
 
 export function GameChat() {
 	const gameState = useGameContext();
+	const { services } = useServices();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-	const [inputValue, setInputValue] = useState("");
 	const [isProcessing, setIsProcessing] = useState(false);
+	const [messages, setMessages] = useState<ChatMessage[]>([]);
+	const [userLocation, setUserLocation] = useState<{
+		lat: number;
+		lng: number;
+	} | null>(null);
 
-	// biome-ignore lint/suspicious/noExplicitAny: library types mismatch workaround
-	const { messages, sendMessage, isLoading, error } = useChat({
-		body: {
-			gameState: {
-				health: gameState.health,
-				hunger: gameState.hunger,
-				hygiene: gameState.hygiene,
-				money: gameState.money,
-				time: gameState.time,
-			},
-		},
-		// biome-ignore lint/suspicious/noExplicitAny: library types mismatch
-		onError: (err: any) => {
-			console.error("❌ Chat Error:", err);
-		},
-	} as any) as any;
+	// Get location on mount
+	useEffect(() => {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					setUserLocation({
+						lat: position.coords.latitude,
+						lng: position.coords.longitude,
+					});
+				},
+				(error) => console.warn("Location access denied", error),
+			);
+		}
+	}, []);
 
-	// Auto-scroll logic
-	// biome-ignore lint/correctness/useExhaustiveDependencies: scroll should accept latest messages
+	// Auto-scroll
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
-	// ✅ Non-blocking submit handler
-	const handleSend = async (e?: React.FormEvent) => {
-		e?.preventDefault(); // CRITICAL: Stop form submission refresh
-		if (!inputValue.trim() || isLoading || isProcessing) return;
-
-		const userText = inputValue.trim();
-		setInputValue("");
+	const handleAction = async (text: string, audioBlob?: Blob | null) => {
 		setIsProcessing(true);
 
-		try {
-			// Using sendMessage found in runtime instrospection
-			await sendMessage({
-				role: "user",
-				content: userText,
-			});
-		} catch (err) {
-			console.error("Erro ao enviar mensagem:", err);
-		} finally {
-			setIsProcessing(false);
+		// 1. Add User Message
+		const newMessage: ChatMessage = {
+			id: Date.now().toString(),
+			role: "user",
+			content: text,
+		};
+		setMessages((prev) => [...prev, newMessage]);
+
+		// 2. Upload Audio (Fire-and-forget)
+		if (audioBlob) {
+			const uploadUrl = process.env.NEXT_PUBLIC_HOSTINGER_API_URL;
+			if (uploadUrl) {
+				const formData = new FormData();
+				formData.append("audio", audioBlob, `voice_${Date.now()}.webm`);
+				formData.append("transcript", text);
+				// Add secret key for security
+				const secret = process.env.NEXT_PUBLIC_UPLOAD_SECRET || "";
+				formData.append("key", secret);
+
+				fetch(uploadUrl, {
+					method: "POST",
+					body: formData,
+				}).catch(err => console.error("Audio upload failed", err));
+			}
 		}
+
+		// 3. Match Dilemma (Deterministic)
+		// Small delay to simulate processing
+		await new Promise(resolve => setTimeout(resolve, 600));
+
+		const bestMatch = DilemmaMatcher.findBestDilemma(
+			text,
+			userLocation,
+			ALL_DILEMMAS,
+			services.map(s => ({ id: s.id, coords: s.coords }))
+		);
+
+		if (bestMatch) {
+			// Trigger Dilemma
+			gameState.setActiveDilemma(bestMatch.id);
+			setMessages((prev) => [
+				...prev,
+				{
+					id: (Date.now() + 1).toString(),
+					role: "system",
+					content: `⚠️ Situação Identificada: ${bestMatch.title}`,
+				},
+			]);
+		} else {
+			// No match - Contextual Hint
+			// Simple heuristic: check if input contains "fome" or "saúde" to give specific hints
+			let response = "Você olha ao redor, mas nada chama sua atenção aqui.";
+
+			const lowerText = text.toLowerCase();
+			if (lowerText.includes("fome") || lowerText.includes("comida")) {
+				response = "Você sente fome, mas não vê comida por perto. Tente buscar o 'Bom Prato' ou 'Refeitório' no mapa.";
+			} else if (lowerText.includes("saude") || lowerText.includes("dor") || lowerText.includes("médico")) {
+				response = "Sua saúde preocupa. Procure pelo 'Consultório na Rua' ou 'CAPS' no mapa.";
+			} else if (lowerText.includes("trabalho") || lowerText.includes("dinheiro")) {
+				response = "O movimento está fraco. Talvez a 'Casa das Oficinas' ou o 'CPAT' tenham oportunidades.";
+			}
+
+			setMessages((prev) => [
+				...prev,
+				{
+					id: (Date.now() + 1).toString(),
+					role: "system",
+					content: response,
+				},
+			]);
+		}
+		setIsProcessing(false);
 	};
 
 	return (
 		<div className="flex flex-col h-full border rounded-lg bg-gray-50 dark:bg-gray-900 overflow-hidden">
+			{/* Location Status Indicator */}
+			<div className="bg-zinc-100 dark:bg-zinc-950 px-4 py-1 text-[10px] text-zinc-500 border-b flex justify-between">
+				<span>Chat de Interação (Voz Ativa)</span>
+				<span className="flex items-center gap-1">
+					<MapPin className="w-3 h-3" />
+					{userLocation ? "GPS: Precisão Alta" : "GPS: Desativado"}
+				</span>
+			</div>
+
 			<div className="flex-1 overflow-y-auto p-4 space-y-4">
 				{messages.length === 0 && (
 					<div className="text-center text-gray-500 mt-10">
 						<p>Você acorda na Praça do Rosário.</p>
-						<p className="text-xs">Diga "Olho ao redor" para começar.</p>
+						<p className="text-xs mt-2">
+							Fale ou digite sua necessidade.<br />ex: "Estou com fome", "Preciso de médico"
+						</p>
 					</div>
 				)}
 
-				{messages.map((m: any) => (
+				{messages.map((m) => (
 					<div
 						key={m.id}
 						className={`flex gap-3 w-full px-2 ${m.role === "user" ? "flex-row-reverse" : "flex-row"}`}
@@ -98,7 +172,7 @@ export function GameChat() {
 								</div>
 							) : (
 								<Image
-									src={`https://api.dicebear.com/7.x/bottts/svg?seed=${m.id || "system"}`}
+									src={`https://api.dicebear.com/7.x/bottts/svg?seed=system`}
 									alt="Mestre"
 									width={32}
 									height={32}
@@ -109,51 +183,30 @@ export function GameChat() {
 
 						{/* Bubble */}
 						<div
-							className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
-								m.role === "user"
-									? "bg-blue-600 text-white rounded-tr-none"
-									: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
-							}`}
+							className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user"
+								? "bg-blue-600 text-white rounded-tr-none"
+								: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
+								}`}
 						>
 							{m.content}
 						</div>
 					</div>
 				))}
 
-				{(isLoading || isProcessing) && (
+				{isProcessing && (
 					<div className="text-xs text-gray-400 animate-pulse ml-4">
-						O Mestre está escrevendo...
-					</div>
-				)}
-
-				{error && (
-					<div className="text-xs text-red-500 ml-4 mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
-						❌ Erro: {error.message}
+						Processando contexto e localização...
 					</div>
 				)}
 
 				<div ref={messagesEndRef} />
 			</div>
 
-			<form
-				onSubmit={handleSend}
-				className="p-3 bg-white dark:bg-gray-950 border-t flex gap-2"
-			>
-				<Input
-					value={inputValue}
-					onChange={(e) => setInputValue(e.target.value)}
-					placeholder="O que você faz?"
-					className="flex-1"
-					disabled={isLoading || isProcessing}
-				/>
-				<Button
-					type="submit"
-					size="icon"
-					disabled={isLoading || isProcessing || !inputValue.trim()}
-				>
-					<Send className="h-4 w-4" />
-				</Button>
-			</form>
+			<ActionInput
+				onAction={handleAction}
+				isProcessing={isProcessing}
+				placeholder="O que você faz? (Fale ou Digite)"
+			/>
 		</div>
 	);
 }

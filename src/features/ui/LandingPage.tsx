@@ -17,13 +17,22 @@ import {
 	X,
 } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DilemmaCache } from "@/utils/dilemmaCache";
 import { AvatarCreation } from "./AvatarCreation";
+import { getAssetUrl } from "@/utils/getAssetUrl";
 
 export default function LandingPage() {
 	// const [isMenuOpen, setIsMenuOpen] = useState(false); // Removed local menu state
 	const [copied, setCopied] = useState(false);
+	const [currentBgIndex, setCurrentBgIndex] = useState(0);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setCurrentBgIndex((prev) => (prev + 1) % 5);
+		}, 5000);
+		return () => clearInterval(interval);
+	}, []);
 
 	// Map State
 	const [_showMap, _setShowMap] = useState(false);
@@ -154,9 +163,24 @@ export default function LandingPage() {
 			{/* Navigation removed - now in global layout */}
 
 			{/* Hero Section - Funnel of Empathy */}
-			<section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white relative overflow-hidden min-h-[90vh] flex items-center">
-				{/* Background Texture - Realismo Sóbrio */}
-				<div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')] mix-blend-overlay"></div>
+			<section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-slate-950 text-white relative overflow-hidden min-h-[90vh] flex items-center">
+				{/* Background Texture - Slideshow */}
+				<div className="absolute inset-0">
+					{[
+						"5.png", // Initial: Homem negro no banco da praça
+						"1.png",
+						"2.png",
+						"3.png",
+						"4.png"
+					].map((img, index) => (
+						<div
+							key={img}
+							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${currentBgIndex === index ? "opacity-40" : "opacity-0"
+								}`}
+							style={{ backgroundImage: `url(${getAssetUrl(img)})` }}
+						/>
+					))}
+				</div>
 
 				<div className="max-w-7xl mx-auto relative z-10 w-full">
 					<div className="lg:flex lg:items-center lg:gap-16">
@@ -438,7 +462,10 @@ export default function LandingPage() {
 				id="mapa"
 				className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white relative overflow-hidden"
 			>
-				<div className="absolute inset-0 opacity-20 bg-[url('https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png')] bg-cover bg-center mix-blend-overlay"></div>
+				<div
+					className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay"
+					style={{ backgroundImage: `url(${getAssetUrl("placeholder-map.png")})` }}
+				></div>
 				<div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
 					<div className="inline-block bg-green-500/20 border border-green-400/30 rounded-full px-4 py-1.5 mb-6">
 						<span className="text-green-300 font-semibold text-sm tracking-wide uppercase">

@@ -8,6 +8,7 @@ import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
 import { useToast } from "@/contexts/ToastContext";
 import { useServiceLogic } from "@/hooks/useServiceLogic";
+import { useODSTracker } from "@/hooks/useODSTracker";
 
 interface NearbyListProps {
 	userPosition: [number, number] | null;
@@ -29,9 +30,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos(deg2rad(lat1)) *
-			Math.cos(deg2rad(lat2)) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2);
+		Math.cos(deg2rad(lat2)) *
+		Math.sin(dLon / 2) *
+		Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	const d = R * c; // Distance in km
 	return d;
@@ -42,7 +43,7 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 	const gameState = useGameContext();
 	const { modifyStat, addMoney, addBuff, advanceTime } = gameState; // Destructure helpers
 	const [_isPending, startTransition] = useTransition();
-	const { checkServiceAccess } = useServiceLogic();
+	const { checkServiceAvailability } = useServiceLogic();
 
 	const sortedServices = useMemo(() => {
 		if (!userPosition) return services;
@@ -61,13 +62,14 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 	}, [services, userPosition]);
 
 	const { showToast } = useToast();
+	const { trackServiceUse } = useODSTracker();
 
 	// Optimize with useCallback and useTransition to avoid blocking UI
 	const handleUseService = useCallback(
 		// biome-ignore lint/suspicious/noExplicitAny: Legacy service type
 		(service: any) => {
 			// Validation (Double check in handler if user bypasses UI)
-			const access = checkServiceAccess(service, gameState);
+			const access = checkServiceAvailability(service, gameState);
 			if (!access.allowed) {
 				showToast(`🚫 Acesso Negado: ${access.reason}`, "error");
 				return;
@@ -78,6 +80,8 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 					"Este serviço não possui efeitos imediatos, mas você pode ir até lá.",
 					"info",
 				);
+				// Track visit intent anyway
+				trackServiceUse(service.name, service.type);
 				return;
 			}
 
@@ -100,6 +104,9 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 				// Custo de tempo padrão: 1 hora
 				advanceTime(1);
 
+				// Track success
+				trackServiceUse(service.name, service.type);
+
 				showToast(`${service.name} utilizado com sucesso!`, "success");
 			});
 		},
@@ -108,9 +115,10 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 			modifyStat,
 			addBuff,
 			advanceTime,
-			checkServiceAccess,
+			checkServiceAvailability,
 			gameState,
 			showToast,
+			trackServiceUse,
 		],
 	);
 
@@ -131,14 +139,14 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 					const distanceFormatted =
 						"distance" in service
 							? // biome-ignore lint/suspicious/noExplicitAny: distance property injected
-								(service as any).distance < 1
+							(service as any).distance < 1
 								? // biome-ignore lint/suspicious/noExplicitAny: distance property injected
-									`${Math.round((service as any).distance * 1000)}m`
+								`${Math.round((service as any).distance * 1000)}m`
 								: // biome-ignore lint/suspicious/noExplicitAny: distance property injected
-									`${(service as any).distance.toFixed(1)}km`
+								`${(service as any).distance.toFixed(1)}km`
 							: null;
 
-					const access = checkServiceAccess(service, gameState);
+					const access = checkServiceAvailability(service, gameState);
 					const isBlocked = !access.allowed;
 
 					return (

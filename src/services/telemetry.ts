@@ -16,6 +16,7 @@ export interface TelemetryEvent {
 	action_type: TelemetryAction;
 	metadata: Record<string, unknown>;
 	ods_category?: string; // Step 2.2
+	ods_target?: string; // ODS Goal (e.g., "ODS 2")
 	user_hash: string; // Step 2.3
 	synced: number;
 }

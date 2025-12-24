@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import type { GameState } from "@/contexts/GameContext";
 import type { ServiceLocation } from "@/contexts/ServicesContext";
 
@@ -8,7 +7,7 @@ export interface ServiceAccess {
 }
 
 export function useServiceLogic() {
-	const checkServiceAccess = (
+	const checkServiceAvailability = (
 		service: ServiceLocation,
 		gameState: GameState,
 	): ServiceAccess => {
@@ -25,7 +24,6 @@ export function useServiceLogic() {
 			// Simple keywords
 			const isComercial =
 				hours.includes("comercial") || hours.includes("08:00 - 18:00");
-			const _isNoite = hours.includes("noturno") || hours.includes("18:00"); // Broad match for night logic
 
 			if (rangeMatch) {
 				const start = parseInt(rangeMatch[1]);
@@ -57,13 +55,25 @@ export function useServiceLogic() {
 			}
 		}
 
-		// 2. Checagem de Documentos e Requisitos (Requirements Check)
+		// 2. SAMIM / Abrigo Check (Explicit Rule)
+		if (service.id === "samim" || service.type === "shelter") {
+			if (
+				workTool.type === "CARRINHO_RECICLAGEM" &&
+				!workTool.isConfiscated
+			) {
+				return {
+					allowed: false,
+					reason: "Regra do Abrigo: Não é permitido entrar com carrinho. Você precisa deixá-lo fora (risco de furto).",
+				};
+			}
+		}
+
+		// 3. Checagem de Documentos (Specific Requirements)
 		if (service.requirements && service.requirements.length > 0) {
 			for (const req of service.requirements) {
 				const r = req.toLowerCase();
 				if (r.includes("documento")) {
 					if (!documents.hasRG && !documents.hasCPF) {
-						// Loose check: any doc
 						return {
 							allowed: false,
 							reason: "Exige Documento (RG ou CPF) que você não possui.",
@@ -71,7 +81,6 @@ export function useServiceLogic() {
 					}
 				}
 				if (r.includes("higiene >")) {
-					// Parse "Higiene > 50"
 					const val = parseInt(r.replace(/[^0-9]/g, ""));
 					if (!isNaN(val) && hygiene <= val) {
 						return {
@@ -80,25 +89,15 @@ export function useServiceLogic() {
 						};
 					}
 				}
-				if (r.includes("agendamento")) {
-					// Placeholder for digital barrier
-					// Could check for phone item or just always block if "Agendamento" is hard requirement?
-					// For game balance, maybe check if they have a phone?
-					// Let's assume it's just a warning for now unless we have a phone logic ready.
-					// Returning block for Poupatempo logic:
-					// logic: "Exige agendamento (celular)" -> implied need phone?
-					// Let's look at inventory.
-				}
 			}
 		}
 
-		// 3. Checagem de Regras (Rules Check) - Specific Gameplay Barriers
+		// 4. Checagem de Regras Genéricas (Legacy)
 		if (service.rules) {
 			const rules = service.rules.toLowerCase();
 			if (
 				rules.includes("proibido carroça") ||
-				rules.includes("não permite carroça") ||
-				rules.includes("não entra ferramenta")
+				rules.includes("não permite carroça")
 			) {
 				if (
 					workTool.type === "CARRINHO_RECICLAGEM" &&
@@ -115,5 +114,5 @@ export function useServiceLogic() {
 		return { allowed: true };
 	};
 
-	return { checkServiceAccess };
+	return { checkServiceAvailability };
 }

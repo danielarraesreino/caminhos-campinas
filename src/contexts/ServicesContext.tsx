@@ -8,6 +8,7 @@ import {
 	useEffect,
 	useState,
 } from "react";
+import expansionServices from "@/data/services-expansion.json";
 
 export type ServiceType =
 	| "food"
@@ -102,10 +103,16 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 				if (!response.ok) throw new Error("Failed to fetch services");
 				const data: ServiceLocation[] = await response.json();
 
-				setServices(data);
-				saveToStorage(data);
+				// Merge with expansion services, ensuring no ID collisions if necessary
+				// Simple merge strategy: concat (assuming distinct IDs for now or overriding)
+				const mergedData = [...data, ...expansionServices as unknown as ServiceLocation[]];
+
+				setServices(mergedData);
+				saveToStorage(mergedData);
 			} else if (!cached) {
-				setError("Offline e nenhum dado salvo encontrado.");
+				// Offline and no cache? Try using just the imported expansion data at least.
+				const fallbackData = [...expansionServices as unknown as ServiceLocation[]];
+				setServices(fallbackData);
 			}
 		} catch (err) {
 			console.error(err);

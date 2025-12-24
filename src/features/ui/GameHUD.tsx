@@ -156,6 +156,7 @@ function StatCard({
 	color,
 	type,
 	alertThreshold,
+	max = 100,
 }: {
 	// biome-ignore lint/suspicious/noExplicitAny: generic icon component
 	icon: any;
@@ -164,6 +165,7 @@ function StatCard({
 	color: "emerald" | "violet" | "amber";
 	type: "asc" | "desc"; // asc: quanto maior pior (ex: risco), desc: quanto maior melhor (ex: saude)
 	alertThreshold?: number;
+	max?: number;
 }) {
 	// Definir cores baseadas no prop 'color'
 	const colorMap = {
@@ -228,12 +230,14 @@ function StatCard({
 			</span>
 
 			{/* Progress Bar Mini */}
+			{/* biome-ignore lint/style/noInlineStyle: dynamic width */}
 			<div className="w-12 h-1.5 bg-slate-900/80 rounded-full overflow-hidden">
 				<div
 					className={`h-full rounded-full transition-all duration-700 ${barColor}`}
-					style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+					style={{ width: `${Math.max(0, Math.min(100, (value / max) * 100))}%` }}
 				/>
 			</div>
 		</div>
 	);
 }
+

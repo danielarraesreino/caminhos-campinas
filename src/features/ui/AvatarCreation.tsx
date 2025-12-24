@@ -21,15 +21,19 @@ interface AvatarCreationProps {
 	onBack: () => void;
 }
 
+import { getAssetUrl } from "@/utils/getAssetUrl";
+
 const AVATAR_OPTIONS = [
 	{
-		id: "/avatars/avatar_1.png",
+		id: "avatar_1",
+		image: getAssetUrl("avatars/avatar_1.png"),
 		label: "Identidade A",
 		gender: "masculino",
 		age: "maduro",
 	},
 	{
-		id: "/avatars/avatar_2.png",
+		id: "avatar_2",
+		image: getAssetUrl("avatars/avatar_2.png"),
 		label: "Identidade B",
 		gender: "trans",
 		age: "adulto",
@@ -46,7 +50,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 		ageRange: "adulto",
 		timeOnStreet: "recente",
 		startingSkill: "nenhuma",
-		avatarImage: AVATAR_OPTIONS[0].id,
+		avatarImage: AVATAR_OPTIONS[0].image,
 	});
 
 	const [isSaving, setIsSaving] = useState(false);
@@ -175,20 +179,20 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								<button
 									type="button"
 									key={opt.id}
-									onClick={() => updateField("avatarImage", opt.id)}
+									onClick={() => updateField("avatarImage", opt.image)}
 									className={`relative aspect-square rounded-3xl overflow-hidden border-4 transition-all duration-300 group
-										${formData.avatarImage === opt.id ? "border-blue-500 scale-105 shadow-[0_0_40px_rgba(59,130,246,0.3)]" : "border-slate-800 hover:border-slate-600"}
+										${formData.avatarImage === opt.image ? "border-blue-500 scale-105 shadow-[0_0_40px_rgba(59,130,246,0.3)]" : "border-slate-800 hover:border-slate-600"}
 									`}
 								>
 									<Image
-										src={opt.id}
+										src={opt.image}
 										alt={opt.label}
 										fill
 										className={`object-cover ${formData.avatarImage === opt.id ? "opacity-100" : "opacity-40 hover:opacity-100"} transition-opacity`}
 									/>
 									<div
 										className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent transition-transform
-										${formData.avatarImage === opt.id ? "translate-y-0" : "translate-y-full group-hover:translate-y-0"}
+										${formData.avatarImage === opt.image ? "translate-y-0" : "translate-y-full group-hover:translate-y-0"}
 									`}
 									>
 										<span className="text-white font-black text-xs uppercase tracking-tighter">
@@ -303,7 +307,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 						<div className="flex flex-col md:flex-row gap-10 items-center bg-blue-600/10 border border-blue-500/20 p-10 rounded-[40px]">
 							<div className="relative w-40 h-40 rounded-3xl overflow-hidden border-4 border-blue-500 shadow-2xl flex-none">
 								<Image
-									src={formData.avatarImage || AVATAR_OPTIONS[0].id}
+									src={formData.avatarImage || AVATAR_OPTIONS[0].image}
 									alt="Avatar Final"
 									fill
 									className="object-cover"

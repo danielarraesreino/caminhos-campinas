@@ -14,11 +14,11 @@ import {
 import { InteractiveText } from "@/components/ui/InteractiveText";
 import type { Dilemma } from "@/features/game-loop/dilemmas";
 import { useAudio } from "@/hooks/useAudio";
-import { TelemetryAction, telemetryService } from "@/services/telemetry";
+import { useODSTracker } from "@/hooks/useODSTracker";
 
 interface DilemmaModalProps {
 	dilemma: Dilemma | null;
-	onResolve: (optionIndex: number) => void;
+	onResolve: (optionIndex: number, outcome: "success" | "failure") => void;
 	onClose: () => void;
 }
 
@@ -28,7 +28,9 @@ export function DilemmaModal({
 	onClose,
 }: DilemmaModalProps) {
 	const [selectedOption, setSelectedOption] = useState<number | null>(null);
+	const [outcome, setOutcome] = useState<"success" | "failure" | null>(null);
 	const { playAmbience, stopAll } = useAudio();
+	const { trackDilemmaDecision } = useODSTracker();
 
 	// Effect to manage audio
 	useEffect(() => {
@@ -46,31 +48,54 @@ export function DilemmaModal({
 	if (!dilemma) return null;
 
 	const handleOptionSelect = (index: number) => {
+		const option = dilemma.options[index];
+
+		// Logic for Risk/Dice Roll
+		let result: "success" | "failure" = "success";
+		if (option.risk && option.risk > 0) {
+			const roll = Math.random() * 100;
+			if (roll < option.risk) {
+				result = "failure";
+			}
+		}
+
+		// Force failure if risk is 100
+		if (option.risk === 100) result = "failure";
+
 		setSelectedOption(index);
+		setOutcome(result);
 
 		// Telemetria Ética (Step 4)
-		const option = dilemma.options[index];
-		if (option.telemetryTag) {
-			telemetryService.track(
-				TelemetryAction.DECISION_MADE,
-				option.telemetryTag,
-				option.telemetryTag.ods,
-			);
-		}
+		// Use ODS Tracker
+		const odsTag = option.telemetryTag?.ods;
+		trackDilemmaDecision(dilemma.id, option.label, odsTag);
 	};
 
 	const handleContinue = () => {
-		if (selectedOption !== null) {
-			onResolve(selectedOption);
+		if (selectedOption !== null && outcome) {
+			onResolve(selectedOption, outcome);
 		} else {
 			onClose();
 		}
 		setSelectedOption(null);
+		setOutcome(null);
 		stopAll(); // Ensure audio stops when closing/continuing
 	};
 
 	const currentOption =
 		selectedOption !== null ? dilemma.options[selectedOption] : null;
+
+	// Determine text to show based on outcome
+	let feedbackText = "";
+	if (currentOption) {
+		if (outcome === "failure" && currentOption.consequence_failure) {
+			feedbackText = currentOption.consequence_failure;
+		} else {
+			feedbackText = currentOption.consequence;
+		}
+	} else {
+		feedbackText = dilemma.description;
+	}
 
 	return (
 		<Dialog
@@ -109,7 +134,11 @@ export function DilemmaModal({
 						>
 							<div>
 								{currentOption ? (
-									<InteractiveText text={currentOption.consequence} />
+									<div className={outcome === "failure" ? "text-red-400" : "text-blue-300"}>
+										{outcome === "failure" && <span className="block mb-2 font-bold uppercase">[FALHA NO RISCO]</span>}
+										{outcome === "success" && currentOption.risk ? <span className="block mb-2 font-bold uppercase text-green-400">[SUCESSO]</span> : null}
+										<InteractiveText text={feedbackText} />
+									</div>
 								) : (
 									<InteractiveText text={dilemma.description} />
 								)}
@@ -125,13 +154,20 @@ export function DilemmaModal({
 										key={option.label}
 										type="button"
 										variant="outline"
-										className="justify-start h-auto py-3 px-4 text-left whitespace-normal border-slate-900 bg-black text-slate-500 hover:bg-slate-900 hover:text-white transition-all font-mono text-xs uppercase tracking-widest rounded-none group"
+										className="justify-between h-auto py-3 px-4 text-left whitespace-normal border-slate-900 bg-black text-slate-500 hover:bg-slate-900 hover:text-white transition-all font-mono text-xs uppercase tracking-widest rounded-none group"
 										onClick={() => handleOptionSelect(index)}
 									>
-										<span className="mr-3 opacity-0 group-hover:opacity-100 text-blue-900 transition-opacity">
-											{">> "}
-										</span>
-										{option.label}
+										<div className="flex items-center">
+											<span className="mr-3 opacity-0 group-hover:opacity-100 text-blue-900 transition-opacity">
+												{">> "}
+											</span>
+											{option.label}
+										</div>
+										{option.risk && option.risk > 0 && (
+											<span className="text-[10px] text-red-500 font-bold ml-2">
+												⚠️ {option.risk}% RISCO
+											</span>
+										)}
 									</Button>
 								))}
 							</div>
@@ -158,6 +194,6 @@ export function DilemmaModal({
 					</DialogFooter>
 				</div>
 			</DialogContent>
-		</Dialog>
+		</Dialog >
 	);
 }
