@@ -3,6 +3,8 @@
 import { SessionProvider } from "next-auth/react";
 import { useEffect } from "react";
 
+import { ToastProvider } from "@/contexts/ToastContext";
+
 export function Providers({ children }: { children: React.ReactNode }) {
 	useEffect(() => {
 		if ("serviceWorker" in navigator) {
@@ -13,5 +15,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 		}
 	}, []);
 
-	return <SessionProvider>{children}</SessionProvider>;
+	return (
+		<SessionProvider>
+			<ToastProvider>{children}</ToastProvider>
+		</SessionProvider>
+	);
 }

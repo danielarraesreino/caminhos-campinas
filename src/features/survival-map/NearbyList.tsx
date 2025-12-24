@@ -6,6 +6,7 @@ import { EcoCard } from "@/components/ui/EcoCard";
 import { InteractiveText } from "@/components/ui/InteractiveText";
 import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
+import { useToast } from "@/contexts/ToastContext";
 import { useServiceLogic } from "@/hooks/useServiceLogic";
 
 interface NearbyListProps {
@@ -59,6 +60,8 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 			.sort((a, b) => (a.distance || 0) - (b.distance || 0));
 	}, [services, userPosition]);
 
+	const { showToast } = useToast();
+
 	// Optimize with useCallback and useTransition to avoid blocking UI
 	const handleUseService = useCallback(
 		// biome-ignore lint/suspicious/noExplicitAny: Legacy service type
@@ -66,13 +69,14 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 			// Validation (Double check in handler if user bypasses UI)
 			const access = checkServiceAccess(service, gameState);
 			if (!access.allowed) {
-				alert(`🚫 Acesso Negado: ${access.reason}`);
+				showToast(`🚫 Acesso Negado: ${access.reason}`, "error");
 				return;
 			}
 
 			if (!service.effects) {
-				alert(
+				showToast(
 					"Este serviço não possui efeitos imediatos, mas você pode ir até lá.",
+					"info",
 				);
 				return;
 			}
@@ -96,10 +100,18 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 				// Custo de tempo padrão: 1 hora
 				advanceTime(1);
 
-				alert(`${service.name} utilizado. Efeitos aplicados.`);
+				showToast(`${service.name} utilizado com sucesso!`, "success");
 			});
 		},
-		[addMoney, modifyStat, addBuff, advanceTime, checkServiceAccess, gameState],
+		[
+			addMoney,
+			modifyStat,
+			addBuff,
+			advanceTime,
+			checkServiceAccess,
+			gameState,
+			showToast,
+		],
 	);
 
 	return (
@@ -188,9 +200,7 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 									className={`flex-1 text-[10px] uppercase font-bold min-h-[48px] h-auto shadow-lg ${isBlocked ? "bg-zinc-800 text-red-400 hover:bg-zinc-800 cursor-not-allowed border border-red-900/30" : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20"}`}
 									onClick={() => {
 										if (isBlocked) {
-											alert(
-												`🚫 ACESSO NEGADO: ${access.reason}\n\nEste é um dilema real enfrentado por quem vive na rua.`,
-											);
+											showToast(`🚫 ACESSO NEGADO: ${access.reason}`, "error");
 										} else {
 											handleUseService(service);
 										}
