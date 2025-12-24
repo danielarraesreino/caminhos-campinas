@@ -42,9 +42,9 @@ export function Navbar() {
 		},
 	];
 
-	// Hide Navbar on Game Page to prevent overlap with HUD
+	// Hide Navbar on Game Page and Campaigns to prevent overlap/conflict
 	const pathname = usePathname();
-	if (pathname === "/jogar") return null;
+	if (pathname === "/jogar" || pathname === "/apoie") return null;
 
 	return (
 		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-50">
