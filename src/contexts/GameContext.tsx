@@ -384,12 +384,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					_rev: rev,
 					...state,
 				});
-			} catch (e) {
-				const err = e as Error;
+			} catch (unknownError) {
+				// biome-ignore lint/suspicious/noExplicitAny: reliable error access
+				const e = unknownError as any;
+
 				if (
-					err.name !== "InvalidStateError" &&
-					!e.message?.includes("closing")
+					e.name === "InvalidStateError" ||
+					e.message?.includes("closing") ||
+					e.message?.includes("connection is closing")
 				) {
+					console.warn(
+						"Database connection already closed or closing - temporary state preserved in RAM",
+					);
+				} else {
 					console.error("Critical failure saving game state to PouchDB", e);
 				}
 			}
