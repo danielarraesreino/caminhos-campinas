@@ -31,11 +31,11 @@ export function GameHUD() {
 	return (
 		<>
 			{stigmaAlert && (
-				<div className="fixed inset-0 pointer-events-none border-[8px] border-red-600/50 animate-pulse z-[60]" />
+				<div className="fixed inset-0 pointer-events-none border-[8px] border-red-600/50 animate-pulse z-30" />
 			)}
 
 			{/* Main HUD Container - Taller and distinct */}
-			<div className="fixed top-0 left-0 w-full h-24 bg-slate-950 border-b-2 border-slate-800 z-[60] shadow-2xl flex items-center justify-between px-4 md:px-8">
+			<div className="fixed top-0 left-0 w-full h-24 bg-slate-950 border-b-2 border-slate-800 z-40 shadow-2xl flex items-center justify-between px-4 md:px-8">
 				{/* LEFT: Avatar & Identity */}
 				<div className="flex items-center gap-4 md:gap-6">
 					{avatar?.avatarImage ? (
