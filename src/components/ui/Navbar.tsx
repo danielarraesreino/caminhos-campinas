@@ -104,7 +104,7 @@ export function Navbar() {
 							type="button"
 							onClick={() => setIsOpen(!isOpen)}
 							className="inline-flex items-center justify-center p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800"
-							aria-expanded={isOpen ? "true" : "false"}
+							aria-expanded={isOpen}
 						>
 							<span className="sr-only">Abrir menu principal</span>
 							{isOpen ? (

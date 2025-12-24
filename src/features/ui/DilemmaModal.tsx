@@ -79,21 +79,24 @@ export function DilemmaModal({
 				if (!open) handleContinue();
 			}}
 		>
-			<DialogContent className="sm:max-w-[500px] border border-slate-800 bg-black text-slate-300 rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)]">
+			<DialogContent
+				showCloseButton={false}
+				className="sm:max-w-[500px] max-h-[85vh] flex flex-col border border-slate-800 bg-black text-slate-300 rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)]"
+			>
 				{/* Header decorativo técnico */}
-				<div className="h-1 w-full bg-slate-900" />
+				<div className="h-1 w-full bg-slate-900 shrink-0" />
 
-				<div className="p-8">
-					{/* Close Button */}
-					<button
-						type="button"
-						onClick={handleContinue}
-						className="absolute top-4 right-4 text-slate-700 hover:text-white transition-colors p-1"
-						aria-label="Fechar modal"
-					>
-						<X size={16} />
-					</button>
+				{/* Close Button - Fixed */}
+				<button
+					type="button"
+					onClick={handleContinue}
+					className="absolute top-4 right-4 text-slate-700 hover:text-white transition-colors p-1 z-10"
+					aria-label="Fechar modal"
+				>
+					<X size={16} />
+				</button>
 
+				<div className="p-8 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
 					<DialogHeader className="space-y-4">
 						<DialogTitle className="text-xl font-mono uppercase tracking-[0.3em] text-slate-100 pr-10 border-b border-slate-900 pb-4">
 							{currentOption
