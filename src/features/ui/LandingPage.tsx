@@ -81,17 +81,18 @@ export default function LandingPage() {
 
 		// Tentar cache primeiro
 		const cacheKey = "demo_scenario";
-		const cached = DilemmaCache.get(cacheKey);
+		// Desabilitando cache para garantir variedade nos testes
+		// const cached = DilemmaCache.get(cacheKey);
 
-		if (cached) {
-			console.log("📦 Usando dilema do cache (instantâneo)");
-			setDilemma({
-				scenario: cached.scenario,
-				options: cached.options,
-			});
-			setAiLoading(false);
-			return;
-		}
+		// if (cached) {
+		// 	console.log("📦 Usando dilema do cache (instantâneo)");
+		// 	setDilemma({
+		// 		scenario: cached.scenario,
+		// 		options: cached.options,
+		// 	});
+		// 	setAiLoading(false);
+		// 	return;
+		// }
 
 		const systemPrompt = `Você é o motor narrativo de um 'Serious Game' sobre a população em situação de rua.
         Gere um cenário curto (máx 50 palavras) e urgente.
@@ -152,116 +153,140 @@ export default function LandingPage() {
 			{/* Navigation */}
 			{/* Navigation removed - now in global layout */}
 
-			{/* Hero Section */}
-			<section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden">
-				<div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/city-fields.png')]"></div>
-				<div className="max-w-7xl mx-auto relative z-10 text-center lg:text-left lg:flex lg:items-center lg:gap-16">
-					<div className="lg:w-1/2">
-						<div className="inline-block bg-blue-500/20 border border-blue-400/30 rounded-full px-4 py-1.5 mb-6">
-							<span className="text-blue-300 font-semibold text-sm tracking-wide uppercase">
-								Serious Game & Tecnologia Social
-							</span>
+			{/* Hero Section - Funnel of Empathy */}
+			<section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white relative overflow-hidden min-h-[90vh] flex items-center">
+				{/* Background Texture - Realismo Sóbrio */}
+				<div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')] mix-blend-overlay"></div>
+
+				<div className="max-w-7xl mx-auto relative z-10 w-full">
+					<div className="lg:flex lg:items-center lg:gap-16">
+						{/* Left Column: The Hook */}
+						<div className="lg:w-1/2 text-center lg:text-left">
+							<div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-400/20 rounded-full px-4 py-1.5 mb-8 animate-fade-in-up">
+								<span className="flex h-2 w-2 rounded-full bg-blue-400 animate-pulse"></span>
+								<span className="text-blue-200 font-semibold text-xs tracking-widest uppercase">
+									Serious Game & Tecnologia Social
+								</span>
+							</div>
+
+							<h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[0.9] mb-8 tracking-tight">
+								A Invisibilidade <br />é uma{" "}
+								<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+									Escolha?
+								</span>
+							</h1>
+
+							<p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-blue-500/30 pl-6">
+								Entre na pele de quem vive nas ruas de Campinas. <br />
+								Simule dilemas reais, entenda a luta por dignidade e transforme
+								sua empatia em impacto real.
+							</p>
+
+							{/* Dual Action Buttons */}
+							<div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+								{/* Primary: Donor/Citizen */}
+								<button
+									type="button"
+									onClick={() => {
+										if (status === "authenticated") {
+											window.location.href = "/jogar";
+										} else {
+											setShowLoginModal(true);
+										}
+									}}
+									className="group relative px-8 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-blue-900/20 overflow-hidden"
+								>
+									<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+									<span className="relative flex items-center gap-3">
+										<ArrowRight className="h-5 w-5" />
+										Vivenciar a Jornada
+									</span>
+								</button>
+
+								{/* Secondary: Beneficiary (Discrete but Accessible) */}
+								<button
+									type="button"
+									onClick={() => (window.location.href = "/recursos")}
+									className="px-8 py-5 bg-transparent border border-slate-700 hover:border-yellow-500/50 text-slate-400 hover:text-yellow-400 rounded-2xl font-medium text-lg transition-all flex items-center justify-center gap-3"
+								>
+									<MapPin className="h-5 w-5" />
+									Preciso de Ajuda Agora
+								</button>
+							</div>
+
+							<div className="mt-8 flex items-center justify-center lg:justify-start gap-4 text-xs font-mono text-slate-500 opacity-60">
+								<span>v0.1.0 Beta</span>
+								<span>•</span>
+								<span>Campinas, SP</span>
+							</div>
 						</div>
-						<h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-							A Rua tem Voz: <br />
-							<span className="text-blue-400">Cidadania</span> contra a{" "}
-							<span className="text-pink-500">Invisibilidade</span>.
-						</h1>
-						<p className="text-lg text-slate-300 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-sans">
-							Baseado na teoria de Milton Santos e Paulo Freire, o projeto{" "}
-							<strong>A Rua Tem Voz</strong> usa a tecnologia social para romper
-							a desafiliação e reconstruir vínculos de cidadania na Região
-							Metropolitana de Campinas.
-						</p>
-						<div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-							<button
-								type="button"
-								onClick={() => scrollToSection("doar")}
-								className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-2"
-							>
-								<Heart className="h-5 w-5 fill-current" />
-								Fazer uma Doação
-							</button>
-							<button
-								type="button"
-								onClick={() => {
-									if (status === "authenticated") {
+
+						{/* Right Column: Visual Proof (Avatar Showcase) */}
+						<div className="lg:w-1/2 mt-16 lg:mt-0 relative">
+							{mode === "creation" ? (
+								<AvatarCreation
+									onComplete={() => {
 										window.location.href = "/jogar";
-									} else {
-										setShowLoginModal(true);
-									}
-								}}
-								className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-green-500/25 flex items-center justify-center gap-2 transform hover:-translate-y-1"
-							>
-								<ArrowRight className="h-5 w-5" />
-								{status === "authenticated"
-									? "CONTINUAR JOGANDO"
-									: "INICIAR JORNADA"}
-							</button>
-							<button
-								type="button"
-								onClick={() => scrollToSection("demo-ia")}
-								className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2"
-							>
-								<Sparkles className="h-5 w-5 text-purple-300" />
-								Testar Demo IA
-							</button>
-						</div>
-					</div>
-					<div className="lg:w-1/2 mt-12 lg:mt-0">
-						{mode === "creation" ? (
-							<AvatarCreation
-								onComplete={() => {
-									window.location.href = "/jogar";
-								}}
-								onBack={() => setMode("landing")}
-							/>
-						) : (
-							<div className="relative mx-auto w-full max-w-md lg:max-w-full">
-								<div className="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 p-6 relative overflow-hidden group">
-									<div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-										<Smartphone className="w-32 h-32 text-white" />
-									</div>
-									<div className="space-y-6">
-										<div className="bg-slate-700/50 p-4 rounded-xl border border-slate-600">
-											<div className="flex items-center gap-3 mb-2">
-												<div className="h-3 w-3 rounded-full bg-red-500"></div>
-												<h3 className="text-slate-200 font-semibold text-sm uppercase">
-													Dilema Real #12
-												</h3>
+									}}
+									onBack={() => setMode("landing")}
+								/>
+							) : (
+								<div className="relative">
+									{/* Decorative Elements around visual */}
+									<div className="absolute -top-10 -right-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+									<div className="absolute -bottom-10 -left-10 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
+
+									<div className="bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-1 shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+										<div className="relative rounded-xl overflow-hidden aspect-[4/3] group">
+											<div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10"></div>
+											{/* Placeholder for Dynamic Avatar Visual - reusing existing logic visually */}
+											{/* Placeholder for Dynamic Avatar Visual - CSS City Illustration */}
+											<div className="absolute inset-0 bg-slate-900 overflow-hidden">
+												{/* Moon/Streetlight */}
+												<div className="absolute top-8 right-12 w-16 h-16 bg-blue-400 rounded-full blur-xl opacity-20 animate-pulse"></div>
+												<div className="absolute top-10 right-14 w-12 h-12 bg-white rounded-full opacity-10"></div>
+
+												{/* City Skyline Silhouette (CSS) */}
+												<div className="absolute bottom-0 left-0 right-0 h-32 bg-slate-950 z-10 flex items-end">
+													<div className="w-8 h-16 bg-slate-800 mx-1"></div>
+													<div className="w-12 h-24 bg-slate-800 mx-1"></div>
+													<div className="w-10 h-10 bg-slate-800 mx-1"></div>
+													<div className="w-16 h-32 bg-slate-800 mx-1 relative">
+														<div className="absolute top-2 left-2 w-1 h-1 bg-yellow-500 animate-pulse"></div>
+														<div className="absolute top-6 right-2 w-1 h-1 bg-yellow-500 animate-pulse delay-75"></div>
+													</div>
+													<div className="w-6 h-12 bg-slate-800 mx-1"></div>
+													<div className="w-20 h-20 bg-slate-800 mx-1"></div>
+												</div>
+
+												{/* Character Silhouette */}
+												<div className="absolute bottom-0 left-12 z-20 w-8 h-16 bg-black rounded-t-full opacity-80 backdrop-blur-sm transform scale-150"></div>
+												<div className="absolute bottom-4 left-16 z-20 w-12 h-8 bg-black rounded-lg transform rotate-12 opacity-80"></div>
+
+												{/* Data Rain / Matrix Effect */}
+												<div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-5 animate-pulse"></div>
 											</div>
-											<p className="text-white font-medium">
-												"Você precisa da 2ª via do RG para conseguir um emprego,
-												mas o Poupatempo exige agendamento online e você não tem
-												internet."
-											</p>
-											<div className="mt-4 grid grid-cols-2 gap-2">
-												<button
-													type="button"
-													className="bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 py-2 rounded-lg text-sm border border-blue-500/30 transition-colors"
-												>
-													Procurar Wi-Fi Livre
-												</button>
-												<button
-													type="button"
-													className="bg-slate-600/40 hover:bg-slate-600/60 text-slate-300 py-2 rounded-lg text-sm border border-slate-500/30 transition-colors"
-												>
-													Pedir ajuda na rua
-												</button>
+
+											{/* Dynamic Text Overlay */}
+											<div className="absolute bottom-6 left-6 right-6 z-20">
+												<div className="bg-black/50 backdrop-blur-md rounded-lg p-4 border border-white/10">
+													<p className="text-white font-medium italic">
+														"A cor da pele, o gênero e o tempo de rua alteram a
+														dificuldade do jogo. Assim como na vida."
+													</p>
+													<div className="mt-3 flex items-center gap-2">
+														<div className="h-1.5 w-1.5 rounded-full bg-green-400"></div>
+														<span className="text-xs text-green-400 font-bold uppercase">
+															Simulação Baseada em Dados
+														</span>
+													</div>
+												</div>
 											</div>
-										</div>
-										<div className="flex items-center justify-between text-slate-400 text-sm">
-											<span className="flex items-center gap-1">
-												<Users className="h-4 w-4" /> +1.300 pessoas impactadas
-											</span>
-											<span className="flex items-center gap-1">
-												<MapPin className="h-4 w-4" /> Campinas, SP
-											</span>
 										</div>
 									</div>
 								</div>
-							</div>
-						)}
+							)}
+						</div>
 					</div>
 				</div>
 			</section>
@@ -403,6 +428,79 @@ export default function LandingPage() {
 									</p>
 								</div>
 							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* Map Section - NEW */}
+			<section
+				id="mapa"
+				className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white relative overflow-hidden"
+			>
+				<div className="absolute inset-0 opacity-20 bg-[url('https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png')] bg-cover bg-center mix-blend-overlay"></div>
+				<div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
+					<div className="inline-block bg-green-500/20 border border-green-400/30 rounded-full px-4 py-1.5 mb-6">
+						<span className="text-green-300 font-semibold text-sm tracking-wide uppercase">
+							Geolocalização Social
+						</span>
+					</div>
+					<h2 className="text-4xl md:text-5xl font-black mb-6">
+						Mapa de Apoio <span className="text-blue-500">Campinas</span>
+					</h2>
+					<p className="text-xl text-slate-300 max-w-3xl mb-12">
+						Encontre abrigos, restaurantes populares (Bom Prato), unidades de
+						saúde e pontos de Wi-Fi livre em tempo real. Uma cartografia da
+						sobrevivência e da solidariedade.
+					</p>
+
+					<div className="w-full max-w-5xl aspect-video bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden relative group">
+						{/* Placeholder Map Visual */}
+						<div className="absolute inset-0 bg-slate-700 flex items-center justify-center">
+							<MapPin className="w-16 h-16 text-slate-500 animate-bounce" />
+							<span className="ml-4 text-slate-400 font-mono">
+								Carregando mapa da região...
+							</span>
+						</div>
+						{/* Visual Mapa CSS (Holographic Style) */}
+						<div className="absolute inset-0 bg-slate-900 overflow-hidden opacity-60 group-hover:opacity-100 transition-opacity duration-500">
+							{/* Grid Base */}
+							<div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:40px_40px] opacity-20"></div>
+
+							{/* Abstract Roads */}
+							<div className="absolute top-[-10%] bottom-[-10%] left-1/3 w-8 bg-slate-800/50 -rotate-12 border-l border-r border-slate-700/30"></div>
+							<div className="absolute top-1/2 left-[-10%] right-[-10%] h-6 bg-slate-800/50 rotate-3 border-t border-b border-slate-700/30"></div>
+
+							{/* POI Markers (Animated) */}
+							<div className="absolute top-1/3 right-1/4">
+								<div className="w-3 h-3 bg-blue-500 rounded-full animate-ping absolute"></div>
+								<div className="w-3 h-3 bg-blue-500 rounded-full relative"></div>
+							</div>
+							<div className="absolute bottom-1/3 left-1/4">
+								<div className="w-3 h-3 bg-green-500 rounded-full animate-ping absolute delay-300"></div>
+								<div className="w-3 h-3 bg-green-500 rounded-full relative"></div>
+							</div>
+
+							{/* Scanline Effect */}
+							<div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent h-full w-full animate-scan"></div>
+						</div>
+
+						{/* Overlay CTA */}
+						<div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm group-hover:backdrop-blur-none group-hover:bg-black/10 transition-all">
+							<button
+								type="button"
+								onClick={() => {
+									if (status === "authenticated") {
+										window.location.href = "/jogar";
+									} else {
+										setShowLoginModal(true);
+									}
+								}}
+								className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl shadow-blue-500/30 transform hover:scale-105 transition-all flex items-center gap-2"
+							>
+								<MapPin className="w-5 h-5" />
+								Explorar Mapa Interativo no Jogo
+							</button>
 						</div>
 					</div>
 				</div>

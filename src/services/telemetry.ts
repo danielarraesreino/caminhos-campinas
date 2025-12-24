@@ -1,3 +1,5 @@
+import { anonymizeLocation, applyTimeJitter } from "@/utils/anonymization";
+
 export enum TelemetryAction {
 	CLICK = "CLICK",
 	VIEW = "VIEW",
@@ -5,6 +7,7 @@ export enum TelemetryAction {
 	GAME_EVENT = "GAME_EVENT",
 	SYNC = "SYNC",
 	ODS_METRIC = "ODS_METRIC",
+	DECISION_MADE = "DECISION_MADE",
 }
 
 export interface TelemetryEvent {
@@ -12,7 +15,9 @@ export interface TelemetryEvent {
 	timestamp: number;
 	action_type: TelemetryAction;
 	metadata: Record<string, unknown>;
-	synced: number; // 0 = false, 1 = true (booleans are not always valid keys in TS definitions)
+	ods_category?: string; // Step 2.2
+	user_hash: string; // Step 2.3
+	synced: number;
 }
 
 const DB_NAME = "telemetry_db";
@@ -22,9 +27,12 @@ const DB_VERSION = 1;
 class TelemetryService {
 	private static instance: TelemetryService;
 	private dbPromise: Promise<IDBDatabase> | null = null;
+	private sessionHash: string;
 
 	private constructor() {
 		this.initDB();
+		// Step 2.3: Session-based rotating hash (not persistent user ID)
+		this.sessionHash = crypto.randomUUID();
 	}
 
 	public static getInstance(): TelemetryService {
@@ -71,14 +79,32 @@ class TelemetryService {
 	public async track(
 		action_type: TelemetryAction,
 		metadata: Record<string, unknown> = {},
+		ods_category?: string,
 	): Promise<void> {
 		try {
 			const db = await this.initDB();
+
+			// Step 1 & 2.1: Anonymization (Time Jitter + Location Fuzzing)
+			const safeTimestamp = applyTimeJitter(Date.now());
+			const safeMetadata = { ...metadata };
+
+			if (
+				typeof safeMetadata.lat === "number" &&
+				typeof safeMetadata.lng === "number"
+			) {
+				const { lat, lng } = safeMetadata;
+				safeMetadata.location = anonymizeLocation(lat, lng);
+				delete safeMetadata.lat;
+				delete safeMetadata.lng;
+			}
+
 			const event: TelemetryEvent = {
 				id: crypto.randomUUID(),
-				timestamp: Date.now(),
+				timestamp: safeTimestamp, // Jittered
 				action_type,
-				metadata,
+				metadata: safeMetadata,
+				ods_category,
+				user_hash: this.sessionHash, // Anonymous Session ID
 				synced: 0,
 			};
 
@@ -96,14 +122,23 @@ class TelemetryService {
 	}
 
 	public async getUnsyncedEvents(): Promise<TelemetryEvent[]> {
+		return this.getAllEvents(true);
+	}
+
+	public async getAllEvents(onlyUnsynced = false): Promise<TelemetryEvent[]> {
 		try {
 			const db = await this.initDB();
 			return new Promise((resolve, reject) => {
 				const transaction = db.transaction([STORE_NAME], "readonly");
 				const store = transaction.objectStore(STORE_NAME);
-				const index = store.index("synced");
-				// use 0 for unsynced
-				const request = index.getAll(0);
+
+				let request: IDBRequest;
+				if (onlyUnsynced) {
+					const index = store.index("synced");
+					request = index.getAll(0);
+				} else {
+					request = store.getAll();
+				}
 
 				request.onsuccess = () => {
 					resolve(request.result);

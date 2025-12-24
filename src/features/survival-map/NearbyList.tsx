@@ -3,11 +3,17 @@
 import { useCallback, useMemo, useTransition } from "react";
 import { EcoButton } from "@/components/ui/EcoButton";
 import { EcoCard } from "@/components/ui/EcoCard";
+import { InteractiveText } from "@/components/ui/InteractiveText";
 import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
+import { useServiceLogic } from "@/hooks/useServiceLogic";
 
 interface NearbyListProps {
 	userPosition: [number, number] | null;
+}
+
+function deg2rad(deg: number): number {
+	return deg * (Math.PI / 180);
 }
 
 function calculateDistance(
@@ -30,15 +36,12 @@ function calculateDistance(
 	return d;
 }
 
-function deg2rad(deg: number): number {
-	return deg * (Math.PI / 180);
-}
-
 export function NearbyList({ userPosition }: NearbyListProps) {
 	const { services } = useServices();
-	const { modifyStat, addMoney, addBuff, advanceTime, socialStigma, hygiene } =
-		useGameContext();
+	const gameState = useGameContext();
+	const { modifyStat, addMoney, addBuff, advanceTime } = gameState; // Destructure helpers
 	const [_isPending, startTransition] = useTransition();
+	const { checkServiceAccess } = useServiceLogic();
 
 	const sortedServices = useMemo(() => {
 		if (!userPosition) return services;
@@ -58,7 +61,15 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 
 	// Optimize with useCallback and useTransition to avoid blocking UI
 	const handleUseService = useCallback(
+		// biome-ignore lint/suspicious/noExplicitAny: Legacy service type
 		(service: any) => {
+			// Validation (Double check in handler if user bypasses UI)
+			const access = checkServiceAccess(service, gameState);
+			if (!access.allowed) {
+				alert(`🚫 Acesso Negado: ${access.reason}`);
+				return;
+			}
+
 			if (!service.effects) {
 				alert(
 					"Este serviço não possui efeitos imediatos, mas você pode ir até lá.",
@@ -74,6 +85,7 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 						if (key === "money") {
 							addMoney(value);
 						} else {
+							// biome-ignore lint/suspicious/noExplicitAny: dynamic stat key
 							modifyStat(key as any, value);
 						}
 					} else if (key === "addBuff" && typeof value === "string") {
@@ -87,7 +99,7 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 				alert(`${service.name} utilizado. Efeitos aplicados.`);
 			});
 		},
-		[addMoney, modifyStat, addBuff, advanceTime],
+		[addMoney, modifyStat, addBuff, advanceTime, checkServiceAccess, gameState],
 	);
 
 	return (
@@ -106,19 +118,27 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 				{sortedServices.map((service) => {
 					const distanceFormatted =
 						"distance" in service
-							? (service as any).distance < 1
-								? `${Math.round((service as any).distance * 1000)}m`
-								: `${(service as any).distance.toFixed(1)}km`
+							? // biome-ignore lint/suspicious/noExplicitAny: distance property injected
+								(service as any).distance < 1
+								? // biome-ignore lint/suspicious/noExplicitAny: distance property injected
+									`${Math.round((service as any).distance * 1000)}m`
+								: // biome-ignore lint/suspicious/noExplicitAny: distance property injected
+									`${(service as any).distance.toFixed(1)}km`
 							: null;
+
+					const access = checkServiceAccess(service, gameState);
+					const isBlocked = !access.allowed;
 
 					return (
 						<EcoCard
 							key={service.id}
-							className="border-zinc-800 p-4 bg-zinc-950/50 backdrop-blur-sm group hover:border-emerald-500/30 transition-colors"
+							className={`border-zinc-800 p-4 transition-colors ${isBlocked ? "bg-zinc-950/80 grayscale-[0.5]" : "bg-zinc-950/50 backdrop-blur-sm group hover:border-emerald-500/30"}`}
 						>
 							<div className="flex justify-between items-start">
 								<div className="flex-1">
-									<h4 className="font-bold text-lg text-white group-hover:text-emerald-400 transition-colors">
+									<h4
+										className={`font-bold text-lg transition-colors ${isBlocked ? "text-zinc-500" : "text-white group-hover:text-emerald-400"}`}
+									>
 										{service.name}
 									</h4>
 									<div className="flex gap-2 items-center mt-1">
@@ -130,11 +150,16 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 												{distanceFormatted}
 											</span>
 										)}
+										{isBlocked && (
+											<span className="text-[10px] px-2 py-0.5 bg-red-900/40 text-red-400 border border-red-900/50 rounded uppercase font-bold tracking-wider flex items-center gap-1">
+												🔒 Bloqueado
+											</span>
+										)}
 									</div>
 									{service.description && (
-										<p className="text-xs text-zinc-400 mt-2 line-clamp-2 italic">
-											{service.description}
-										</p>
+										<div className="text-xs text-zinc-400 mt-2 line-clamp-2 italic">
+											<InteractiveText text={service.description} />
+										</div>
 									)}
 								</div>
 							</div>
@@ -155,31 +180,31 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 								<EcoButton
 									variant="primary"
 									size="sm"
-									aria-label={`Utilizar serviço ${service.name}`}
-									disabled={
-										(service.type === "comércio" ||
-											service.type === "privado") &&
-										socialStigma > 70 &&
-										hygiene < 30
+									aria-label={
+										isBlocked
+											? `Serviço bloqueado: ${service.name}`
+											: `Utilizar serviço ${service.name}`
 									}
-									className="flex-1 text-[10px] uppercase font-bold h-9 bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-900/20 disabled:opacity-50 disabled:bg-zinc-700 disabled:cursor-not-allowed"
-									onClick={() => handleUseService(service)}
+									className={`flex-1 text-[10px] uppercase font-bold h-9 shadow-lg ${isBlocked ? "bg-zinc-800 text-red-400 hover:bg-zinc-800 cursor-not-allowed border border-red-900/30" : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20"}`}
+									onClick={() => {
+										if (isBlocked) {
+											alert(
+												`🚫 ACESSO NEGADO: ${access.reason}\n\nEste é um dilema real enfrentado por quem vive na rua.`,
+											);
+										} else {
+											handleUseService(service);
+										}
+									}}
 								>
-									{(service.type === "comércio" ||
-										service.type === "privado") &&
-									socialStigma > 70 &&
-									hygiene < 30
-										? "Barrado"
-										: "Utilizar"}
+									{isBlocked ? "Indisponível" : "Utilizar"}
 								</EcoButton>
 							</div>
-							{(service.type === "comércio" || service.type === "privado") &&
-								socialStigma > 70 &&
-								hygiene < 30 && (
-									<p className="text-[10px] text-red-400 mt-2 text-center font-medium animate-pulse">
-										"O segurança barrou sua entrada pela sua aparência."
-									</p>
-								)}
+
+							{isBlocked && (
+								<div className="text-[10px] text-red-400/80 mt-2 text-center font-medium animate-pulse">
+									<InteractiveText text={access.reason || "Acesso restrito."} />
+								</div>
+							)}
 						</EcoCard>
 					);
 				})}

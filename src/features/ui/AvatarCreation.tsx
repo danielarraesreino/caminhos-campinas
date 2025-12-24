@@ -49,12 +49,23 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 		avatarImage: AVATAR_OPTIONS[0].id,
 	});
 
-	const handleNext = () => {
-		if (step < 5) setStep(step + 1);
-		else {
-			resetGame();
-			setAvatar(formData);
-			onComplete();
+	const [isSaving, setIsSaving] = useState(false);
+
+	const handleNext = async () => {
+		if (step < 5) {
+			setStep(step + 1);
+		} else {
+			setIsSaving(true);
+			try {
+				await resetGame(); // Ensure DB is cleared first
+				setAvatar(formData);
+				// Small delay to ensure state propagation/persistence start
+				await new Promise((resolve) => setTimeout(resolve, 500));
+				onComplete();
+			} catch (error) {
+				console.error("Erro ao salvar avatar:", error);
+				setIsSaving(false);
+			}
 		}
 	};
 
@@ -101,10 +112,14 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 				{step === 1 && (
 					<div className="space-y-8 animate-slide-up">
 						<div className="space-y-4">
-							<label className="block text-sm font-black text-slate-400 uppercase tracking-widest">
+							<label
+								htmlFor="avatar-name"
+								className="block text-sm font-black text-slate-400 uppercase tracking-widest"
+							>
 								Como seu personagem é chamado?
 							</label>
 							<Input
+								id="avatar-name"
 								value={formData.name}
 								onChange={(e) => updateField("name", e.target.value)}
 								placeholder="Ex: Zé do Pátio, Maria da Praça..."
@@ -158,6 +173,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 						<div className="grid grid-cols-2 gap-8">
 							{AVATAR_OPTIONS.map((opt) => (
 								<button
+									type="button"
 									key={opt.id}
 									onClick={() => updateField("avatarImage", opt.id)}
 									className={`relative aspect-square rounded-3xl overflow-hidden border-4 transition-all duration-300 group
@@ -193,6 +209,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 						<div className="grid grid-cols-2 gap-4">
 							{["branco", "preto", "pardo", "indigena"].map((eth) => (
 								<button
+									type="button"
 									key={eth}
 									onClick={() => updateField("ethnicity", eth)}
 									className={`p-6 rounded-2xl border-2 text-left transition-all relative group ${formData.ethnicity === eth ? "bg-blue-600 border-blue-400 scale-[1.02] shadow-xl" : "bg-slate-800/40 border-slate-800 hover:border-slate-600"}`}
@@ -221,11 +238,12 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 
 				{step === 4 && (
 					<div className="space-y-6 animate-slide-up">
-						<label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-6">
+						<p className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-6">
 							Tempo de Sobrevivência na Rua
-						</label>
+						</p>
 						<div className="flex flex-col gap-5">
 							<button
+								type="button"
 								onClick={() => updateField("timeOnStreet", "recente")}
 								className={`p-8 rounded-3xl border-2 text-left transition-all ${formData.timeOnStreet === "recente" ? "bg-blue-600 border-blue-400 shadow-2xl" : "bg-slate-800/40 border-slate-800"}`}
 							>
@@ -251,6 +269,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								</div>
 							</button>
 							<button
+								type="button"
 								onClick={() => updateField("timeOnStreet", "veterano")}
 								className={`p-8 rounded-3xl border-2 text-left transition-all ${formData.timeOnStreet === "veterano" ? "bg-blue-600 border-blue-400 shadow-2xl" : "bg-slate-800/40 border-slate-800"}`}
 							>
@@ -328,10 +347,14 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 				</Button>
 				<Button
 					onClick={handleNext}
-					disabled={step === 1 && !formData.name}
-					className="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest h-14 rounded-2xl transition-all shadow-xl shadow-blue-500/40"
+					disabled={(step === 1 && !formData.name) || isSaving}
+					className="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest h-14 rounded-2xl transition-all shadow-xl shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
 				>
-					{step === 5 ? "Iniciar Jornada" : "Próximo Passo"}{" "}
+					{isSaving
+						? "Salvando..."
+						: step === 5
+							? "Iniciar Jornada"
+							: "Próximo Passo"}{" "}
 					<ArrowRight className="h-4 w-4 ml-2" />
 				</Button>
 			</div>

@@ -146,17 +146,30 @@ export function GameOverModal({
 						</div>
 					)}
 
-					{/* Botão de reiniciar */}
-					<div className="flex flex-col gap-3 mt-8">
+					{/* Ação e Conversão */}
+					<div className="flex flex-col gap-4 mt-8 bg-slate-900/50 p-6 rounded-xl border border-slate-700">
+						<div className="text-center mb-2">
+							<p className="text-lg text-white font-medium italic">
+								"Na vida real, não existe respawn. Mas sua solidariedade pode
+								salvar vidas."
+							</p>
+						</div>
+
+						<a
+							href="/apoie"
+							className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 px-6 rounded-xl font-bold text-lg text-center uppercase tracking-wide shadow-lg shadow-blue-900/30 flex items-center justify-center gap-2 transition-all hover:scale-105"
+						>
+							<Heart className="w-6 h-6 fill-current" />
+							Doe um Cobertor Hoje
+						</a>
+
 						<Button
 							onClick={onRestart}
-							className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg font-black uppercase tracking-wider rounded-xl shadow-lg shadow-blue-900/50 transition-all"
+							variant="outline"
+							className="w-full bg-transparent hover:bg-white/5 text-slate-400 border-slate-600 hover:border-slate-500 py-6"
 						>
 							🔄 Tentar Novamente
 						</Button>
-						<p className="text-xs text-center text-gray-500 italic">
-							"A cada jogo, uma nova história. A cada história, uma reflexão."
-						</p>
 					</div>
 				</div>
 			</div>

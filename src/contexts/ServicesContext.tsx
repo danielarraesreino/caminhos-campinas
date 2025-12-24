@@ -13,7 +13,9 @@ export type ServiceType =
 	| "food"
 	| "shelter"
 	| "health"
+	| "hygiene"
 	| "assistance"
+	| "work"
 	| "comércio"
 	| "privado";
 
@@ -25,6 +27,8 @@ export interface ServiceLocation {
 	opening_hours: string;
 	address?: string;
 	description?: string;
+	rules?: string;
+	requirements?: string[];
 	effects?: {
 		hunger?: number;
 		health?: number;

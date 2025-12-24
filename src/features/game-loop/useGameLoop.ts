@@ -9,6 +9,7 @@ export function useGameLoop() {
 		health,
 		hunger,
 		hygiene,
+		dignity,
 		energy,
 		sanity,
 		socialStigma,
@@ -38,41 +39,12 @@ export function useGameLoop() {
 		const interval = setInterval(() => {
 			if (isPaused || activeDilemmaId) return;
 
-			if (health <= 0) {
-				if (activeDilemmaId !== "game-over") {
-					setActiveDilemma("game-over");
-				}
-				return;
-			}
-
-			// 1. Clima Dinâmico (Chuva)
-			if (Math.random() < 0.05) {
-				setIsRaining((prev) => !prev);
-			}
-
-			// Decadência passiva suavizada (ritmo de Campinas)
-			let hngDecay = 0.2; // Reduzido: -0.5 → -0.2 (60% menor)
-			let hygDecay = 0.08; // Reduzido: -0.2 → -0.08 (60% menor)
-			let enrDecay = 0.08; // Reduzido: -0.2 → -0.08 (60% menor)
-			const snyDecay = 0.08 * getSanityDecayMultiplier(); // Reduzido: -0.2 → -0.08 (60% menor)
-
-			if (avatar) {
-				if (avatar.ageRange === "jovem") hngDecay += 0.04; // Proporcional
-				if (avatar.ageRange === "idoso") enrDecay += 0.04; // Proporcional
-				if (avatar.timeOnStreet === "recente") hygDecay += 0.04; // Proporcional
-			}
-
-			// 2. Refatoração de Inventário (Peso)
-			const totalWeight = inventory.reduce((acc, i) => acc + i.weight, 0);
-			if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM") {
-				enrDecay += 0.12; // Sobrecarga física (reduzido proporcionalmente)
-			}
-
 			// 3. Efeitos Atmosféricos e Eventos Randômicos
 			const stateSnap = {
 				health,
 				hunger,
 				hygiene,
+				dignity,
 				sanity,
 				energy,
 				socialStigma,
@@ -80,6 +52,48 @@ export function useGameLoop() {
 				inventory,
 				isAtShelter,
 			} as any;
+
+			if (health <= 0) {
+				if (activeDilemmaId !== "game-over") {
+					setActiveDilemma("game-over");
+				}
+				return;
+			}
+
+			// REFATORAÇÃO: GAME OVER SOCIAL (Depressão Profunda/Desistência)
+			// Se a Dignidade chega a 0, o jogador não tem mais forças para lutar.
+			if (stateSnap.dignity <= 0) {
+				if (activeDilemmaId !== "game-over") {
+					setActiveDilemma("game-over");
+				}
+				return;
+			}
+
+			// 1. Clima Dinâmico (Chuva) - 5% de chance a cada tick (10s)
+			if (Math.random() < 0.05) {
+				setIsRaining((prev) => !prev);
+			}
+
+			// REFATORAÇÃO: TAXAS DE DECAIMENTO (Core_Mechanics.md)
+			// Baseado na "Fome Apertando" e necessidade de Serviços
+			let hngDecay = 0.4; // Fome aperta mais rápido (antes 0.2)
+			const hygDecay = 0.3; // Higiene degrada constante (antes 0.08)
+			let enrDecay = 0.2;
+			let snyDecay = 0.15 * getSanityDecayMultiplier();
+
+			// Modificadores de Avatar
+			if (avatar) {
+				if (avatar.ageRange === "jovem") hngDecay += 0.1; // Metabolismo rápido
+				if (avatar.ageRange === "idoso") enrDecay += 0.1; // Cansaço rápido
+				if (avatar.timeOnStreet === "recente") snyDecay += 0.1; // Choque de realidade
+			}
+
+			// 2. Refatoração de Inventário (Peso Realista)
+			// Carrinho protege contra sobrecarga
+			const totalWeight = inventory.reduce((acc, i) => acc + i.weight, 0);
+			if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM") {
+				enrDecay += 0.3; // Carregar peso na mão exaure
+			}
 
 			// Eventos de Clima
 			const weatherEffects = applyWeatherEffects(stateSnap, isRaining);
@@ -114,6 +128,7 @@ export function useGameLoop() {
 		health,
 		hunger,
 		hygiene,
+		dignity,
 		sanity,
 		energy,
 		socialStigma,
@@ -214,4 +229,6 @@ export function useGameLoop() {
 		checkShelterBarrier,
 		socialStigma,
 	]);
+
+	return { isRaining };
 }

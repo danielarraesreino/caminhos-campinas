@@ -28,6 +28,11 @@ export interface DilemmaOption {
 		workToolUpdate?: Partial<GameState["workTool"]>;
 		timeAdvance?: number;
 	};
+	telemetryTag?: {
+		ods: string;
+		action: string;
+		outcome: string;
+	};
 }
 
 export interface Dilemma {
@@ -39,109 +44,248 @@ export interface Dilemma {
 		value: number;
 	};
 	audioId?: string;
+	ambience?: string;
+	soundEffect?: string;
 	prerequisite?: string;
 	options: DilemmaOption[];
 }
 
+// --- REALITY INJECTED DILEMMAS (SOCIOLOGIA_BRASILEIRA_E_CAMPINAS) ---
 export const GAME_DILEMMAS: Dilemma[] = [
+	// 1. SOBREVIVÊNCIA BÁSICA
 	{
 		id: "hunger-emergency",
 		title: "Fome Apertando",
 		description:
 			"O dia está acabando e sua barriga dói de fome. Você precisa encontrar algo para comer logo ou sua saúde começará a declinar rapidamente.",
 		trigger: { type: "HUNGER_LOW", value: 30 },
+		ambience: "rain_heavy",
 		options: [
 			{
 				label: "Bom Prato Centro (R$ 1)",
 				consequence:
 					"O Bom Prato garante alimentação de qualidade por um preço simbólico. Você comeu bem e economizou. (Disponível apenas entre 10h e 14h)",
 				effect: { hunger: 80, money: -1 },
+				telemetryTag: {
+					ods: "ODS_2_FOME",
+					action: "BUSCA_SERVICO_PUBLICO",
+					outcome: "SUCESSO",
+				},
 			},
 			{
 				label: "Refeitório Metodista (Grátis)",
 				consequence:
-					"O refeitório oferece comida com dignidade e você se sente respeitado. A fila estava longa (-2h), mas valeu a pena.",
+					"O Refeitório Metodista oferece comida com dignidade e você se sente respeitado. A fila estava longa (-2h), mas valeu a pena pela conversa e segurança.",
 				effect: { hunger: 60, dignity: 15, timeAdvance: 2 },
+				telemetryTag: {
+					ods: "ODS_2_FOME",
+					action: "BUSCA_REDE_APOIO",
+					outcome: "SUCESSO_DIGNIDADE",
+				},
 			},
 			{
 				label: "Revirar Lixo",
 				consequence:
-					"A fome falou mais alto, mas você corre risco de doenças e sua dignidade foi embora.",
-				effect: { hunger: 20, health: -10, sanity: -5, dignity: -20 },
+					"A fome falou mais alto. O risco de infecção é alto e a vergonha é inevitável.",
+				effect: { hunger: 20, health: -15, sanity: -5, dignity: -25 },
+				telemetryTag: {
+					ods: "ODS_2_FOME",
+					action: "BUSCA_INFORMAL_RISCO",
+					outcome: "DEGRADACAO",
+				},
 			},
 		],
 	},
 	{
+		id: "hygiene-barrier",
+		title: "A Barreira Invisível da Higiene",
+		description:
+			"Você tenta entrar no mercado para comprar água, mas o segurança bloqueia sua entrada apenas com o olhar. 'Aqui não', ele diz. Sua aparência/higiene (Status Crítico) está impedindo o acesso.",
+		trigger: { type: "HYGIENE_LOW", value: 15 },
+		options: [
+			{
+				label: "Ir ao Centro Pop (Banho)",
+				consequence:
+					"Você caminha até o Centro Pop. O banho renova não apenas o corpo, mas a alma. Você se sente humano novamente.",
+				effect: { hygiene: 90, sanity: 10, dignity: 10, timeAdvance: 2 },
+				telemetryTag: {
+					ods: "ODS_6_SANEAMENTO",
+					action: "BUSCA_SERVICO_PUBLICO",
+					outcome: "SUCESSO",
+				},
+			},
+			{
+				label: "Discutir com Segurança",
+				consequence:
+					"A discussão chama a atenção da polícia. Você é humilhado e expulso do local, aumentando seu Estigma Social.",
+				effect: { socialStigma: 15, sanity: -10, dignity: -10 },
+				telemetryTag: {
+					ods: "ODS_10_DESIGUALDADE",
+					action: "CONFLITO_SOCIAL",
+					outcome: "ESTIGMA_AUMENTADO",
+				},
+			},
+		],
+	},
+
+	// 2. DILEMAS DO CARRINHO (A FERRAMENTA DE TRABALHO)
+	{
 		id: "barreira-samim",
 		title: "A Barreira do SAMIM",
 		description:
-			"Você chegou ao SAMIM para o pernoite, mas está com seu carrinho de reciclagem. As regras são claras: não entra carga ou ferramentas grandes. O pernoite é sua única chance de sono seguro, mas o carrinho é seu sustento.",
+			"Você chegou ao SAMIM para o pernoite, mas está com seu carrinho de reciclagem. As regras são claras: não é permitida a entrada de 'objetos volumosos'.",
 		trigger: { type: "RANDOM", value: 0.3 },
 		options: [
 			{
-				label: "Abandonar Carrinho",
+				label: "Abandonar Carrinho na Rua",
 				consequence:
-					"Você entrou e dormiu seguro, mas ao acordar, o 'Rapa' (fiscalização) tinha levado seu carrinho que ficou na calçada. Você terá que recomeçar do zero.",
+					"Você entrou e dormiu seguro. Ao acordar, o Caminhão do Rapa havia passado. Sua ferramenta de trabalho e seus pertences foram apreendidos como 'lixo'.",
 				effect: {
 					health: 20,
 					dignity: 5,
 					workToolUpdate: { type: null, capacity: 0, riskFactor: 0 },
+					sanity: -20,
+				},
+				telemetryTag: {
+					ods: "ODS_11_CIDADES",
+					action: "ACEITE_INSTITUCIONAL",
+					outcome: "PERDA_BENS",
 				},
 			},
 			{
-				label: "Dormir na Rua",
+				label: "Dormir na Rua (Defender o Carrinho)",
 				consequence:
-					"Você preferiu proteger seu patrimônio. A noite foi fria e perigosa na calçada da Francisco Elisiário. Seu corpo dói e sua mente está exausta.",
-				effect: { health: -15, sanity: -15, energy: -20, dignity: -5 },
+					"Você escolheu proteger seu sustento. A noite na calçada foi fria e tensa, vigilância constante. Você manteve o carrinho, mas sua saúde cobrou o preço.",
+				effect: { health: -15, sanity: -15, energy: -30, dignity: -5 },
+				telemetryTag: {
+					ods: "ODS_1_POBREZA",
+					action: "RECUSA_INSTITUCIONAL",
+					outcome: "PRESERVACAO_TRABALHO",
+				},
+			},
+		],
+	},
+	{
+		id: "barreira-animal",
+		title: "O Dilema do Companheiro",
+		description:
+			"Você tem um cachorro que é sua única família e proteção na rua. Tentou entrar no abrigo, mas animais são proibidos.",
+		trigger: { type: "RANDOM", value: 0.2 },
+		options: [
+			{
+				label: "Abandonar o Cachorro",
+				consequence:
+					"Você deixa seu amigo para trás para dormir em uma cama. A culpa te consome a noite toda. Você perdeu sua humanidade.",
+				effect: { sanity: -50, dignity: -30, health: 10 },
+			},
+			{
+				label: "Ficar fora com ele",
+				consequence:
+					"Vocês dormem juntos sob a marquise. O cachorro te aquece e alerta sobre perigos. Você dorme mal, mas seu coração está em paz.",
+				effect: {
+					sanity: 10,
+					health: -10,
+					energy: -10,
+					addBuff: "PROTECAO_CANINA",
+				},
 			},
 		],
 	},
 	{
 		id: "abordagem-rapa",
-		title: "Abordagem do Rapa",
+		title: "O Rapa Chegou",
 		description:
-			"A fiscalização urbana ('Rapa') parou ao seu lado. Eles não querem te prender, querem limpar a calçada. Seus pertences e sua ferramenta de trabalho estão em risco.",
-		trigger: { type: "SOCIAL_STIGMA_HIGH", value: 60 },
+			"Fiscalização Urbana. Eles alegam que seu carrinho está 'obstruindo o passeio público' e ameaçam apreensão imediata baseada no Código de Posturas.",
+		trigger: { type: "SOCIAL_STIGMA_HIGH", value: 50 },
 		options: [
 			{
-				label: "Tentar Negociar",
+				label: "Tentar Dialogar",
 				consequence:
-					"Você implora e consegue salvar o básico, mas eles levam sua carga de recicláveis e metade da sua dignidade.",
+					"Você argumenta que é trabalhador da reciclagem. Eles permitem que fique com os pertences pessoais, mas levam o material coletado (dinheiro do dia).",
 				effect: {
-					dignity: -20,
-					socialStigma: 10,
-					workToolUpdate: { condition: 50 }, // Perda de carga degrada condição simbolicamente
+					dignity: -10,
+					inventoryAdd: "NOTIFICACAO_FISCAL",
+					money: -100, // Perde o valor do dia
 				},
 			},
 			{
-				label: "Perder Tudo",
+				label: "Resistir (Conflito)",
 				consequence:
-					"Eles levam seu carrinho e tudo o que estava dentro. Você fica apenas com a roupa do corpo.",
+					"A GCM é chamada. Você perde o carrinho, a carga e é levado para averiguação. Perda total.",
 				effect: {
-					dignity: -30,
+					dignity: -40,
 					workToolUpdate: { type: null, capacity: 0, riskFactor: 0 },
+					health: -10,
+					socialStigma: 20,
 				},
 			},
 		],
 	},
+
+	// 3. SAÚDE & REDUÇÃO DE DANOS
 	{
 		id: "paradoxo-caps",
 		title: "O Paradoxo do CAPS AD",
 		description:
-			"Você buscou ajuda no CAPS AD para lidar com a ansiedade e o vício. O atendimento é ótimo e a medicação te acalma, mas ela traz um sono profundo.",
+			"Você buscou o CAPS AD. O atendimento foi humanizado e sem julgamentos, mas a medicação para ansiedade/abstinência é forte.",
 		trigger: { type: "RANDOM", value: 0.15 },
 		options: [
 			{
-				label: "Aceitar a Medicação",
+				label: "Tomar a Medicação",
 				consequence:
-					"Sua mente descansa, mas você fica 'sedado'. No sono profundo na praça, você é um alvo fácil. Sua vigilância caiu drasticamente.",
-				effect: { sanity: 20, addBuff: "SEDADO_CAPS" },
+					"A ansiedade some, mas a sonolência é pesada. Dormir na rua 'dopado' é um risco extremo de ter seus tênis ou pertences roubados (Vigilância Zero).",
+				effect: { sanity: 30, addBuff: "SEDADO_CAPS" },
 			},
 			{
-				label: "Apenas Conversar",
+				label: "Participar só da Oficina",
 				consequence:
-					"O diálogo ajuda, mas a crise de abstinência e o barulho da rua dificultam o descanso.",
-				effect: { sanity: 5, health: -5 },
+					"Você conversa, faz arte, se conecta. Ajuda, mas a crise de abstinência física continua batendo.",
+				effect: { sanity: 10, health: -5 },
+			},
+		],
+	},
+
+	// 4. QUEST LINE: BUROCRACIA DO RG (CICLO DO "NADA CONSTA")
+	{
+		id: "samim-entry-fail",
+		title: "Barrado no SAMIM (Documento)",
+		description:
+			"Para cadastrar o pernoite, exigem RG original ou B.O. recente. Você não tem nenhum dos dois.",
+		trigger: { type: "RANDOM", value: 0.1 },
+		options: [
+			{
+				label: "Explicar situação de rua",
+				consequence:
+					"A burocracia é implacável: 'Sem documento, sem cadastro'. Você é orientado a ir ao Poupatempo, mas hoje dorme na rua.",
+				effect: { health: -10, sanity: -10, addBuff: "SEM_DOCUMENTO" },
+			},
+			{
+				label: "Tentar uma Casa de Passagem",
+				consequence:
+					"A Casa de Passagem Cáritas é mais flexível e foca na retomada de documentos. Você consegue entrar, mas é longe.",
+				effect: { energy: -20, hygiene: 10, stabilityGap: -5 },
+			},
+		],
+	},
+	{
+		id: "poupatempo-paradox",
+		title: "O Paradoxo do Endereço",
+		description:
+			"No Poupatempo, você consegue isenção da taxa, mas o atendente pede um 'Comprovante de Residência' para emitir o RG. Você mora na rua.",
+		prerequisite: "samim-entry-fail",
+		trigger: { type: "RANDOM", value: 0.5 },
+		options: [
+			{
+				label: "Dar o endereço do Abrigo",
+				consequence:
+					"Se você tiver o cartão do SAMIM ou Centro Pop, isso funciona! Caso contrário, o sistema trava. (Dica: Vá ao Centro Pop pegar uma declaração)",
+				effect: { sanity: -5 },
+			},
+			{
+				label: "Declarar 'Morador de Rua'",
+				consequence:
+					"Existe um formulário específico para isso, mas nem todo atendente sabe. Você precisa insistir e citar a lei. Cidadania +10 se conseguir.",
+				effect: { dignity: 10, stabilityGap: -5, sanity: -5 },
 			},
 		],
 	},
@@ -149,176 +293,61 @@ export const GAME_DILEMMAS: Dilemma[] = [
 		id: "lei-padre-julio",
 		title: "Arquitetura Hostil",
 		description:
-			"Você encontrou uma marquise nova no Centro, mas o dono do prédio instalou pinos metálicos no chão para impedir que alguém deite. Isso fere a Lei Padre Júlio Lancellotti.",
+			"Pedras pontiagudas foram cimentadas embaixo do viaduto onde você costumava ficar. Isso é ilegal pela Lei Padre Júlio Lancellotti, mas está lá.",
 		trigger: { type: "RANDOM", value: 0.1 },
 		options: [
 			{
-				label: "Usar Papelão",
+				label: "Dormir em cima (Papelão)",
 				consequence:
-					"Você improvisa uma camada grossa de papelão sobre os pinos. É desconfortável, mas neutraliza o dano do frio.",
-				effect: { energy: 10, dignity: -10, health: -5 },
+					"Você amontoa papelão. As pedras ainda machucam as costas. A noite é péssima.",
+				effect: { energy: -20, health: -10, dignity: -15 },
 			},
 			{
-				label: "Denunciar (Cidadania)",
+				label: "Denunciar no app da Prefeitura",
 				consequence:
-					"Você chama um coletivo de direitos humanos. A estrutura é removida dias depois e você ganha reconhecimento por lutar pelos seus direitos.",
-				effect: { dignity: 30, stabilityGap: -5, socialStigma: -10 },
-			},
-		],
-	},
-	{
-		id: "bico-flanelinha",
-		title: "Conflito de Território",
-		description:
-			"Você estava vigiando carros na Rua Barão de Jaguara quando outro vigia chega dizendo que 'aquele quarteirão tem dono'. O clima esquenta.",
-		trigger: { type: "RANDOM", value: 0.2 },
-		options: [
-			{
-				label: "Recuar (Paz)",
-				consequence:
-					"Você evita o confronto físico, mas perde o ponto de renda da tarde.",
-				effect: { sanity: 5, money: -10 },
-			},
-			{
-				label: "Impor Respeito",
-				consequence:
-					"Você garante o território, mas o estresse e a adrenalina te deixam exausto e mal visto pela vizinhança.",
-				effect: { money: 30, sanity: -20, energy: -30, socialStigma: 15 },
+					"Você tira foto e denuncia. Não resolve sua noite (você tem que ir para outro lugar), mas você lutou contra a invisibilidade.",
+				effect: { dignity: 20, energy: -10, socialStigma: -5 },
 			},
 		],
 	},
+	// 5. ODS 18 - RACISMO INSTITUCIONAL (CENSO 2024: 67,8% Pretos/Pardos)
 	{
-		id: "venda-farol",
-		title: "Chuva no Farol",
+		id: "police-stop",
+		title: "Procedimento Padrão",
 		description:
-			"Você investiu seus últimos trocados em caixas de bala para vender no cruzamento da Aquidaban. No meio do expediente, começa um temporal típico de Campinas.",
-		trigger: { type: "RANDOM", value: 0.15 },
+			"Uma viatura da Guarda Municipal para ao seu lado. O agente desce com a mão no coldre. 'Mãos na cabeça, encosta na parede'. Você sente os olhares dos passantes.",
+		trigger: { type: "RANDOM", value: 0.1 }, // 10% chance
+		audioId: "siren", // Assuming siren sfx exists or just silent tension
 		options: [
 			{
-				label: "Proteger Mercadoria",
+				label: "Apresentar RG (Se tiver)",
 				consequence:
-					"Você se molha todo, mas salva as balas. Sua saúde sofre pelo frio intenso.",
-				effect: { health: -20, dignity: -5 },
-			},
-			{
-				label: "Vender na Chuva",
-				consequence:
-					"Alguns motoristas sentem pena e compram rápido, mas o papel das balas amolece e metade se perde.",
-				effect: { money: 20, health: -30, sanity: -10 },
-			},
-		],
-	},
-	{
-		id: "horario-ceprocamp",
-		title: "Conflito Institucional",
-		description:
-			"Suas aulas no CEPROCAMP terminam às 22h, mas o SAMIM fecha os portões às 19h. Sem uma declaração especial, você terá que escolher entre o futuro ou o teto de hoje.",
-		trigger: { type: "RANDOM", value: 0.25 },
-		options: [
-			{
-				label: "Estudar e dormir na rua",
-				consequence:
-					"Você aprendeu muito, mas a noite na rua cobrou seu preço em saúde e segurança.",
-				effect: { stabilityGap: -15, health: -20, sanity: -10 },
-			},
-			{
-				label: "Garantir o abrigo",
-				consequence:
-					"Você dormiu seco, mas faltou à aula e corre risco de perder a vaga no curso.",
-				effect: { health: 10, energy: 30, stabilityGap: 5 },
-			},
-		],
-	},
-	{
-		id: "comunidade-terapeutica",
-		title: "Comunidade Terapêutica",
-		description:
-			"Uma Kombi de uma Comunidade Terapêutica te oferece 'Teto e Comida' por 6 meses, mas a regra é abstinência total e oração obrigatória.",
-		trigger: { type: "RANDOM", value: 0.05 },
-		options: [
-			{
-				label: "Aceitar (Teto)",
-				consequence:
-					"Você tem comida e cama, mas perdeu sua rede de contatos na rua e sua liberdade de ir e vir.",
+					"Você mostra o documento. O agente checa os antecedentes. 'Tá limpo, circula'. Você é liberado, mas a humilhação fica.",
 				effect: {
-					health: 50,
-					hunger: 50,
-					dignity: 10,
-					stabilityGap: -10,
-					addBuff: "RECLUSO",
+					dignity: -5,
+					sanity: -5,
+				},
+				telemetryTag: {
+					ods: "ODS_18",
+					action: "ENQUADRO_COM_DOC",
+					outcome: "LIBERADO",
 				},
 			},
 			{
-				label: "Recusar (Liberdade)",
+				label: "Argumentar Direitos",
 				consequence:
-					"A liberdade da rua é dura, mas você prefere manter sua autonomia e seus contatos reais.",
-				effect: { sanity: 15, dignity: 5 },
-			},
-		],
-	},
-	// --- QUEST LINE: DOCUMENTAÇÃO ---
-	{
-		id: "samim-entry-fail",
-		title: "Barrado no SAMIM",
-		description:
-			"Você tenta entrar para o pernoite, mas o monitor pede seu RG. Você não o tem.",
-		trigger: { type: "RANDOM", value: 0.1 },
-		options: [
-			{
-				label: "Explicar que perdeu tudo",
-				consequence:
-					"Ele entende, mas sem documento ou B.O. a vaga é negada. Você passará a noite na rua. (Missão: Vá ao Poupatempo)",
-				effect: { health: -10, sanity: -10 },
-			},
-			{
-				label: "Procurar o Poupatempo amanhã",
-				consequence:
-					"Você aceita a derrota, mas decide que precisa regularizar sua situação. A noite será longa.",
-				effect: { sanity: 5, health: -5 },
-			},
-		],
-	},
-	{
-		id: "poupatempo-visit",
-		title: "Fila do Poupatempo",
-		description:
-			"Você chega ao Poupatempo disposto a tirar o RG, mas descobre que precisa de agendamento online prévio.",
-		prerequisite: "samim-entry-fail", // Só acontece se já foi barrado antes
-		trigger: { type: "RANDOM", value: 0.4 }, // Alta chance se já teve o problema
-		options: [
-			{
-				label: "Tentar implorar por um encaixe",
-				consequence:
-					"O segurança é firme: 'Só com agendamento'. Frustração total. Você precisa de internet.",
-				effect: { sanity: -15 },
-			},
-			{
-				label: "Ir até a Biblioteca Municipal",
-				consequence:
-					"Alguém na fila diz que lá tem internet grátis para agendar. É sua melhor chance.",
-				effect: { stabilityGap: -2 },
-			},
-		],
-	},
-	{
-		id: "library-internet",
-		title: "Ponto Sagrado: Biblioteca",
-		description:
-			"Na Biblioteca Municipal (perto da prefeitura), você consegue usar o computador por 30 min.",
-		prerequisite: "poupatempo-visit", // Só acontece se já foi ao poupatempo
-		trigger: { type: "RANDOM", value: 0.5 },
-		options: [
-			{
-				label: "Agendar RG no Poupatempo",
-				consequence:
-					"Missão cumprida! Agora é só esperar o dia marcado. Cidadania +10. (Você obteve o agendamento)",
-				effect: { stabilityGap: -10, sanity: 10, addBuff: "AGENDAMENTO_RG" },
-			},
-			{
-				label: "Pesquisar cursos no CEPROCAMP",
-				consequence:
-					"Você vê uma chance de sair da rua através da capacitação, mas esquece do RG.",
-				effect: { sanity: 15, dignity: 10 },
+					"Você questiona a abordagem. O agente não gosta. 'Tá querendo ensinar meu trabalho?'. Você é revistado com agressividade. Seus pertences são espalhados no chão.",
+				effect: {
+					dignity: -20,
+					health: -5,
+					sanity: -15,
+					socialStigma: 10,
+				},
+				telemetryTag: {
+					ods: "ODS_18_RACISMO_INSTITUCIONAL",
+					action: "RESISTENCIA_CIVIL",
+					outcome: "OPRESSAO",
+				},
 			},
 		],
 	},

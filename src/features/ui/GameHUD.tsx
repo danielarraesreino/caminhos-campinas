@@ -4,6 +4,7 @@ import {
 	Activity,
 	Brain,
 	Clock,
+	Menu,
 	Package,
 	ShieldAlert,
 	Wallet,
@@ -20,7 +21,7 @@ export function GameHUD() {
 		day,
 		socialStigma,
 		workTool,
-		dignity,
+		// dignity,
 		avatar,
 	} = useGameContext();
 
@@ -30,137 +31,207 @@ export function GameHUD() {
 	return (
 		<>
 			{stigmaAlert && (
-				<div className="fixed inset-0 pointer-events-none border-4 border-red-900/20 animate-pulse z-[60]" />
+				<div className="fixed inset-0 pointer-events-none border-[8px] border-red-600/50 animate-pulse z-[60]" />
 			)}
 
-			<div className="fixed top-0 left-0 w-full bg-black/95 text-slate-400 p-2 z-50 border-b border-slate-900 flex items-center justify-between pointer-events-auto shadow-[0_0_30px_rgba(0,0,0,1)]">
-				{/* Esquerda: Identidade e Biometria Urbana */}
-				<div className="flex items-center gap-6 px-4">
-					{avatar?.avatarImage && (
-						<div className="relative w-10 h-10 rounded-lg overflow-hidden border border-slate-800 shadow-lg flex-none group">
+			{/* Main HUD Container - Taller and distinct */}
+			<div className="fixed top-0 left-0 w-full h-24 bg-slate-950 border-b-2 border-slate-800 z-[60] shadow-2xl flex items-center justify-between px-4 md:px-8">
+				{/* LEFT: Avatar & Identity */}
+				<div className="flex items-center gap-4 md:gap-6">
+					{avatar?.avatarImage ? (
+						<div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 border-slate-600 shadow-lg flex-none group hover:scale-105 transition-transform">
 							<Image
 								src={avatar.avatarImage}
 								alt={avatar.name}
 								fill
-								className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+								className="object-cover"
 							/>
-							<div className="absolute inset-0 bg-blue-900/10 mix-blend-overlay"></div>
-						</div>
-					)}
-					<div className="flex items-center gap-6">
-						<BiometricItem
-							icon={Activity}
-							value={health}
-							label="BIO"
-							status={health < 30 ? "CRITICAL" : "OK"}
-						/>
-						<BiometricItem
-							icon={Brain}
-							value={sanity}
-							label="PSI"
-							status={sanity < 30 ? "CRITICAL" : "OK"}
-						/>
-						<BiometricItem
-							icon={ShieldAlert}
-							value={socialStigma}
-							label="RISK"
-							type="INVERTED"
-							status={socialStigma > 70 ? "CRITICAL" : "OK"}
-						/>
-					</div>
-				</div>
-
-				{/* Centro: Status de Ferramenta */}
-				<div className="hidden lg:flex items-center gap-6 text-[9px] font-mono tracking-[0.2em] uppercase opacity-40">
-					{workTool.type ? (
-						<div className="flex items-center gap-2">
-							<Package className="h-3 w-3" />
-							<span>
-								{workTool.type.replace("_", " ")} {workTool.condition}%
-							</span>
+							{/* Name Tag Overlay */}
+							<div className="absolute bottom-0 left-0 w-full bg-black/70 p-1 text-center">
+								<span className="text-[10px] md:text-xs font-bold text-white truncate block uppercase tracking-wider">
+									{avatar.name.split(" ")[0]}
+								</span>
+							</div>
 						</div>
 					) : (
-						<span className="italic text-slate-800">NO_PRODUCTION_TOOL</span>
+						<div className="w-16 h-16 bg-slate-800 rounded-2xl animate-pulse" />
 					)}
-					<div className="h-4 w-[1px] bg-slate-900" />
-					<div className="flex items-center gap-2 border border-slate-900 px-2 py-0.5">
-						<span className="text-slate-400">DGN: {Math.round(dignity)}%</span>
+
+					{/* Status Stats - Large Cards */}
+					<div className="flex items-center gap-2 md:gap-4">
+						<StatCard
+							icon={Activity}
+							value={health}
+							label="SAÚDE"
+							color="emerald"
+							type="desc"
+						/>
+						<StatCard
+							icon={Brain}
+							value={sanity}
+							label="MENTE"
+							color="violet"
+							type="desc"
+						/>
+						<StatCard
+							icon={ShieldAlert}
+							value={socialStigma}
+							label="RISCO"
+							color="amber"
+							type="asc"
+							alertThreshold={70}
+						/>
 					</div>
 				</div>
 
-				{/* Direita: Economia e Tempo */}
-				<div className="flex items-center gap-6 px-4">
-					<div className="flex flex-col items-end">
-						<div className="flex items-center gap-2 text-white font-mono text-xs border-b border-slate-900 pb-0.5 mb-0.5">
-							<Wallet className="h-3 w-3 text-slate-600" />
-							<span>BRL {money.toFixed(2)}</span>
+				{/* CENTER: Context Info (Desktops only) */}
+				<div className="hidden xl:flex flex-col items-center justify-center opacity-80">
+					<div className="bg-slate-900/50 px-6 py-2 rounded-xl border border-slate-800 flex items-center gap-6">
+						<div className="flex flex-col items-center">
+							<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
+								DIA {day}
+							</span>
+							<div className="flex items-center gap-2 text-white font-mono text-xl font-bold">
+								<Clock className="w-5 h-5 text-blue-400" />
+								{time.toString().padStart(2, "0")}:00
+							</div>
 						</div>
-						<div className="flex items-center gap-2 font-mono text-[9px] text-slate-600 tracking-tighter uppercase">
-							<Clock className="h-3 w-3" />
+						<div className="w-[1px] h-8 bg-slate-700" />
+						<div className="flex flex-col items-center">
+							<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
+								CAIXA
+							</span>
+							<div className="flex items-center gap-2 text-green-400 font-mono text-xl font-bold">
+								<Wallet className="w-5 h-5" />
+								R$ {money.toFixed(2)}
+							</div>
+						</div>
+					</div>
+					{workTool.type && (
+						<div className="mt-1 flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-widest">
+							<Package className="w-3 h-3" />
+							{workTool.type.replace("_", " ")} ({workTool.condition}%)
+						</div>
+					)}
+				</div>
+
+				{/* RIGHT: Compact Info (Mobile) & Actions */}
+				<div className="flex items-center gap-4">
+					{/* Mobile Money/Time display */}
+					<div className="xl:hidden flex flex-col items-end gap-1">
+						<div className="flex items-center gap-1.5 bg-slate-900 border border-slate-700 px-3 py-1 rounded-lg">
+							<Wallet className="w-3.5 h-3.5 text-green-400" />
+							<span className="text-green-400 font-mono font-bold text-sm">
+								R${Math.round(money)}
+							</span>
+						</div>
+						<div className="flex items-center gap-1.5 text-slate-400 font-mono text-xs">
+							<Clock className="w-3 h-3" />
 							<span>
-								D{day} {time.toString().padStart(2, "0")}:00
+								D{day} - {time}:00
 							</span>
 						</div>
 					</div>
 
-					{/* Menu de Recursos e Apoio */}
-					<div className="hidden lg:flex">
-						<a
-							href="/recursos"
-							target="_blank"
-							className="text-[10px] text-slate-500 hover:text-blue-400 transition-colors uppercase font-bold tracking-widest border border-slate-800 px-3 py-1 rounded-sm"
-							rel="noopener"
-						>
-							RECURSOS
-						</a>
-					</div>
+					<a
+						href="/recursos"
+						target="_blank"
+						className="hidden md:flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition-transform hover:scale-105 shadow-lg shadow-blue-900/20"
+						rel="noopener"
+					>
+						<Menu className="w-4 h-4" />
+						MENU
+					</a>
 				</div>
 			</div>
 		</>
 	);
 }
 
-function BiometricItem({
+// Subcomponente de Cartão de Status
+function StatCard({
 	icon: Icon,
 	value,
 	label,
-	status,
-	type = "NORMAL",
+	color,
+	type,
+	alertThreshold,
 }: {
-	icon: React.ElementType;
+	icon: any;
 	value: number;
 	label: string;
-	status: "OK" | "CRITICAL";
-	type?: "NORMAL" | "INVERTED";
+	color: "emerald" | "violet" | "amber";
+	type: "asc" | "desc"; // asc: quanto maior pior (ex: risco), desc: quanto maior melhor (ex: saude)
+	alertThreshold?: number;
 }) {
-	const isAlarm = status === "CRITICAL";
+	// Definir cores baseadas no prop 'color'
+	const colorMap = {
+		emerald: {
+			bg: "bg-emerald-950/40",
+			border: "border-emerald-500/30",
+			icon: "text-emerald-500",
+			text: "text-white",
+			bar: "bg-emerald-500",
+			glow: "shadow-emerald-900/20",
+		},
+		violet: {
+			bg: "bg-violet-950/40",
+			border: "border-violet-500/30",
+			icon: "text-violet-500",
+			text: "text-white",
+			bar: "bg-violet-500",
+			glow: "shadow-violet-900/20",
+		},
+		amber: {
+			bg: "bg-amber-950/40",
+			border: "border-amber-500/30",
+			icon: "text-amber-500",
+			text: "text-white",
+			bar: "bg-amber-500",
+			glow: "shadow-amber-900/20",
+		},
+	};
+
+	const theme = colorMap[color];
+
+	// Lógica de alerta crítico
+	const isCritical =
+		type === "desc" ? value < 30 : alertThreshold && value > alertThreshold;
+
+	// Se crítico, muda para vermelho/alerta
+	const containerClasses = isCritical
+		? "border-red-500 bg-red-950/50 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+		: `${theme.bg} ${theme.border} ${theme.glow}`;
+
+	const iconColor = isCritical ? "text-red-500" : theme.icon;
+	const barColor = isCritical ? "bg-red-500" : theme.bar;
 
 	return (
-		<div className="flex items-center gap-2 group">
-			<div
-				className={`p-1 border ${isAlarm ? "border-red-900/50 bg-red-950/20" : "border-slate-900 bg-black"}`}
-			>
-				<Icon
-					className={`h-3.5 w-3.5 ${isAlarm ? "text-red-600 animate-pulse" : "text-slate-700"}`}
-				/>
+		<div
+			className={`
+			flex flex-col justify-center items-center w-20 md:w-24 h-20 md:h-22 rounded-xl border-2 backdrop-blur-sm transition-all
+			${containerClasses}
+		`}
+		>
+			<div className="flex items-center gap-1.5 mb-1">
+				<Icon className={`w-4 h-4 md:w-5 md:h-5 ${iconColor}`} />
+				<span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+					{label}
+				</span>
 			</div>
-			<div className="flex flex-col">
-				<div className="flex items-center justify-between gap-4">
-					<span className="text-[8px] font-mono font-bold text-slate-600 tracking-wider leading-none">
-						{label}
-					</span>
-					<span
-						className={`text-[9px] font-mono leading-none ${isAlarm ? "text-red-600" : "text-slate-500"}`}
-					>
-						{Math.round(value)}
-					</span>
-				</div>
-				<div className="h-0.5 w-16 bg-slate-950 mt-1">
-					<div
-						className={`h-full transition-all duration-1000 ${isAlarm ? "bg-red-800" : "bg-slate-700"}`}
-						style={{ width: `${type === "NORMAL" ? value : value}%` }}
-					/>
-				</div>
+
+			<span
+				className={`text-2xl md:text-3xl font-black ${theme.text} leading-none mb-2`}
+			>
+				{Math.round(value)}
+			</span>
+
+			{/* Progress Bar Mini */}
+			<div className="w-12 h-1.5 bg-slate-900/80 rounded-full overflow-hidden">
+				<div
+					className={`h-full rounded-full transition-all duration-700 ${barColor}`}
+					style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+				/>
 			</div>
 		</div>
 	);

@@ -12,7 +12,7 @@ export interface GameEvent {
 export function processRandomEvents(
 	state: GameState,
 ): Partial<GameState> | null {
-	const { socialStigma, workTool, inventory } = state;
+	const { socialStigma } = state;
 
 	// 1. "O Rapa" (Fiscalização)
 	// Trigger: socialStigma > 70, chance increases with stigma

@@ -1,5 +1,5 @@
 import { groq } from "@ai-sdk/groq";
-import { convertToModelMessages, streamText, type UIMessage } from "ai";
+import { streamText } from "ai";
 
 export const maxDuration = 30;
 
@@ -33,11 +33,37 @@ export async function POST(req: Request) {
 			[key: string]: unknown;
 		}
 
-		const {
-			messages,
-			gameState,
-		}: { messages: UIMessage[]; gameState?: GameState } = await req.json();
-		console.log("📨 Received messages:", messages?.length || 0);
+		const body = await req.json();
+		console.log("📨 Received Body Keys:", Object.keys(body));
+
+		// Handle various possible payload structures
+		let { messages, gameState } = body || {};
+
+		// Fallback for singular 'message' usage or missing array
+		if (!messages || !Array.isArray(messages)) {
+			console.warn(
+				"⚠️ 'messages' array missing or invalid. Checking fallback...",
+			);
+			if (body.message) {
+				// If singular message is sent
+				messages = [
+					{
+						role: "user",
+						content:
+							typeof body.message === "string"
+								? body.message
+								: JSON.stringify(body.message),
+					},
+				];
+			} else if (body.prompt) {
+				// Legacy Vercel AI usage
+				messages = [{ role: "user", content: body.prompt }];
+			} else {
+				messages = [];
+			}
+		}
+
+		console.log("📨 Processed messages count:", messages.length);
 		console.log("🎮 Game state:", gameState);
 
 		const systemPrompt = `
@@ -56,19 +82,22 @@ export async function POST(req: Request) {
       3. Mantenha as respostas curtas (máximo 3 frases) para leitura rápida no celular.
       4. Se o jogador fizer uma ação, descreva a consequência baseada nos stats dele.
       5. Ofereça sempre 2 ou 3 opções de próxima ação implícitas na narrativa.
-      
+
       Exemplo: "Você caminha pela Rua 13 de Maio. O cheiro de salgado de uma lanchonete te lembra que você não come há horas. Um segurança te observa com desconfiança. O que você faz?"
     `;
 
 		console.log("🤖 Calling Groq API with Llama 3.3 70B...");
-		const result = streamText({
+		const result = await streamText({
 			model: groq("llama-3.3-70b-versatile"),
 			system: systemPrompt,
-			messages: convertToModelMessages(messages),
+			messages: messages.map((m: any) => ({
+				role: m.role,
+				content: m.content,
+			})),
 		});
 
-		console.log("✅ Groq stream created, sending UI message response");
-		return result.toUIMessageStreamResponse();
+		console.log("✅ Groq stream created, sending generic stream response");
+		return result.toTextStreamResponse();
 	} catch (error) {
 		console.error("❌ API Error DETAILS:", error);
 		console.error(

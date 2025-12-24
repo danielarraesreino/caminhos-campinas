@@ -1,116 +1,113 @@
 "use client";
 
-import { BarChart3, MapPin, Menu, Sparkles, X } from "lucide-react";
+import { BarChart, Gamepad, MapPin, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const { data: _session, status } = useSession();
+	const [isOpen, setIsOpen] = useState(false);
+
+	// Navigation groups for separate personas
+	const primaryLinks = [
+		{
+			href: "/jogar",
+			label: "Simulador",
+			icon: <Gamepad className="w-4 h-4" />,
+		},
+		{
+			href: "/impacto",
+			label: "Dados Abertos",
+			icon: <BarChart className="w-4 h-4" />,
+		},
+	];
+
+	const utilityLinks = [
+		{
+			href: "/recursos",
+			label: "Guia de Rua",
+			icon: <MapPin className="w-4 h-4" />,
+			className: "text-yellow-400 hover:text-yellow-300 font-bold", // Visual distinction for survival tools
+		},
+	];
+
+	// Hide Navbar on Game Page to prevent overlap with HUD
 	const pathname = usePathname();
-	const router = useRouter();
-
-	// Close menu when route changes
-	// biome-ignore lint/correctness/useExhaustiveDependencies: Trigger on route change
-	useEffect(() => {
-		setIsMenuOpen(false);
-	}, [pathname]);
-
-	const handleNavigation = (sectionId: string) => {
-		if (pathname !== "/") {
-			router.push(`/#${sectionId}`);
-			return;
-		}
-
-		const element = document.getElementById(sectionId);
-		if (element) {
-			element.scrollIntoView({ behavior: "smooth" });
-		}
-		setIsMenuOpen(false);
-	};
+	if (pathname === "/jogar") return null;
 
 	return (
-		<nav className="fixed w-full bg-white/90 backdrop-blur-sm z-50 border-b border-slate-200 shadow-sm">
+		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-50">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="flex justify-between items-center h-16">
-					<Link href="/" className="flex items-center gap-2">
-						<div className="bg-blue-600 p-2 rounded-lg">
-							<MapPin className="h-6 w-6 text-white" />
+				<div className="flex items-center justify-between h-16">
+					{/* 1. BRANDING */}
+					<Link href="/" className="flex items-center gap-2 group">
+						<div className="w-8 h-8 bg-blue-600 group-hover:bg-blue-500 rounded-lg flex items-center justify-center font-bold text-white transition-colors">
+							C
 						</div>
-						<span className="font-bold text-xl tracking-tight text-slate-800">
-							Caminhos <span className="text-blue-600">Campinas</span>
+						<span className="font-bold text-xl tracking-tight text-white transition-colors">
+							Caminhos{" "}
+							<span className="text-blue-500 group-hover:text-blue-400">
+								Campinas
+							</span>
 						</span>
 					</Link>
 
-					{/* Desktop Menu */}
-					<div className="hidden md:flex items-center space-x-8">
-						<button
-							type="button"
-							onClick={() => handleNavigation("projeto")}
-							className="text-slate-600 hover:text-blue-600 font-bold transition-colors uppercase tracking-widest text-xs"
-						>
-							A Rua Tem Voz
-						</button>
-						<Link
-							href="/impacto"
-							className="text-blue-600 hover:text-blue-800 font-bold transition-colors flex items-center gap-1 uppercase tracking-widest text-xs"
-						>
-							<BarChart3 className="w-4 h-4" /> Painel de Impacto
-						</Link>
-						<Link
-							href="/#mapa"
-							className="text-slate-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1 uppercase tracking-widest text-xs"
-						>
-							<MapPin className="w-4 h-4 text-green-600" /> Mapa de Apoio
-						</Link>
-						<button
-							type="button"
-							onClick={() => handleNavigation("demo-ia")}
-							className="text-slate-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-1 uppercase tracking-widest text-xs"
-						>
-							<Sparkles className="w-4 h-4 text-purple-500" /> Demo IA
-						</button>
-						{status === "authenticated" ? (
+					{/* 2. DESKTOP MENU (Bifurcated) */}
+					<div className="hidden md:flex items-center gap-6">
+						{/* Group A: Empathy & Data */}
+						<div className="flex items-center space-x-1 border-r border-zinc-800 pr-6">
 							<Link
-								href="/jogar"
-								className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full font-bold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+								href="/"
+								className="text-zinc-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
 							>
-								Continuar Jornada
+								Início
 							</Link>
-						) : (
-							<button
-								type="button"
-								// Opens login modal only if on landing page, otherwise redirects to home (or login page if we had one)
-								// Since logic for opening modal is in LandingPage, we might need a Global Context for LoginModal or just redirect to custom login page.
-								// For now, if not on home, redirect to home with query param? Or just redirect to /api/auth/signin
-								onClick={() => {
-									if (pathname === "/") {
-										// This is tricky because the modal state is inside LandingPage.
-										// We might need to expose it or move it up.
-										// For simplicity now:
-										window.location.href = "/api/auth/signin";
-									} else {
-										window.location.href = "/api/auth/signin";
-									}
-								}}
-								className="text-slate-600 hover:text-blue-600 font-bold uppercase tracking-widest text-xs"
+							{primaryLinks.map((link) => (
+								<Link
+									key={link.href}
+									href={link.href}
+									className="flex items-center gap-2 text-zinc-300 hover:text-white hover:bg-zinc-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+								>
+									{link.icon}
+									{link.label}
+								</Link>
+							))}
+						</div>
+
+						{/* Group B: Survival Utility (Highlighted) */}
+						{utilityLinks.map((link) => (
+							<Link
+								key={link.href}
+								href={link.href}
+								className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm border border-yellow-500/20 bg-yellow-500/10 hover:bg-yellow-500/20 transition-all ${link.className}`}
 							>
-								Entrar
-							</button>
-						)}
+								{link.icon}
+								{link.label}
+							</Link>
+						))}
+
+						{/* CTA */}
+						<Link href="/apoie">
+							<Button
+								variant="default"
+								className="bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
+							>
+								Apoie Agora
+							</Button>
+						</Link>
 					</div>
 
-					{/* Mobile Menu Button */}
-					<div className="md:hidden">
+					{/* 3. MOBILE MENU BUTTON */}
+					<div className="-mr-2 flex md:hidden">
 						<button
 							type="button"
-							onClick={() => setIsMenuOpen(!isMenuOpen)}
-							className="text-slate-600 p-2"
-							aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+							onClick={() => setIsOpen(!isOpen)}
+							className="inline-flex items-center justify-center p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800"
+							aria-expanded={isOpen ? "true" : "false"}
 						>
-							{isMenuOpen ? (
+							<span className="sr-only">Abrir menu principal</span>
+							{isOpen ? (
 								<X className="h-6 w-6" />
 							) : (
 								<Menu className="h-6 w-6" />
@@ -120,51 +117,62 @@ export function Navbar() {
 				</div>
 			</div>
 
-			{/* Mobile Menu */}
-			{isMenuOpen && (
-				<div className="md:hidden bg-white border-b border-slate-200 animate-fade-in">
-					<div className="px-4 pt-2 pb-6 space-y-2">
-						<button
-							type="button"
-							onClick={() => handleNavigation("projeto")}
-							className="block w-full text-left px-3 py-3 text-slate-600 font-medium border-b border-slate-100"
-						>
-							O Projeto
-						</button>
-						<button
-							type="button"
-							onClick={() => handleNavigation("demo-ia")}
-							className="block w-full text-left px-3 py-3 text-slate-600 font-medium border-b border-slate-100 flex items-center gap-2"
-						>
-							<Sparkles className="w-4 h-4 text-purple-500" /> Demo IA
-						</button>
-						<button
-							type="button"
-							onClick={() => handleNavigation("tecnologia")}
-							className="block w-full text-left px-3 py-3 text-slate-600 font-medium border-b border-slate-100"
-						>
-							Tecnologia
-						</button>
-						<button
-							type="button"
-							onClick={() => {
-								if (status === "authenticated") {
-									router.push("/jogar");
-								} else {
-									window.location.href = "/api/auth/signin";
-								}
-							}}
-							className="block w-full text-left px-3 py-3 text-slate-600 font-medium border-b border-slate-100"
-						>
-							{status === "authenticated" ? "Jogar" : "Entrar"}
-						</button>
-						<button
-							type="button"
-							onClick={() => handleNavigation("doar")}
-							className="block w-full mt-4 text-center bg-blue-600 text-white px-3 py-3 rounded-lg font-bold"
-						>
-							Apoiar Agora
-						</button>
+			{/* 4. MOBILE MENU (Drawer) */}
+			{isOpen && (
+				<div className="md:hidden bg-zinc-950 border-b border-zinc-800 animate-in slide-in-from-top-2">
+					<div className="px-4 pt-2 pb-6 space-y-4">
+						{/* Mobile Group A */}
+						<div className="space-y-1">
+							<p className="text-xs uppercase tracking-widest text-zinc-600 font-bold px-3 py-2">
+								Explorar
+							</p>
+							<Link
+								href="/"
+								onClick={() => setIsOpen(false)}
+								className="block px-3 py-3 rounded-md text-base font-medium text-zinc-300 hover:text-white hover:bg-zinc-900"
+							>
+								Início
+							</Link>
+							{primaryLinks.map((link) => (
+								<Link
+									key={link.href}
+									href={link.href}
+									onClick={() => setIsOpen(false)}
+									className="flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium text-zinc-300 hover:text-white hover:bg-zinc-900"
+								>
+									{link.icon}
+									{link.label}
+								</Link>
+							))}
+						</div>
+
+						<div className="border-t border-zinc-800 my-2"></div>
+
+						{/* Mobile Group B: Utility */}
+						<div className="space-y-1">
+							<p className="text-xs uppercase tracking-widest text-yellow-600 font-bold px-3 py-2">
+								Utilidade Pública
+							</p>
+							{utilityLinks.map((link) => (
+								<Link
+									key={link.href}
+									href={link.href}
+									onClick={() => setIsOpen(false)}
+									className={`flex items-center gap-3 px-3 py-3 rounded-md text-base bg-yellow-950/20 border border-yellow-900/30 ${link.className}`}
+								>
+									{link.icon}
+									{link.label}
+								</Link>
+							))}
+						</div>
+
+						<div className="pt-2">
+							<Link href="/apoie" onClick={() => setIsOpen(false)}>
+								<Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg font-bold">
+									Apoie a Causa
+								</Button>
+							</Link>
+						</div>
 					</div>
 				</div>
 			)}

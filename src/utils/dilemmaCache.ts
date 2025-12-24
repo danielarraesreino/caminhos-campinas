@@ -4,6 +4,7 @@ interface CachedDilemma {
 	timestamp: number;
 }
 
+// biome-ignore lint/complexity/noStaticOnlyClass: utility class pattern
 export class DilemmaCache {
 	private static TTL = 24 * 60 * 60 * 1000; // 24 horas
 	private static PREFIX = "dilemma_cache_";

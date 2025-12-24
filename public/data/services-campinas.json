@@ -1,82 +1,269 @@
 [
 	{
-		"id": "samim",
-		"name": "SAMIM (Pernoite)",
-		"type": "shelter",
-		"coords": [-22.9038, -47.0652],
-		"opening_hours": "18:00 - 19:00 (Entrada)",
-		"address": "R. Francisco Elisiário, 312 - Centro",
-		"description": "Serviço de Acolhimento Municipal (Pernoite). Regras rígidas, não entra ferramenta de trabalho volumosa.",
+		"id": "bp_centro",
+		"name": "Bom Prato (Estadual)",
+		"type": "food",
+		"coords": [
+			-22.9102,
+			-47.0605
+		],
+		"opening_hours": "07:00 (Café), 10:30 (Almoço), 17:00 (Jantar)",
+		"address": "Av. Dr. Moraes Sales, 384 - Centro",
+		"description": "Café (R$0,50), Almoço (R$1,00) e Jantar (R$1,00). Crianças até 6 anos não pagam.",
+		"rules": "Recupera muita fome por baixo custo, mas tem fila.",
 		"effects": {
-			"health": 15,
-			"energy": 40,
-			"dignity": -5
+			"hunger": 90,
+			"money": -1
 		}
 	},
 	{
-		"id": "caritas",
-		"name": "Casa de Passagem Cáritas",
-		"type": "shelter",
-		"coords": [-22.912, -47.058],
-		"opening_hours": "24h (Encaminhamento)",
-		"address": "Próximo à Estação",
-		"description": "Foco em autonomia e reinserção social. Ajuda com documentos.",
+		"id": "bp_movel_1",
+		"name": "Bom Prato Móvel (Jd. Florence)",
+		"type": "food",
+		"coords": [
+			-22.9329,
+			-47.1130
+		],
+		"opening_hours": "A partir das 11h",
+		"address": "Praça do Sirius (Rua José Humberto Bronca)",
+		"description": "Unidade volante (Censo 2024). Foca na periferia noroeste. Gratuito para crianças até 6 anos.",
+		"rules": "Fila chega a dobrar o quarteirão.",
 		"effects": {
-			"health": 10,
+			"hunger": 85,
+			"money": -1
+		}
+	},
+	{
+		"id": "bp_movel_2",
+		"name": "Bom Prato Móvel (Jd. Fernanda)",
+		"type": "food",
+		"coords": [
+			-23.0015,
+			-47.1235
+		],
+		"opening_hours": "A partir das 11h",
+		"address": "Rua Lourival de Almeida",
+		"description": "Atende a região sul (Campo Belo). Essencial para quem está longe do centro.",
+		"rules": "Almoço a R$ 1,00.",
+		"effects": {
+			"hunger": 85,
+			"money": -1
+		}
+	},
+	{
+		"id": "bp_movel_3",
+		"name": "Bom Prato Móvel (Jd. Monte Cristo)",
+		"type": "food",
+		"coords": [
+			-22.9650,
+			-47.0850
+		],
+		"opening_hours": "A partir das 11h",
+		"address": "Rua Fauze Selhe",
+		"description": "Unidade volante na região do Parque Oziel. Alta demanda.",
+		"rules": "Chegue cedo.",
+		"effects": {
+			"hunger": 85,
+			"money": -1
+		}
+	},
+	{
+		"id": "ref_municipal",
+		"name": "Refeitório da Cidadania",
+		"type": "food",
+		"coords": [
+			-22.9090,
+			-47.0620
+		],
+		"opening_hours": "17:00 (Distribuição de senhas)",
+		"address": "Rua Álvares Machado, 766 - Centro",
+		"description": "Jantar gratuito.",
+		"rules": "Gratuito, mas exige chegar cedo. Recupera dignidade (limpo e seguro).",
+		"effects": {
+			"hunger": 70,
+			"dignity": 10,
+			"energy": -10
+		}
+	},
+	{
+		"id": "distrib_voluntaria",
+		"name": "Quentinhas Fraternas",
+		"type": "food",
+		"coords": [
+			-22.9055,
+			-47.0608
+		],
+		"opening_hours": "Noturno (Irregular)",
+		"address": "Largo do Rosário e Catedral",
+		"description": "Distribuição voluntária de alimentos.",
+		"rules": "Evento aleatório, pode não aparecer.",
+		"effects": {
+			"hunger": 50
+		}
+	},
+	{
+		"id": "centro_pop_1",
+		"name": "Centro POP I (Sares)",
+		"type": "hygiene",
+		"coords": [
+			-22.9060,
+			-47.0630
+		],
+		"opening_hours": "Diurno",
+		"address": "Rua Regente Feijó, 824 - Centro",
+		"description": "Banho, lavanderia e guarda-volumes.",
+		"rules": "Essencial para higiene. Evita ser barrado em outros locais.",
+		"effects": {
+			"hygiene": 100,
+			"dignity": 5
+		}
+	},
+	{
+		"id": "centro_pop_2",
+		"name": "Centro POP II",
+		"type": "assistance",
+		"coords": [
+			-22.9025,
+			-47.0645
+		],
+		"opening_hours": "Comercial",
+		"address": "Rua José Paulino, 603 - Centro",
+		"description": "Atendimento técnico, documentação e encaminhamento.",
+		"effects": {
 			"sanity": 10,
 			"stabilityGap": -5
 		}
 	},
 	{
-		"id": "bp_centro",
-		"name": "Bom Prato Centro",
-		"type": "food",
-		"coords": [-22.9102, -47.0605],
-		"opening_hours": "10:30 - 14:00 (Almoço), 17:00 - 18:00 (Jantar)",
-		"address": "Av. Dr. Moraes Sales, 384 - Centro",
-		"description": "Refeições a R$ 1,00. Sustento básico e barato.",
+		"id": "samim",
+		"name": "SAMIM (Albergue Municipal)",
+		"type": "shelter",
+		"coords": [
+			-22.9038,
+			-47.0652
+		],
+		"opening_hours": "18:00 - 19:00 (Entrada)",
+		"address": "Rua Francisco Elisiário, 312 - Bonfim",
+		"description": "Acolhimento noturno (Pernoite).",
+		"rules": "Não permite carroças/grandes volumes. Exige documento ou B.O.",
+		"requirements": [
+			"Documento"
+		],
 		"effects": {
-			"hunger": 80,
-			"money": -1
+			"health": 20,
+			"energy": 80,
+			"dignity": -5
 		}
 	},
 	{
-		"id": "ref_metodista",
-		"name": "Refeitório Metodista",
-		"type": "food",
-		"coords": [-22.9075, -47.0595],
-		"opening_hours": "11:30 - 13:00",
-		"address": "Rua José Paulino x Ferreira Penteado",
-		"description": "Refeição servida em mesa com talheres. Dignidade e acolhimento.",
+		"id": "caritas",
+		"name": "Casa de Passagem (Cáritas)",
+		"type": "shelter",
+		"coords": [
+			-22.912,
+			-47.058
+		],
+		"opening_hours": "24h (Encaminhamento)",
+		"address": "Casa Antônio Fernando dos Santos",
+		"description": "Foco em reinserção e autonomia.",
+		"requirements": [
+			"Encaminhamento Centro POP"
+		],
 		"effects": {
-			"hunger": 80,
-			"dignity": 15
+			"sanity": 15,
+			"stabilityGap": -10
+		}
+	},
+	{
+		"id": "bagageiro",
+		"name": "Bagageiro Municipal",
+		"type": "assistance",
+		"coords": [
+			-22.9135,
+			-47.0680
+		],
+		"opening_hours": "08:00 - 17:00",
+		"address": "Rua Francisco Theodoro, 138 - Vila Industrial",
+		"description": "Guarda de pertences e ferramentas.",
+		"rules": "Permite guardar itens pesados para facilitar locomoção.",
+		"effects": {
+			"energy": 10
 		}
 	},
 	{
 		"id": "saude_rua",
 		"name": "Consultório na Rua",
 		"type": "health",
-		"coords": [-22.9085, -47.0585],
-		"opening_hours": "08:00 - 17:00",
-		"address": "Itinerante - Praças do Centro",
-		"description": "Equipe multidisciplinar para atendimento de saúde na rua. Sem burocracia.",
+		"coords": [
+			-22.9085,
+			-47.0585
+		],
+		"opening_hours": "Itinerante",
+		"address": "Largo do Rosário / Pça José Bonifácio",
+		"description": "Agora com 3 equipes e 27 profissionais itinerantes (Censo 2024). Foco no Centro e áreas vulneráveis.",
+		"rules": "Sem agendamento ou burocracia.",
 		"effects": {
-			"health": 30,
+			"health": 40,
 			"sanity": 5
 		}
 	},
 	{
 		"id": "caps_ad",
-		"name": "CAPS AD Reviver",
+		"name": "CAPS AD",
 		"type": "health",
-		"coords": [-22.918, -47.062],
-		"opening_hours": "08:00 - 18:00",
-		"address": "Centro",
-		"description": "Cuidado especializado para álcool e drogas. Atendimento humanizado.",
+		"coords": [
+			-22.918,
+			-47.062
+		],
+		"opening_hours": "Comercial",
+		"address": "Rua Padre Domingos Giovanini, 95 - Taquaral",
+		"description": "Tratamento de dependência e redução de danos.",
+		"rules": "Recupera Sanidade, mas pode consumir Energia (medicação).",
 		"effects": {
-			"sanity": 20,
+			"sanity": 30,
+			"energy": -20,
 			"addBuff": "SEDADO_CAPS"
+		}
+	},
+	{
+		"id": "cpat",
+		"name": "CPAT",
+		"type": "work",
+		"coords": [
+			-22.9050,
+			-47.0590
+		],
+		"opening_hours": "Comercial",
+		"address": "Av. Campos Sales, 427 - Centro",
+		"description": "Vagas de emprego e emissão de Carteira de Trabalho.",
+		"rules": "Exige vestimenta adequada (Higiene > 50).",
+		"requirements": [
+			"Higiene > 50"
+		],
+		"effects": {
+			"money": 0,
+			"stabilityGap": -20
+		}
+	},
+	{
+		"id": "poupatempo",
+		"name": "Poupatempo Campinas Shopping",
+		"type": "assistance",
+		"coords": [
+			-22.9320,
+			-47.0750
+		],
+		"opening_hours": "Agendado",
+		"address": "Rua Jacy Teixeira de Camargo, 940",
+		"description": "Documentação em geral.",
+		"rules": "Longe do centro (gasta transporte), exige agendamento (celular).",
+		"requirements": [
+			"Agendamento",
+			"Transporte"
+		],
+		"effects": {
+			"money": -5,
+			"stabilityGap": -15
 		}
 	}
 ]

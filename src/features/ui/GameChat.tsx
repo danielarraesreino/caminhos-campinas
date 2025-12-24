@@ -2,6 +2,8 @@
 
 import { useChat } from "@ai-sdk/react";
 import { Send } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,10 +15,8 @@ export function GameChat() {
 	const [inputValue, setInputValue] = useState("");
 	const [isProcessing, setIsProcessing] = useState(false);
 
-	// ✅ FIX ERRO 2 & 3: useChat casted to any to avoid TS build error with 'append'
-	// biome-ignore lint/suspicious/noExplicitAny: library types mismatch
-	const { messages, append, isLoading, error } = useChat({
-		api: "/api/chat",
+	// biome-ignore lint/suspicious/noExplicitAny: library types mismatch workaround
+	const { messages, sendMessage, isLoading, error } = useChat({
 		body: {
 			gameState: {
 				health: gameState.health,
@@ -27,36 +27,34 @@ export function GameChat() {
 			},
 		},
 		// biome-ignore lint/suspicious/noExplicitAny: library types mismatch
-		onError: (error: any) => {
-			console.error("❌ Chat Error:", error);
+		onError: (err: any) => {
+			console.error("❌ Chat Error:", err);
 		},
-		// biome-ignore lint/suspicious/noExplicitAny: library types mismatch
 	} as any) as any;
 
-	// Auto-scroll para o fim do chat
-	// biome-ignore lint/correctness/useExhaustiveDependencies: scroll needs to trigger on message update
+	// Auto-scroll logic
+	// biome-ignore lint/correctness/useExhaustiveDependencies: scroll should accept latest messages
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
-	// ✅ CORREÇÃO PRINCIPAL: async/await para não bloquear a UI
-	// Isso resolve o INP de 6000ms → <100ms
+	// ✅ Non-blocking submit handler
 	const handleSend = async (e?: React.FormEvent) => {
-		e?.preventDefault();
+		e?.preventDefault(); // CRITICAL: Stop form submission refresh
 		if (!inputValue.trim() || isLoading || isProcessing) return;
 
 		const userText = inputValue.trim();
-		setInputValue(""); // Limpa imediatamente para resposta visual rápida
+		setInputValue("");
 		setIsProcessing(true);
 
 		try {
-			// ✅ Chamada ASSÍNCRONA - não bloqueia a thread principal
-			await append({
+			// Using sendMessage found in runtime instrospection
+			await sendMessage({
 				role: "user",
 				content: userText,
 			});
-		} catch (error) {
-			console.error("Erro ao enviar mensagem:", error);
+		} catch (err) {
+			console.error("Erro ao enviar mensagem:", err);
 		} finally {
 			setIsProcessing(false);
 		}
@@ -72,17 +70,49 @@ export function GameChat() {
 					</div>
 				)}
 
-				{/* biome-ignore lint/suspicious/noExplicitAny: message type from lib */}
 				{messages.map((m: any) => (
 					<div
 						key={m.id}
-						className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+						className={`flex gap-3 w-full px-2 ${m.role === "user" ? "flex-row-reverse" : "flex-row"}`}
 					>
+						{/* Avatar */}
+						<div className="flex-shrink-0 mt-1">
+							{m.role === "user" ? (
+								<div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center shadow-sm">
+									{/* biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon */}
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										className="text-white"
+									>
+										<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+										<circle cx="12" cy="7" r="4" />
+									</svg>
+								</div>
+							) : (
+								<Image
+									src={`https://api.dicebear.com/7.x/bottts/svg?seed=${m.id || "system"}`}
+									alt="Mestre"
+									width={32}
+									height={32}
+									className="rounded-full bg-purple-100 shadow-sm border border-purple-200"
+								/>
+							)}
+						</div>
+
+						{/* Bubble */}
 						<div
-							className={`max-w-[80%] rounded-lg p-3 text-sm ${
+							className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
 								m.role === "user"
-									? "bg-blue-600 text-white"
-									: "bg-white dark:bg-gray-800 border shadow-sm"
+									? "bg-blue-600 text-white rounded-tr-none"
+									: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
 							}`}
 						>
 							{m.content}

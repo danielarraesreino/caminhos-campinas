@@ -13,52 +13,80 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { filterByDensity } from "@/utils/anonymization";
-import {
-	generateMockMetrics,
-	type MockEvent,
-} from "@/utils/generateMockMetrics";
+
+import { type TelemetryEvent, telemetryService } from "@/services/telemetry";
+import { InequalityChart } from "./InequalityChart";
 import { MaslowComparison } from "./MaslowComparison";
 import { ODSExplainer } from "./ODSExplainer";
 
+// ... imports
+
 export function ImpactDashboard() {
-	const [mockData, setMockData] = useState<MockEvent[]>([]);
+	const [realData, setRealData] = useState<TelemetryEvent[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [showAnonInfo, setShowAnonInfo] = useState(false);
 
 	useEffect(() => {
-		const data = generateMockMetrics(1500);
-		setMockData(data);
-		setLoading(false);
+		async function loadData() {
+			try {
+				const events = await telemetryService.getAllEvents();
+				setRealData(events);
+			} catch (e) {
+				console.error("Failed to load dashboard data", e);
+			} finally {
+				setLoading(false);
+			}
+		}
+		loadData();
 	}, []);
 
-	const aggregatedData = useMemo(() => {
-		const gridMap = new Map<string, MockEvent[]>();
-		mockData.forEach((event) => {
-			const events = gridMap.get(event.grid) || [];
-			events.push(event);
-			gridMap.set(event.grid, events);
-		});
-		return filterByDensity(gridMap, 5);
-	}, [mockData]);
-
+	// Processamento Real (ODS)
 	const stats = useMemo(() => {
-		const counts = { ODS_2: 0, ODS_11: 0, ODS_10: 0, ODS_3: 0, avg_failure: 0 };
-		let totalFailure = 0,
-			eventCount = 0;
+		const counts = {
+			ODS_2: 0,
+			ODS_11: 0,
+			ODS_10: 0,
+			ODS_3: 0,
+			avg_failure: 0,
+			total_decisions: 0,
+		};
 
-		aggregatedData.forEach((events) => {
-			events.forEach((e) => {
-				const key = e.ods as keyof typeof counts;
-				if (counts[key] !== undefined) (counts[key] as number)++;
-				totalFailure += e.systemic_failure;
-				eventCount++;
-			});
+		// Mapeamento de ODS (Simples)
+		realData.forEach((event) => {
+			if (event.action_type === "DECISION_MADE" && event.ods_category) {
+				counts.total_decisions++;
+				if (event.ods_category.includes("ODS_2")) counts.ODS_2++;
+				if (event.ods_category.includes("ODS_11")) counts.ODS_11++;
+				if (event.ods_category.includes("ODS_10")) counts.ODS_10++;
+				if (event.ods_category.includes("ODS_3")) counts.ODS_3++;
+			}
 		});
+
+		// "Avg Failure" como proxy de vulnerabilidade (mockado por enquanto ou baseado em outcome negativo)
+		// Se outcome contiver "RISCO" ou "PERDA", conta como falha sistêmica
+		let negativeOutcomes = 0;
+		realData.forEach((event) => {
+			// biome-ignore lint/suspicious/noExplicitAny: metadata type
+			const outcome = (event.metadata as any)?.outcome || "";
+			if (
+				outcome.includes("RISCO") ||
+				outcome.includes("PERDA") ||
+				outcome.includes("DEGRADACAO")
+			) {
+				negativeOutcomes++;
+			}
+		});
+
 		counts.avg_failure =
-			eventCount > 0 ? Math.round(totalFailure / eventCount) : 0;
+			counts.total_decisions > 0
+				? Math.round((negativeOutcomes / counts.total_decisions) * 100)
+				: 0;
 		return counts;
-	}, [aggregatedData]);
+	}, [realData]);
+
+	// Ocultar mapa se não houver dados suficientes (Privacy)
+	// ... (Manter lógica de mapa ou remover por hora se complexo migrar)
+	// Para simplificar, não vou quebrar o mapa agora, apenas os cards de métricas.
 
 	if (loading)
 		return (
@@ -94,6 +122,7 @@ export function ImpactDashboard() {
 
 				<div className="flex flex-col items-end gap-3">
 					<button
+						type="button"
 						onClick={() => setShowAnonInfo(!showAnonInfo)}
 						className="flex items-center gap-3 bg-blue-900/10 border border-blue-600/40 px-6 py-3 rounded-xl text-sm font-black text-blue-400 hover:bg-blue-600/20 hover:border-blue-500 transition-all group"
 					>
@@ -189,8 +218,10 @@ export function ImpactDashboard() {
 			</div>
 
 			{/* Área Maslow e ODS (Espaçamento Ajustado) */}
-			<div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8">
-				<div className="lg:col-span-2">
+			<div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 pt-8">
+				{/* Coluna da Esquerda: Análise de Desigualdade (Novo) */}
+				<div className="space-y-8">
+					<InequalityChart data={realData} />
 					<ODSExplainer />
 				</div>
 
@@ -288,7 +319,7 @@ function RankingCard({
 			<div className="space-y-3">
 				{topThree.map((item, i) => (
 					<div
-						key={i}
+						key={`${item.label}-${i}`}
 						className={`flex items-center justify-between p-3 rounded-xl border ${item.highlight ? "bg-blue-600/10 border-blue-600/50" : "bg-black border-slate-900"}`}
 					>
 						<div className="flex items-center gap-3">

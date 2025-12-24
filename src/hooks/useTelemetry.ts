@@ -1,7 +1,11 @@
 import { useCallback, useEffect } from "react";
+import { useGameContext } from "@/contexts/GameContext"; // Import Context
 import { type TelemetryAction, telemetryService } from "../services/telemetry";
 
 export const useTelemetry = () => {
+	// Get Avatar from Context to enrich data
+	const { avatar } = useGameContext();
+
 	const sync = useCallback(async () => {
 		if (!navigator.onLine) return;
 
@@ -29,18 +33,34 @@ export const useTelemetry = () => {
 	}, []);
 
 	const trackAction = useCallback(
-		async (action: TelemetryAction, data: Record<string, any> = {}) => {
-			await telemetryService.track(action, data);
+		async (
+			action: TelemetryAction,
+			data: Record<string, unknown> = {},
+			ods_category?: string,
+		) => {
+			// ODS 5 & 10 Enrichments
+			const demographicData = avatar
+				? {
+						demographic_gender: avatar.gender,
+						demographic_ethnicity: avatar.ethnicity || "unknown", // Fallback
+						demographic_age: avatar.ageRange,
+						demographic_time_street: avatar.timeOnStreet,
+					}
+				: {};
+
+			const enrichedMetadata = {
+				...data,
+				...demographicData,
+			};
+
+			await telemetryService.track(action, enrichedMetadata, ods_category);
 
 			// Try to sync immediately if online
 			if (navigator.onLine) {
-				// Debounce or just fire and forget?
-				// For requirement "attempt to send", we call sync.
-				// We catch errors inside sync so it won't crash the app.
 				sync();
 			}
 		},
-		[sync],
+		[sync, avatar], // Avatar is dependency
 	);
 
 	// Sync on online event

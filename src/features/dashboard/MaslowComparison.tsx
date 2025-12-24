@@ -194,7 +194,8 @@ function PyramidTier({
 	level,
 	tooltipId,
 	onInfoClick,
-}: any) {
+}: // biome-ignore lint/suspicious/noExplicitAny: legacy props
+	any) {
 	return (
 		<div
 			className={`${width} min-h-[70px] border-2 transition-all duration-300 flex items-center justify-between px-6 py-4 relative group rounded-xl

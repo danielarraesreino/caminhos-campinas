@@ -1,4 +1,4 @@
-import { applyTimeJitter, toGrid } from "../utils/anonymization";
+import { anonymizeLocation, applyTimeJitter } from "../utils/anonymization";
 
 // Coordenadas centrais aproximadas de Campinas
 const CAMPINAS_COORDS = { lat: -22.9064, lng: -47.0616 };
@@ -40,7 +40,7 @@ export function generateMockMetrics(count = 1000): MockEvent[] {
 			id: crypto.randomUUID(),
 			ods: ODS_MAP[type],
 			type,
-			grid: toGrid(lat, lng),
+			grid: anonymizeLocation(lat, lng),
 			timestamp: applyTimeJitter(now - Math.random() * 7 * 24 * 60 * 60 * 1000), // Últimos 7 dias
 			systemic_failure: Math.floor(Math.random() * 100),
 		});

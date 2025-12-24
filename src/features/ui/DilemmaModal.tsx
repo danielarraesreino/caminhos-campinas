@@ -14,6 +14,7 @@ import {
 import { InteractiveText } from "@/components/ui/InteractiveText";
 import type { Dilemma } from "@/features/game-loop/dilemmas";
 import { useAudio } from "@/hooks/useAudio";
+import { TelemetryAction, telemetryService } from "@/services/telemetry";
 
 interface DilemmaModalProps {
 	dilemma: Dilemma | null;
@@ -46,6 +47,16 @@ export function DilemmaModal({
 
 	const handleOptionSelect = (index: number) => {
 		setSelectedOption(index);
+
+		// Telemetria Ética (Step 4)
+		const option = dilemma.options[index];
+		if (option.telemetryTag) {
+			telemetryService.track(
+				TelemetryAction.DECISION_MADE,
+				option.telemetryTag,
+				option.telemetryTag.ods,
+			);
+		}
 	};
 
 	const handleContinue = () => {
@@ -89,12 +100,17 @@ export function DilemmaModal({
 								? "Impacto_Sistêmico"
 								: dilemma.title.replace(" ", "_")}
 						</DialogTitle>
-						<DialogDescription className="text-slate-400 text-base leading-relaxed font-serif italic pt-2">
-							{currentOption ? (
-								<InteractiveText content={currentOption.consequence} />
-							) : (
-								<InteractiveText content={dilemma.description} />
-							)}
+						<DialogDescription
+							className="text-slate-400 text-base leading-relaxed font-serif italic pt-2"
+							asChild
+						>
+							<div>
+								{currentOption ? (
+									<InteractiveText text={currentOption.consequence} />
+								) : (
+									<InteractiveText text={dilemma.description} />
+								)}
+							</div>
 						</DialogDescription>
 					</DialogHeader>
 
@@ -119,7 +135,14 @@ export function DilemmaModal({
 						)}
 					</div>
 
-					<DialogFooter className="mt-8 border-t border-slate-900 pt-6">
+					<DialogFooter className="mt-8 border-t border-slate-900 pt-6 flex flex-col gap-4">
+						{currentOption?.telemetryTag && (
+							<div className="flex items-center justify-center gap-2 text-[10px] text-blue-500 font-mono tracking-widest uppercase opacity-80 animate-pulse">
+								<div className="w-2 h-2 bg-blue-500 rounded-full" />
+								Dado Anônimo Registrado:{" "}
+								{currentOption.telemetryTag.ods.replace(/_/g, " ")}
+							</div>
+						)}
 						{currentOption && (
 							<Button
 								type="button"
