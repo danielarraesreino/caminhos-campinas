@@ -15,8 +15,7 @@ import { useEffect, useState } from "react";
 import { type ServiceType, useServices } from "@/contexts/ServicesContext";
 
 export default function ResourcesPage() {
-	const { services, loading, error, refreshServices, filterServices } =
-		useServices();
+	const { services, loading, refreshServices, filterServices } = useServices();
 	const [activeCategory, setActiveCategory] = useState<ServiceType | "all">(
 		"all",
 	);
@@ -233,6 +232,10 @@ export default function ResourcesPage() {
 
 							<button
 								type="button"
+								onClick={() => {
+									const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
+									window.open(url, "_blank");
+								}}
 								className="w-full bg-zinc-800 border border-zinc-700 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
 							>
 								<MapPin className="w-4 h-4" />
@@ -253,6 +256,70 @@ export default function ResourcesPage() {
 						</button>
 					</div>
 				)}
+			</div>
+
+			{/* Mapa do Site / Navegação Completa */}
+			<div className="mt-16 pt-8 border-t border-zinc-800">
+				<h2 className="text-2xl font-black text-blue-500 uppercase tracking-tighter mb-6">
+					Navegação do Site
+				</h2>
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+					<a
+						href="/"
+						className="block bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl hover:bg-zinc-800 transition-colors group"
+					>
+						<h3 className="text-white font-bold group-hover:text-blue-400">
+							🏠 Início
+						</h3>
+						<p className="text-zinc-500 text-xs mt-1">
+							Página inicial e apresentação do projeto
+						</p>
+					</a>
+					<a
+						href="/jogar"
+						className="block bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl hover:bg-zinc-800 transition-colors group"
+					>
+						<h3 className="text-white font-bold group-hover:text-blue-400">
+							🎮 Simulador
+						</h3>
+						<p className="text-zinc-500 text-xs mt-1">
+							Jogue o simulador de sobrevivência
+						</p>
+					</a>
+					<a
+						href="/impacto"
+						className="block bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl hover:bg-zinc-800 transition-colors group"
+					>
+						<h3 className="text-white font-bold group-hover:text-blue-400">
+							📊 Dados de Impacto
+						</h3>
+						<p className="text-zinc-500 text-xs mt-1">
+							Dashboard de dados abertos e telemetria
+						</p>
+					</a>
+					<a
+						href="/sobre"
+						className="block bg-zinc-900/50 border border-zinc-800 p-4 rounded-xl hover:bg-zinc-800 transition-colors group"
+					>
+						<h3 className="text-white font-bold group-hover:text-blue-400">
+							ℹ️ Sobre
+						</h3>
+						<p className="text-zinc-500 text-xs mt-1">
+							Conceito, equipe e metodologia
+						</p>
+					</a>
+					<a
+						href="/apoie"
+						className="block bg-blue-900/10 border border-blue-500/30 p-4 rounded-xl hover:bg-blue-900/20 transition-colors group"
+					>
+						<h3 className="text-blue-400 font-bold group-hover:text-blue-300">
+							🤝 Apoie
+						</h3>
+						<p className="text-zinc-500 text-xs mt-1">
+							Saiba como contribuir com a causa
+						</p>
+					</a>
+				</div>
 			</div>
 		</div>
 	);

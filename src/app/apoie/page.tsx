@@ -1,6 +1,6 @@
 "use client";
 
-import { Coffee, Heart, Utensils } from "lucide-react";
+import { Coffee, ExternalLink, Heart, Share2, Utensils } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { DilemmaContribution } from "@/features/ui/DilemmaContribution";
 
 interface SupportCardProps {
 	title: string;
