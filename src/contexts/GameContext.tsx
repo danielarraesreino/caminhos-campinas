@@ -406,7 +406,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 	}, [state, hasHydrated, db]);
 
 	// Helper functions wrapping dispatch
-	const modifyStat = useCallback((stat: string, amount: number) => {
+	// biome-ignore lint/suspicious/noExplicitAny: dynamic stat access
+	const modifyStat = useCallback((stat: any, amount: number) => {
 		dispatch({ type: "MODIFY_STAT", payload: { stat, amount } });
 	}, []);
 
