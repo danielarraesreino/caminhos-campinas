@@ -169,7 +169,7 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 									variant="ghost"
 									size="sm"
 									aria-label={`Traçar rota para ${service.name}`}
-									className="flex-1 text-[10px] uppercase font-bold h-9 bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
+									className="flex-1 text-[10px] uppercase font-bold min-h-[48px] h-auto bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
 									onClick={() => {
 										const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
 										window.open(url, "_blank");
@@ -185,7 +185,7 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 											? `Serviço bloqueado: ${service.name}`
 											: `Utilizar serviço ${service.name}`
 									}
-									className={`flex-1 text-[10px] uppercase font-bold h-9 shadow-lg ${isBlocked ? "bg-zinc-800 text-red-400 hover:bg-zinc-800 cursor-not-allowed border border-red-900/30" : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20"}`}
+									className={`flex-1 text-[10px] uppercase font-bold min-h-[48px] h-auto shadow-lg ${isBlocked ? "bg-zinc-800 text-red-400 hover:bg-zinc-800 cursor-not-allowed border border-red-900/30" : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-900/20"}`}
 									onClick={() => {
 										if (isBlocked) {
 											alert(
