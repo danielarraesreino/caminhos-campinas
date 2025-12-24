@@ -4,9 +4,8 @@ import { MapPin } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { useServices } from "@/contexts/ServicesContext"; // Updated import
-import { DilemmaMatcher } from "@/services/DilemmaMatcher";
-import { ALL_DILEMMAS } from "@/features/game-loop/dilemmas";
+import { useServices } from "@/contexts/ServicesContext";
+import { useDilemmaMatcher } from "@/hooks/useDilemmaMatcher";
 import { ActionInput } from "./ActionInput";
 
 interface ChatMessage {
@@ -46,6 +45,9 @@ export function GameChat() {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
+	// Use the new hook for intelligent matching
+	const { findMatch } = useDilemmaMatcher();
+
 	const handleAction = async (text: string, audioBlob?: Blob | null) => {
 		setIsProcessing(true);
 
@@ -57,34 +59,31 @@ export function GameChat() {
 		};
 		setMessages((prev) => [...prev, newMessage]);
 
-		// 2. Upload Audio (Fire-and-forget)
+		// 2. Upload Audio (Fire-and-forget for research/telemetry)
 		if (audioBlob) {
 			const uploadUrl = process.env.NEXT_PUBLIC_HOSTINGER_API_URL;
-			if (uploadUrl) {
+			const secret = process.env.NEXT_PUBLIC_UPLOAD_SECRET;
+
+			if (uploadUrl && secret) {
 				const formData = new FormData();
 				formData.append("audio", audioBlob, `voice_${Date.now()}.webm`);
 				formData.append("transcript", text);
-				// Add secret key for security
-				const secret = process.env.NEXT_PUBLIC_UPLOAD_SECRET || "";
 				formData.append("key", secret);
 
 				fetch(uploadUrl, {
 					method: "POST",
 					body: formData,
-				}).catch(err => console.error("Audio upload failed", err));
+				}).catch((err) => console.error("Audio upload failed", err));
 			}
 		}
 
-		// 3. Match Dilemma (Deterministic)
-		// Small delay to simulate processing
-		await new Promise(resolve => setTimeout(resolve, 600));
+		// 3. Match Dilemma (Deterministic & Local)
+		// Small delay to simulate processing and feel natural
+		await new Promise((resolve) => setTimeout(resolve, 600));
 
-		const bestMatch = DilemmaMatcher.findBestDilemma(
-			text,
-			userLocation,
-			ALL_DILEMMAS,
-			services.map(s => ({ id: s.id, coords: s.coords }))
-		);
+		// Use the new hook which encapsulates services + distance logic + keyword matching
+		const coords = userLocation ? [userLocation.lat, userLocation.lng] as [number, number] : null;
+		const bestMatch = findMatch(text, coords);
 
 		if (bestMatch) {
 			// Trigger Dilemma
@@ -98,17 +97,29 @@ export function GameChat() {
 				},
 			]);
 		} else {
-			// No match - Contextual Hint
-			// Simple heuristic: check if input contains "fome" or "saúde" to give specific hints
-			let response = "Você olha ao redor, mas nada chama sua atenção aqui.";
+			// No match - Contextual Hint (Fallback AI or hardcoded hints)
+			// Using the previous heuristic fallback, but now it's explicit "Flavor Text"
+			let response = "Você olha ao redor, mas a rua parece vazia e silenciosa.";
 
 			const lowerText = text.toLowerCase();
 			if (lowerText.includes("fome") || lowerText.includes("comida")) {
-				response = "Você sente fome, mas não vê comida por perto. Tente buscar o 'Bom Prato' ou 'Refeitório' no mapa.";
-			} else if (lowerText.includes("saude") || lowerText.includes("dor") || lowerText.includes("médico")) {
-				response = "Sua saúde preocupa. Procure pelo 'Consultório na Rua' ou 'CAPS' no mapa.";
-			} else if (lowerText.includes("trabalho") || lowerText.includes("dinheiro")) {
-				response = "O movimento está fraco. Talvez a 'Casa das Oficinas' ou o 'CPAT' tenham oportunidades.";
+				response =
+					"Você sente fome. Tente buscar o 'Bom Prato' ou 'Refeitório' no mapa acima.";
+			} else if (
+				lowerText.includes("saude") ||
+				lowerText.includes("dor") ||
+				lowerText.includes("médico")
+			) {
+				response =
+					"Sua condição de saúde preocupa. Procure pelo 'Consultório na Rua' ou 'CAPS'.";
+			} else if (
+				lowerText.includes("trabalho") ||
+				lowerText.includes("dinheiro")
+			) {
+				response =
+					"O movimento está fraco. Talvez a 'Casa das Oficinas' ou o 'CPAT' tenham oportunidades no centro.";
+			} else if (lowerText.includes("dormir") || lowerText.includes("sono")) {
+				response = "A noite é perigosa. Procure o 'SAMIM' ou a 'Casa de Passagem'.";
 			}
 
 			setMessages((prev) => [
@@ -139,7 +150,9 @@ export function GameChat() {
 					<div className="text-center text-gray-500 mt-10">
 						<p>Você acorda na Praça do Rosário.</p>
 						<p className="text-xs mt-2">
-							Fale ou digite sua necessidade.<br />ex: "Estou com fome", "Preciso de médico"
+							Fale ou digite sua necessidade.
+							<br />
+							ex: "Estou com fome", "Preciso de médico"
 						</p>
 					</div>
 				)}

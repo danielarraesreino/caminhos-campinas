@@ -57,13 +57,10 @@ export function useServiceLogic() {
 
 		// 2. SAMIM / Abrigo Check (Explicit Rule)
 		if (service.id === "samim" || service.type === "shelter") {
-			if (
-				workTool.type === "CARRINHO_RECICLAGEM" &&
-				!workTool.isConfiscated
-			) {
+			if (workTool.type === "CARRINHO_RECICLAGEM" && !workTool.isConfiscated) {
 				return {
 					allowed: false,
-					reason: "Regra do Abrigo: Não é permitido entrar com carrinho. Você precisa deixá-lo fora (risco de furto).",
+					reason: "Regra do local: Proibido entrada de carroças",
 				};
 			}
 		}

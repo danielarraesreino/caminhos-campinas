@@ -386,18 +386,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				});
 			} catch (unknownError) {
 				// biome-ignore lint/suspicious/noExplicitAny: reliable error access
-				const e = unknownError as any;
+				const error = unknownError as any;
 
+				// Correção de tipagem para Vibe Coding
 				if (
-					e.name === "InvalidStateError" ||
-					e.message?.includes("closing") ||
-					e.message?.includes("connection is closing")
+					error?.name !== "InvalidStateError" &&
+					!error?.message?.includes("closing")
 				) {
-					console.warn(
-						"Database connection already closed or closing - temporary state preserved in RAM",
-					);
-				} else {
-					console.error("Critical failure saving game state to PouchDB", e);
+					console.error("Critical failure saving game state:", error);
 				}
 			}
 		}, 1000);

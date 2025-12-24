@@ -134,9 +134,21 @@ export function DilemmaModal({
 						>
 							<div>
 								{currentOption ? (
-									<div className={outcome === "failure" ? "text-red-400" : "text-blue-300"}>
-										{outcome === "failure" && <span className="block mb-2 font-bold uppercase">[FALHA NO RISCO]</span>}
-										{outcome === "success" && currentOption.risk ? <span className="block mb-2 font-bold uppercase text-green-400">[SUCESSO]</span> : null}
+									<div
+										className={
+											outcome === "failure" ? "text-red-400" : "text-blue-300"
+										}
+									>
+										{outcome === "failure" && (
+											<span className="block mb-2 font-bold uppercase">
+												[FALHA NO RISCO]
+											</span>
+										)}
+										{outcome === "success" && currentOption.risk ? (
+											<span className="block mb-2 font-bold uppercase text-green-400">
+												[SUCESSO]
+											</span>
+										) : null}
 										<InteractiveText text={feedbackText} />
 									</div>
 								) : (
@@ -194,6 +206,6 @@ export function DilemmaModal({
 					</DialogFooter>
 				</div>
 			</DialogContent>
-		</Dialog >
+		</Dialog>
 	);
 }

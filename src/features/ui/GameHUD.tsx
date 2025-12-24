@@ -8,11 +8,15 @@ import {
 	Package,
 	ShieldAlert,
 	Wallet,
+	Mic, // New Icon
 } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { VoiceReporter } from "./VoiceReporter";
 
 export function GameHUD() {
+	const [isReporterOpen, setIsReporterOpen] = useState(false);
 	const {
 		health,
 		sanity,
@@ -133,6 +137,14 @@ export function GameHUD() {
 						</div>
 					</div>
 
+					<button
+						onClick={() => setIsReporterOpen(true)}
+						className="hidden md:flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white px-5 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition-transform hover:scale-105 shadow-lg shadow-purple-900/20"
+					>
+						<Mic className="w-4 h-4" />
+						RELATO
+					</button>
+
 					<a
 						href="/recursos"
 						target="_blank"
@@ -144,6 +156,23 @@ export function GameHUD() {
 					</a>
 				</div>
 			</div>
+
+			{/* Voice Reporter Modal / Overlay */}
+			{
+				isReporterOpen && (
+					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+						<div className="relative w-full max-w-md">
+							<button
+								onClick={() => setIsReporterOpen(false)}
+								className="absolute -top-12 right-0 text-white hover:text-gray-300"
+							>
+								Fechar [X]
+							</button>
+							<VoiceReporter />
+						</div>
+					</div>
+				)
+			}
 		</>
 	);
 }
@@ -232,12 +261,14 @@ function StatCard({
 			{/* Progress Bar Mini */}
 			{/* biome-ignore lint/style/noInlineStyle: dynamic width */}
 			<div className="w-12 h-1.5 bg-slate-900/80 rounded-full overflow-hidden">
+				{/* biome-ignore lint/style/noInlineStyle: dynamic width */}
 				<div
 					className={`h-full rounded-full transition-all duration-700 ${barColor}`}
-					style={{ width: `${Math.max(0, Math.min(100, (value / max) * 100))}%` }}
+					style={{
+						width: `${Math.max(0, Math.min(100, (value / max) * 100))}%`,
+					}}
 				/>
 			</div>
 		</div>
 	);
 }
-

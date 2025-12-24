@@ -78,8 +78,8 @@ export function InequalityChart({ data }: InequalityChartProps) {
 							{stats.groupA.refusalRate}% Negação
 						</span>
 					</div>
-					{/* biome-ignore lint/style/noInlineStyle: dynamic width */}
 					<div className="h-4 bg-slate-800 rounded-full overflow-hidden relative">
+						{/* biome-ignore lint/style/noInlineStyle: dynamic width */}
 						<div
 							className="absolute top-0 left-0 h-full bg-red-600 transition-all duration-1000 ease-out"
 							style={{ width: `${stats.groupA.refusalRate}%` }}
@@ -104,8 +104,8 @@ export function InequalityChart({ data }: InequalityChartProps) {
 							{stats.groupB.refusalRate}% Negação
 						</span>
 					</div>
-					{/* biome-ignore lint/style/noInlineStyle: dynamic width */}
 					<div className="h-4 bg-slate-800 rounded-full overflow-hidden relative">
+						{/* biome-ignore lint/style/noInlineStyle: dynamic width */}
 						<div
 							className={`absolute top-0 left-0 h-full transition-all duration-1000 ease-out ${stats.groupB.refusalRate > 30 ? "bg-orange-500" : "bg-emerald-500"}`}
 							style={{ width: `${stats.groupB.refusalRate}%` }}

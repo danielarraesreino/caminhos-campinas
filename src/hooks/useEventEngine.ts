@@ -61,12 +61,15 @@ export function useEventEngine() {
 			// 2. Efeitos Especializados
 			if (effectToApply.money) addMoney(effectToApply.money);
 			if (effectToApply.timeAdvance) advanceTime(effectToApply.timeAdvance);
-			if (effectToApply.inventoryAdd) addToInventory(effectToApply.inventoryAdd);
+			if (effectToApply.inventoryAdd)
+				addToInventory(effectToApply.inventoryAdd);
 			if (effectToApply.clearInventory) {
 				// Esvaziar inventário (Logic needed in context or just iterating IDs?)
 				// Simplified: Context doesn't have clearInventory, so we rely on manual removal or updated hook
 				// For now, let's assume valid intent but maybe limited implementation
-				console.log("Inventory clearing requested but not fully implemented in context yet.");
+				console.log(
+					"Inventory clearing requested but not fully implemented in context yet.",
+				);
 			}
 
 			// 3. Efeitos Sociais Campinas

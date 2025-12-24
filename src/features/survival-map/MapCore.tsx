@@ -28,16 +28,30 @@ const UserIcon = new L.Icon({
 	shadowSize: [41, 41],
 });
 
-const ResourceIcon = new L.Icon({
-	iconUrl:
-		"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
-	shadowUrl:
-		"https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-	iconSize: [25, 41],
-	iconAnchor: [12, 41],
-	popupAnchor: [1, -34],
-	shadowSize: [41, 41],
-});
+// Dynamic Icon Factory
+const getIconForType = (type: string) => {
+	let colorUrl = "marker-icon-2x-blue.png"; // Default
+
+	if (type === "shelter" || type === "albergue") {
+		colorUrl = "marker-icon-2x-violet.png";
+	} else if (type === "food" || type === "alimentacao") {
+		colorUrl = "marker-icon-2x-orange.png";
+	} else if (type === "health" || type === "saude") {
+		colorUrl = "marker-icon-2x-red.png";
+	} else if (type === "work") {
+		colorUrl = "marker-icon-2x-gold.png";
+	}
+
+	return new L.Icon({
+		iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/${colorUrl}`,
+		shadowUrl:
+			"https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+		iconSize: [25, 41],
+		iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+		shadowSize: [41, 41],
+	});
+};
 
 function MapController({ center }: { center: [number, number] }) {
 	const map = useMap();
@@ -90,7 +104,11 @@ export default function MapCore({ userPosition, resources }: MapCoreProps) {
 
 			{/* Resources Markers */}
 			{resources.map((res) => (
-				<Marker key={res.id} position={[res.lat, res.lng]} icon={ResourceIcon}>
+				<Marker
+					key={res.id}
+					position={[res.lat, res.lng]}
+					icon={getIconForType(res.type)}
+				>
 					<Popup>
 						<strong>{res.name}</strong>
 						<br />

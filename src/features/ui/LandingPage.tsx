@@ -17,10 +17,10 @@ import {
 	X,
 } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DilemmaCache } from "@/utils/dilemmaCache";
-import { AvatarCreation } from "./AvatarCreation";
 import { getAssetUrl } from "@/utils/getAssetUrl";
+import { AvatarCreation } from "./AvatarCreation";
 
 export default function LandingPage() {
 	// const [isMenuOpen, setIsMenuOpen] = useState(false); // Removed local menu state
@@ -171,8 +171,9 @@ export default function LandingPage() {
 						"1.png",
 						"2.png",
 						"3.png",
-						"4.png"
+						"4.png",
 					].map((img, index) => (
+						// biome-ignore lint/style/noInlineStyle: dynamic background
 						<div
 							key={img}
 							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${currentBgIndex === index ? "opacity-40" : "opacity-0"
@@ -463,8 +464,11 @@ export default function LandingPage() {
 				className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white relative overflow-hidden"
 			>
 				<div
+					// biome-ignore lint/style/noInlineStyle: dynamic background
 					className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay"
-					style={{ backgroundImage: `url(${getAssetUrl("placeholder-map.png")})` }}
+					style={{
+						backgroundImage: `url(${getAssetUrl("placeholder-map.png")})`,
+					}}
 				></div>
 				<div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
 					<div className="inline-block bg-green-500/20 border border-green-400/30 rounded-full px-4 py-1.5 mb-6">

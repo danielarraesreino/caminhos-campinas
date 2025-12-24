@@ -1,64 +1,87 @@
-import type React from "react";
-import { GLOSSARY_TERMS } from "@/data/glossary";
+"use client";
+
+import React, { useState } from "react";
+import { GLOSSARY } from "@/data/glossary";
 
 interface InteractiveTextProps {
 	text: string;
+	className?: string;
 }
 
-export const InteractiveText: React.FC<InteractiveTextProps> = ({ text }) => {
-	// 1. Create a regex from the keys of GLOSSARY_TERMS (escape special chars if needed)
-	// We want to match whole words or exact phrases, case-insensitive (maybe).
-	// For "Consultório na Rua", it's a phrase.
-	// Sort keys by length (descending) to match longer phrases first.
-	const terms = Object.keys(GLOSSARY_TERMS).sort((a, b) => b.length - a.length);
+export function InteractiveText({ text, className = "" }: InteractiveTextProps) {
+	// Simple tokenization to preserve punctuation and spacing might be tricky with regex replace.
+	// We will iterate through glossary keys and wrap found matching terms.
+	// To handle multiple terms efficiently and correctly (without nesting), we can use a segments approach.
 
-	// Create regex pattern: (term1|term2|...)
-	// Use \\b boundaries for single words, but be careful with phrases or portuguese accents.
-	// Actually for simplicity in this MVP, simple replacement is safer than complex regex boundaries with unicode.
-	// We'll use a simple case-insensitive match.
-	const pattern = new RegExp(`(${terms.join("|")})`, "gi");
+	// However, for a simple implementation, let's split by space and check, 
+	// BUT multi-word terms like "Arquitetura Hostil" need priority.
 
-	// Split text by the pattern
-	const parts = text.split(pattern);
+	const terms = Object.keys(GLOSSARY).sort((a, b) => b.length - a.length); // Match longest first
+
+	// We can allow the regex to be case insensitive
+	// We need to escape special regex chars in terms if any (glossary keys seem safe mostly)
+
+	const parts: { text: string; term?: string }[] = [{ text }];
+
+	for (const term of terms) {
+		for (let i = 0; i < parts.length; i++) {
+			if (parts[i].term) continue; // Already matched
+
+			const segment = parts[i].text;
+			// Negative lookbehind/ahead for word boundaries allows partial matches if needed, 
+			// but usually we want whole words or at least distinct phrases. 
+			// Let's us \b boundaries for now, but Portuguese accents can mess up \b.
+			// Simplified approach: string split with capturing group
+
+			const regex = new RegExp(`(${term})`, "gi");
+			const split = segment.split(regex);
+
+			if (split.length > 1) {
+				// Reconstruct parts
+				const newSegments: { text: string; term?: string }[] = [];
+				split.forEach(s => {
+					if (s.toLowerCase() === term.toLowerCase()) {
+						newSegments.push({ text: s, term: term }); // Keep original casing from text, link to term key
+					} else if (s !== "") {
+						newSegments.push({ text: s });
+					}
+				});
+
+				// Replace current parts[i] with newSegments
+				parts.splice(i, 1, ...newSegments);
+				// Adjust index to skip the newly added segments
+				i += newSegments.length - 1;
+			}
+		}
+	}
 
 	return (
-		<span>
-			{parts.map((part, index) => {
-				// Check if this part is a glossary key (case insensitive check)
-				// We need to find the exact key casing to look up the definition
-				const normalizedPart = part;
-				const glossaryKey = terms.find(
-					(term) => term.toLowerCase() === conversationKey(part),
-				);
-
-				if (glossaryKey) {
-					const definition = GLOSSARY_TERMS[glossaryKey];
+		<span className={className}>
+			{parts.map((part, idx) => {
+				if (part.term) {
+					const definition = GLOSSARY[part.term];
+					// Using native title for simplicity as requested, 
+					// or we could use a custom lightweight tooltip style.
+					// Let's stick to the requested visual: border-b-2 border-dotted
 					return (
 						<span
-							key={`${index}-${part.substring(0, 10)}`}
-							className="group relative inline-block cursor-help decoration-dotted underline underline-offset-4 decoration-amber-500/50 hover:decoration-amber-400 hover:text-amber-200 transition-colors"
+							key={idx}
+							className="border-b-2 border-dotted border-purple-400 cursor-help hover:bg-purple-900/30 transition-colors relative group"
+							title={definition} // Native fallback
 						>
-							{part}
-							{/* Tooltip */}
-							<span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-950 border border-slate-800 rounded-lg shadow-xl text-xs text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity z-[100] text-left">
-								<strong className="block text-amber-400 mb-1">
-									{glossaryKey}
-								</strong>
+							{part.text}
+							{/* Custom Tooltip on Hover */}
+							<span className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white shadow-xl z-50 pointer-events-none">
+								<span className="font-bold block mb-1 text-purple-300">{part.term}</span>
 								{definition}
 								{/* Arrow */}
-								<span className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-950" />
+								<span className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900"></span>
 							</span>
 						</span>
 					);
 				}
-
-				return <span key={`${index}-${part.substring(0, 10)}`}>{part}</span>;
+				return <span key={idx}>{part.text}</span>;
 			})}
 		</span>
 	);
-};
-
-// Helper to normalize for comparison (though find logic above handles it)
-function conversationKey(str: string) {
-	return str.toLowerCase();
 }

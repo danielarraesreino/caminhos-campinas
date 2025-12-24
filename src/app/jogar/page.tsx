@@ -158,7 +158,11 @@ export default function GamePage() {
 						className="bg-blue-600 hover:bg-blue-500 text-white p-4 rounded-full shadow-lg border-2 border-slate-900 transition-transform hover:scale-110 flex items-center justify-center"
 						aria-label="Abrir Chat de Ação"
 					>
-						{isChatOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+						{isChatOpen ? (
+							<X className="w-6 h-6" />
+						) : (
+							<MessageCircle className="w-6 h-6" />
+						)}
 					</button>
 				</div>
 

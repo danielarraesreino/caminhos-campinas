@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart, Gamepad, MapPin, Menu, X } from "lucide-react";
+import { BarChart, Building2, FileText, Gamepad, MapPin, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -20,6 +20,16 @@ export function Navbar() {
 			href: "/impacto",
 			label: "Dados Abertos",
 			icon: <BarChart className="w-4 h-4" />,
+		},
+		{
+			href: "/transparencia",
+			label: "Transparência",
+			icon: <FileText className="w-4 h-4" />,
+		},
+		{
+			href: "/parceiros",
+			label: "Parceiros ESG",
+			icon: <Building2 className="w-4 h-4" />,
 		},
 	];
 
@@ -104,7 +114,7 @@ export function Navbar() {
 							type="button"
 							onClick={() => setIsOpen(!isOpen)}
 							className="inline-flex items-center justify-center p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800"
-							aria-expanded={isOpen ? "true" : "false"}
+							aria-expanded={isOpen}
 						>
 							<span className="sr-only">Abrir menu principal</span>
 							{isOpen ? (

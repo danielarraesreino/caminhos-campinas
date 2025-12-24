@@ -8,7 +8,7 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import expansionServices from "@/data/services-expansion.json";
+
 
 export type ServiceType =
 	| "food"
@@ -96,30 +96,18 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 			}
 
 			// If we are online, fetch fresh data
-			// For this offline-first requirement, if we have cached data, we might not want to block or error hard.
-			// But let's try to update it.
 			if (navigator.onLine) {
 				const response = await fetch("/data/services-campinas.json");
 				if (!response.ok) throw new Error("Failed to fetch services");
 				const data: ServiceLocation[] = await response.json();
 
-				// Merge with expansion services, ensuring no ID collisions if necessary
-				// Simple merge strategy: concat (assuming distinct IDs for now or overriding)
-				const mergedData = [...data, ...expansionServices as unknown as ServiceLocation[]];
-
-				setServices(mergedData);
-				saveToStorage(mergedData);
-			} else if (!cached) {
-				// Offline and no cache? Try using just the imported expansion data at least.
-				const fallbackData = [...expansionServices as unknown as ServiceLocation[]];
-				setServices(fallbackData);
+				setServices(data);
+				saveToStorage(data);
 			}
 		} catch (err) {
 			console.error(err);
-			// If fetch fails but we had cache, we are fine, just maybe show a warning log.
-			// If we didn't have cache, set error.
 			if (!loadFromStorage()) {
-				setError("Erro ao carregar serviços.");
+				setError("Erro ao carregar serviços. Verifique sua conexão.");
 			}
 		} finally {
 			setLoading(false);

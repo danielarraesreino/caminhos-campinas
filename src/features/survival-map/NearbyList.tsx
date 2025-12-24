@@ -7,8 +7,8 @@ import { InteractiveText } from "@/components/ui/InteractiveText";
 import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
 import { useToast } from "@/contexts/ToastContext";
-import { useServiceLogic } from "@/hooks/useServiceLogic";
 import { useODSTracker } from "@/hooks/useODSTracker";
+import { useServiceLogic } from "@/hooks/useServiceLogic";
 
 interface NearbyListProps {
 	userPosition: [number, number] | null;
@@ -30,9 +30,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos(deg2rad(lat1)) *
-		Math.cos(deg2rad(lat2)) *
-		Math.sin(dLon / 2) *
-		Math.sin(dLon / 2);
+			Math.cos(deg2rad(lat2)) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	const d = R * c; // Distance in km
 	return d;
@@ -139,11 +139,11 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 					const distanceFormatted =
 						"distance" in service
 							? // biome-ignore lint/suspicious/noExplicitAny: distance property injected
-							(service as any).distance < 1
+								(service as any).distance < 1
 								? // biome-ignore lint/suspicious/noExplicitAny: distance property injected
-								`${Math.round((service as any).distance * 1000)}m`
+									`${Math.round((service as any).distance * 1000)}m`
 								: // biome-ignore lint/suspicious/noExplicitAny: distance property injected
-								`${(service as any).distance.toFixed(1)}km`
+									`${(service as any).distance.toFixed(1)}km`
 							: null;
 
 					const access = checkServiceAvailability(service, gameState);
