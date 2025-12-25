@@ -17,7 +17,10 @@ export type ServiceType =
 	| "educacao"
 	| "comércio"
 	| "privado"
-	| "work";
+	| "work"
+	| "education"
+	| "job_training"
+	| "tech";
 
 export interface ServiceLocation {
 	id: string;

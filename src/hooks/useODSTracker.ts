@@ -10,6 +10,9 @@ const SERVICE_ODS_MAP: Record<ServiceType, string> = {
 	assistencia: "ODS 1 - Erradicação da Pobreza", // General Social Assistance
 	work: "ODS 8 - Trabalho Decente e Crescimento Econômico",
 	educacao: "ODS 4 - Educação de Qualidade",
+	education: "ODS 4 - Educação de Qualidade",
+	job_training: "ODS 8 - Trabalho Decente e Crescimento Econômico",
+	tech: "ODS 9 - Indústria, Inovação e Infraestrutura",
 	comércio: "ODS 12 - Consumo e Produção Responsáveis", // Loose mapping
 	privado: "ODS 10 - Redução das Desigualdades", // Generic fallback
 };
