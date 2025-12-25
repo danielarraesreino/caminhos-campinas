@@ -11,6 +11,10 @@ import {
 	useTransition,
 } from "react";
 import { Button } from "@/components/ui/button";
+import {
+	GLOSSARY_TERMS,
+	GlossaryTooltip,
+} from "@/components/ui/GlossaryTooltip";
 import { Input } from "@/components/ui/input";
 import { useGameContext } from "@/contexts/GameContext";
 
@@ -18,6 +22,7 @@ export function GameChat() {
 	const gameState = useGameContext();
 	const [isPending, startTransition] = useTransition();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const [isThinking, setIsThinking] = useState(false);
 
 	const [userLocation, setUserLocation] = useState<{
 		lat: number;
@@ -40,23 +45,34 @@ export function GameChat() {
 	}, []);
 
 	// Configuração corrigida sem rota de API explícita se for padrão
-	// biome-ignore lint/suspicious/noExplicitAny: bypassing type mismatch
+	// biome-ignore lint/suspicious/noExplicitAny: bypassing type mismatch from useChat hook
 	const chatHelpers = useChat({
-		onError: (err: Error) => console.error("Erro no chat:", err),
+		onError: (err: Error) => {
+			console.error("Erro no chat:", err);
+			setIsThinking(false);
+		},
+		onFinish: () => {
+			setIsThinking(false);
+		},
 	}) as any;
 
 	const { messages, input, handleInputChange, handleSubmit, isLoading, error } =
 		chatHelpers;
 
-	// Auto-scroll
-	// biome-ignore lint/correctness/useExhaustiveDependencies: trigger scroll on messages change
+	// Reset thinking when messages change (received new message)
 	useEffect(() => {
+		if (messages.length > 0) {
+			setIsThinking(false);
+		}
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
 	const onSubmit = (e: FormEvent) => {
 		e.preventDefault();
 		if (!input.trim()) return;
+
+		setIsThinking(true); // Immediate feedback
+
 		// Transição para não bloquear a UI (Mapas)
 		startTransition(() => {
 			handleSubmit(e, {
@@ -71,6 +87,32 @@ export function GameChat() {
 					},
 				},
 			});
+		});
+	};
+
+	// Helper to highlight logic
+	const renderMessageContent = (content: string) => {
+		// Identify terms and split string
+		const terms = Object.keys(GLOSSARY_TERMS);
+		// Create a regex to match any term, case insensitive
+		const regex = new RegExp(`(${terms.join("|")})`, "gi");
+
+		const parts = content.split(regex);
+
+		return parts.map((part, i) => {
+			// Check if this part matches a term
+			const matchedTerm = terms.find(
+				(t) => t.toLowerCase() === part.toLowerCase(),
+			);
+			if (matchedTerm) {
+				return (
+					// biome-ignore lint/suspicious/noArrayIndexKey: order is static based on split
+					<GlossaryTooltip key={`${i}-${matchedTerm}`} term={matchedTerm}>
+						{part}
+					</GlossaryTooltip>
+				);
+			}
+			return part;
 		});
 	};
 
@@ -144,15 +186,31 @@ export function GameChat() {
 										: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
 								}`}
 							>
-								{m.content}
+								{m.role === "assistant"
+									? renderMessageContent(m.content)
+									: m.content}
 							</div>
 						</div>
 					))
 				}
 
-				{(isLoading || isPending) && (
-					<div className="text-xs text-gray-400 animate-pulse ml-4">
-						Processando contexto e localização...
+				{/* Loading/Thinking Indicator */}
+				{(isLoading || isPending || isThinking) && (
+					<div className="flex gap-3 w-full px-2">
+						<div className="flex-shrink-0 mt-1">
+							<Image
+								src={`https://api.dicebear.com/7.x/bottts/svg?seed=system`}
+								alt="Mestre"
+								width={32}
+								height={32}
+								className="rounded-full bg-purple-100 shadow-sm border border-purple-200 opacity-70"
+							/>
+						</div>
+						<div className="bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm flex items-center gap-1">
+							<span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+							<span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+							<span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
+						</div>
 					</div>
 				)}
 
@@ -173,11 +231,15 @@ export function GameChat() {
 					value={input}
 					onChange={handleInputChange}
 					placeholder="O que você faz?"
-					disabled={isLoading || isPending}
+					disabled={isLoading || isPending || isThinking}
 					className="flex-1"
 				/>
-				<Button type="submit" disabled={isLoading || isPending} size="icon">
-					{isPending || isLoading ? (
+				<Button
+					type="submit"
+					disabled={isLoading || isPending || isThinking}
+					size="icon"
+				>
+					{isPending || isLoading || isThinking ? (
 						<span className="animate-spin text-xs">...</span>
 					) : (
 						<Send className="w-4 h-4" />

@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import { useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { CitizenshipTree } from "./CitizenshipTree";
 import { VoiceReporter } from "./VoiceReporter";
 
 export function GameHUD() {
@@ -38,8 +39,13 @@ export function GameHUD() {
 				<div className="fixed inset-0 pointer-events-none border-[8px] border-red-600/50 animate-pulse z-30" />
 			)}
 
-			{/* Main HUD Container - Taller and distinct */}
-			<div className="fixed top-0 left-0 w-full h-24 bg-slate-950 border-b-2 border-slate-800 z-40 shadow-2xl flex items-center justify-between px-4 md:px-8">
+			{/* Citizenship Tree (PDU) - Top Bar */}
+			<div className="fixed top-0 left-0 w-full z-50">
+				<CitizenshipTree />
+			</div>
+
+			{/* Main HUD Container - Adjusted top margin */}
+			<div className="fixed top-[88px] md:top-[100px] left-0 w-full h-20 bg-slate-950 border-b-2 border-slate-800 z-40 shadow-2xl flex items-center justify-between px-4 md:px-8">
 				{/* LEFT: Avatar & Identity */}
 				<div className="flex items-center gap-4 md:gap-6">
 					{avatar?.avatarImage ? (
@@ -260,9 +266,7 @@ function StatCard({
 			</span>
 
 			{/* Progress Bar Mini */}
-			{/* biome-ignore lint/style/noInlineStyle: dynamic width */}
 			<div className="w-12 h-1.5 bg-slate-900/80 rounded-full overflow-hidden">
-				{/* biome-ignore lint/style/noInlineStyle: dynamic width */}
 				<div
 					className={`h-full rounded-full transition-all duration-700 ${barColor}`}
 					style={{

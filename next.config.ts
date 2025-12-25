@@ -14,6 +14,21 @@ const nextConfig: NextConfig = {
 				hostname: "lightseagreen-horse-933009.hostingersite.com",
 				pathname: "/**",
 			},
+			{
+				protocol: "https",
+				hostname: "imgur.com",
+				pathname: "/**",
+			},
+			{
+				protocol: "https",
+				hostname: "i.imgur.com",
+				pathname: "/**",
+			},
+			{
+				protocol: "https",
+				hostname: "raw.githubusercontent.com",
+				pathname: "/**",
+			},
 		],
 	},
 };
