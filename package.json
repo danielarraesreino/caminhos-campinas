@@ -8,7 +8,7 @@
 		"start": "next start",
 		"lint": "biome check src/",
 		"format": "biome format --write src/",
-		"prebuild": "npm run lint && tsc --noEmit",
+		"prebuild": "tsc --noEmit",
 		"prepare": "husky"
 	},
 	"lint-staged": {

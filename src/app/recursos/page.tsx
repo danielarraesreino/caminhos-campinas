@@ -77,7 +77,8 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<span
 					className={`
 					px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
-					${service.type === "alimentacao"
+					${
+						service.type === "alimentacao"
 							? "bg-orange-900 text-orange-400"
 							: service.type === "abrigo"
 								? "bg-indigo-900 text-indigo-400"
@@ -86,7 +87,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 									: service.type === "educacao"
 										? "bg-blue-900 text-blue-400"
 										: "bg-slate-800 text-slate-400"
-						}
+					}
 				`}
 				>
 					{service.type}
@@ -166,11 +167,12 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						disabled={!canEnroll || enrollmentStatus !== "idle"}
 						onClick={handleEnroll}
 						className={`flex-1 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors relative overflow-hidden
-							${canEnroll
-								? enrollmentStatus === "enrolled"
-									? "bg-green-600"
-									: "bg-blue-600 hover:bg-blue-500"
-								: "bg-zinc-800 opacity-50 cursor-not-allowed"
+							${
+								canEnroll
+									? enrollmentStatus === "enrolled"
+										? "bg-green-600"
+										: "bg-blue-600 hover:bg-blue-500"
+									: "bg-zinc-800 opacity-50 cursor-not-allowed"
 							}
 						`}
 					>

@@ -90,8 +90,6 @@ export function ActionInput({
 		}
 	};
 
-
-
 	const handleSubmit = (e?: React.FormEvent) => {
 		e?.preventDefault();
 		if (!inputValue.trim() || isProcessing) return;

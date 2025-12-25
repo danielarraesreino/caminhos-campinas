@@ -68,7 +68,12 @@ export default function FundraisingPage() {
 			<header className="bg-slate-900 text-white pt-32 pb-24 px-6 relative overflow-hidden">
 				{/* Elementos de fundo abstratos (mapa da cidade) */}
 				<div className="absolute inset-0 opacity-10 pointer-events-none">
-					<svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-labelledby="bg-pattern-title">
+					<svg
+						className="w-full h-full"
+						viewBox="0 0 100 100"
+						preserveAspectRatio="none"
+						aria-labelledby="bg-pattern-title"
+					>
 						<title id="bg-pattern-title">Padrão de fundo abstrato</title>
 						<path
 							d="M0 50 Q 50 0 100 50 T 200 50"
@@ -403,91 +408,88 @@ export default function FundraisingPage() {
 							</div>
 						</div>
 					</div>
-				)
-				}
+				)}
 
 				{/* CONTEÚDO INSTITUCIONAL (Sem venda de dados) */}
-				{
-					activeTab === "companies" && (
-						<div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-							<div className="text-center max-w-2xl mx-auto">
-								<h2 className="text-3xl font-bold text-slate-900 mb-4">
-									Sua empresa na construção de uma cidade justa.
-								</h2>
-								<p className="text-slate-600">
-									Não vendemos dados. Construímos pontes. O Apoio Institucional
-									permite que sua marca financie a manutenção da plataforma
-									tecnológica que serve tanto à população de rua quanto aos
-									assistentes sociais.
+				{activeTab === "companies" && (
+					<div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+						<div className="text-center max-w-2xl mx-auto">
+							<h2 className="text-3xl font-bold text-slate-900 mb-4">
+								Sua empresa na construção de uma cidade justa.
+							</h2>
+							<p className="text-slate-600">
+								Não vendemos dados. Construímos pontes. O Apoio Institucional
+								permite que sua marca financie a manutenção da plataforma
+								tecnológica que serve tanto à população de rua quanto aos
+								assistentes sociais.
+							</p>
+						</div>
+
+						<div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+							<div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+								<h3 className="text-xl font-bold mb-4 text-slate-900">
+									Parceiro Mantenedor
+								</h3>
+								<p className="text-slate-600 mb-6 text-sm leading-relaxed">
+									Ideal para empresas que querem fortalecer sua agenda ESG
+									apoiando a inovação social. Sua marca aparecerá como apoiadora
+									da tecnologia cívica de Campinas.
 								</p>
+								<ul className="space-y-3 mb-8">
+									<li className="flex items-center gap-2 text-sm text-slate-700">
+										<CheckCircle2 size={16} className="text-emerald-500" /> Logo
+										no rodapé do Jogo e Site
+									</li>
+									<li className="flex items-center gap-2 text-sm text-slate-700">
+										<CheckCircle2 size={16} className="text-emerald-500" />{" "}
+										Menção no Relatório Anual de Atividades
+									</li>
+									<li className="flex items-center gap-2 text-sm text-slate-700">
+										<CheckCircle2 size={16} className="text-emerald-500" /> Selo
+										"Empresa Cidadã"
+									</li>
+								</ul>
+								<button
+									type="button"
+									className="w-full py-2 rounded-lg bg-slate-900 text-white font-bold hover:bg-slate-800"
+								>
+									Entrar em Contato
+								</button>
 							</div>
 
-							<div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-								<div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-									<h3 className="text-xl font-bold mb-4 text-slate-900">
-										Parceiro Mantenedor
-									</h3>
-									<p className="text-slate-600 mb-6 text-sm leading-relaxed">
-										Ideal para empresas que querem fortalecer sua agenda ESG
-										apoiando a inovação social. Sua marca aparecerá como apoiadora
-										da tecnologia cívica de Campinas.
-									</p>
-									<ul className="space-y-3 mb-8">
-										<li className="flex items-center gap-2 text-sm text-slate-700">
-											<CheckCircle2 size={16} className="text-emerald-500" /> Logo
-											no rodapé do Jogo e Site
-										</li>
-										<li className="flex items-center gap-2 text-sm text-slate-700">
-											<CheckCircle2 size={16} className="text-emerald-500" />{" "}
-											Menção no Relatório Anual de Atividades
-										</li>
-										<li className="flex items-center gap-2 text-sm text-slate-700">
-											<CheckCircle2 size={16} className="text-emerald-500" /> Selo
-											"Empresa Cidadã"
-										</li>
-									</ul>
-									<button
-										type="button"
-										className="w-full py-2 rounded-lg bg-slate-900 text-white font-bold hover:bg-slate-800"
-									>
-										Entrar em Contato
-									</button>
-								</div>
-
-								<div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-									<h3 className="text-xl font-bold mb-4 text-slate-900">
-										Apoio Técnico (Pro Bono)
-									</h3>
-									<p className="text-slate-600 mb-6 text-sm leading-relaxed">
-										Sua empresa pode doar horas de desenvolvimento, design ou
-										infraestrutura de servidores para manter o "Trabalho Justo"
-										operando com custo zero.
-									</p>
-									<ul className="space-y-3 mb-8">
-										<li className="flex items-center gap-2 text-sm text-slate-700">
-											<CheckCircle2 size={16} className="text-blue-500" />{" "}
-											Agradecimento especial nos Créditos
-										</li>
-										<li className="flex items-center gap-2 text-sm text-slate-700">
-											<CheckCircle2 size={16} className="text-blue-500" />{" "}
-											Workshop de Impacto Social para sua equipe
-										</li>
-									</ul>
-									<button
-										type="button"
-										className="w-full py-2 rounded-lg border border-slate-300 text-slate-700 font-bold hover:bg-slate-50"
-									>
-										Oferecer Serviço
-									</button>
-								</div>
+							<div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+								<h3 className="text-xl font-bold mb-4 text-slate-900">
+									Apoio Técnico (Pro Bono)
+								</h3>
+								<p className="text-slate-600 mb-6 text-sm leading-relaxed">
+									Sua empresa pode doar horas de desenvolvimento, design ou
+									infraestrutura de servidores para manter o "Trabalho Justo"
+									operando com custo zero.
+								</p>
+								<ul className="space-y-3 mb-8">
+									<li className="flex items-center gap-2 text-sm text-slate-700">
+										<CheckCircle2 size={16} className="text-blue-500" />{" "}
+										Agradecimento especial nos Créditos
+									</li>
+									<li className="flex items-center gap-2 text-sm text-slate-700">
+										<CheckCircle2 size={16} className="text-blue-500" />{" "}
+										Workshop de Impacto Social para sua equipe
+									</li>
+								</ul>
+								<button
+									type="button"
+									className="w-full py-2 rounded-lg border border-slate-300 text-slate-700 font-bold hover:bg-slate-50"
+								>
+									Oferecer Serviço
+								</button>
 							</div>
 						</div>
-					)
-				}
-			</main >
+					</div>
+				)}
+			</main>
 
 			{/* SEÇÃO DE TRANSPARÊNCIA E ORÇAMENTO (NOVO) */}
-			< section className="bg-slate-100 py-16 border-t border-slate-200" >
+			<section className="bg-slate-100 py-16 border-t border-slate-200">
 				<div className="max-w-5xl mx-auto px-6">
 					<div className="text-center mb-12">
 						<div className="inline-block bg-slate-200 text-slate-700 px-4 py-1 rounded-full font-bold text-xs uppercase tracking-wider mb-4">
@@ -632,7 +634,10 @@ export default function FundraisingPage() {
 										},
 									].map((mod, idx) => (
 										// biome-ignore lint/suspicious/noArrayIndexKey: Static content order
-										<div key={idx} className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:border-blue-300 transition-colors">
+										<div
+											key={idx}
+											className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:border-blue-300 transition-colors"
+										>
 											<div className="flex items-start gap-3">
 												<div className="bg-blue-100 p-1.5 rounded-full mt-0.5 text-blue-600">
 													<Check size={14} />
@@ -671,10 +676,10 @@ export default function FundraisingPage() {
 						</div>
 					</div>
 				</div>
-			</section >
+			</section>
 
 			{/* Footer Profissional */}
-			< footer className="bg-white border-t border-slate-200 py-12" >
+			<footer className="bg-white border-t border-slate-200 py-12">
 				<div className="max-w-6xl mx-auto px-6">
 					<div className="grid md:grid-cols-4 gap-8 mb-8 text-sm text-slate-600">
 						<div className="col-span-1 md:col-span-2">
@@ -752,7 +757,7 @@ export default function FundraisingPage() {
 					<br />
 					Este projeto respeita a LGPD e não comercializa dados de usuários.
 				</div>
-			</footer >
-		</div >
+			</footer>
+		</div>
 	);
 }
