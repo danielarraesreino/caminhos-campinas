@@ -1,8 +1,15 @@
 "use client";
 
-import { BarChart, Building2, FileText, Gamepad, MapPin, Menu, X } from "lucide-react";
+import {
+	BarChart,
+	Building2,
+	FileText,
+	Gamepad,
+	MapPin,
+	Menu,
+	X,
+} from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -42,9 +49,9 @@ export function Navbar() {
 		},
 	];
 
-	// Hide Navbar on Game Page and Campaigns to prevent overlap/conflict
-	const pathname = usePathname();
-	if (pathname === "/jogar" || pathname === "/apoie") return null;
+	// Hide Navbar on Game Page only (immersive mode)
+	// const pathname = usePathname();
+	// if (pathname === "/jogar") return null;
 
 	return (
 		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-50">
@@ -114,7 +121,7 @@ export function Navbar() {
 							type="button"
 							onClick={() => setIsOpen(!isOpen)}
 							className="inline-flex items-center justify-center p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800"
-							aria-expanded={isOpen}
+							aria-expanded={isOpen ? "true" : "false"}
 						>
 							<span className="sr-only">Abrir menu principal</span>
 							{isOpen ? (

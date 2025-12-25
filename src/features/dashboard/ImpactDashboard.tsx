@@ -3,19 +3,25 @@
 import {
 	AlertTriangle,
 	BarChart3,
-	Globe,
 	HelpCircle,
 	Info,
-	MapPin,
-	MessageSquareCode,
 	Shield,
 	TrendingUp,
 } from "lucide-react";
-import type React from "react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
-	BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid,
-	PieChart, Pie, Cell, Legend
+	Bar,
+	BarChart,
+	CartesianGrid,
+	Cell,
+	Legend,
+	Pie,
+	PieChart,
+	Tooltip as RechartsTooltip,
+	ResponsiveContainer,
+	XAxis,
+	YAxis,
 } from "recharts";
 
 import { type TelemetryEvent, telemetryService } from "@/services/telemetry";
@@ -132,13 +138,23 @@ export function ImpactDashboard() {
 								<span className="text-blue-500 not-italic">Vivo</span>
 							</h1>
 							<div className="flex items-center gap-3 text-slate-500 font-medium text-lg uppercase tracking-wide">
-								<TrendingUp size={20} className="text-blue-500" /> Inteligência de Dados para ODS
+								<TrendingUp size={20} className="text-blue-500" /> Inteligência
+								de Dados para ODS
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<div className="flex flex-col items-end gap-3">
+					<Link href="/apoie">
+						<button
+							type="button"
+							className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/50 px-4 py-2 rounded-lg text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider mb-2"
+						>
+							<TrendingUp size={14} />
+							Financie esta Tecnologia
+						</button>
+					</Link>
 					<button
 						type="button"
 						onClick={() => setShowAnonInfo(!showAnonInfo)}
@@ -153,7 +169,9 @@ export function ImpactDashboard() {
 					</button>
 					<div className="flex gap-2 text-[10px] uppercase font-mono font-bold text-slate-600 tracking-wider">
 						<span>Status:</span>
-						<span className="text-emerald-500 animate-pulse">COLETANDO EM TEMPO REAL</span>
+						<span className="text-emerald-500 animate-pulse">
+							COLETANDO EM TEMPO REAL
+						</span>
 					</div>
 				</div>
 			</header>
@@ -170,8 +188,8 @@ export function ImpactDashboard() {
 							<p className="text-lg text-slate-300 leading-relaxed font-sans">
 								Utilizamos o protocolo <strong>K-Anonymity</strong>: se uma
 								célula da grade (500m²) possuir menos de 5 registros, os dados
-								são omitidos. Aplicamos <strong>Time Jitter</strong> de 2 horas para impedir o
-								rastreamento em tempo real.
+								são omitidos. Aplicamos <strong>Time Jitter</strong> de 2 horas
+								para impedir o rastreamento em tempo real.
 							</p>
 						</div>
 					</div>
@@ -187,26 +205,54 @@ export function ImpactDashboard() {
 							<AlertTriangle className="text-red-500" /> Mapa de Calor da Fome
 						</h3>
 						<p className="text-slate-400 text-sm mt-2">
-							Cruzamento: <span className="text-white font-bold">Horário da Busca</span> vs. <span className="text-white font-bold">Serviços Abertos</span>.
+							Cruzamento:{" "}
+							<span className="text-white font-bold">Horário da Busca</span> vs.{" "}
+							<span className="text-white font-bold">Serviços Abertos</span>.
 							Evidencia a lacuna de atendimento noturno (Jantar).
 						</p>
 					</div>
-					<div className="h-[300px] w-full mt-auto">
+					<div className="h-[300px] min-h-[300px] w-full mt-auto">
 						<ResponsiveContainer width="100%" height="100%">
 							<BarChart data={HUNGER_TIME_DATA}>
-								<CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-								<XAxis dataKey="hour" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-								<YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-								<RechartsTooltip
-									contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', color: '#f8fafc' }}
-									cursor={{ fill: '#1e293b', opacity: 0.4 }}
+								<CartesianGrid
+									strokeDasharray="3 3"
+									stroke="#1e293b"
+									vertical={false}
 								/>
-								<Bar dataKey="requests" name="Buscas por Comida" fill="#ef4444" radius={[4, 4, 0, 0]}>
-									{
-										HUNGER_TIME_DATA.map((entry, index) => (
-											<Cell key={`cell-${index}`} fill={entry.serviceOpen ? "#3b82f6" : "#ef4444"} />
-										))
-									}
+								<XAxis
+									dataKey="hour"
+									stroke="#64748b"
+									fontSize={12}
+									tickLine={false}
+									axisLine={false}
+								/>
+								<YAxis
+									stroke="#64748b"
+									fontSize={12}
+									tickLine={false}
+									axisLine={false}
+								/>
+								<RechartsTooltip
+									contentStyle={{
+										backgroundColor: "#0f172a",
+										borderColor: "#1e293b",
+										color: "#f8fafc",
+									}}
+									cursor={{ fill: "#1e293b", opacity: 0.4 }}
+								/>
+								<Bar
+									dataKey="requests"
+									name="Buscas por Comida"
+									fill="#ef4444"
+									radius={[4, 4, 0, 0]}
+								>
+									{HUNGER_TIME_DATA.map((entry, index) => (
+										<Cell
+											// biome-ignore lint/suspicious/noArrayIndexKey: Static data
+											key={`cell-${index}`}
+											fill={entry.serviceOpen ? "#3b82f6" : "#ef4444"}
+										/>
+									))}
 								</Bar>
 							</BarChart>
 						</ResponsiveContainer>
@@ -216,7 +262,8 @@ export function ImpactDashboard() {
 							<div className="w-3 h-3 bg-blue-500 rounded-sm" /> Serviço Aberto
 						</div>
 						<div className="flex items-center gap-2">
-							<div className="w-3 h-3 bg-red-500 rounded-sm" /> Serviço Fechado (Lacuna)
+							<div className="w-3 h-3 bg-red-500 rounded-sm" /> Serviço Fechado
+							(Lacuna)
 						</div>
 					</div>
 				</section>
@@ -225,13 +272,15 @@ export function ImpactDashboard() {
 				<section className="bg-[#0c0c0f] border border-slate-800 p-8 rounded-3xl shadow-xl flex flex-col">
 					<div className="mb-6">
 						<h3 className="text-2xl font-black text-white flex items-center gap-3 uppercase italic tracking-tight">
-							<Shield className="text-orange-500" /> Barreiras de Acesso (ODS 1.4)
+							<Shield className="text-orange-500" /> Barreiras de Acesso (ODS
+							1.4)
 						</h3>
 						<p className="text-slate-400 text-sm mt-2">
-							Motivos de desistência ao tentar acessar um serviço público (Abrigo/Restaurante).
+							Motivos de desistência ao tentar acessar um serviço público
+							(Abrigo/Restaurante).
 						</p>
 					</div>
-					<div className="h-[300px] w-full flex items-center justify-center">
+					<div className="h-[300px] min-h-[300px] w-full flex items-center justify-center">
 						<ResponsiveContainer width="100%" height="100%">
 							<PieChart>
 								<Pie
@@ -244,18 +293,32 @@ export function ImpactDashboard() {
 									dataKey="value"
 								>
 									{BARRIERS_DATA.map((entry, index) => (
-										<Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+										<Cell
+											// biome-ignore lint/suspicious/noArrayIndexKey: Static data
+											key={`cell-${index}`}
+											fill={entry.color}
+											stroke="none"
+										/>
 									))}
 								</Pie>
 								<RechartsTooltip
-									contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', color: '#f8fafc' }}
+									contentStyle={{
+										backgroundColor: "#0f172a",
+										borderColor: "#1e293b",
+										color: "#f8fafc",
+									}}
 								/>
 								<Legend
 									verticalAlign="bottom"
 									height={36}
 									iconType="circle"
 									layout="horizontal"
-									wrapperStyle={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', color: '#94a3b8' }}
+									wrapperStyle={{
+										fontSize: "12px",
+										fontWeight: "bold",
+										textTransform: "uppercase",
+										color: "#94a3b8",
+									}}
 								/>
 							</PieChart>
 						</ResponsiveContainer>
@@ -295,7 +358,8 @@ export function ImpactDashboard() {
 							</span>
 						</div>
 						<p className="text-lg text-emerald-100/80 font-medium leading-relaxed font-sans border-t border-emerald-500/20 pt-4">
-							"Cada pessoa que encontra o Consultório na Rua via app evita, em média, uma internação de emergência de alta complexidade."
+							"Cada pessoa que encontra o Consultório na Rua via app evita, em
+							média, uma internação de emergência de alta complexidade."
 						</p>
 					</div>
 				</div>
@@ -383,4 +447,3 @@ function EnhancedMetricCard({
 		</div>
 	);
 }
-

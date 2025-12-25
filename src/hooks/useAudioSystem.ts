@@ -17,50 +17,75 @@ interface AudioSystemCallbacks {
 }
 
 export function useAudioSystem(): AudioSystemCallbacks {
+	const [pendingTrack, setPendingTrack] = useState<string | null>(null);
 	const [isInitialized, setIsInitialized] = useState(false);
-
-	// Sync local volume state with global for reactivity if needed,
-	// but for now we just control the global.
-	const [volume, setLocalVolume] = useState(globalVolume);
+	const [, setLocalVolume] = useState(globalVolume);
 
 	const initAudio = useCallback(() => {
 		if (isInitialized) return;
 		setIsInitialized(true);
-		// Unlock logic if needed
+		// Resume context if needed (browsers usually handle this on play)
 	}, [isInitialized]);
 
-	const playAmbience = useCallback((trackId: string) => {
-		// Construct path
-		const src = `/sounds/${trackId}.mp3`;
+	// Effect to play pending track once initialized
+	useEffect(() => {
+		if (isInitialized && pendingTrack) {
+			const src = `/sounds/${pendingTrack}.mp3`;
+			// Check if already playing
+			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
+				setPendingTrack(null);
+				return;
+			}
 
-		// Check if same src is already playing
-		if (
-			globalAmbience &&
-			globalAmbience.src.endsWith(src) &&
-			!globalAmbience.paused
-		) {
-			return;
+			// Stop existing
+			if (globalAmbience) {
+				globalAmbience.pause();
+				globalAmbience = null;
+			}
+
+			const audio = new Audio(src);
+			audio.loop = true;
+			audio.volume = globalVolume; // Use module variable for latest volume
+			audio.play().catch((e) => console.warn("Pending audio play failed:", e));
+			globalAmbience = audio;
+			setPendingTrack(null);
 		}
+	}, [isInitialized, pendingTrack]);
 
-		// Stop existing
-		if (globalAmbience) {
-			globalAmbience.pause();
-			globalAmbience = null;
-		}
+	const playAmbience = useCallback(
+		(trackId: string) => {
+			if (!isInitialized) {
+				setPendingTrack(trackId);
+				return;
+			}
 
-		// Create new
-		const audio = new Audio(src);
-		audio.loop = true;
-		audio.volume = globalVolume;
+			// Construct path
+			const src = `/sounds/${trackId}.mp3`;
 
-		// Auto-play if initialized (or try anyway)
-		// Note: If not initialized by interaction, this might fail.
-		audio.play().catch((e) => {
-			console.warn("Audio play failed (waiting for interaction):", e);
-		});
+			// Check if same src is already playing
+			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
+				return;
+			}
 
-		globalAmbience = audio;
-	}, []);
+			// Stop existing
+			if (globalAmbience) {
+				globalAmbience.pause();
+				globalAmbience = null;
+			}
+
+			// Create new
+			const audio = new Audio(src);
+			audio.loop = true;
+			audio.volume = globalVolume;
+
+			audio.play().catch((e) => {
+				console.warn("Audio play failed (waiting for interaction):", e);
+			});
+
+			globalAmbience = audio;
+		},
+		[isInitialized],
+	);
 
 	const stopAmbience = useCallback(() => {
 		if (globalAmbience) {

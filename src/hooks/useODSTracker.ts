@@ -4,12 +4,12 @@ import { TelemetryAction, telemetryService } from "@/services/telemetry";
 
 // ODS Mappings
 const SERVICE_ODS_MAP: Record<ServiceType, string> = {
-	food: "ODS 2 - Fome Zero e Agricultura Sustentável",
-	shelter: "ODS 11 - Cidades e Comunidades Sustentáveis",
-	health: "ODS 3 - Saúde e Bem-Estar",
-	hygiene: "ODS 6 - Água Potável e Saneamento",
-	assistance: "ODS 1 - Erradicação da Pobreza", // General Social Assistance
+	alimentacao: "ODS 2 - Fome Zero e Agricultura Sustentável",
+	abrigo: "ODS 11 - Cidades e Comunidades Sustentáveis",
+	saude: "ODS 3 - Saúde e Bem-Estar",
+	assistencia: "ODS 1 - Erradicação da Pobreza", // General Social Assistance
 	work: "ODS 8 - Trabalho Decente e Crescimento Econômico",
+	educacao: "ODS 4 - Educação de Qualidade",
 	comércio: "ODS 12 - Consumo e Produção Responsáveis", // Loose mapping
 	privado: "ODS 10 - Redução das Desigualdades", // Generic fallback
 };
@@ -19,7 +19,7 @@ export function useODSTracker() {
 		async (
 			actionName: string,
 			odsTarget: string,
-			metadata: Record<string, unknown> = {},
+			metadata: Record<string, any> = {},
 		) => {
 			await telemetryService.track(
 				TelemetryAction.ODS_METRIC,

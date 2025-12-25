@@ -77,6 +77,7 @@ export interface GameState {
 	criticalHealth: boolean;
 	avatar: Avatar | null;
 	isPaused: boolean;
+	userPosition: [number, number] | null;
 }
 
 // Action Types for Reducer
@@ -95,6 +96,7 @@ export type GameAction =
 	| { type: "REMOVE_INVENTORY"; payload: string }
 	| { type: "SET_AVATAR"; payload: Avatar }
 	| { type: "SET_PAUSED"; payload: boolean }
+	| { type: "SET_USER_POSITION"; payload: [number, number] | null }
 	| { type: "RESET_GAME" };
 
 const INITIAL_STATE: GameState = {
@@ -129,6 +131,7 @@ const INITIAL_STATE: GameState = {
 	criticalHealth: false,
 	avatar: null,
 	isPaused: false,
+	userPosition: null,
 };
 
 // Reducer Function
@@ -264,6 +267,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case "SET_PAUSED":
 			return { ...state, isPaused: action.payload };
 
+		case "SET_USER_POSITION":
+			return { ...state, userPosition: action.payload };
+
 		case "RESET_GAME":
 			return INITIAL_STATE;
 
@@ -302,6 +308,7 @@ interface GameContextProps extends GameState {
 	removeFromInventory: (itemId: string) => void;
 	setAvatar: (avatar: Avatar) => void;
 	setPaused: (value: boolean) => void;
+	setUserPosition: (position: [number, number] | null) => void;
 	eat: (amount: number) => void;
 	sleep: (isSafe: boolean) => Promise<void>;
 	work: (hours: number) => void;
@@ -352,31 +359,21 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		};
 	}, [db]);
 
-	// Save to PouchDB
+	// Debounced Save to PouchDB com Tratamento de Conflito (409)
 	useEffect(() => {
-		const isMounted = true;
+		const _isMounted = true;
 		if (!hasHydrated || !db) return;
 
-		const timeoutId = setTimeout(async () => {
-			try {
-				if (!db || !isMounted) return;
+		const saveState = async (retryCount = 0) => {
+			if (!db) return;
 
+			try {
 				let rev: string | undefined;
 				try {
 					const existing: any = await db.get(DOC_ID);
-					if (!isMounted) return;
 					rev = existing._rev;
 				} catch (e: any) {
-					if (e.status !== 404) {
-						if (!isMounted) return;
-						if (
-							e.name === "InvalidStateError" ||
-							e.message?.includes("closing")
-						) {
-							return;
-						}
-						throw e;
-					}
+					if (e.status !== 404) throw e;
 				}
 
 				await db.put({
@@ -384,19 +381,30 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					_rev: rev,
 					...state,
 				});
-			} catch (unknownError) {
-				// biome-ignore lint/suspicious/noExplicitAny: reliable error access
-				const error = unknownError as any;
-
-				// Correção de tipagem para Vibe Coding
-				if (
-					error?.name !== "InvalidStateError" &&
-					!error?.message?.includes("closing")
+				console.log("💾 Game Saved");
+			} catch (e: any) {
+				// Se for conflito (409) e não tiver tentado muitas vezes, tenta de novo
+				if (e.status === 409 && retryCount < 3) {
+					console.warn(
+						`Conflito de salvamento detectado. Tentando novamente (${
+							retryCount + 1
+						}/3)...`,
+					);
+					setTimeout(() => saveState(retryCount + 1), 100); // Pequeno delay antes de tentar de novo
+				} else if (
+					e.name === "InvalidStateError" ||
+					e.message?.includes("closing")
 				) {
-					console.error("Critical failure saving game state:", error);
+					console.warn("Conexão com DB fechando, salvamento pulado.");
+				} else {
+					console.error("Falha crítica ao salvar estado:", e);
 				}
 			}
-		}, 1000);
+		};
+
+		const timeoutId = setTimeout(() => {
+			saveState();
+		}, 1000); // Mantém o debounce de 1s
 
 		return () => clearTimeout(timeoutId);
 	}, [state, hasHydrated, db]);
@@ -457,6 +465,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
 	const setPaused = useCallback((value: boolean) => {
 		dispatch({ type: "SET_PAUSED", payload: value });
+	}, []);
+
+	const setUserPosition = useCallback((position: [number, number] | null) => {
+		dispatch({ type: "SET_USER_POSITION", payload: position });
 	}, []);
 
 	const eat = useCallback(
@@ -562,6 +574,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			removeFromInventory,
 			setAvatar,
 			setPaused,
+			setUserPosition,
 			eat,
 			sleep,
 			work,
@@ -582,6 +595,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			removeFromInventory,
 			setAvatar,
 			setPaused,
+			setUserPosition,
 			eat,
 			sleep,
 			work,

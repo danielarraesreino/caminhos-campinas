@@ -26,8 +26,8 @@ export function useServiceLogic() {
 				hours.includes("comercial") || hours.includes("08:00 - 18:00");
 
 			if (rangeMatch) {
-				const start = parseInt(rangeMatch[1]);
-				const end = parseInt(rangeMatch[2]);
+				const start = parseInt(rangeMatch[1], 10);
+				const end = parseInt(rangeMatch[2], 10);
 
 				// Handle ranges that cross midnight (e.g. 23:00 - 04:00)
 				if (start < end) {
@@ -56,7 +56,7 @@ export function useServiceLogic() {
 		}
 
 		// 2. SAMIM / Abrigo Check (Explicit Rule)
-		if (service.id === "samim" || service.type === "shelter") {
+		if (service.id === "samim" || service.type === "abrigo") {
 			if (workTool.type === "CARRINHO_RECICLAGEM" && !workTool.isConfiscated) {
 				return {
 					allowed: false,
@@ -78,8 +78,8 @@ export function useServiceLogic() {
 					}
 				}
 				if (r.includes("higiene >")) {
-					const val = parseInt(r.replace(/[^0-9]/g, ""));
-					if (!isNaN(val) && hygiene <= val) {
+					const val = parseInt(r.replace(/[^0-9]/g, ""), 10);
+					if (!Number.isNaN(val) && hygiene <= val) {
 						return {
 							allowed: false,
 							reason: `Exige Higiene acima de ${val}. Você está muito sujo.`,
@@ -105,6 +105,17 @@ export function useServiceLogic() {
 						reason: "Não é permitido entrar com Carroça de Reciclagem.",
 					};
 				}
+			}
+		}
+
+		// 5. Checagem de Dinheiro (Money Check)
+		if (service.effects?.money && service.effects.money < 0) {
+			const cost = Math.abs(service.effects.money);
+			if (gameState.money < cost) {
+				return {
+					allowed: false,
+					reason: `Dinheiro insuficiente. Custa R$ ${cost.toFixed(2)}.`,
+				};
 			}
 		}
 

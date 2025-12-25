@@ -10,10 +10,8 @@ import {
 	Loader2,
 	MapPin,
 	Shield,
-	Smartphone,
 	Sparkles,
 	Target,
-	Users,
 	X,
 } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
@@ -58,7 +56,7 @@ export default function LandingPage() {
 		setTimeout(() => setCopied(false), 2000);
 	};
 
-	const scrollToSection = (id: string) => {
+	const _scrollToSection = (id: string) => {
 		const element = document.getElementById(id);
 		if (element) {
 			element.scrollIntoView({ behavior: "smooth" });
@@ -173,11 +171,11 @@ export default function LandingPage() {
 						"3.png",
 						"4.png",
 					].map((img, index) => (
-						// biome-ignore lint/style/noInlineStyle: dynamic background
 						<div
 							key={img}
-							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${currentBgIndex === index ? "opacity-40" : "opacity-0"
-								}`}
+							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${
+								currentBgIndex === index ? "opacity-40" : "opacity-0"
+							}`}
 							style={{ backgroundImage: `url(${getAssetUrl(img)})` }}
 						/>
 					))}
@@ -464,7 +462,6 @@ export default function LandingPage() {
 				className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white relative overflow-hidden"
 			>
 				<div
-					// biome-ignore lint/style/noInlineStyle: dynamic background
 					className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay"
 					style={{
 						backgroundImage: `url(${getAssetUrl("placeholder-map.png")})`,
@@ -734,12 +731,7 @@ export default function LandingPage() {
 								</p>
 								<button
 									type="button"
-									onClick={() =>
-										window.open(
-											"https://instagram.com/coletivoaruatemvoz",
-											"_blank",
-										)
-									}
+									onClick={() => (window.location.href = "/parceiros")}
 									className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/20"
 								>
 									Seja um Parceiro Corporativo

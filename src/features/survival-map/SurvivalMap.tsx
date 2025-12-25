@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
 import { NearbyList } from "./NearbyList";
 
@@ -13,9 +14,7 @@ const MapCore = dynamic(() => import("./MapCore"), {
 });
 
 export function SurvivalMap() {
-	const [userPosition, setUserPosition] = useState<[number, number] | null>(
-		null,
-	);
+	const { userPosition, setUserPosition } = useGameContext();
 	const [loadingLocation, setLoadingLocation] = useState(false);
 
 	// Use ServicesContext for real data
@@ -31,6 +30,9 @@ export function SurvivalMap() {
 	}));
 
 	useEffect(() => {
+		// Only fetch if not already set (or we could force refresh? Let's respect existing if valid)
+		if (userPosition) return;
+
 		setLoadingLocation(true);
 		if ("geolocation" in navigator) {
 			navigator.geolocation.getCurrentPosition(
@@ -49,7 +51,7 @@ export function SurvivalMap() {
 		} else {
 			setLoadingLocation(false);
 		}
-	}, []);
+	}, [setUserPosition, userPosition]);
 
 	return (
 		<div className="flex flex-col h-full w-full bg-slate-100">

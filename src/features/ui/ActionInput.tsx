@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2, Mic, Send, Square } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -22,11 +22,19 @@ export function ActionInput({
 	const audioChunks = useRef<BlobPart[]>([]);
 	const mediaRecorder = useRef<MediaRecorder | null>(null);
 
+	const stopRecording = useCallback(() => {
+		if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
+			mediaRecorder.current.stop();
+			// Note: Blob creation usually happens asynchronously onstop
+		}
+	}, []);
+
 	// Initialize Web Speech API
 	useEffect(() => {
 		if (typeof window !== "undefined") {
 			const SpeechRecognition =
-				(window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+				(window as any).SpeechRecognition ||
+				(window as any).webkitSpeechRecognition;
 			if (SpeechRecognition) {
 				recognitionRef.current = new SpeechRecognition();
 				recognitionRef.current.continuous = false;
@@ -44,7 +52,7 @@ export function ActionInput({
 				};
 			}
 		}
-	}, []);
+	}, [stopRecording]);
 
 	const startListening = async () => {
 		if (recognitionRef.current && !isListening) {
@@ -82,12 +90,7 @@ export function ActionInput({
 		}
 	};
 
-	const stopRecording = () => {
-		if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
-			mediaRecorder.current.stop();
-			// Note: Blob creation usually happens asynchronously onstop
-		}
-	};
+
 
 	const handleSubmit = (e?: React.FormEvent) => {
 		e?.preventDefault();

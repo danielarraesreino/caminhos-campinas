@@ -8,6 +8,7 @@
 		"start": "next start",
 		"lint": "biome check src/",
 		"format": "biome format --write src/",
+		"prebuild": "npm run lint && tsc --noEmit",
 		"prepare": "husky"
 	},
 	"lint-staged": {
@@ -36,6 +37,7 @@
 		"next-auth": "^5.0.0-beta.30",
 		"pouchdb": "^9.0.0",
 		"pouchdb-browser": "^9.0.0",
+		"qrcode.react": "^4.2.0",
 		"react": "19.2.1",
 		"react-dom": "19.2.1",
 		"react-leaflet": "^5.0.0",

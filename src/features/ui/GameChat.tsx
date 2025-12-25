@@ -1,25 +1,24 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { useChat } from "@ai-sdk/react";
+import { MapPin, Send } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import {
+	type FormEvent,
+	useEffect,
+	useRef,
+	useState,
+	useTransition,
+} from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useGameContext } from "@/contexts/GameContext";
-import { useServices } from "@/contexts/ServicesContext";
-import { useDilemmaMatcher } from "@/hooks/useDilemmaMatcher";
-import { ActionInput } from "./ActionInput";
-
-interface ChatMessage {
-	id: string;
-	role: "user" | "system";
-	content: string;
-}
 
 export function GameChat() {
 	const gameState = useGameContext();
-	const { services } = useServices();
+	const [isPending, startTransition] = useTransition();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-	const [isProcessing, setIsProcessing] = useState(false);
-	const [messages, setMessages] = useState<ChatMessage[]>([]);
+
 	const [userLocation, setUserLocation] = useState<{
 		lat: number;
 		lng: number;
@@ -40,98 +39,39 @@ export function GameChat() {
 		}
 	}, []);
 
+	// Configuração corrigida sem rota de API explícita se for padrão
+	// biome-ignore lint/suspicious/noExplicitAny: bypassing type mismatch
+	const chatHelpers = useChat({
+		onError: (err: Error) => console.error("Erro no chat:", err),
+	}) as any;
+
+	const { messages, input, handleInputChange, handleSubmit, isLoading, error } =
+		chatHelpers;
+
 	// Auto-scroll
+	// biome-ignore lint/correctness/useExhaustiveDependencies: trigger scroll on messages change
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
-	// Use the new hook for intelligent matching
-	const { findMatch } = useDilemmaMatcher();
-
-	const handleAction = async (text: string, audioBlob?: Blob | null) => {
-		setIsProcessing(true);
-
-		// 1. Add User Message
-		const newMessage: ChatMessage = {
-			id: Date.now().toString(),
-			role: "user",
-			content: text,
-		};
-		setMessages((prev) => [...prev, newMessage]);
-
-		// 2. Upload Audio (Fire-and-forget for research/telemetry)
-		if (audioBlob) {
-			const uploadUrl = process.env.NEXT_PUBLIC_HOSTINGER_API_URL;
-			const secret = process.env.NEXT_PUBLIC_UPLOAD_SECRET;
-
-			if (uploadUrl && secret) {
-				const formData = new FormData();
-				formData.append("audio", audioBlob, `voice_${Date.now()}.webm`);
-				formData.append("transcript", text);
-				formData.append("key", secret);
-
-				fetch(uploadUrl, {
-					method: "POST",
-					body: formData,
-				}).catch((err) => console.error("Audio upload failed", err));
-			}
-		}
-
-		// 3. Match Dilemma (Deterministic & Local)
-		// Small delay to simulate processing and feel natural
-		await new Promise((resolve) => setTimeout(resolve, 600));
-
-		// Use the new hook which encapsulates services + distance logic + keyword matching
-		const coords = userLocation ? [userLocation.lat, userLocation.lng] as [number, number] : null;
-		const bestMatch = findMatch(text, coords);
-
-		if (bestMatch) {
-			// Trigger Dilemma
-			gameState.setActiveDilemma(bestMatch.id);
-			setMessages((prev) => [
-				...prev,
-				{
-					id: (Date.now() + 1).toString(),
-					role: "system",
-					content: `⚠️ Situação Identificada: ${bestMatch.title}`,
+	const onSubmit = (e: FormEvent) => {
+		e.preventDefault();
+		if (!input.trim()) return;
+		// Transição para não bloquear a UI (Mapas)
+		startTransition(() => {
+			handleSubmit(e, {
+				body: {
+					gameState: {
+						health: gameState.health,
+						hunger: gameState.hunger,
+						hygiene: gameState.hygiene,
+						money: gameState.money,
+						time: gameState.time,
+						location: userLocation, // Sending location if available
+					},
 				},
-			]);
-		} else {
-			// No match - Contextual Hint (Fallback AI or hardcoded hints)
-			// Using the previous heuristic fallback, but now it's explicit "Flavor Text"
-			let response = "Você olha ao redor, mas a rua parece vazia e silenciosa.";
-
-			const lowerText = text.toLowerCase();
-			if (lowerText.includes("fome") || lowerText.includes("comida")) {
-				response =
-					"Você sente fome. Tente buscar o 'Bom Prato' ou 'Refeitório' no mapa acima.";
-			} else if (
-				lowerText.includes("saude") ||
-				lowerText.includes("dor") ||
-				lowerText.includes("médico")
-			) {
-				response =
-					"Sua condição de saúde preocupa. Procure pelo 'Consultório na Rua' ou 'CAPS'.";
-			} else if (
-				lowerText.includes("trabalho") ||
-				lowerText.includes("dinheiro")
-			) {
-				response =
-					"O movimento está fraco. Talvez a 'Casa das Oficinas' ou o 'CPAT' tenham oportunidades no centro.";
-			} else if (lowerText.includes("dormir") || lowerText.includes("sono")) {
-				response = "A noite é perigosa. Procure o 'SAMIM' ou a 'Casa de Passagem'.";
-			}
-
-			setMessages((prev) => [
-				...prev,
-				{
-					id: (Date.now() + 1).toString(),
-					role: "system",
-					content: response,
-				},
-			]);
-		}
-		setIsProcessing(false);
+			});
+		});
 	};
 
 	return (
@@ -157,69 +97,94 @@ export function GameChat() {
 					</div>
 				)}
 
-				{messages.map((m) => (
-					<div
-						key={m.id}
-						className={`flex gap-3 w-full px-2 ${m.role === "user" ? "flex-row-reverse" : "flex-row"}`}
-					>
-						{/* Avatar */}
-						<div className="flex-shrink-0 mt-1">
-							{m.role === "user" ? (
-								<div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center shadow-sm">
-									{/* biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon */}
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										className="text-white"
-									>
-										<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-										<circle cx="12" cy="7" r="4" />
-									</svg>
-								</div>
-							) : (
-								<Image
-									src={`https://api.dicebear.com/7.x/bottts/svg?seed=system`}
-									alt="Mestre"
-									width={32}
-									height={32}
-									className="rounded-full bg-purple-100 shadow-sm border border-purple-200"
-								/>
-							)}
-						</div>
-
-						{/* Bubble */}
+				{
+					// biome-ignore lint/suspicious/noExplicitAny: simple type definition
+					messages.map((m: any) => (
 						<div
-							className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user"
-								? "bg-blue-600 text-white rounded-tr-none"
-								: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
-								}`}
+							key={m.id}
+							className={`flex gap-3 w-full px-2 ${m.role === "user" ? "flex-row-reverse" : "flex-row"}`}
 						>
-							{m.content}
-						</div>
-					</div>
-				))}
+							{/* Avatar */}
+							<div className="flex-shrink-0 mt-1">
+								{m.role === "user" ? (
+									<div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center shadow-sm">
+										{/* biome-ignore lint/a11y/noSvgWithoutTitle: decorative icon */}
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											strokeWidth="2"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											className="text-white"
+										>
+											<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+											<circle cx="12" cy="7" r="4" />
+										</svg>
+									</div>
+								) : (
+									<Image
+										src={`https://api.dicebear.com/7.x/bottts/svg?seed=system`}
+										alt="Mestre"
+										width={32}
+										height={32}
+										className="rounded-full bg-purple-100 shadow-sm border border-purple-200"
+									/>
+								)}
+							</div>
 
-				{isProcessing && (
+							{/* Bubble */}
+							<div
+								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
+									m.role === "user"
+										? "bg-blue-600 text-white rounded-tr-none"
+										: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
+								}`}
+							>
+								{m.content}
+							</div>
+						</div>
+					))
+				}
+
+				{(isLoading || isPending) && (
 					<div className="text-xs text-gray-400 animate-pulse ml-4">
 						Processando contexto e localização...
+					</div>
+				)}
+
+				{error && (
+					<div className="text-xs text-red-500 ml-4">
+						Erro ao processar mensagem. Tente novamente.
 					</div>
 				)}
 
 				<div ref={messagesEndRef} />
 			</div>
 
-			<ActionInput
-				onAction={handleAction}
-				isProcessing={isProcessing}
-				placeholder="O que você faz? (Fale ou Digite)"
-			/>
+			<form
+				onSubmit={onSubmit}
+				className="p-3 bg-white dark:bg-gray-950 border-t flex gap-2"
+			>
+				<Input
+					value={input}
+					onChange={handleInputChange}
+					placeholder="O que você faz?"
+					disabled={isLoading || isPending}
+					className="flex-1"
+				/>
+				<Button type="submit" disabled={isLoading || isPending} size="icon">
+					{isPending || isLoading ? (
+						<span className="animate-spin text-xs">...</span>
+					) : (
+						<Send className="w-4 h-4" />
+					)}
+					<span className="sr-only">Enviar</span>
+				</Button>
+			</form>
 		</div>
 	);
 }

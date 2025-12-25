@@ -188,6 +188,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 										src={opt.image}
 										alt={opt.label}
 										fill
+										sizes="(max-width: 768px) 100vw, 33vw"
 										className={`object-cover ${formData.avatarImage === opt.id ? "opacity-100" : "opacity-40 hover:opacity-100"} transition-opacity`}
 									/>
 									<div
@@ -310,6 +311,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 									src={formData.avatarImage || AVATAR_OPTIONS[0].image}
 									alt="Avatar Final"
 									fill
+									sizes="(max-width: 768px) 100vw, 33vw"
 									className="object-cover"
 								/>
 							</div>

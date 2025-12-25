@@ -5,10 +5,10 @@ import {
 	Brain,
 	Clock,
 	Menu,
+	Mic, // New Icon
 	Package,
 	ShieldAlert,
 	Wallet,
-	Mic, // New Icon
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -48,6 +48,7 @@ export function GameHUD() {
 								src={avatar.avatarImage}
 								alt={avatar.name}
 								fill
+								sizes="(max-width: 768px) 100vw, 33vw"
 								className="object-cover"
 							/>
 							{/* Name Tag Overlay */}
@@ -138,6 +139,7 @@ export function GameHUD() {
 					</div>
 
 					<button
+						type="button"
 						onClick={() => setIsReporterOpen(true)}
 						className="hidden md:flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white px-5 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition-transform hover:scale-105 shadow-lg shadow-purple-900/20"
 					>
@@ -158,21 +160,20 @@ export function GameHUD() {
 			</div>
 
 			{/* Voice Reporter Modal / Overlay */}
-			{
-				isReporterOpen && (
-					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
-						<div className="relative w-full max-w-md">
-							<button
-								onClick={() => setIsReporterOpen(false)}
-								className="absolute -top-12 right-0 text-white hover:text-gray-300"
-							>
-								Fechar [X]
-							</button>
-							<VoiceReporter />
-						</div>
+			{isReporterOpen && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
+					<div className="relative w-full max-w-md">
+						<button
+							type="button"
+							onClick={() => setIsReporterOpen(false)}
+							className="absolute -top-12 right-0 text-white hover:text-gray-300"
+						>
+							Fechar [X]
+						</button>
+						<VoiceReporter />
 					</div>
-				)
-			}
+				</div>
+			)}
 		</>
 	);
 }

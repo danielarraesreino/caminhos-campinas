@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { useSurvivalLogic } from "@/hooks/useSurvivalLogic";
+import { calculateDistance } from "@/utils/geo";
 import { GAME_DILEMMAS } from "./dilemmas";
 import { applyWeatherEffects, processRandomEvents } from "./eventEngine";
 
@@ -28,12 +29,17 @@ export function useGameLoop() {
 		removeFromInventory,
 		setWorkTool,
 		addToInventory,
+		userPosition,
 	} = useGameContext();
 
 	const { getSanityDecayMultiplier, checkShelterBarrier } = useSurvivalLogic();
-
 	const lastHourRef = useRef(time);
 	const [isRaining, setIsRaining] = useState(false);
+
+	// Import helper locally or at top? Better at top.
+	// But since I am using replace_file_content, I'll add import at the top in a separate call if needed,
+	// or assume I can add it here? No, must trigger top of file.
+	// Let's add userPosition here first.
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -76,10 +82,10 @@ export function useGameLoop() {
 
 			// REFATORAÇÃO: TAXAS DE DECAIMENTO (Core_Mechanics.md)
 			// Baseado na "Fome Apertando" e necessidade de Serviços
-			let hngDecay = 0.4; // Fome aperta mais rápido (antes 0.2)
-			const hygDecay = 0.3; // Higiene degrada constante (antes 0.08)
-			let enrDecay = 0.2;
-			let snyDecay = 0.15 * getSanityDecayMultiplier();
+			let hngDecay = 1.5; // Fome: -36/dia (Crítico em ~3 dias)
+			const hygDecay = 1.0; // Higiene: -24/dia
+			let enrDecay = 3.0; // Energia: -72/dia (Exige dormir diariamente)
+			let snyDecay = 0.5 * getSanityDecayMultiplier();
 
 			// Modificadores de Avatar
 			if (avatar) {
@@ -157,6 +163,27 @@ export function useGameLoop() {
 		function checkSystemicEvents(currentHour: number) {
 			if (activeDilemmaId) return;
 
+			// 0. GEOLOCATION TRIGGER (Barreira do SAMIM)
+			if (userPosition && currentHour >= 19) {
+				const samimDist = calculateDistance(
+					userPosition[0],
+					userPosition[1],
+					-22.9038,
+					-47.0652,
+				);
+
+				if (samimDist < 0.2) {
+					// 200m
+					// We need to define this dilemma ID in dilemmas.ts or assume it exists.
+					// Using "abrigo_samim_01" as ID (found in dilemmas.ts).
+					const hasResolved = resolvedDilemmas.includes("abrigo_samim_01");
+					if (!hasResolved) {
+						setActiveDilemma("abrigo_samim_01");
+						return;
+					}
+				}
+			}
+
 			// 1. CHECK DE FERRAMENTA DE TRABALHO (Bloqueio Institucional)
 			checkShelterBarrier();
 
@@ -228,6 +255,7 @@ export function useGameLoop() {
 		modifyStat,
 		checkShelterBarrier,
 		socialStigma,
+		userPosition,
 	]);
 
 	return { isRaining };

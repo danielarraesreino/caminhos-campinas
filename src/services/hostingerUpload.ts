@@ -28,14 +28,14 @@ export async function uploadUserDilemma(
 
 		const data = await response.json();
 
-		if (!response.ok || data.status === 'error') {
+		if (!response.ok || data.status === "error") {
 			throw new Error(data.message || `Upload failed: ${response.statusText}`);
 		}
 
 		return {
 			success: true,
 			message: "Relato enviado com sucesso!",
-			url: data.url
+			url: data.url,
 		};
 	} catch (error) {
 		console.error("Error uploading dilemma:", error);

@@ -163,7 +163,8 @@ export function NearbyList({ userPosition }: NearbyListProps) {
 									</h4>
 									<div className="flex gap-2 items-center mt-1">
 										<span className="text-[10px] px-2 py-0.5 bg-zinc-900 text-zinc-300 rounded uppercase font-bold tracking-wider">
-											{service.type}
+											{service.type.charAt(0).toUpperCase() +
+												service.type.slice(1)}
 										</span>
 										{distanceFormatted && (
 											<span className="text-xs font-mono text-emerald-400 font-bold bg-emerald-900/10 px-2 rounded">

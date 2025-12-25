@@ -32,14 +32,16 @@ const UserIcon = new L.Icon({
 const getIconForType = (type: string) => {
 	let colorUrl = "marker-icon-2x-blue.png"; // Default
 
-	if (type === "shelter" || type === "albergue") {
+	if (type === "shelter" || type === "abrigo" || type === "albergue") {
 		colorUrl = "marker-icon-2x-violet.png";
 	} else if (type === "food" || type === "alimentacao") {
 		colorUrl = "marker-icon-2x-orange.png";
 	} else if (type === "health" || type === "saude") {
 		colorUrl = "marker-icon-2x-red.png";
-	} else if (type === "work") {
+	} else if (type === "work" || type === "educacao") {
 		colorUrl = "marker-icon-2x-gold.png";
+	} else if (type === "assistencia") {
+		colorUrl = "marker-icon-2x-blue.png"; // Default blue
 	}
 
 	return new L.Icon({

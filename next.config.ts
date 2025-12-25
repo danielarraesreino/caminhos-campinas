@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
 				hostname: "api.dicebear.com",
 				pathname: "/**",
 			},
+			{
+				protocol: "https",
+				hostname: "lightseagreen-horse-933009.hostingersite.com",
+				pathname: "/**",
+			},
 		],
 	},
 };

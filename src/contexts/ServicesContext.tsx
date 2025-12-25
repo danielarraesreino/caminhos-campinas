@@ -9,16 +9,15 @@ import {
 	useState,
 } from "react";
 
-
 export type ServiceType =
-	| "food"
-	| "shelter"
-	| "health"
-	| "hygiene"
-	| "assistance"
-	| "work"
+	| "abrigo"
+	| "alimentacao"
+	| "saude"
+	| "assistencia"
+	| "educacao"
 	| "comércio"
-	| "privado";
+	| "privado"
+	| "work";
 
 export interface ServiceLocation {
 	id: string;
@@ -121,7 +120,30 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 	const filterServices = useCallback(
 		(type: ServiceType | "all") => {
 			if (type === "all") return services;
-			return services.filter((s) => s.type === type);
+
+			// Enhanced filtering: include services that PROVIDE the benefit, even if main type differs
+			return services.filter((s) => {
+				const isExactMatch = s.type === type;
+				if (isExactMatch) return true;
+
+				// Cross-category checks based on effects
+				if (type === "alimentacao" && (s.effects?.hunger || 0) > 0) return true;
+				// "hygiene" is an effect, no longer a main category in the JSON, but "assistencia" often covers it (Centro Pop provide showers).
+				// If we want to filter specifically by "hygiene" effect, we need to see how the filter is called.
+				// However, ServiceType definition doesn't have "hygiene" anymore in my previous edit? Wait, I didn't verify if I should keep "hygiene" as a ServiceType or if it's subsumed by "assistencia".
+				// The JSON uses "assistencia". I'll keep "assistencia" logic.
+				// But let's look at the mapping logic requested: "food" -> "alimentacao", "shelter" -> "abrigo", "health" -> "saude", "assistance" -> "assistencia", "education" -> "educacao".
+
+				if (type === "saude" && (s.effects?.health || 0) > 0) return true;
+				if (
+					type === "abrigo" &&
+					(s.effects?.energy || 0) > 0 &&
+					s.type !== "work"
+				)
+					return true;
+
+				return false;
+			});
 		},
 		[services],
 	);

@@ -1,0 +1,3 @@
+src/**/*.css
+next.config.ts
+public/**/*.json

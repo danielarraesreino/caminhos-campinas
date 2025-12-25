@@ -38,6 +38,7 @@ import { Providers } from "@/components/Providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 import { Navbar } from "@/components/ui/Navbar";
+import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
 
 export default function RootLayout({
 	children,
@@ -59,6 +60,7 @@ export default function RootLayout({
 								<SpeedInsights />
 								<Analytics />
 								<ServiceWorkerRegister />
+								<RealitySwitcher />
 							</ServicesProvider>
 						</GameProvider>
 					</SurvivalModeProvider>

@@ -47,7 +47,7 @@ export function GameOverModal({
 	};
 
 	return (
-		<div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
+		<div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
 			<div className="w-full max-w-2xl bg-gradient-to-b from-gray-900 to-black border-2 border-red-800 rounded-3xl overflow-hidden shadow-2xl shadow-red-900/50">
 				{/* Header com motivo */}
 				<div
@@ -90,19 +90,20 @@ export function GameOverModal({
 									key={key}
 									className="text-gray-200 leading-relaxed whitespace-pre-line"
 								>
-									{parts.map((part, partIdx) =>
-										partIdx % 2 === 1 ? (
-											// biome-ignore lint/suspicious/noArrayIndexKey: order is stable
-											<strong
-												key={`${key}-${partIdx}`}
-												className="text-white font-bold"
-											>
-												{part}
-											</strong>
-										) : (
-											part
-										),
-									)}
+									{parts.map((part, partIdx) => {
+										if (partIdx % 2 === 1) {
+											return (
+												<strong
+													// biome-ignore lint/suspicious/noArrayIndexKey: order is stable
+													key={`${key}-${partIdx}`}
+													className="text-white font-bold"
+												>
+													{part}
+												</strong>
+											);
+										}
+										return part;
+									})}
 								</p>
 							);
 						})}

@@ -1,8 +1,11 @@
 "use client";
 
 import {
+	AlertCircle,
 	AlertTriangle,
 	BedDouble,
+	BookOpen,
+	CheckCircle2,
 	FileText,
 	MapPin,
 	Phone,
@@ -12,7 +15,186 @@ import {
 	Utensils,
 } from "lucide-react"; // Updated icons for survival needs
 import { useEffect, useState } from "react";
-import { type ServiceType, useServices } from "@/contexts/ServicesContext";
+import { useGameContext } from "@/contexts/GameContext";
+import {
+	type ServiceLocation,
+	type ServiceType,
+	useServices,
+} from "@/contexts/ServicesContext";
+
+function ServiceCard({ service }: { service: ServiceLocation }) {
+	const { documents, modifyStat } = useGameContext();
+	const [enrollmentStatus, setEnrollmentStatus] = useState<
+		"idle" | "enrolling" | "enrolled"
+	>("idle");
+	const [progress, setProgress] = useState(0);
+
+	// Check requirements
+	const missingreqs =
+		service.requirements?.filter((req: string) => {
+			const r = req.toLowerCase();
+			if (r.includes("rg") && !documents.hasRG) return true;
+			if (r.includes("cpf") && !documents.hasCPF) return true;
+			// Simple check for now
+			return false;
+		}) || [];
+
+	const canEnroll = missingreqs.length === 0;
+
+	const handleEnroll = () => {
+		if (!canEnroll) return;
+		setEnrollmentStatus("enrolling");
+
+		// Simulation timer
+		let p = 0;
+		const timer = setInterval(() => {
+			p += 5;
+			setProgress(p);
+			if (p >= 100) {
+				clearInterval(timer);
+				setEnrollmentStatus("enrolled");
+				// Effect?
+			}
+		}, 100);
+	};
+
+	const isEducation = service.type === "educacao";
+
+	return (
+		<div
+			className={`bg-zinc-900 border ${isEducation ? "border-blue-900/50" : "border-zinc-800"} rounded-xl p-5 active:bg-zinc-800 transition-colors relative overflow-hidden`}
+		>
+			{isEducation && (
+				<div className="absolute top-0 right-0 p-2">
+					<BookOpen className="text-blue-500/20 w-12 h-12 -mr-2 -mt-2" />
+				</div>
+			)}
+
+			<div className="flex justify-between items-start mb-2 relative z-10">
+				<h3 className="font-bold text-xl text-white leading-tight">
+					{service.name}
+				</h3>
+				<span
+					className={`
+					px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
+					${service.type === "alimentacao"
+							? "bg-orange-900 text-orange-400"
+							: service.type === "abrigo"
+								? "bg-indigo-900 text-indigo-400"
+								: service.type === "saude"
+									? "bg-red-900 text-red-400"
+									: service.type === "educacao"
+										? "bg-blue-900 text-blue-400"
+										: "bg-slate-800 text-slate-400"
+						}
+				`}
+				>
+					{service.type}
+				</span>
+			</div>
+
+			<div className="flex items-start gap-2 text-zinc-400 mb-3 relative z-10">
+				<MapPin className="w-4 h-4 shrink-0 mt-1" />
+				<p className="text-sm leading-relaxed">
+					{service.address || "Endereço não informado"}
+				</p>
+			</div>
+
+			{/* Education Specifics */}
+			{isEducation && service.effects?.money && (
+				<div className="mb-4 bg-emerald-900/20 border border-emerald-500/30 p-3 rounded-lg flex items-center justify-between">
+					<span className="text-xs text-emerald-400 font-bold uppercase">
+						Bolsa / Renda
+					</span>
+					<span className="text-emerald-300 font-mono font-bold">
+						R$ {service.effects.money},00
+					</span>
+				</div>
+			)}
+
+			{service.opening_hours && (
+				<p className="text-xs text-zinc-500 font-mono mb-2 bg-black/30 w-fit px-2 py-1 rounded">
+					🕒 {service.opening_hours}
+				</p>
+			)}
+
+			{/* Requirements Logic */}
+			{service.requirements && service.requirements.length > 0 && (
+				<div className="mb-4 space-y-2">
+					{service.requirements.map((req: string, idx: number) => {
+						const isMissing = missingreqs.includes(req);
+						return (
+							<div
+								// biome-ignore lint/suspicious/noArrayIndexKey: Static requirements list
+								key={idx}
+								className={`flex items-center gap-2 text-xs font-bold px-2 py-1 rounded border ${isMissing ? "bg-red-900/20 border-red-900/50 text-red-400" : "bg-green-900/20 border-green-900/30 text-green-400"}`}
+							>
+								{isMissing ? (
+									<AlertCircle size={12} />
+								) : (
+									<CheckCircle2 size={12} />
+								)}
+								{req} {isMissing && "(Falta)"}
+							</div>
+						);
+					})}
+				</div>
+			)}
+
+			{service.rules && (
+				<div className="mb-3 p-2 bg-yellow-900/10 border border-yellow-700/30 rounded text-xs text-yellow-200/80 italic">
+					<p>💡 Dica: {service.rules}</p>
+				</div>
+			)}
+
+			<div className="flex gap-2 mt-4">
+				<button
+					type="button"
+					onClick={() => {
+						const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
+						window.open(url, "_blank");
+					}}
+					className="flex-1 bg-zinc-800 border border-zinc-700 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+				>
+					<MapPin className="w-4 h-4" />
+					Ver Mapa
+				</button>
+
+				{isEducation && (
+					<button
+						type="button"
+						disabled={!canEnroll || enrollmentStatus !== "idle"}
+						onClick={handleEnroll}
+						className={`flex-1 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors relative overflow-hidden
+							${canEnroll
+								? enrollmentStatus === "enrolled"
+									? "bg-green-600"
+									: "bg-blue-600 hover:bg-blue-500"
+								: "bg-zinc-800 opacity-50 cursor-not-allowed"
+							}
+						`}
+					>
+						{enrollmentStatus === "enrolling" && (
+							<div
+								className="absolute left-0 top-0 bottom-0 bg-blue-400/30 transition-all duration-100"
+								style={{ width: `${progress}%` }}
+							/>
+						)}
+
+						{enrollmentStatus === "idle" &&
+							(canEnroll ? "Inscrever-se" : "Requisitos")}
+						{enrollmentStatus === "enrolling" && `Processando ${progress}%`}
+						{enrollmentStatus === "enrolled" && (
+							<>
+								<CheckCircle2 size={16} /> Inscrito
+							</>
+						)}
+					</button>
+				)}
+			</div>
+		</div>
+	);
+}
 
 export default function ResourcesPage() {
 	const { services, loading, refreshServices, filterServices } = useServices();
@@ -29,35 +211,42 @@ export default function ResourcesPage() {
 			label: "Alimentação",
 			icon: <Utensils className="w-6 h-6" />,
 			color: "bg-orange-500",
-			type: "food",
+			type: "alimentacao",
 		},
 		{
 			id: "health",
 			label: "Saúde",
 			icon: <RefreshCw className="w-6 h-6" />,
 			color: "bg-red-500",
-			type: "health",
+			type: "saude",
 		},
 		{
 			id: "hygiene",
 			label: "Higiene",
 			icon: <ShowerHead className="w-6 h-6" />,
 			color: "bg-cyan-500",
-			type: "hygiene",
+			type: "assistencia", // Hygiene is now under Assistencia (Centro Pop)
 		},
 		{
 			id: "shelter",
 			label: "Dormir",
 			icon: <BedDouble className="w-6 h-6" />,
 			color: "bg-indigo-500",
-			type: "shelter",
+			type: "abrigo",
 		},
 		{
 			id: "assistance",
 			label: "Documentos",
 			icon: <FileText className="w-6 h-6" />,
 			color: "bg-emerald-500",
-			type: "assistance",
+			type: "assistencia",
+		},
+		{
+			id: "education",
+			label: "Formação",
+			icon: <BookOpen className="w-6 h-6" />,
+			color: "bg-blue-600",
+			type: "educacao",
 		},
 	];
 
@@ -157,7 +346,7 @@ export default function ResourcesPage() {
 				<h2 className="text-zinc-400 font-medium">
 					{activeCategory === "all"
 						? "Todos os recursos"
-						: `Exibindo: ${activeCategory}`}
+						: `Exibindo: ${categories.find((c) => c.type === activeCategory)?.label || activeCategory}`}
 				</h2>
 				<span className="bg-zinc-900 px-3 py-1 rounded-full text-xs font-mono text-zinc-500">
 					{displayedServices.length} locais
@@ -172,76 +361,7 @@ export default function ResourcesPage() {
 					</p>
 				) : displayedServices.length > 0 ? (
 					displayedServices.map((service) => (
-						<div
-							key={service.id}
-							className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 active:bg-zinc-800 transition-colors"
-						>
-							<div className="flex justify-between items-start mb-2">
-								<h3 className="font-bold text-xl text-white leading-tight">
-									{service.name}
-								</h3>
-								<span
-									className={`
-									px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
-									${
-										service.type === "food"
-											? "bg-orange-900 text-orange-400"
-											: service.type === "shelter"
-												? "bg-indigo-900 text-indigo-400"
-												: service.type === "health"
-													? "bg-red-900 text-red-400"
-													: "bg-slate-800 text-slate-400"
-									}
-								`}
-								>
-									{service.type}
-								</span>
-							</div>
-
-							<div className="flex items-start gap-2 text-zinc-400 mb-3">
-								<MapPin className="w-4 h-4 shrink-0 mt-1" />
-								<p className="text-sm leading-relaxed">
-									{service.address || "Endereço não informado"}
-								</p>
-							</div>
-
-							{service.opening_hours && (
-								<p className="text-xs text-zinc-500 font-mono mb-2 bg-black/30 w-fit px-2 py-1 rounded">
-									🕒 {service.opening_hours}
-								</p>
-							)}
-
-							{service.requirements && service.requirements.length > 0 && (
-								<div className="mb-2 flex flex-wrap gap-1">
-									{service.requirements.map((req, idx) => (
-										<span
-											key={`${idx}-${req}`}
-											className="text-[10px] bg-red-900/40 text-red-200 border border-red-900/50 px-2 py-0.5 rounded uppercase font-bold"
-										>
-											Exige: {req}
-										</span>
-									))}
-								</div>
-							)}
-
-							{service.rules && (
-								<div className="mb-3 p-2 bg-yellow-900/10 border border-yellow-700/30 rounded text-xs text-yellow-200/80 italic">
-									<p>💡 Dica: {service.rules}</p>
-								</div>
-							)}
-
-							<button
-								type="button"
-								onClick={() => {
-									const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
-									window.open(url, "_blank");
-								}}
-								className="w-full bg-zinc-800 border border-zinc-700 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
-							>
-								<MapPin className="w-4 h-4" />
-								Ver no Mapa
-							</button>
-						</div>
+						<ServiceCard key={service.id} service={service} />
 					))
 				) : (
 					<div className="text-center py-10 opacity-50">
