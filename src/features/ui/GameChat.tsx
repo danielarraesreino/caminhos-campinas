@@ -15,8 +15,8 @@ import {
 	GLOSSARY_TERMS,
 	GlossaryTooltip,
 } from "@/components/ui/GlossaryTooltip";
-import { Input } from "@/components/ui/input";
 import { useGameContext } from "@/contexts/GameContext";
+import { ActionInput } from "./ActionInput";
 
 export function GameChat() {
 	const gameState = useGameContext();
@@ -67,23 +67,59 @@ export function GameChat() {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
-	const onSubmit = (e: FormEvent) => {
-		e.preventDefault();
-		if (!input.trim()) return;
+	const handleAction = async (text: string, audioBlob?: Blob | null) => {
+		if (!text.trim() && !audioBlob) return;
 
-		setIsThinking(true); // Immediate feedback
+		setIsThinking(true);
 
-		// Transição para não bloquear a UI (Mapas)
+		// Upload Audio if exists
+		let audioUrl = "";
+		if (audioBlob) {
+			try {
+				const formData = new FormData();
+				formData.append("audio", audioBlob, "voice_input.webm");
+
+				// Use environment variable or fallback to knwon URL
+				const uploadUrl = process.env.NEXT_PUBLIC_HOSTINGER_API_URL
+					? `${process.env.NEXT_PUBLIC_HOSTINGER_API_URL}/upload-audio.php`
+					: "https://lightseagreen-horse-933009.hostingersite.com/upload-audio.php";
+
+				const response = await fetch(uploadUrl, {
+					method: "POST",
+					body: formData,
+				});
+
+				if (response.ok) {
+					const data = await response.json();
+					if (data.url) audioUrl = data.url;
+				} else {
+					console.warn("Audio upload failed");
+				}
+			} catch (err) {
+				console.error("Error uploading audio", err);
+			}
+		}
+
 		startTransition(() => {
-			handleSubmit(e, {
-				body: {
+			// Manually construct the append call because handleSubmit is for forms
+			// We use `append` from useChat to send a new message
+			// Wait, useChat `append` acts like sending.
+			// But `handleSubmit` handles the API call automatically.
+			// Ideally we use `append` manually here since we are not using a form event directly bound to input.
+
+			// Actually `chatHelpers.append` is the way to programmatically send.
+			chatHelpers.append({
+				role: "user",
+				content: text,
+				data: {
+					audioUrl: audioUrl, // Pass audio URL in data
 					gameState: {
 						health: gameState.health,
 						hunger: gameState.hunger,
 						hygiene: gameState.hygiene,
 						money: gameState.money,
 						time: gameState.time,
-						location: userLocation, // Sending location if available
+						location: userLocation,
 					},
 				},
 			});
@@ -223,30 +259,13 @@ export function GameChat() {
 				<div ref={messagesEndRef} />
 			</div>
 
-			<form
-				onSubmit={onSubmit}
-				className="p-3 bg-white dark:bg-gray-950 border-t flex gap-2"
-			>
-				<Input
-					value={input}
-					onChange={handleInputChange}
-					placeholder="O que você faz?"
-					disabled={isLoading || isPending || isThinking}
-					className="flex-1"
+			<div className="p-3 bg-white dark:bg-gray-950 border-t">
+				<ActionInput
+					onAction={handleAction}
+					isProcessing={isLoading || isPending || isThinking}
+					placeholder="Fale ou digite..."
 				/>
-				<Button
-					type="submit"
-					disabled={isLoading || isPending || isThinking}
-					size="icon"
-				>
-					{isPending || isLoading || isThinking ? (
-						<span className="animate-spin text-xs">...</span>
-					) : (
-						<Send className="w-4 h-4" />
-					)}
-					<span className="sr-only">Enviar</span>
-				</Button>
-			</form>
+			</div>
 		</div>
 	);
 }
