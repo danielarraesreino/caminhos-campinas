@@ -30,7 +30,7 @@ export function RealitySwitcher() {
 		}
 	};
 
-	return createPortal(
+	return (
 		<div className="fixed bottom-6 left-6 z-[9999] group">
 			<button
 				type="button"
@@ -65,7 +65,6 @@ export function RealitySwitcher() {
 					<div className="absolute top-1/2 -right-1 w-2 h-2 bg-black/80 transform -translate-y-1/2 rotate-45" />
 				</div>
 			</button>
-		</div>,
-		document.body,
+		</div>
 	);
 }

@@ -277,7 +277,7 @@ export default function LandingPage() {
 									onClick={() => {
 										window.location.href = "/recursos";
 									}}
-									className="px-8 py-5 bg-transparent border border-slate-700 hover:border-yellow-500/50 text-slate-400 hover:text-yellow-400 rounded-2xl font-medium text-lg transition-all flex items-center justify-center gap-3"
+									className="px-8 py-5 bg-transparent border border-slate-700 hover:border-yellow-500/50 text-slate-300 hover:text-yellow-400 rounded-2xl font-medium text-lg transition-all flex items-center justify-center gap-3"
 								>
 									<MapPin className="h-5 w-5" />
 									Preciso de Ajuda Agora
@@ -292,7 +292,7 @@ export default function LandingPage() {
 								}}
 							/>
 
-							<div className="mt-8 flex items-center justify-center lg:justify-start gap-4 text-xs font-mono text-slate-500 opacity-60">
+							<div className="mt-8 flex items-center justify-center lg:justify-start gap-4 text-xs font-mono text-slate-400 opacity-80">
 								<span>v0.1.0 Beta</span>
 								<span>•</span>
 								<span>Campinas, SP</span>
@@ -394,7 +394,7 @@ export default function LandingPage() {
 								<h3 className="font-black text-slate-900 uppercase tracking-tight">
 									Combate à Desafiliação
 								</h3>
-								<p className="text-sm text-slate-500">
+								<p className="text-sm text-slate-600">
 									Reconstrução de vínculos em estruturas que fazem sentido para
 									a vida.
 								</p>
@@ -403,7 +403,7 @@ export default function LandingPage() {
 								<h3 className="font-black text-slate-900 uppercase tracking-tight">
 									Apartação Social
 								</h3>
-								<p className="text-sm text-slate-500">
+								<p className="text-sm text-slate-600">
 									O reconhecimento do outro como um semelhante, não apenas um
 									objeto de caridade.
 								</p>
@@ -815,7 +815,7 @@ export default function LandingPage() {
 					<div className="bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-blue-100 max-w-lg mx-auto relative overflow-hidden">
 						<div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-purple-500"></div>
 
-						<h3 className="text-lg font-medium text-slate-500 mb-2">
+						<h3 className="text-lg font-medium text-slate-700 mb-2">
 							Chave PIX (Celular)
 						</h3>
 
@@ -875,7 +875,7 @@ export default function LandingPage() {
 						</div>
 
 						<div className="flex flex-col items-center">
-							<span className="text-sm font-medium text-slate-500 mb-2">
+							<span className="text-sm font-medium text-slate-400 mb-2">
 								Siga o Coletivo
 							</span>
 							<a
