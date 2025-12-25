@@ -105,6 +105,7 @@ export function OnboardingTutorial({
 							type="button"
 							onClick={handleClose}
 							className="text-slate-400 hover:text-white"
+							aria-label="Fechar tutorial"
 						>
 							<X size={20} />
 						</button>
