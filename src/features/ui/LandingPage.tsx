@@ -391,18 +391,18 @@ export default function LandingPage() {
 						</p>
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
 							<div className="space-y-2">
-								<h4 className="font-black text-slate-800 uppercase tracking-tight">
+								<h3 className="font-black text-slate-900 uppercase tracking-tight">
 									Combate à Desafiliação
-								</h4>
+								</h3>
 								<p className="text-sm text-slate-500">
 									Reconstrução de vínculos em estruturas que fazem sentido para
 									a vida.
 								</p>
 							</div>
 							<div className="space-y-2">
-								<h4 className="font-black text-slate-800 uppercase tracking-tight">
+								<h3 className="font-black text-slate-900 uppercase tracking-tight">
 									Apartação Social
-								</h4>
+								</h3>
 								<p className="text-sm text-slate-500">
 									O reconhecimento do outro como um semelhante, não apenas um
 									objeto de caridade.
@@ -706,9 +706,9 @@ export default function LandingPage() {
 										<div className="bg-purple-900/20 border border-purple-500/30 p-6 rounded-xl">
 											<div className="flex items-center gap-2 mb-3">
 												<Sparkles className="h-4 w-4 text-purple-400" />
-												<h4 className="font-bold text-purple-300 text-sm">
+												<h3 className="font-bold text-purple-300 text-sm">
 													CONSEQUÊNCIA
-												</h4>
+												</h3>
 											</div>
 											<p className="text-slate-200">{aiFeedback}</p>
 											<button

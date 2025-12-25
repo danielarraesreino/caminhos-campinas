@@ -329,9 +329,9 @@ export default function ResourcesPage() {
 			{/* Emergency Banner */}
 			<div className="bg-red-900/40 border border-red-500/30 rounded-xl p-4 mb-8 flex items-center justify-between">
 				<div>
-					<h3 className="text-red-400 font-bold uppercase text-sm">
+					<h2 className="text-red-400 font-bold uppercase text-sm">
 						Emergência Médica?
-					</h3>
+					</h2>
 					<p className="text-white font-black text-2xl">Ligue 192</p>
 				</div>
 				<a
