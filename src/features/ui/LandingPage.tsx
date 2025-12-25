@@ -14,16 +14,24 @@ import {
 	Target,
 	X,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useGameContext } from "@/contexts/GameContext";
 import { DilemmaCache } from "@/utils/dilemmaCache";
 import { getAssetUrl } from "@/utils/getAssetUrl";
 import { AvatarCreation } from "./AvatarCreation";
+import { OnboardingTutorial } from "./OnboardingTutorial";
 
 export default function LandingPage() {
+	const router = useRouter();
 	// const [isMenuOpen, setIsMenuOpen] = useState(false); // Removed local menu state
 	const [copied, setCopied] = useState(false);
 	const [currentBgIndex, setCurrentBgIndex] = useState(0);
+	const [showTutorial, setShowTutorial] = useState(false);
+
+	const { clearPersistence, resetGame, avatar } = useGameContext();
+	const hasSavedGame = !!avatar;
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -36,6 +44,25 @@ export default function LandingPage() {
 	const [_showMap, _setShowMap] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [mode, setMode] = useState<"landing" | "creation">("landing");
+
+	const handleNewGame = async () => {
+		if (hasSavedGame) {
+			if (!confirm("Isso apagará seu progresso atual. Tem certeza?")) return;
+		}
+		await clearPersistence();
+		resetGame();
+
+		const seenTutorial = localStorage.getItem("pop_rua_tutorial_seen");
+		if (!seenTutorial) {
+			setShowTutorial(true);
+		} else {
+			setMode("creation");
+		}
+	};
+
+	const handleContinue = () => {
+		router.push("/jogar");
+	};
 
 	const { data: _session, status } = useSession();
 
@@ -207,35 +234,63 @@ export default function LandingPage() {
 
 							{/* Dual Action Buttons */}
 							<div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-								{/* Primary: Donor/Citizen */}
-								<button
-									type="button"
-									onClick={() => {
-										if (status === "authenticated") {
-											window.location.href = "/jogar";
-										} else {
-											setShowLoginModal(true);
-										}
-									}}
-									className="group relative px-8 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-blue-900/20 overflow-hidden"
-								>
-									<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-									<span className="relative flex items-center gap-3">
-										<ArrowRight className="h-5 w-5" />
-										Vivenciar a Jornada
-									</span>
-								</button>
+								{/* Primary: New Game / Continue */}
+								{hasSavedGame ? (
+									<>
+										<button
+											type="button"
+											onClick={handleContinue}
+											className="group relative px-8 py-5 bg-green-600 hover:bg-green-500 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-green-900/20 overflow-hidden"
+										>
+											<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+											<span className="relative flex items-center gap-3">
+												<ArrowRight className="h-5 w-5" />
+												Continuar Jornada
+											</span>
+										</button>
+
+										<button
+											type="button"
+											onClick={handleNewGame}
+											className="px-6 py-5 bg-transparent border border-white/20 hover:bg-white/10 text-slate-300 rounded-2xl font-medium text-sm transition-all"
+										>
+											Novo Jogo (Reset)
+										</button>
+									</>
+								) : (
+									<button
+										type="button"
+										onClick={handleNewGame}
+										className="group relative px-8 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-blue-900/20 overflow-hidden"
+									>
+										<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+										<span className="relative flex items-center gap-3">
+											<ArrowRight className="h-5 w-5" />
+											Começar Nova História
+										</span>
+									</button>
+								)}
 
 								{/* Secondary: Beneficiary (Discrete but Accessible) */}
 								<button
 									type="button"
-									onClick={() => (window.location.href = "/recursos")}
+									onClick={() => {
+										window.location.href = "/recursos";
+									}}
 									className="px-8 py-5 bg-transparent border border-slate-700 hover:border-yellow-500/50 text-slate-400 hover:text-yellow-400 rounded-2xl font-medium text-lg transition-all flex items-center justify-center gap-3"
 								>
 									<MapPin className="h-5 w-5" />
 									Preciso de Ajuda Agora
 								</button>
 							</div>
+
+							<OnboardingTutorial
+								isOpen={showTutorial}
+								onClose={() => {
+									setShowTutorial(false);
+									setMode("creation");
+								}}
+							/>
 
 							<div className="mt-8 flex items-center justify-center lg:justify-start gap-4 text-xs font-mono text-slate-500 opacity-60">
 								<span>v0.1.0 Beta</span>
@@ -731,7 +786,7 @@ export default function LandingPage() {
 								</p>
 								<button
 									type="button"
-									onClick={() => (window.location.href = "/parceiros")}
+									onClick={() => router.push("/parceiros")}
 									className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/20"
 								>
 									Seja um Parceiro Corporativo

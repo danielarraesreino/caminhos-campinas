@@ -313,6 +313,7 @@ interface GameContextProps extends GameState {
 	sleep: (isSafe: boolean) => Promise<void>;
 	work: (hours: number) => void;
 	resetGame: () => void;
+	clearPersistence: () => Promise<void>;
 }
 
 const GameContext = createContext<GameContextProps | undefined>(undefined);
@@ -335,9 +336,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				const doc: any = await db.get(DOC_ID);
 				if (!isMounted) return;
 
-				// biome-ignore lint/performance/noDelete: PouchDB metadata
+				// biome-ignore lint/performance/noDelete: PouchDB metadata removal
 				delete doc._id;
-				// biome-ignore lint/performance/noDelete: PouchDB metadata
+				// biome-ignore lint/performance/noDelete: PouchDB metadata removal
 				delete doc._rev;
 
 				if (isMounted) {
@@ -370,8 +371,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			try {
 				let rev: string | undefined;
 				try {
+					// biome-ignore lint/suspicious/noExplicitAny: library return type
 					const existing: any = await db.get(DOC_ID);
 					rev = existing._rev;
+					// biome-ignore lint/suspicious/noExplicitAny: error handling
 				} catch (e: any) {
 					if (e.status !== 404) throw e;
 				}
@@ -382,6 +385,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					...state,
 				});
 				console.log("💾 Game Saved");
+				// biome-ignore lint/suspicious/noExplicitAny: error handling
 			} catch (e: any) {
 				// Se for conflito (409) e não tiver tentado muitas vezes, tenta de novo
 				if (e.status === 409 && retryCount < 3) {
@@ -546,15 +550,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 	);
 
 	const resetGame = useCallback(async () => {
+		dispatch({ type: "RESET_GAME" });
+	}, []);
+
+	const clearPersistence = useCallback(async () => {
 		if (db) {
 			try {
 				const doc = await db.get(DOC_ID);
 				await db.remove(doc);
+				console.log("🔥 Persistence cleared");
 			} catch (_e) {
-				// ignore
+				// ignore if not found
 			}
 		}
-		dispatch({ type: "RESET_GAME" });
 	}, [db]);
 
 	const value = useMemo(
@@ -579,6 +587,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			sleep,
 			work,
 			resetGame,
+			clearPersistence,
 		}),
 		[
 			state,
@@ -600,6 +609,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			sleep,
 			work,
 			resetGame,
+			clearPersistence,
 		],
 	);
 
