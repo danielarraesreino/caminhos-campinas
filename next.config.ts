@@ -31,6 +31,12 @@ const nextConfig: NextConfig = {
 			},
 		],
 	},
+	// Optimization to avoid timeouts in Serverless Functions
+	experimental: {
+		serverActions: {
+			bodySizeLimit: "2mb",
+		},
+	},
 };
 
 export default nextConfig;

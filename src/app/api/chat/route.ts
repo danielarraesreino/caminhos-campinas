@@ -2,6 +2,7 @@ import { groq } from "@ai-sdk/groq";
 import { streamText } from "ai";
 
 export const maxDuration = 30;
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
 	try {
