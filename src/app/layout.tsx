@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Clarity from "@/components/analytics/Clarity";
 import "leaflet/dist/leaflet.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -58,7 +59,8 @@ export default function RootLayout({
 								<Navbar />
 								{children}
 								<SpeedInsights />
-								<Analytics />
+								<Clarity />
+                                                                <Analytics />
 								<ServiceWorkerRegister />
 								<RealitySwitcher />
 							</ServicesProvider>
