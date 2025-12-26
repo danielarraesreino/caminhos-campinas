@@ -7,7 +7,7 @@ export enum TelemetryAction {
 	GAME_EVENT = "GAME_EVENT",
 	SYNC = "SYNC",
 	ODS_METRIC = "ODS_METRIC",
-	DECISION_MADE = "DECISION_MADE",
+	DECISION_MADE = "DECISION_MADE", SERVICE_USED = "SERVICE_USED",
 }
 
 export interface TelemetryEvent {

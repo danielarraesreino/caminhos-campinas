@@ -200,9 +200,8 @@ export default function LandingPage() {
 					].map((img, index) => (
 						<div
 							key={img}
-							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${
-								currentBgIndex === index ? "opacity-40" : "opacity-0"
-							}`}
+							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${currentBgIndex === index ? "opacity-40" : "opacity-0"
+								}`}
 							style={{ backgroundImage: `url(${getAssetUrl(img)})` }}
 						/>
 					))}
@@ -635,10 +634,7 @@ export default function LandingPage() {
 									className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-purple-500/25 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
 								>
 									{aiLoading ? (
-										<>
-											<Loader2 className="h-5 w-5 animate-spin" /> Gerando
-											Cenário...
-										</>
+										<span className="flex items-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Gerando Cenário...</span>
 									) : (
 										<>
 											<Sparkles className="h-5 w-5" /> ✨ Gerar Dilema Real
@@ -743,9 +739,7 @@ export default function LandingPage() {
 								Inovação Social com Custo Eficiente
 							</h2>
 							<p className="text-slate-600 mb-6 text-lg">
-								Diferente de apps tradicionais que custam milhões, utilizamos a
-								plataforma <strong>Google Antigravity</strong> e o modelo{" "}
-								<strong>Groq Llama 3.3 70B</strong>.
+								Diferente de apps tradicionais que custam milhões, construímos esta plataforma usando <strong>Inteligência Artificial</strong> como alavanca de autonomia. Eu não sabia programar, mas sabia o que precisava ser feito. A tecnologia me deu a liberdade de criar.
 							</p>
 							<ul className="space-y-4">
 								<li className="flex items-center gap-3">
@@ -753,7 +747,7 @@ export default function LandingPage() {
 										<Check className="h-4 w-4 text-green-600" />
 									</div>
 									<span className="text-slate-700">
-										Desenvolvimento Ágil (Agent-First Development)
+										<strong>Autonomia Real:</strong> Orquestrado por quem vive a realidade, sem depender de grandes equipes de TI ou burocracia.
 									</span>
 								</li>
 								<li className="flex items-center gap-3">
@@ -761,7 +755,7 @@ export default function LandingPage() {
 										<Check className="h-4 w-4 text-green-600" />
 									</div>
 									<span className="text-slate-700">
-										Custos de manutenção reduzidos via automação
+										<strong>Código como Ferramenta de Poder:</strong> A tecnologia deve servir para emancipação. Se eu consegui, nós conseguimos.
 									</span>
 								</li>
 								<li className="flex items-center gap-3">
@@ -769,7 +763,7 @@ export default function LandingPage() {
 										<Check className="h-4 w-4 text-green-600" />
 									</div>
 									<span className="text-slate-700">
-										Acessibilidade nativa para dispositivos simples
+										<strong>Acessibilidade Nativa:</strong> Construído para rodar em qualquer celular, porque a informação é um direito de todos.
 									</span>
 								</li>
 							</ul>
@@ -891,10 +885,13 @@ export default function LandingPage() {
 					</div>
 					<div className="mt-12 pt-8 border-t border-slate-800 text-center text-xs">
 						<p>
-							&copy; 2025 Coletivo A Rua Tem Voz. Todos os direitos reservados.
+							&copy; 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
 						</p>
-						<p className="mt-2">
-							Desenvolvido com Antigravity IDE & Groq Llama 3.3.
+						<p className="mt-2 text-slate-500">
+							Desenvolvido por Daniel (Japa / Oclinhos) • Vibe Coding
+						</p>
+						<p className="mt-1 text-slate-600">
+							"Informação é a libertação real, única e verdadeira."
 						</p>
 					</div>
 				</div>

@@ -45,19 +45,25 @@ export function GameChat() {
 	}, []);
 
 	// Configuração corrigida sem rota de API explícita se for padrão
-	// biome-ignore lint/suspicious/noExplicitAny: bypassing type mismatch from useChat hook
-	const chatHelpers = useChat({
-		onError: (err: Error) => {
-			console.error("Erro no chat:", err);
+	const {
+		messages,
+		input,
+		handleInputChange,
+		handleSubmit,
+		isLoading,
+		error,
+		append,
+	} = useChat({
+		api: "/api/chat",
+		// Rate limiting handling
+		onError: (err) => {
+			console.error("Chat error:", err);
 			setIsThinking(false);
 		},
 		onFinish: () => {
 			setIsThinking(false);
 		},
-	}) as any;
-
-	const { messages, input, handleInputChange, handleSubmit, isLoading, error } =
-		chatHelpers;
+	});
 
 	// Reset thinking when messages change (received new message)
 	useEffect(() => {
@@ -79,36 +85,20 @@ export function GameChat() {
 				const formData = new FormData();
 				formData.append("audio", audioBlob, "voice_input.webm");
 
-				// Use environment variable or fallback to knwon URL
-				const uploadUrl = process.env.NEXT_PUBLIC_HOSTINGER_API_URL
-					? `${process.env.NEXT_PUBLIC_HOSTINGER_API_URL}/upload-audio.php`
-					: "https://lightseagreen-horse-933009.hostingersite.com/upload-audio.php";
+				// Assuming you have an upload endpoint
+				// const res = await fetch('/api/upload', { method: 'POST', body: formData });
+				// const data = await res.json();
+				// audioUrl = data.url;
 
-				const response = await fetch(uploadUrl, {
-					method: "POST",
-					body: formData,
-				});
-
-				if (response.ok) {
-					const data = await response.json();
-					if (data.url) audioUrl = data.url;
-				} else {
-					console.warn("Audio upload failed");
-				}
-			} catch (err) {
-				console.error("Error uploading audio", err);
+				// For prototype: mock url or base64
+				console.log("Audio blob ready for upload processing");
+			} catch (e) {
+				console.error("Audio upload failed", e);
 			}
 		}
 
 		startTransition(() => {
-			// Manually construct the append call because handleSubmit is for forms
-			// We use `append` from useChat to send a new message
-			// Wait, useChat `append` acts like sending.
-			// But `handleSubmit` handles the API call automatically.
-			// Ideally we use `append` manually here since we are not using a form event directly bound to input.
-
-			// Actually `chatHelpers.append` is the way to programmatically send.
-			chatHelpers.append({
+			append({
 				role: "user",
 				content: text,
 				data: {
@@ -216,11 +206,10 @@ export function GameChat() {
 
 							{/* Bubble */}
 							<div
-								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
-									m.role === "user"
-										? "bg-blue-600 text-white rounded-tr-none"
-										: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
-								}`}
+								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user"
+									? "bg-blue-600 text-white rounded-tr-none"
+									: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
+									}`}
 							>
 								{m.role === "assistant"
 									? renderMessageContent(m.content)

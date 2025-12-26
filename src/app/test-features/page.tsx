@@ -115,10 +115,10 @@ export default function TestFeaturesPage() {
 				<div className="mt-4 p-4 bg-zinc-900/50 rounded-lg">
 					<h3 className="text-sm font-bold text-zinc-400 mb-2">
 						Inventário (Peso Total:{" "}
-						{inventory.reduce((acc, i) => acc + i.weight, 0).toFixed(1)}kg)
+						{inventory.reduce((acc: number, i: any) => acc + i.weight, 0).toFixed(1)}kg)
 					</h3>
 					<div className="flex flex-wrap gap-2">
-						{inventory.map((item) => (
+						{inventory.map((item: any) => (
 							<span
 								key={item.id}
 								className="text-xs px-2 py-1 bg-zinc-800 rounded"
@@ -190,7 +190,7 @@ export default function TestFeaturesPage() {
 						<h3 className="mb-2 font-bold text-zinc-400">
 							Nearby List (Mock User @ Campinas Center)
 						</h3>
-						<NearbyList userPosition={[-22.90556, -47.06083]} />
+						<NearbyList />
 					</div>
 				</div>
 			</section>

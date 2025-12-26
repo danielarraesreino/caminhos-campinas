@@ -15,6 +15,8 @@ import {
 	ShieldCheck,
 	Smartphone,
 	Users,
+	Instagram,
+	Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
@@ -105,10 +107,28 @@ export default function FundraisingPage() {
 						<p className="text-lg text-slate-300 mb-8 leading-relaxed">
 							O "Caminhos Campinas" não é apenas um jogo. É uma janela para a
 							realidade de 1.300 pessoas que vivem nas ruas da nossa cidade. Ao
-							apoiar o <strong>Trabalho Justo</strong>, você financia a
-							tecnologia que dá visibilidade a essa luta e apoia diretamente a
-							rede de proteção.
+							apoiar o <strong>Coletivo A Rua Tem Voz</strong>, você financia a
+							recursos para viabilizar nossa primeira turma piloto com 20 jovens. Ao
+							apoiar o <strong>Coletivo A Rua Tem Voz</strong>, você financia diretamente a contratação de educadores e alimentação.
 						</p>
+						<div className="flex flex-col sm:flex-row gap-4 justify-center">
+							<a
+								href="https://apoia.se/coletivoaruatemvoz"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="inline-flex items-center justify-center gap-2 bg-pink-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-700 transition-all shadow-lg hover:shadow-pink-500/30 transform hover:-translate-y-1"
+							>
+								<Heart className="animate-pulse" size={20} fill="currentColor" />
+								Campanha no Apoia.se (Recorrente)
+							</a>
+							<a
+								href="#pix"
+								className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-100 transition-all shadow-lg transform hover:-translate-y-1"
+							>
+								<Wallet size={20} />
+								Doar via PIX (Único)
+							</a>
+						</div>
 						<div className="flex flex-col sm:flex-row gap-4">
 							<button
 								type="button"
@@ -202,7 +222,7 @@ export default function FundraisingPage() {
 							</h2>
 							<p className="text-slate-600 text-lg leading-relaxed mb-8">
 								Vivemos na mesma cidade, mas em mundos diferentes. O{" "}
-								<strong>Trabalho Justo</strong> usa a tecnologia para quebrar a
+								<strong>Coletivo A Rua Tem Voz</strong> usa a tecnologia para quebrar a
 								indiferença. Ao apoiar, você não está apenas "dando dinheiro".
 								Você está financiando uma ferramenta de educação que combate o
 								preconceito e conecta quem quer ajudar com quem precisa de
@@ -241,6 +261,77 @@ export default function FundraisingPage() {
 								</div>
 							</div>
 						</section>
+						{/* Footer Profissional - Rebranded */}
+						<footer className="bg-white border-t border-slate-200 py-12">
+							<div className="max-w-6xl mx-auto px-6">
+								<div className="grid md:grid-cols-4 gap-8 mb-8 text-sm text-slate-600">
+									<div className="col-span-1 md:col-span-2">
+										<div className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+											<div className="w-6 h-6 bg-slate-900 rounded flex items-center justify-center text-white font-serif text-xs">
+												C
+											</div>
+											COLETIVO A RUA TEM VOZ
+										</div>
+										<p className="max-w-xs mb-4 italic text-slate-800 font-medium">
+											"Informação é a libertação real, única e verdadeira."
+										</p>
+										<p className="max-w-xs mb-4 text-xs">
+											Desenvolvido na base do <strong>Vibe Coding</strong> explorando
+											novas tecnologias para impacto social real.
+										</p>
+										<div className="space-y-1 mb-4 text-slate-500">
+											<div className="font-bold text-slate-900 text-xs uppercase tracking-wide mb-1">
+												Desenvolvedor / Responsa
+											</div>
+											<div className="flex items-center gap-2 font-medium">
+												<Users size={14} className="text-blue-700" />
+												Daniel (Japa / Oclinhos)
+											</div>
+										</div>
+									</div>
+									<div>
+										<div className="font-bold text-slate-900 mb-4">TRANSPARÊNCIA</div>
+										<ul className="space-y-2">
+											<li>
+												<Link href="/transparencia" className="hover:text-blue-600">
+													Nossa Missão
+												</Link>
+											</li>
+										</ul>
+									</div>
+									<div>
+										<div className="font-bold text-slate-900 mb-4">APOIO TÉCNICO</div>
+										<ul className="space-y-2">
+											<li>
+												<a
+													href="https://www.instagram.com/coletivoaruatemvoz"
+													target="_blank"
+													rel="noopener noreferrer"
+													className="hover:text-pink-600 flex items-center gap-1"
+												>
+													<Instagram size={14} /> @coletivoaruatemvoz
+												</a>
+											</li>
+											<li>
+												<a
+													href="https://dados.campinas.sp.gov.br/"
+													target="_blank"
+													rel="noopener noreferrer"
+													className="hover:text-blue-600"
+												>
+													Dados Abertos Campinas
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div className="text-center border-t border-slate-100 pt-8 text-xs text-slate-400">
+								&copy; 2025 Coletivo A Rua Tem Voz. Desenvolvido por Daniel (Japa).
+								<br />
+								Tecnologia como instrumento de emancipação.
+							</div>
+						</footer>
 
 						<div className="border-t border-slate-200 my-12"></div>
 
@@ -266,7 +357,7 @@ export default function FundraisingPage() {
 											Apoio Conectado
 										</h3>
 										<p className="text-slate-500 text-sm mb-6 min-h-[60px]">
-											Ajuda a manter a plataforma "Trabalho Justo" no ar,
+											Ajuda a manter a plataforma do Coletivo no ar,
 											garantindo que as informações sobre abrigos e refeições
 											estejam sempre atualizadas.
 										</p>
@@ -463,7 +554,7 @@ export default function FundraisingPage() {
 								</h3>
 								<p className="text-slate-600 mb-6 text-sm leading-relaxed">
 									Sua empresa pode doar horas de desenvolvimento, design ou
-									infraestrutura de servidores para manter o "Trabalho Justo"
+									infraestrutura de servidores para manter o "Caminhos Campinas"
 									operando com custo zero.
 								</p>
 								<ul className="space-y-3 mb-8">
@@ -678,42 +769,41 @@ export default function FundraisingPage() {
 				</div>
 			</section>
 
-			{/* Footer Profissional */}
+			{/* Footer Profissional - Rebranded */}
 			<footer className="bg-white border-t border-slate-200 py-12">
 				<div className="max-w-6xl mx-auto px-6">
 					<div className="grid md:grid-cols-4 gap-8 mb-8 text-sm text-slate-600">
 						<div className="col-span-1 md:col-span-2">
 							<div className="font-bold text-slate-900 mb-4 flex items-center gap-2">
 								<div className="w-6 h-6 bg-slate-900 rounded flex items-center justify-center text-white font-serif text-xs">
-									T
+									C
 								</div>
-								TRABALHO JUSTO
+								COLETIVO A RUA TEM VOZ
 							</div>
-							<p className="max-w-xs mb-4">
-								Uma iniciativa independente de tecnologia social. Conectando
-								doadores, voluntários e serviços públicos para uma Campinas mais
-								humana.
+							<p className="max-w-xs mb-4 italic text-slate-800 font-medium">
+								"Informação é a libertação real, única e verdadeira."
+							</p>
+							<p className="max-w-xs mb-4 text-xs">
+								Desenvolvido na base do <strong>Vibe Coding</strong> explorando
+								novas tecnologias para impacto social real.
 							</p>
 
-							{/* Contatos Adicionados */}
-							<div className="space-y-1 mb-4 text-slate-500">
-								<div className="flex items-center gap-2 font-medium">
-									<Phone size={14} className="text-blue-700" />
-									(19) 99991-2915
+							{/* Developer Profile */}
+							<div className="mb-6 flex items-center gap-4">
+								<div className="w-24 h-24 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm relative">
+									<img
+										src="/daniel_dev.jpg"
+										alt="Daniel (Japa / Oclinhos)"
+										className="w-full h-full object-cover object-top"
+									/>
 								</div>
-								<div className="flex items-center gap-2 font-medium">
-									<Phone size={14} className="text-blue-700" />
-									(19) 99325-7342
-								</div>
-							</div>
-
-							<div className="flex gap-4">
-								{/* Ícones de redes sociais fictícios */}
-								<div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 cursor-pointer">
-									IG
-								</div>
-								<div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 cursor-pointer">
-									TW
+								<div>
+									<div className="font-bold text-slate-900 text-xs uppercase tracking-wide">
+										Desenvolvedor / Responsa
+									</div>
+									<div className="font-bold text-slate-800 text-sm">
+										Daniel (Japa / Oclinhos)
+									</div>
 								</div>
 							</div>
 						</div>
@@ -727,12 +817,7 @@ export default function FundraisingPage() {
 								</li>
 								<li>
 									<Link href="/transparencia" className="hover:text-blue-600">
-										Prestação de Contas 2024
-									</Link>
-								</li>
-								<li>
-									<Link href="/transparencia" className="hover:text-blue-600">
-										Estatuto Social
+										Prestação de Contas
 									</Link>
 								</li>
 							</ul>
@@ -740,22 +825,34 @@ export default function FundraisingPage() {
 						<div>
 							<div className="font-bold text-slate-900 mb-4">APOIO TÉCNICO</div>
 							<ul className="space-y-2">
-								<li>Coletivo A Rua Tem Voz</li>
 								<li>
-									<Link href="/impacto" className="hover:text-blue-600">
-										Rede de Dados Abertos
-									</Link>
+									<a
+										href="https://www.instagram.com/coletivoaruatemvoz"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="hover:text-pink-600 flex items-center gap-1"
+									>
+										<Instagram size={14} /> @coletivoaruatemvoz
+									</a>
 								</li>
-								<li>Cáritas Campinas (Parceiro)</li>
+								<li>
+									<a
+										href="https://dados.campinas.sp.gov.br/"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="hover:text-blue-600"
+									>
+										Dados Abertos Campinas
+									</a>
+								</li>
 							</ul>
 						</div>
 					</div>
 				</div>
 				<div className="text-center border-t border-slate-100 pt-8 text-xs text-slate-400">
-					&copy; 2025 Trabalho Justo. Desenvolvido com tecnologia de código
-					aberto.
+					&copy; 2025 Coletivo A Rua Tem Voz. Desenvolvido por Daniel (Japa).
 					<br />
-					Este projeto respeita a LGPD e não comercializa dados de usuários.
+					Tecnologia como instrumento de emancipação.
 				</div>
 			</footer>
 		</div>

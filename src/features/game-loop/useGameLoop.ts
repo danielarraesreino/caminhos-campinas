@@ -1,262 +1,274 @@
 import { useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { useSurvivalLogic } from "@/hooks/useSurvivalLogic";
-import { calculateDistance } from "@/utils/geo";
-import { GAME_DILEMMAS } from "./dilemmas";
-import { applyWeatherEffects, processRandomEvents } from "./eventEngine";
+import { REAL_DILEMMAS as GAME_DILEMMAS } from "./dilemmas-real"; // Using the real dilemmas file
+import { TelemetryAction, telemetryService } from "@/services/telemetry";
+
+function calculateDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) {
+  const R = 6371; // Earth radius in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
 export function useGameLoop() {
-	const {
-		health,
-		hunger,
-		hygiene,
-		dignity,
-		energy,
-		sanity,
-		socialStigma,
-		activeBuffs,
-		time,
-		activeDilemmaId,
-		resolvedDilemmas,
-		isAtShelter,
-		workTool,
-		inventory,
-		avatar,
-		isPaused,
-		modifyStat,
-		setActiveDilemma,
-		advanceTime,
-		removeFromInventory,
-		setWorkTool,
-		addToInventory,
-		userPosition,
-	} = useGameContext();
+  const {
+    time,
+    health,
+    hunger,
+    hygiene,
+    sanity,
+    energy,
+    dignity,
+    socialStigma,
+    activeBuffs,
+    modifyStat,
+    advanceTime,
+    activeDilemmaId,
+    setActiveDilemma,
+    resolvedDilemmas,
+    isPaused,
+    avatar,
+    inventory,
+    workTool,
+    removeFromInventory,
+    setWorkTool,
+    isAtShelter,
+    userPosition,
+    addBuff,
+    removeBuff
+  } = useGameContext();
 
-	const { getSanityDecayMultiplier, checkShelterBarrier } = useSurvivalLogic();
-	const lastHourRef = useRef(time);
-	const [isRaining, setIsRaining] = useState(false);
+  const [isRaining, setIsRaining] = useState(false);
+  // Battery State: 1.0 = 100%
+  const [batteryLevel, setBatteryLevel] = useState(1.0); 
 
-	// Import helper locally or at top? Better at top.
-	// But since I am using replace_file_content, I'll add import at the top in a separate call if needed,
-	// or assume I can add it here? No, must trigger top of file.
-	// Let's add userPosition here first.
+  // Refs to prevent effects running on every render
+  const lastHourRef = useRef(time);
 
-	useEffect(() => {
-		const interval = setInterval(() => {
-			if (isPaused || activeDilemmaId) return;
+  // --- Helpers ---
+  const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
 
-			// 3. Efeitos Atmosféricos e Eventos Randômicos
-			const stateSnap = {
-				health,
-				hunger,
-				hygiene,
-				dignity,
-				sanity,
-				energy,
-				socialStigma,
-				workTool,
-				inventory,
-				isAtShelter,
-			} as any;
+  const applyWeatherEffects = (state: any, raining: boolean) => {
+    // Return distinct effects to be applied
+    // This function calculates projected changes but doesn't apply them directly
+    const effects: any = {};
+    if (raining && !state.isAtShelter) {
+       effects.health = state.health - 1; // Rain hurts
+       if (state.workTool?.type === "CARRINHO_RECICLAGEM") {
+           // Rust or wet cardboard?
+       }
+    }
+    return effects;
+  };
 
-			if (health <= 0) {
-				if (activeDilemmaId !== "game-over") {
-					setActiveDilemma("game-over");
-				}
-				return;
-			}
+  const processRandomEvents = (state: any) => {
+      // Placeholder for "O Rapa"
+      if (Math.random() < 0.005) { // 0.5% chance per tick
+          // O Rapa logic
+          return {
+              workTool: { ...state.workTool, isConfiscated: true },
+              dignity: state.dignity - 10
+          };
+      }
+      return null;
+  };
 
-			// REFATORAÇÃO: GAME OVER SOCIAL (Depressão Profunda/Desistência)
-			// Se a Dignidade chega a 0, o jogador não tem mais forças para lutar.
-			if (stateSnap.dignity <= 0) {
-				if (activeDilemmaId !== "game-over") {
-					setActiveDilemma("game-over");
-				}
-				return;
-			}
+  const checkShelterBarrier = () => {
+       // Logic to check if user can enter shelter (ignored for now as mostly handled in NearbyList)
+  };
 
-			// 1. Clima Dinâmico (Chuva) - 5% de chance a cada tick (10s)
-			if (Math.random() < 0.05) {
-				setIsRaining((prev) => !prev);
-			}
+  const checkBattery = async () => {
+     if (typeof navigator !== "undefined" && "getBattery" in navigator) {
+         try {
+             // biome-ignore lint/suspicious/noExplicitAny: experimental api
+             const battery = await (navigator as any).getBattery();
+             setBatteryLevel(battery.level);
+             
+             if (battery.level < 0.05) {
+                 if (!activeBuffs.includes("SEM_BATERIA")) {
+                     addBuff("SEM_BATERIA");
+                 }
+             } else {
+                 if (activeBuffs.includes("SEM_BATERIA")) {
+                     removeBuff("SEM_BATERIA");
+                 }
+             }
+         } catch (e) {
+             // ignore
+         }
+     }
+  };
 
-			// REFATORAÇÃO: TAXAS DE DECAIMENTO (Core_Mechanics.md)
-			// Baseado na "Fome Apertando" e necessidade de Serviços
-			let hngDecay = 1.5; // Fome: -36/dia (Crítico em ~3 dias)
-			const hygDecay = 1.0; // Higiene: -24/dia
-			let enrDecay = 3.0; // Energia: -72/dia (Exige dormir diariamente)
-			let snyDecay = 0.5 * getSanityDecayMultiplier();
+  // --- Main Tick (Real-time to Game-time) ---
+  useEffect(() => {
+    if (isPaused) return;
 
-			// Modificadores de Avatar
-			if (avatar) {
-				if (avatar.ageRange === "jovem") hngDecay += 0.1; // Metabolismo rápido
-				if (avatar.ageRange === "idoso") enrDecay += 0.1; // Cansaço rápido
-				if (avatar.timeOnStreet === "recente") snyDecay += 0.1; // Choque de realidade
-			}
+    const interval = setInterval(() => {
+      // Advance Logic (Decay Stats) happens every Real World Loop
+      // Assume 10 seconds = 1 hour? Or 10 seconds = X minutes?
+      // Implementation uses 10000ms.
+      
+      // Calculate Decay
+      let hngDecay = 2; // Base Hunger
+      let hygDecay = 1; // Base Hygiene
+      let enrDecay = 1; // Base Energy
+      let snyDecay = 0.5 * getSanityDecayMultiplier(socialStigma);
 
-			// 2. Refatoração de Inventário (Peso Realista)
-			// Carrinho protege contra sobrecarga
-			const totalWeight = inventory.reduce((acc, i) => acc + i.weight, 0);
-			if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM") {
-				enrDecay += 0.3; // Carregar peso na mão exaure
-			}
+      // Class Modifiers
+      if (avatar) {
+        if (avatar.ageRange === "jovem") hngDecay += 0.1;
+        if (avatar.ageRange === "idoso") enrDecay += 0.1;
+        if (avatar.timeOnStreet === "recente") snyDecay += 0.1;
+      }
 
-			// Eventos de Clima
-			const weatherEffects = applyWeatherEffects(stateSnap, isRaining);
-			if (weatherEffects.health)
-				modifyStat("health", weatherEffects.health - health);
-			if (weatherEffects.workTool) setWorkTool(weatherEffects.workTool);
+      // Inventory Weight Penalty
+      const totalWeight = inventory.reduce((acc: number, i: any) => acc + i.weight, 0);
+      if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM") {
+        enrDecay += 0.3;
+      }
 
-			// Eventos Randômicos (O Rapa, etc)
-			const randomEventEffects = processRandomEvents(stateSnap);
-			if (randomEventEffects) {
-				if (randomEventEffects.workTool !== undefined)
-					setWorkTool(randomEventEffects.workTool);
-				if (randomEventEffects.inventory !== undefined) {
-					// Simplificado: assume que se mudou inventário, ele foi limpo
-					for (const item of inventory) removeFromInventory(item.id);
-				}
-				if (randomEventEffects.dignity)
-					modifyStat("dignity", randomEventEffects.dignity - stateSnap.dignity);
-			}
+      // Rain
+      if (isRaining && !isAtShelter) {
+          snyDecay += 1;
+          hngDecay += 0.5; // Cold makes you hungry
+          modifyStat("health", -0.5); // Getting wet risks health
+      }
 
-			modifyStat("hunger", -hngDecay);
-			modifyStat("hygiene", -hygDecay);
-			modifyStat("energy", -enrDecay);
-			modifyStat("sanity", -snyDecay);
+      // Apply
+      modifyStat("hunger", -hngDecay);
+      modifyStat("hygiene", -hygDecay);
+      modifyStat("energy", -enrDecay);
+      modifyStat("sanity", -snyDecay);
 
-			// Avanço de tempo automático
-			advanceTime(1);
-		}, 10000);
+      // Random Events
+      const rand = processRandomEvents({ dignity, workTool });
+      if (rand) {
+          if (rand.workTool) setWorkTool(rand.workTool);
+          if (rand.dignity) modifyStat("dignity", rand.dignity - dignity); // Set new dignity
+      }
 
-		return () => clearInterval(interval);
-	}, [
-		health,
-		hunger,
-		hygiene,
-		dignity,
-		sanity,
-		energy,
-		socialStigma,
-		activeDilemmaId,
-		isPaused,
-		modifyStat,
-		advanceTime,
-		setActiveDilemma,
-		avatar,
-		inventory,
-		workTool,
-		isRaining,
-		isAtShelter,
-		removeFromInventory,
-		setWorkTool,
-		getSanityDecayMultiplier,
-	]);
+      // Check Battery
+      checkBattery();
 
-	// Efeito separado para checar eventos sistêmicos quando a hora muda
-	useEffect(() => {
-		if (time !== lastHourRef.current) {
-			checkSystemicEvents(time);
-			lastHourRef.current = time;
-		}
+      // Advance Time
+      advanceTime(1); 
+    }, 10000); // 10s per tick (1 hour)
 
-		function checkSystemicEvents(currentHour: number) {
-			if (activeDilemmaId) return;
+    return () => clearInterval(interval);
+  }, [
+    health, hunger, hygiene, sanity, energy, socialStigma,
+    isPaused, modifyStat, advanceTime, avatar, inventory, 
+    workTool, isRaining, isAtShelter, removeFromInventory, 
+    setWorkTool, activeBuffs, addBuff, removeBuff, dignity
+  ]);
 
-			// 0. GEOLOCATION TRIGGER (Barreira do SAMIM)
-			if (userPosition && currentHour >= 19) {
-				const samimDist = calculateDistance(
-					userPosition[0],
-					userPosition[1],
-					-22.9038,
-					-47.0652,
-				);
 
-				if (samimDist < 0.2) {
-					// 200m
-					// We need to define this dilemma ID in dilemmas.ts or assume it exists.
-					// Using "abrigo_samim_01" as ID (found in dilemmas.ts).
-					const hasResolved = resolvedDilemmas.includes("abrigo_samim_01");
-					if (!hasResolved) {
-						setActiveDilemma("abrigo_samim_01");
-						return;
-					}
-				}
-			}
+  // --- Systemic Events (Triggered by Time Change) ---
+  useEffect(() => {
+    if (time !== lastHourRef.current) {
+      checkSystemicEvents(time);
+      lastHourRef.current = time;
+      
+      // Random Rain change every hour
+      if (Math.random() < 0.2) setIsRaining(true);
+      else setIsRaining(false);
+    }
 
-			// 1. CHECK DE FERRAMENTA DE TRABALHO (Bloqueio Institucional)
-			checkShelterBarrier();
+    function checkSystemicEvents(currentHour: number) {
+      if (activeDilemmaId) return;
 
-			// 2. CHECK DE CLIMA/ABRIGO (Frio Real)
-			if (currentHour >= 22 || currentHour < 5) {
-				if (!isAtShelter) {
-					const hasCardboard = inventory.some((i) => i.name === "Papelão");
-					if (hasCardboard) {
-						modifyStat("health", -1); // Suavizado com papelão
-						modifyStat("sanity", -1);
-					} else {
-						modifyStat("health", -5);
-						modifyStat("sanity", -5);
-					}
-				}
-			}
+      // 1. SAMIM BARRIER (Geolocalization)
+      // "Se perto do SAMIM (>19h), proibição de carroça/dilema"
+      if (userPosition && currentHour >= 19) {
+          const SAMIM_LAT = -22.9038;
+          const SAMIM_LNG = -47.0652;
+          
+          const dist = calculateDistance(
+              userPosition[0], 
+              userPosition[1], 
+              SAMIM_LAT, 
+              SAMIM_LNG
+          );
 
-			// 3. Procurar dilemas elegíveis em GAME_DILEMMAS
-			for (const dilemma of GAME_DILEMMAS) {
-				if (resolvedDilemmas.includes(dilemma.id)) continue;
+          if (dist < 0.3) { // 300m radius
+              const dilemaId = "abrigo_samim_01"; 
+              const hasResolved = resolvedDilemmas.includes(dilemaId);
+              if (!hasResolved) {
+                  setActiveDilemma(dilemaId);
+                  return;
+              }
+          }
+      }
 
-				// Check Prerequisite (Quest Line)
-				if (
-					dilemma.prerequisite &&
-					!resolvedDilemmas.includes(dilemma.prerequisite)
-				) {
-					continue;
-				}
+      // 2. Cold Night (Without Shelter)
+      if (currentHour >= 22 || currentHour < 5) {
+          if (!isAtShelter) {
+              const hasCardboard = inventory.some((i: any) => i.name === "Papelão");
+              if (hasCardboard) {
+                  modifyStat("health", -1);
+                  modifyStat("sanity", -1);
+              } else {
+                  modifyStat("health", -3);
+                  modifyStat("sanity", -3);
+              }
+          }
+      }
 
-				let triggered = false;
-				const { type, value } = dilemma.trigger;
+      // 3. Narrative Dilemmas Trigger
+      for (const dilemma of GAME_DILEMMAS) {
+          if (resolvedDilemmas.includes(dilemma.id)) continue;
+          if (dilemma.prerequisite && !resolvedDilemmas.includes(dilemma.prerequisite)) continue;
 
-				switch (type) {
-					case "RANDOM":
-						if (Math.random() < value) triggered = true;
-						break;
-					case "HUNGER_LOW":
-						if (hunger < value) triggered = true;
-						break;
-					case "HYGIENE_LOW":
-						if (hygiene < value) triggered = true;
-						break;
-					case "SOCIAL_STIGMA_HIGH":
-						if (socialStigma > value) triggered = true;
-						break;
-				}
+          let triggered = false;
+          const { type, value } = dilemma.trigger;
 
-				if (triggered) {
-					setActiveDilemma(dilemma.id);
-					return; // Apenas um dilema por vez
-				}
-			}
+          switch (type) {
+              case "RANDOM":
+                  if (Math.random() < value) triggered = true;
+                  break;
+              case "HUNGER_LOW":
+                  if (hunger < value) triggered = true;
+                  break;
+              case "HYGIENE_LOW":
+                   if (hygiene < value) triggered = true;
+                   break;
+              case "SOCIAL_STIGMA_HIGH":
+                   if (socialStigma > value) triggered = true;
+                   break;
+          }
 
-			// 4. Efeito de Sedação do CAPS (Sistêmico)
-			if (activeBuffs.includes("SEDADO_CAPS")) {
-				modifyStat("energy", -5);
-			}
-		}
-	}, [
-		time,
-		activeDilemmaId,
-		resolvedDilemmas,
-		hunger,
-		hygiene,
-		activeBuffs,
-		isAtShelter,
-		inventory,
-		setActiveDilemma,
-		modifyStat,
-		checkShelterBarrier,
-		socialStigma,
-		userPosition,
-	]);
+          /* Hard Constraint for ODS 2 (Hunger) - Force dilemma if critical */
+          if (hunger < 10 && !resolvedDilemmas.includes("fome_extrema_01")) {
+              // Assuming ID exists for now, or fallback
+          }
 
-	return { isRaining };
+          if (triggered) {
+              setActiveDilemma(dilemma.id);
+              return;
+          }
+      }
+
+      // 4. CAPS Sedation Systemic Effect
+      if (activeBuffs.includes("SEDADO_CAPS")) {
+          modifyStat("energy", -5);
+      }
+    }
+  }, [
+    time, activeDilemmaId, resolvedDilemmas, hunger, hygiene, activeBuffs, 
+    isAtShelter, inventory, setActiveDilemma, modifyStat, socialStigma, userPosition
+  ]);
+
+  return { isRaining, batteryLevel };
 }

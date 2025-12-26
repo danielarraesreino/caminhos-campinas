@@ -77,7 +77,7 @@ export function SurvivalMap() {
 
 			{/* Nearby List Area - Scrollable */}
 			<div className="flex-1 overflow-y-auto p-4 bg-slate-900 border-t border-slate-800">
-				<NearbyList userPosition={userPosition} />
+				<NearbyList />
 			</div>
 		</div>
 	);
