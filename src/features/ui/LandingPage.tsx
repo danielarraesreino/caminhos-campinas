@@ -883,14 +883,31 @@ export default function LandingPage() {
 							</a>
 						</div>
 					</div>
-					<div className="mt-12 pt-8 border-t border-slate-800 text-center text-xs">
-						<p>
+					<div className="mt-12 pt-8 border-t border-slate-800 text-center text-xs flex flex-col items-center">
+						<p className="mb-6 opacity-60">
 							&copy; 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
 						</p>
-						<p className="mt-2 text-slate-500">
-							Desenvolvido por Daniel (Japa / Oclinhos) • Vibe Coding
-						</p>
-						<p className="mt-1 text-slate-600">
+
+						<div className="flex items-center gap-4 bg-slate-800/50 px-6 py-3 rounded-full border border-slate-700/50 hover:bg-slate-800 transition-colors group">
+							<div className="relative">
+								<img
+									src="/daniel_dev.jpg"
+									alt="Daniel (Japa)"
+									className="w-12 h-12 rounded-full border-2 border-slate-600 group-hover:border-blue-500 transition-colors object-cover"
+								/>
+								<div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"></div>
+							</div>
+							<div className="text-left">
+								<p className="text-slate-300 font-bold group-hover:text-white transition-colors">
+									Desenvolvido por Daniel (Japa/Oclinhos)
+								</p>
+								<p className="text-slate-500 text-[10px] uppercase tracking-wider group-hover:text-blue-400 transition-colors">
+									Vibe Coding &boxvh; Inovação Social
+								</p>
+							</div>
+						</div>
+
+						<p className="mt-6 text-slate-600 italic max-w-sm">
 							"Informação é a libertação real, única e verdadeira."
 						</p>
 					</div>
