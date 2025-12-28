@@ -200,9 +200,8 @@ export default function LandingPage() {
 					].map((img, index) => (
 						<div
 							key={img}
-							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${
-								currentBgIndex === index ? "opacity-40" : "opacity-0"
-							}`}
+							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${currentBgIndex === index ? "opacity-40" : "opacity-0"
+								}`}
 							style={{ backgroundImage: `url(${getAssetUrl(img)})` }}
 						/>
 					))}
@@ -226,7 +225,7 @@ export default function LandingPage() {
 								</span>
 							</h1>
 
-							<p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-blue-500/30 pl-6">
+							<p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-blue-500/30 pl-6">
 								Entre na pele de quem vive nas ruas de Campinas. <br />
 								Simule dilemas reais, entenda a luta por dignidade e transforme
 								sua empatia em impacto real.
@@ -417,7 +416,7 @@ export default function LandingPage() {
 						<h3 className="text-2xl font-black italic uppercase tracking-tighter">
 							Portal do Parceiro Institucional
 						</h3>
-						<p className="text-slate-400 font-sans">
+						<p className="text-slate-300 font-sans">
 							Para gestores públicos, empresas ESG e acadêmicos. Acesse a
 							telemetria em tempo real das violações de direitos e demandas por
 							ODS em Campinas.
@@ -431,7 +430,7 @@ export default function LandingPage() {
 						>
 							Acessar Dashboard de Impacto <ArrowRight size={20} />
 						</button>
-						<p className="text-[10px] text-slate-500 text-center uppercase font-bold tracking-[0.2em]">
+						<p className="text-[10px] text-slate-400 text-center uppercase font-bold tracking-[0.2em]">
 							Dados processados via Protocolo Anti-Chacina (K-5)
 						</p>
 					</div>
