@@ -101,13 +101,19 @@ export default function LandingPage() {
 			// Simulate loading for effect
 			await new Promise((resolve) => setTimeout(resolve, 1500));
 
+			const dilemmaList = REAL_DILEMMAS && REAL_DILEMMAS.length > 0 ? REAL_DILEMMAS : []; // Safety check
+
+			if (dilemmaList.length === 0) {
+				throw new Error("Nenhum dilema disponível no censo.");
+			}
+
 			const randomDilemma =
-				REAL_DILEMMAS[Math.floor(Math.random() * REAL_DILEMMAS.length)];
+				dilemmaList[Math.floor(Math.random() * dilemmaList.length)];
 
 			if (randomDilemma) {
 				setDilemma({
 					scenario: randomDilemma.description,
-					options: randomDilemma.options.map((o) => o.label),
+					options: randomDilemma.options.map((o: any) => o.label),
 					raw: randomDilemma,
 				});
 			} else {

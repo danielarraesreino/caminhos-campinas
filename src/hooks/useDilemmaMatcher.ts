@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useServices } from "@/contexts/ServicesContext";
-import type { Dilemma } from "@/features/game-loop/dilemmas";
+import type { Dilemma } from "@/features/game-loop/dilemma-types";
 // Dilemmas data import - assuming it's available or we maintain a subset here?
 // Ideally we should import from a central dilemma registry.
 // For now, I will use a placeholder or assume imports are possible.
