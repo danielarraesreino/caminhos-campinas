@@ -45,10 +45,10 @@ export default function LandingPage() {
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [mode, setMode] = useState<"landing" | "creation">("landing");
 
+	const [showResetConfirm, setShowResetConfirm] = useState(false);
+
 	const handleNewGame = async () => {
-		if (hasSavedGame) {
-			if (!confirm("Isso apagará seu progresso atual. Tem certeza?")) return;
-		}
+		// Confirm logic handled in UI now
 		await clearPersistence();
 		resetGame();
 
@@ -213,10 +213,23 @@ export default function LandingPage() {
 
 										<button
 											type="button"
-											onClick={handleNewGame}
-											className="px-6 py-5 bg-transparent border border-white/20 hover:bg-white/10 text-slate-300 rounded-2xl font-medium text-sm transition-all"
+											onClick={() => {
+												if (showResetConfirm) {
+													handleNewGame();
+													setShowResetConfirm(false);
+												} else {
+													setShowResetConfirm(true);
+													setTimeout(() => setShowResetConfirm(false), 5000); // Reset after 5s
+												}
+											}}
+											className={`px-6 py-5 border rounded-2xl font-medium text-sm transition-all ${showResetConfirm
+												? "bg-red-600 border-red-500 text-white animate-pulse"
+												: "bg-transparent border-white/20 hover:bg-white/10 text-slate-300"
+												}`}
 										>
-											Novo Jogo (Reset)
+											{showResetConfirm
+												? "Confirmar Reset?"
+												: "Novo Jogo (Reset)"}
 										</button>
 									</>
 								) : (
