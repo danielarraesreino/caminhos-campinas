@@ -205,11 +205,9 @@ function PyramidTier({
             hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]
         `}
 		>
-			{locked && (
-				<div className="absolute inset-0 bg-black/70 backdrop-blur-[2px] flex items-center justify-center rounded-xl z-10">
-					<Lock size={24} className="text-red-600 opacity-60" />
-				</div>
-			)}
+			<div className="absolute inset-0 bg-black/70 backdrop-blur-[2px] flex items-center justify-center rounded-xl z-10">
+				<Lock size={24} className="text-red-600" />
+			</div>
 
 			<div className="flex flex-col gap-1 items-start">
 				<span className="text-[10px] uppercase tracking-widest font-black text-slate-400 group-hover:text-blue-500 transition-colors">

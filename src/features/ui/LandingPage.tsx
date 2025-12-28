@@ -18,10 +18,10 @@ import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { DilemmaCache } from "@/utils/dilemmaCache";
 import { getAssetUrl } from "@/utils/getAssetUrl";
 import { AvatarCreation } from "./AvatarCreation";
 import { OnboardingTutorial } from "./OnboardingTutorial";
+import { REAL_DILEMMAS } from "@/features/game-loop/dilemmas-real";
 
 export default function LandingPage() {
 	const router = useRouter();
@@ -66,11 +66,12 @@ export default function LandingPage() {
 
 	const { data: _session, status } = useSession();
 
-	// AI State
+	// Local Dilemma State
 	const [aiLoading, setAiLoading] = useState(false);
 	const [dilemma, setDilemma] = useState<{
 		scenario: string;
 		options: string[];
+		raw?: any;
 	} | null>(null);
 	const [aiFeedback, setAiFeedback] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -90,91 +91,53 @@ export default function LandingPage() {
 		}
 	};
 
-	// Groq API Call Helper - API Route segura
-	const callGroq = async (prompt: string) => {
-		const response = await fetch("/api/groq", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ prompt }),
-		});
-
-		const data = await response.json();
-
-		if (!data.success) {
-			throw new Error(data.error || "Erro ao processar requisição");
-		}
-
-		return data.text || "Sem resposta da IA.";
-	};
-
 	const generateDilemma = async () => {
 		setAiLoading(true);
 		setError(null);
 		setDilemma(null);
 		setAiFeedback(null);
 
-		// Tentar cache primeiro
-		const cacheKey = "demo_scenario";
-		// Desabilitando cache para garantir variedade nos testes
-		// const cached = DilemmaCache.get(cacheKey);
-
-		// if (cached) {
-		// 	console.log("📦 Usando dilema do cache (instantâneo)");
-		// 	setDilemma({
-		// 		scenario: cached.scenario,
-		// 		options: cached.options,
-		// 	});
-		// 	setAiLoading(false);
-		// 	return;
-		// }
-
-		const systemPrompt = `Você é o motor narrativo de um 'Serious Game' sobre a população em situação de rua.
-        Gere um cenário curto (máx 50 palavras) e urgente.
-        Forneça exatamente 3 opções de ação curtas (máx 5 palavras cada).
-        Responda ESTRITAMENTE em JSON neste formato:
-        {
-            "scenario": "Texto do cenário...",
-            "options": ["Opção 1", "Opção 2", "Opção 3"]
-        }`;
-
 		try {
-			console.log("🌐 Chamando API Groq (primeira vez ou cache expirado)");
-			const text = await callGroq(systemPrompt);
-			const cleanText = text?.replace(/```json|```/g, "").trim();
-			const json = JSON.parse(cleanText || "{}");
+			// Simulate loading for effect
+			await new Promise((resolve) => setTimeout(resolve, 1500));
 
-			if (json.scenario && Array.isArray(json.options)) {
-				setDilemma(json);
-				// Salvar no cache
-				DilemmaCache.set(cacheKey, {
-					scenario: json.scenario,
-					options: json.options,
+			const randomDilemma =
+				REAL_DILEMMAS[Math.floor(Math.random() * REAL_DILEMMAS.length)];
+
+			if (randomDilemma) {
+				setDilemma({
+					scenario: randomDilemma.description,
+					options: randomDilemma.options.map((o) => o.label),
+					raw: randomDilemma,
 				});
-				console.log("💾 Dilema salvo no cache");
 			} else {
-				throw new Error("Formato inválido da IA");
+				throw new Error("Dilema não encontrado");
 			}
 		} catch (err) {
 			console.error(err);
-			setError("Erro ao gerar dilema. Tente novamente.");
+			setError("Erro ao carregar dilema.");
 		} finally {
 			setAiLoading(false);
 		}
 	};
 
-	const solveDilemma = async (action: string) => {
+	const solveDilemma = async (actionLabel: string) => {
 		setAiLoading(true);
 		setError(null);
 
-		const systemPrompt = `Contexto: Jogo sério população de rua.
-        Cenário: "${dilemma?.scenario}"
-        Ação Escolhida: "${action}"
-        
-        Analise a consequência (máx 40 palavras). Seja realista e educativo.`;
-
 		try {
-			const text = await callGroq(systemPrompt);
-			setAiFeedback(text || "Sem resposta.");
+			// Simulate processing
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+
+			const option = dilemma?.raw?.options.find(
+				(o: any) => o.label === actionLabel
+			);
+
+			if (option) {
+				setAiFeedback(option.consequence);
+			} else {
+				setAiFeedback("Consequência não encontrada para esta ação.");
+			}
 		} catch (_err) {
 			setError("Erro ao processar ação.");
 		} finally {
@@ -239,7 +202,7 @@ export default function LandingPage() {
 										<button
 											type="button"
 											onClick={handleContinue}
-											className="group relative px-8 py-5 bg-green-600 hover:bg-green-500 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-green-900/20 overflow-hidden"
+											className="group relative px-8 py-5 bg-green-700 hover:bg-green-600 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-green-900/20 overflow-hidden"
 										>
 											<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
 											<span className="relative flex items-center gap-3">
@@ -727,8 +690,7 @@ export default function LandingPage() {
 						)}
 					</div>
 					<p className="text-center text-slate-500 text-xs mt-4">
-						* As respostas são geradas por Inteligência Artificial e servem
-						apenas para simulação educativa.
+						* As situações são baseadas em dados reais do Censo Pop Rua 2024.
 					</p>
 				</div>
 			</section>
@@ -897,7 +859,7 @@ export default function LandingPage() {
 						</div>
 					</div>
 					<div className="mt-12 pt-8 border-t border-slate-800 text-center text-xs flex flex-col items-center">
-						<p className="mb-6 opacity-60">
+						<p className="mb-6 text-slate-500">
 							&copy; 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de
 							emancipação.
 						</p>
@@ -915,7 +877,7 @@ export default function LandingPage() {
 								<p className="text-slate-300 font-bold group-hover:text-white transition-colors">
 									Desenvolvido por Daniel (Japa/Oclinhos)
 								</p>
-								<p className="text-slate-500 text-[10px] uppercase tracking-wider group-hover:text-blue-400 transition-colors">
+								<p className="text-slate-400 text-[10px] uppercase tracking-wider group-hover:text-blue-400 transition-colors">
 									Vibe Coding &boxvh; Inovação Social
 								</p>
 							</div>
