@@ -1,5 +1,5 @@
 import type { GameState } from "@/contexts/GameContext";
-import { REAL_DILEMMAS } from "./dilemmas-real";
+// import { REAL_DILEMMAS } from "./dilemmas-real"; // Circular dependency removed
 
 export type TriggerType =
 	| "HUNGER_LOW"
@@ -373,4 +373,4 @@ export const GAME_DILEMMAS: Dilemma[] = [
 	},
 ];
 
-export const ALL_DILEMMAS: Dilemma[] = [...GAME_DILEMMAS, ...REAL_DILEMMAS];
+// ALL_DILEMMAS moved to all-dilemmas.ts to avoid circular dependency
