@@ -74,10 +74,15 @@ export function OnboardingTutorial({
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const [dontShowAgain, setDontShowAgain] = useState(false);
 
-	const handleNext = () => {
+	const [isExiting, setIsExiting] = useState(false);
+
+	const handleNext = async () => {
 		if (currentSlide < slides.length - 1) {
 			setCurrentSlide(currentSlide + 1);
 		} else {
+			setIsExiting(true);
+			// Defer close to allow UI update
+			await new Promise(resolve => setTimeout(resolve, 50));
 			handleClose();
 		}
 	};
@@ -133,9 +138,8 @@ export function OnboardingTutorial({
 						<div
 							// biome-ignore lint/suspicious/noArrayIndexKey: slides are static constant
 							key={idx}
-							className={`h-1.5 rounded-full transition-all duration-300 ${
-								idx === currentSlide ? "w-6 bg-blue-500" : "w-1.5 bg-slate-700"
-							}`}
+							className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? "w-6 bg-blue-500" : "w-1.5 bg-slate-700"
+								}`}
 						/>
 					))}
 				</div>
@@ -158,10 +162,20 @@ export function OnboardingTutorial({
 					</div>
 					<Button
 						onClick={handleNext}
-						className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
+						disabled={isExiting}
+						className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition-all active:scale-95"
 					>
-						{currentSlide === slides.length - 1 ? "Começar Jogo" : "Próximo"}
-						<ArrowRight className="ml-2 w-4 h-4" />
+						{isExiting ? (
+							<span className="flex items-center gap-2">
+								<span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+								Carregando...
+							</span>
+						) : currentSlide === slides.length - 1 ? (
+							"Começar Jogo"
+						) : (
+							"Próximo"
+						)}
+						{!isExiting && <ArrowRight className="ml-2 w-4 h-4" />}
 					</Button>
 				</DialogFooter>
 			</DialogContent>
