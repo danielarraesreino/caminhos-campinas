@@ -6,7 +6,8 @@ export type TriggerType =
 	| "HYGIENE_LOW"
 	| "RANDOM"
 	| "SOCIAL_STIGMA_HIGH"
-	| "LOCATION" | "STATUS";
+	| "LOCATION"
+	| "STATUS";
 
 export interface DilemmaOption {
 	label: string;
@@ -68,7 +69,8 @@ export interface Dilemma {
 	trigger: {
 		type: TriggerType;
 		value: number;
-		locationId?: string; statusCondition?: Record<string, number>;
+		locationId?: string;
+		statusCondition?: Record<string, number>;
 	};
 	tags?: string[];
 	location_trigger?: {

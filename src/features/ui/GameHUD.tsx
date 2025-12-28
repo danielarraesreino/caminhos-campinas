@@ -8,6 +8,8 @@ import {
 	Mic, // New Icon
 	Package,
 	ShieldAlert,
+	Unlock,
+	User,
 	Wallet,
 } from "lucide-react";
 import Image from "next/image";
@@ -17,6 +19,7 @@ import { CitizenshipTree } from "./CitizenshipTree";
 import { VoiceReporter } from "./VoiceReporter";
 
 export function GameHUD() {
+	const [imgError, setImgError] = useState(false);
 	const [isReporterOpen, setIsReporterOpen] = useState(false);
 	const {
 		health,
@@ -28,6 +31,7 @@ export function GameHUD() {
 		workTool,
 		// dignity,
 		avatar,
+		forceUnlock,
 	} = useGameContext();
 
 	// Efeito de bordo pulsante para alto estigma
@@ -48,7 +52,7 @@ export function GameHUD() {
 			<div className="fixed top-[88px] md:top-[100px] left-0 w-full h-20 bg-slate-950 border-b-2 border-slate-800 z-40 shadow-2xl flex items-center justify-between px-4 md:px-8">
 				{/* LEFT: Avatar & Identity */}
 				<div className="flex items-center gap-4 md:gap-6">
-					{avatar?.avatarImage ? (
+					{avatar?.avatarImage && !imgError ? (
 						<div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 border-slate-600 shadow-lg flex-none group hover:scale-105 transition-transform">
 							<Image
 								src={avatar.avatarImage}
@@ -56,6 +60,7 @@ export function GameHUD() {
 								fill
 								sizes="(max-width: 768px) 100vw, 33vw"
 								className="object-cover"
+								onError={() => setImgError(true)}
 							/>
 							{/* Name Tag Overlay */}
 							<div className="absolute bottom-0 left-0 w-full bg-black/70 p-1 text-center">
@@ -65,7 +70,9 @@ export function GameHUD() {
 							</div>
 						</div>
 					) : (
-						<div className="w-16 h-16 bg-slate-800 rounded-2xl animate-pulse" />
+						<div className="w-16 h-16 md:w-20 md:h-20 bg-slate-800 rounded-2xl flex items-center justify-center border-2 border-slate-700">
+							<User className="w-8 h-8 text-slate-500" />
+						</div>
 					)}
 
 					{/* Status Stats - Large Cards */}
@@ -87,7 +94,7 @@ export function GameHUD() {
 						<StatCard
 							icon={ShieldAlert}
 							value={socialStigma}
-							label="RISCO"
+							label="ESTIGMA"
 							color="amber"
 							type="asc"
 							alertThreshold={70}
@@ -151,6 +158,15 @@ export function GameHUD() {
 					>
 						<Mic className="w-4 h-4" />
 						RELATO
+					</button>
+
+					<button
+						type="button"
+						onClick={forceUnlock}
+						title="Forçar Destravamento do Mapa"
+						className="hidden md:flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-slate-400 px-3 py-3 rounded-xl transition-colors border border-slate-700"
+					>
+						<Unlock className="w-4 h-4" />
 					</button>
 
 					<a

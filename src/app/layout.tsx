@@ -60,7 +60,7 @@ export default function RootLayout({
 								{children}
 								<SpeedInsights />
 								<Clarity />
-                                                                <Analytics />
+								<Analytics />
 								<ServiceWorkerRegister />
 								<RealitySwitcher />
 							</ServicesProvider>

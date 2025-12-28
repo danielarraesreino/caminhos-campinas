@@ -108,8 +108,9 @@ export default function FundraisingPage() {
 							O "Caminhos Campinas" não é apenas um jogo. É uma janela para a
 							realidade de 1.300 pessoas que vivem nas ruas da nossa cidade. Ao
 							apoiar o <strong>Coletivo A Rua Tem Voz</strong>, você financia a
-							recursos para viabilizar nossa primeira turma piloto com 20 jovens. Ao
-							apoiar o <strong>Coletivo A Rua Tem Voz</strong>, você financia diretamente a contratação de educadores e alimentação.
+							recursos para viabilizar nossa primeira turma piloto com 20
+							jovens. Ao apoiar o <strong>Coletivo A Rua Tem Voz</strong>, você
+							financia diretamente a contratação de educadores e alimentação.
 						</p>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center">
 							<a
@@ -118,7 +119,11 @@ export default function FundraisingPage() {
 								rel="noopener noreferrer"
 								className="inline-flex items-center justify-center gap-2 bg-pink-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-700 transition-all shadow-lg hover:shadow-pink-500/30 transform hover:-translate-y-1"
 							>
-								<Heart className="animate-pulse" size={20} fill="currentColor" />
+								<Heart
+									className="animate-pulse"
+									size={20}
+									fill="currentColor"
+								/>
 								Campanha no Apoia.se (Recorrente)
 							</a>
 							<a
@@ -222,11 +227,11 @@ export default function FundraisingPage() {
 							</h2>
 							<p className="text-slate-600 text-lg leading-relaxed mb-8">
 								Vivemos na mesma cidade, mas em mundos diferentes. O{" "}
-								<strong>Coletivo A Rua Tem Voz</strong> usa a tecnologia para quebrar a
-								indiferença. Ao apoiar, você não está apenas "dando dinheiro".
-								Você está financiando uma ferramenta de educação que combate o
-								preconceito e conecta quem quer ajudar com quem precisa de
-								ajuda.
+								<strong>Coletivo A Rua Tem Voz</strong> usa a tecnologia para
+								quebrar a indiferença. Ao apoiar, você não está apenas "dando
+								dinheiro". Você está financiando uma ferramenta de educação que
+								combate o preconceito e conecta quem quer ajudar com quem
+								precisa de ajuda.
 							</p>
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
 								<div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -276,8 +281,8 @@ export default function FundraisingPage() {
 											"Informação é a libertação real, única e verdadeira."
 										</p>
 										<p className="max-w-xs mb-4 text-xs">
-											Desenvolvido na base do <strong>Vibe Coding</strong> explorando
-											novas tecnologias para impacto social real.
+											Desenvolvido na base do <strong>Vibe Coding</strong>{" "}
+											explorando novas tecnologias para impacto social real.
 										</p>
 										<div className="space-y-1 mb-4 text-slate-500">
 											<div className="font-bold text-slate-900 text-xs uppercase tracking-wide mb-1">
@@ -290,17 +295,24 @@ export default function FundraisingPage() {
 										</div>
 									</div>
 									<div>
-										<div className="font-bold text-slate-900 mb-4">TRANSPARÊNCIA</div>
+										<div className="font-bold text-slate-900 mb-4">
+											TRANSPARÊNCIA
+										</div>
 										<ul className="space-y-2">
 											<li>
-												<Link href="/transparencia" className="hover:text-blue-600">
+												<Link
+													href="/transparencia"
+													className="hover:text-blue-600"
+												>
 													Nossa Missão
 												</Link>
 											</li>
 										</ul>
 									</div>
 									<div>
-										<div className="font-bold text-slate-900 mb-4">APOIO TÉCNICO</div>
+										<div className="font-bold text-slate-900 mb-4">
+											APOIO TÉCNICO
+										</div>
 										<ul className="space-y-2">
 											<li>
 												<a
@@ -327,7 +339,8 @@ export default function FundraisingPage() {
 								</div>
 							</div>
 							<div className="text-center border-t border-slate-100 pt-8 text-xs text-slate-400">
-								&copy; 2025 Coletivo A Rua Tem Voz. Desenvolvido por Daniel (Japa).
+								&copy; 2025 Coletivo A Rua Tem Voz. Desenvolvido por Daniel
+								(Japa).
 								<br />
 								Tecnologia como instrumento de emancipação.
 							</div>
@@ -357,9 +370,9 @@ export default function FundraisingPage() {
 											Apoio Conectado
 										</h3>
 										<p className="text-slate-500 text-sm mb-6 min-h-[60px]">
-											Ajuda a manter a plataforma do Coletivo no ar,
-											garantindo que as informações sobre abrigos e refeições
-											estejam sempre atualizadas.
+											Ajuda a manter a plataforma do Coletivo no ar, garantindo
+											que as informações sobre abrigos e refeições estejam
+											sempre atualizadas.
 										</p>
 										<button
 											type="button"

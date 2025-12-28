@@ -71,7 +71,9 @@ export default function TransparenciaPage() {
 						Transparência desde o dia zero.
 					</h2>
 					<p className="text-lg text-slate-400">
-						Este projeto ainda não está operando. Nossa missão agora é captar recursos para viabilizar a primeira turma piloto com 20 jovens em situação de rua.
+						Este projeto ainda não está operando. Nossa missão agora é captar
+						recursos para viabilizar a primeira turma piloto com 20 jovens em
+						situação de rua.
 					</p>
 				</section>
 
@@ -141,9 +143,7 @@ export default function TransparenciaPage() {
 								<item.icon size={24} />
 							</div>
 							<div className="flex items-baseline gap-2 mb-1 relative z-10">
-								<h4 className="text-3xl font-bold text-white">
-									{item.value}
-								</h4>
+								<h4 className="text-3xl font-bold text-white">{item.value}</h4>
 								<span className="text-slate-500 font-medium">
 									{item.target}
 								</span>
@@ -161,9 +161,12 @@ export default function TransparenciaPage() {
 				{/* Documents Section */}
 				<section className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 opacity-60 grayscale hover:grayscale-0 transition-all cursor-not-allowed">
 					<div className="space-y-2">
-						<h3 className="text-xl font-bold text-white">Prestação de Contas (Em Breve)</h3>
+						<h3 className="text-xl font-bold text-white">
+							Prestação de Contas (Em Breve)
+						</h3>
 						<p className="text-slate-400 text-sm max-w-lg">
-							Assim que o projeto for iniciado, todos os comprovantes e planilhas serão publicados aqui mensalmente.
+							Assim que o projeto for iniciado, todos os comprovantes e
+							planilhas serão publicados aqui mensalmente.
 						</p>
 					</div>
 					<button

@@ -115,7 +115,10 @@ export default function TestFeaturesPage() {
 				<div className="mt-4 p-4 bg-zinc-900/50 rounded-lg">
 					<h3 className="text-sm font-bold text-zinc-400 mb-2">
 						Inventário (Peso Total:{" "}
-						{inventory.reduce((acc: number, i: any) => acc + i.weight, 0).toFixed(1)}kg)
+						{inventory
+							.reduce((acc: number, i: any) => acc + i.weight, 0)
+							.toFixed(1)}
+						kg)
 					</h3>
 					<div className="flex flex-wrap gap-2">
 						{inventory.map((item: any) => (

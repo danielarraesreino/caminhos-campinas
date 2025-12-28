@@ -21,19 +21,19 @@ interface AvatarCreationProps {
 	onBack: () => void;
 }
 
-import { getAssetUrl } from "@/utils/getAssetUrl";
+// import { getAssetUrl } from "@/utils/getAssetUrl";
 
 const AVATAR_OPTIONS = [
 	{
 		id: "avatar_1",
-		image: getAssetUrl("avatars/avatar_1.png"),
+		image: "/avatars/avatar_1.png",
 		label: "Identidade A",
 		gender: "masculino",
 		age: "maduro",
 	},
 	{
 		id: "avatar_2",
-		image: getAssetUrl("avatars/avatar_2.png"),
+		image: "/avatars/avatar_2.png",
 		label: "Identidade B",
 		gender: "trans",
 		age: "adulto",

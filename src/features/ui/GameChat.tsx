@@ -5,6 +5,7 @@ import { MapPin, Send } from "lucide-react";
 import Image from "next/image";
 import {
 	type FormEvent,
+	useCallback,
 	useEffect,
 	useRef,
 	useState,
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/GlossaryTooltip";
 import { useGameContext } from "@/contexts/GameContext";
 import { ActionInput } from "./ActionInput";
+import { getDB } from "@/features/offline-db/db";
 
 export function GameChat() {
 	const gameState = useGameContext();
@@ -45,9 +47,12 @@ export function GameChat() {
 	}, []);
 
 	// Configuração corrigida sem rota de API explícita se for padrão
-	// biome-ignore lint/suspicious/noExplicitAny: Temporary fix for build error
+	// Configuração corrigida com tratamento de erro e initialMessages
+	// Configuração corrigida com tratamento de erro e initialMessages
+	// biome-ignore lint/suspicious/noExplicitAny: Temporary fix for build error due to type mismatch
 	const chatHelpers = useChat({
 		api: "/api/chat",
+		initialMessages: [],
 		// Rate limiting handling
 		onError: (err: any) => {
 			console.error("Chat error:", err);
@@ -76,48 +81,76 @@ export function GameChat() {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
-	const handleAction = async (text: string, audioBlob?: Blob | null) => {
-		if (!text.trim() && !audioBlob) return;
+	// Stabilize gameState for handleAction to prevent recreating it on every tick
+	const gameStateRef = useRef(gameState);
+	useEffect(() => {
+		gameStateRef.current = gameState;
+	}, [gameState]);
 
-		setIsThinking(true);
+	const handleAction = useCallback(
+		async (text: string, audioBlob?: Blob | null) => {
+			if (!text.trim() && !audioBlob) return;
 
-		// Upload Audio if exists
-		let audioUrl = "";
-		if (audioBlob) {
+			setIsThinking(true);
+
+			// Upload Audio if exists
+			let audioUrl = "";
+			if (audioBlob) {
+				console.log(
+					"Audio blob active - Saving locally for DEBUG/OFFLINE mode",
+				);
+				// DISABLE HOSTINGER UPLOAD TEMPORARILY
+				/*
 			try {
 				const formData = new FormData();
 				formData.append("audio", audioBlob, "voice_input.webm");
-
-				// Assuming you have an upload endpoint
 				// const res = await fetch('/api/upload', { method: 'POST', body: formData });
-				// const data = await res.json();
-				// audioUrl = data.url;
+				// ...
+			} catch (e) { ... }
+			*/
 
-				// For prototype: mock url or base64
-				console.log("Audio blob ready for upload processing");
-			} catch (e) {
-				console.error("Audio upload failed", e);
+				// Force PouchDB Save (Offline/Debug)
+				try {
+					const db = await getDB();
+					if (db) {
+						await db.post({
+							type: "pending_upload",
+							blob: audioBlob,
+							createdAt: new Date().toISOString(),
+							debug: true,
+						});
+						console.log("Audio saved to PouchDB (offline fallback)");
+					}
+				} catch (dbError) {
+					console.error("Failed to save audio fallback", dbError);
+				}
 			}
-		}
 
-		startTransition(() => {
-			append({
-				role: "user",
-				content: text,
-				data: {
-					audioUrl: audioUrl, // Pass audio URL in data
-					gameState: {
-						health: gameState.health,
-						hunger: gameState.hunger,
-						hygiene: gameState.hygiene,
-						money: gameState.money,
-						time: gameState.time,
-						location: userLocation,
-					},
-				},
+			startTransition(() => {
+				try {
+					append({
+						role: "user",
+						content: text,
+						data: {
+							audioUrl: audioUrl, // Pass audio URL in data
+							gameState: {
+								health: gameStateRef.current.health,
+								hunger: gameStateRef.current.hunger,
+								hygiene: gameStateRef.current.hygiene,
+								money: gameStateRef.current.money,
+								time: gameStateRef.current.time,
+								location: userLocation,
+							},
+						},
+					});
+				} catch (err) {
+					console.error("Error appending message:", err);
+					setIsThinking(false);
+				}
 			});
-		});
-	};
+		},
+		[append, startTransition, userLocation],
+	);
 
 	// Helper to highlight logic
 	const renderMessageContent = (content: string) => {
@@ -209,10 +242,11 @@ export function GameChat() {
 
 							{/* Bubble */}
 							<div
-								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user"
-									? "bg-blue-600 text-white rounded-tr-none"
-									: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
-									}`}
+								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
+									m.role === "user"
+										? "bg-blue-600 text-white rounded-tr-none"
+										: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
+								}`}
 							>
 								{m.role === "assistant"
 									? renderMessageContent(m.content)
