@@ -820,7 +820,7 @@ export default function LandingPage() {
 							>
 								{copied ? "Chave Copiada!" : "Copiar Chave PIX"}
 							</button>
-							<p className="text-xs text-slate-400 mt-2">
+							<p className="text-xs text-slate-600 mt-2">
 								O valor será destinado integralmente ao desenvolvimento do jogo
 								e ações do coletivo.
 							</p>
@@ -859,7 +859,7 @@ export default function LandingPage() {
 						</div>
 					</div>
 					<div className="mt-12 pt-8 border-t border-slate-800 text-center text-xs flex flex-col items-center">
-						<p className="mb-6 text-slate-500">
+						<p className="mb-6 text-slate-300">
 							&copy; 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de
 							emancipação.
 						</p>
@@ -869,7 +869,7 @@ export default function LandingPage() {
 								<img
 									src="/daniel_dev.jpg"
 									alt="Daniel (Japa)"
-									className="w-12 h-12 rounded-full border-2 border-slate-600 group-hover:border-blue-500 transition-colors object-cover"
+									className="w-20 h-20 rounded-full border-2 border-slate-600 group-hover:border-blue-500 transition-colors object-cover object-center"
 								/>
 								<div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"></div>
 							</div>
@@ -883,7 +883,7 @@ export default function LandingPage() {
 							</div>
 						</div>
 
-						<p className="mt-6 text-slate-600 italic max-w-sm">
+						<p className="mt-6 text-slate-300 italic max-w-sm">
 							"Informação é a libertação real, única e verdadeira."
 						</p>
 					</div>
