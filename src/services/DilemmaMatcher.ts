@@ -1,4 +1,4 @@
-import type { Dilemma } from "@/features/game-loop/dilemmas";
+import type { Dilemma } from "@/features/game-loop/dilemma-types";
 
 interface UserLocation {
 	lat: number;
@@ -36,7 +36,7 @@ export const DilemmaMatcher = {
 		// Filter by tags
 		const relevantDilemmas = gameDilemmas.filter((d) => {
 			if (!d.tags) return false;
-			return d.tags.some((tag) => normalizedInput.includes(tag.toLowerCase()));
+			return d.tags.some((tag: string) => normalizedInput.includes(tag.toLowerCase()));
 		});
 
 		if (relevantDilemmas.length === 0) return null;
