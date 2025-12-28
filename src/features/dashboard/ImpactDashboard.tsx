@@ -146,14 +146,12 @@ export function ImpactDashboard() {
 				</div>
 
 				<div className="flex flex-col items-end gap-3">
-					<Link href="/apoie">
-						<button
-							type="button"
-							className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/50 px-4 py-2 rounded-lg text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider mb-2"
-						>
-							<TrendingUp size={14} />
-							Financie esta Tecnologia
-						</button>
+					<Link
+						href="/apoie"
+						className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/50 px-4 py-3 rounded-lg text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider mb-2 min-h-[44px]"
+					>
+						<TrendingUp size={14} />
+						Financie esta Tecnologia
 					</Link>
 					<button
 						type="button"
