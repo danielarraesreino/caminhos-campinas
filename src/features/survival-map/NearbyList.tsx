@@ -40,9 +40,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-			Math.cos((lat2 * Math.PI) / 180) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2);
+		Math.cos((lat2 * Math.PI) / 180) *
+		Math.sin(dLon / 2) *
+		Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c; // in km
 }
@@ -181,7 +181,17 @@ export function NearbyList() {
 								>
 									{allowed ? "Utilizar Serviço" : "Indisponível"}
 								</button>
-								<button className="flex items-center justify-center w-9 h-9 border rounded hover:bg-muted">
+								<button
+									type="button"
+									onClick={() =>
+										window.open(
+											`https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`,
+											"_blank",
+										)
+									}
+									className="flex items-center justify-center w-9 h-9 border rounded hover:bg-muted transition-colors text-blue-500 hover:text-blue-600 hover:border-blue-200"
+									title="Ver no Google Maps"
+								>
 									<Navigation size={16} />
 								</button>
 							</div>
