@@ -702,7 +702,7 @@ export default function LandingPage() {
 							</div>
 						)}
 					</div>
-					<p className="text-center text-slate-500 text-xs mt-4">
+					<p className="text-center text-slate-400 text-xs mt-4">
 						* As situações são baseadas em dados reais do Censo Pop Rua 2024.
 					</p>
 				</div>
@@ -927,7 +927,7 @@ export default function LandingPage() {
 							<h3 className="text-2xl font-bold text-slate-800">
 								Boas-vindas!
 							</h3>
-							<p className="text-slate-500 text-sm mt-1">
+							<p className="text-slate-600 text-sm mt-1">
 								Escolha como deseja iniciar sua jornada.
 							</p>
 						</div>
@@ -969,7 +969,7 @@ export default function LandingPage() {
 								<div className="absolute inset-0 flex items-center">
 									<div className="w-full border-t border-slate-100"></div>
 								</div>
-								<span className="relative px-3 bg-white text-xs font-bold text-slate-400 uppercase tracking-widest">
+								<span className="relative px-3 bg-white text-xs font-bold text-slate-600 uppercase tracking-widest">
 									Ou
 								</span>
 							</div>
@@ -982,7 +982,7 @@ export default function LandingPage() {
 								Acesso Anônimo
 								<ArrowRight className="h-4 w-4 opacity-50" />
 							</button>
-							<p className="text-[10px] text-center text-slate-400 mt-4 leading-relaxed">
+							<p className="text-[10px] text-center text-slate-600 mt-4 leading-relaxed">
 								Ao entrar, você concorda em utilizar a plataforma para fins
 								educativos e de impacto social positivo.
 							</p>
