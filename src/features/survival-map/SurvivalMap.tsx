@@ -14,7 +14,7 @@ const MapCore = dynamic(() => import("./MapCore"), {
 });
 
 export function SurvivalMap() {
-	const { userPosition, setUserPosition } = useGameContext();
+	const { userPosition, setUserPosition, eat, modifyStat } = useGameContext();
 	const [loadingLocation, setLoadingLocation] = useState(false);
 
 	// Use ServicesContext for real data
@@ -72,7 +72,26 @@ export function SurvivalMap() {
 					🚨 SOS EMERGÊNCIA
 				</a>
 
-				<MapCore userPosition={userPosition} resources={resources} />
+				<MapCore
+					userPosition={userPosition}
+					resources={resources}
+					onResourceInteract={(res: any) => {
+						console.log("Interagindo com:", res.name);
+						// Basic interaction logic mapping
+						if (res.type === "food" || res.type === "alimentacao") {
+							eat(20);
+							alert(`Você visitou ${res.name} e comeu!`);
+						} else if (res.type === "health" || res.type === "saude") {
+							modifyStat("health", 15);
+							alert(`Você recebeu atendimento em ${res.name}.`);
+						} else if (res.type === "shelter" || res.type === "abrigo") {
+							modifyStat("energy", 30);
+							alert(`Você descansou em ${res.name}.`);
+						} else {
+							alert(`Você visitou ${res.name}.`);
+						}
+					}}
+				/>
 			</div>
 
 			{/* Nearby List Area - Scrollable */}

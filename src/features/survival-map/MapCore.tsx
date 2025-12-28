@@ -74,9 +74,10 @@ interface MapCoreProps {
 		lat: number;
 		lng: number;
 	}[];
+	onResourceInteract?: (resource: any) => void;
 }
 
-export default function MapCore({ userPosition, resources }: MapCoreProps) {
+export default function MapCore({ userPosition, resources, onResourceInteract }: MapCoreProps) {
 	// Default to Campinas center if no user position
 	const defaultPosition: [number, number] = [-22.90556, -47.06083];
 	const initialPosition = userPosition || defaultPosition;
@@ -112,9 +113,18 @@ export default function MapCore({ userPosition, resources }: MapCoreProps) {
 					icon={getIconForType(res.type)}
 				>
 					<Popup>
-						<strong>{res.name}</strong>
-						<br />
-						<span className="text-xs text-gray-600">{res.type}</span>
+						<div className="flex flex-col gap-2 min-w-[150px]">
+							<strong className="text-sm font-bold">{res.name}</strong>
+							<span className="text-xs uppercase tracking-wide text-slate-500 font-bold">{res.type}</span>
+							<hr className="border-slate-200" />
+							<button
+								type="button"
+								onClick={() => onResourceInteract?.(res)}
+								className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded shadow transition-colors"
+							>
+								IR / INTERAGIR
+							</button>
+						</div>
 					</Popup>
 				</Marker>
 			))}

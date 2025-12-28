@@ -35,8 +35,15 @@ export const DilemmaMatcher = {
 
 		// Filter by tags
 		const relevantDilemmas = gameDilemmas.filter((d) => {
-			if (!d.tags) return false;
-			return d.tags.some((tag: string) => normalizedInput.includes(tag.toLowerCase()));
+			// 1. Tag Match (High Precision)
+			if (d.tags && d.tags.some((tag: string) => normalizedInput.includes(tag.toLowerCase()))) {
+				return true;
+			}
+			// 2. Text Match (Fallback) - Search in Title and Description
+			const titleMatch = d.title.toLowerCase().includes(normalizedInput);
+			const descMatch = d.description.toLowerCase().includes(normalizedInput);
+
+			return titleMatch || descMatch;
 		});
 
 		if (relevantDilemmas.length === 0) return null;
