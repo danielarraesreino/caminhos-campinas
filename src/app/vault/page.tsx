@@ -1,5 +1,5 @@
-import { VaultPage } from "@/features/vault/VaultPage";
 import { SessionProvider } from "next-auth/react";
+import { VaultPage } from "@/features/vault/VaultPage";
 
 export default function Page() {
 	return (

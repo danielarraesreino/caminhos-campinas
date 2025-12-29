@@ -123,10 +123,10 @@ export function NearbyList() {
 
 			// DISPARO DE TELEMETRIA ODS
 			let actionType = "OUTROS";
-			if (service.type === "shelter") actionType = "ABRIGO"; // ODS 11.1
-			if (service.type === "food") actionType = "ALIMENTACAO"; // ODS 2.1
-			if (service.type === "health") actionType = "SAUDE"; // ODS 3.8
-			if (service.type === "assistance") actionType = "CIDADANIA"; // ODS 10
+			if (service.type === "ABRIGO") actionType = "ABRIGO"; // ODS 11.1
+			if (service.type === "ALIMENTACAO") actionType = "ALIMENTACAO"; // ODS 2.1
+			if (service.type === "SAUDE") actionType = "SAUDE"; // ODS 3.8
+			if (service.type === "ASSISTENCIA") actionType = "CIDADANIA"; // ODS 10
 
 			trackServiceAccess(actionType, service.name);
 		},
@@ -156,7 +156,7 @@ export function NearbyList() {
 								<div>
 									<h3 className="font-bold">{service.name}</h3>
 									<p className="text-xs text-muted-foreground">
-										{service.type.toUpperCase()} • {distanceDisplay}
+										{service.type} • {distanceDisplay}
 									</p>
 								</div>
 								<span className="text-xs font-mono bg-secondary px-2 py-1 rounded">

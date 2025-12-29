@@ -255,7 +255,7 @@ const DOC_ID = "game_state_v1";
 export function GameProvider({ children }: { children: React.ReactNode }) {
 	const [state, dispatch] = useReducer(gameReducer, INITIAL_STATE);
 	const [hasHydrated, setHasHydrated] = useState(false);
-	const db = useOfflineDB();
+	const { db } = useOfflineDB();
 
 	// 1. Hydration (Load from PouchDB)
 	useEffect(() => {

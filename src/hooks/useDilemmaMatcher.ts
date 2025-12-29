@@ -78,7 +78,7 @@ export function useDilemmaMatcher() {
 				locationObj
 			) {
 				const consultorio = services.find(
-					(s) => s.type === "saude" || s.name.includes("Consultório"),
+					(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
 				);
 				if (consultorio) {
 					const _dist = calculateDist(

@@ -99,15 +99,14 @@ export function GameChat() {
 				console.log(
 					"Audio blob active - Saving locally for DEBUG/OFFLINE mode",
 				);
-				// DISABLE HOSTINGER UPLOAD TEMPORARILY
+				// DISABLE SERVER UPLOAD FOR PRODUCTION (FREE TIER)
 				/*
-			try {
-				const formData = new FormData();
-				formData.append("audio", audioBlob, "voice_input.webm");
-				// const res = await fetch('/api/upload', { method: 'POST', body: formData });
-				// ...
-			} catch (e) { ... }
-			*/
+				try {
+					const formData = new FormData();
+					formData.append("audio", audioBlob, "voice_input.webm");
+					// const res = await fetch('/api/upload', { method: 'POST', body: formData });
+				} catch (e) { ... }
+				*/
 
 				// Force PouchDB Save (Offline/Debug)
 				try {
@@ -242,11 +241,10 @@ export function GameChat() {
 
 							{/* Bubble */}
 							<div
-								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
-									m.role === "user"
-										? "bg-blue-600 text-white rounded-tr-none"
-										: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
-								}`}
+								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user"
+									? "bg-blue-600 text-white rounded-tr-none"
+									: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
+									}`}
 							>
 								{m.role === "assistant"
 									? renderMessageContent(m.content)

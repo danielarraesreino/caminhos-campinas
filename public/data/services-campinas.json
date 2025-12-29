@@ -1,305 +1,232 @@
 [
-        {
-                "id": "samim",
-                "name": "SAMIM (Albergue Municipal)",
-                "type": "abrigo",
-                "category": "Acolhimento Noturno",
-                "address": "Rua Francisco Elisiário, 240 - Bonfim",
-                "description": "Exige documento ou B.O. Entrada rígida entre 18h-19h. Proibido entrada de carroças. Estadia de 5 dias renováveis.",
-                "opening_hours": "18:00 - 06:00",
-                "coords": [
-                        -22.9025,
-                        -47.066
-                ],
-                "phone": "(19) 3231-2999",
-                "effects": {
-                        "energy": 100,
-                        "hygiene": 100,
-                        "dignity": -5
-                }
-        },
-        {
-                "id": "casa_passagem_caritas",
-                "name": "Casa de Passagem (Cáritas)",
-                "type": "abrigo",
-                "category": "Acolhimento Temporário",
-                "address": "Rua José Cruz Ferreira Jorge, 32 - Vila Industrial",
-                "description": "Foco em saída da rua e documentação. Ambiente mais acolhedor. Vagas limitadas (20 masculinas).",
-                "opening_hours": "24h (Encaminhamento via Centro Pop)",
-                "coords": [
-                        -22.912,
-                        -47.058
-                ],
-                "effects": {
-                        "energy": 100,
-                        "sanity": 20,
-                        "dignity": 20
-                }
-        },
-        {
-                "id": "abrigo_santa_clara",
-                "name": "Abrigo Santa Clara (Cáritas)",
-                "type": "abrigo",
-                "category": "Acolhimento Feminino/Família",
-                "address": "Rua das Camélias, 640 - Chácara Primavera",
-                "description": "Específico para mulheres e mulheres com filhos. Apoio psicossocial.",
-                "opening_hours": "24h (Encaminhamento)",
-                "coords": [
-                        -22.855,
-                        -47.045
-                ],
-                "effects": {
-                        "energy": 100,
-                        "sanity": 30,
-                        "security": 100
-                }
-        },
-        {
-                "id": "casa_santa_dulce",
-                "name": "Casa Santa Dulce dos Pobres",
-                "type": "abrigo",
-                "category": "Acolhimento Misto",
-                "address": "Rua José Cruz Ferreira Jorge, 32 - Jd. São Paulo",
-                "description": "Acolhimento provisório para homens e mulheres (40 vagas).",
-                "opening_hours": "24h",
-                "coords": [
-                        -22.92,
-                        -47.07
-                ],
-                "effects": {
-                        "energy": 100,
-                        "sanity": 15
-                }
-        },
-        {
-                "id": "centro_pop_1",
-                "name": "Centro POP I (Sares)",
-                "type": "assistencia",
-                "category": "Dia",
-                "address": "Rua Regente Feijó, 1240 - Centro",
-                "description": "Banho, lavanderia e guarda-volumes. Apoio para tirar documentos. Atendimento técnico.",
-                "opening_hours": "08:00 - 17:00",
-                "coords": [
-                        -22.9065,
-                        -47.056
-                ],
-                "phone": "(19) 3231-4155",
-                "effects": {
-                        "hygiene": 100,
-                        "dignity": 10
-                }
-        },
-        {
-                "id": "centro_pop_2",
-                "name": "Centro POP II",
-                "type": "assistencia",
-                "category": "Dia",
-                "address": "Rua José Paulino, 603 - Centro",
-                "description": "Referência para cadastro único e atendimento técnico especializado.",
-                "opening_hours": "08:00 - 17:00",
-                "coords": [
-                        -22.908,
-                        -47.062
-                ],
-                "phone": "(19) 3235-2281",
-                "effects": {
-                        "dignity": 15
-                }
-        },
-        {
-                "id": "bagageiro_municipal",
-                "name": "Bagageiro Municipal",
-                "type": "assistencia",
-                "category": "Guarda-Volumes",
-                "address": "Vila Industrial (Próx. Rodoviária Antiga)",
-                "description": "Local seguro para guardar pertences e documentos (até 1.8 mil bagagens). Evita roubos na rua.",
-                "opening_hours": "08:00 - 17:00",
-                "coords": [
-                        -22.915,
-                        -47.07
-                ],
-                "effects": {
-                        "security": 100
-                }
-        },
-        {
-                "id": "bom_prato_centro",
-                "name": "Bom Prato Centro",
-                "type": "alimentacao",
-                "category": "Restaurante Popular",
-                "address": "Av. Dr. Moraes Sales, 384 - Centro",
-                "description": "Café (R$ 0,50) e Almoço/Jantar (R$ 1,00). Fila média de 40 min. Gratuito para cadastrados no CadÚnico Pop Rua.",
-                "opening_hours": "07:00, 10:30, 17:00",
-                "coords": [
-                        -22.9102,
-                        -47.0605
-                ],
-                "effects": {
-                        "hunger": 100,
-                        "money": -1
-                }
-        },
-        {
-                "id": "bom_prato_movel",
-                "name": "Bom Prato Móvel",
-                "type": "alimentacao",
-                "category": "Itinerante",
-                "address": "Jardim Florence / Região Noroeste (Variável)",
-                "description": "Caminhão que serve 300 almoços a R$ 1,00 em regiões periféricas.",
-                "opening_hours": "11:00",
-                "coords": [
-                        -22.93,
-                        -47.12
-                ],
-                "effects": {
-                        "hunger": 100,
-                        "money": -1
-                }
-        },
-        {
-                "id": "refeitorio_cidadania",
-                "name": "Refeitório da Cidadania",
-                "type": "alimentacao",
-                "category": "Gratuito",
-                "address": "Rua Álvares Machado, 766 - Centro",
-                "description": "Distribuição gratuita de jantar (200 refeições). Exige higienização das mãos. Ambiente sentado.",
-                "opening_hours": "18:00 - 19:00",
-                "coords": [
-                        -22.908,
-                        -47.062
-                ],
-                "effects": {
-                        "hunger": 80,
-                        "dignity": 10
-                }
-        },
-        {
-                "id": "consultorio_rua",
-                "name": "Consultório na Rua",
-                "type": "saude",
-                "category": "Baixa Exigência",
-                "address": "Rua Fernão Lopes, 1290 - Pq. Taquaral (Sede) / Itinerante",
-                "description": "Equipe móvel que vai até as praças. Faz curativos, testes e pré-natal. Não exige abstinência ou documentos.",
-                "opening_hours": "07:00 - 18:00",
-                "coords": [
-                        -22.865,
-                        -47.05
-                ],
-                "phone": "(19) 3291-6094",
-                "effects": {
-                        "health": 40,
-                        "sanity": 10
-                }
-        },
-        {
-                "id": "caps_ad_reviver",
-                "name": "CAPS AD III Reviver",
-                "type": "saude",
-                "category": "Álcool e Drogas",
-                "address": "Rua Padre Domingos Giovanini, 95 - Taquaral",
-                "description": "Atendimento 24h para crise e desintoxicação. Possui 8 leitos para pernoite de curta duração.",
-                "opening_hours": "24h",
-                "coords": [
-                        -22.872,
-                        -47.055
-                ],
-                "phone": "(19) 3365-4918",
-                "effects": {
-                        "sanity": 50,
-                        "health": 20
-                }
-        },
-        {
-                "id": "caps_ad_antonio",
-                "name": "CAPS AD III Antônio Orlando",
-                "type": "saude",
-                "category": "Álcool e Drogas",
-                "address": "Rua Ferdinando Panatoni, 1040 - Jd. Paulicéia",
-                "description": "Referência para Região Noroeste/Sudoeste. Acolhimento noturno e oficinas terapêuticas.",
-                "opening_hours": "24h",
-                "coords": [
-                        -22.925,
-                        -47.08
-                ],
-                "phone": "(19) 3258-6098",
-                "effects": {
-                        "sanity": 50,
-                        "health": 20
-                }
-        },
-        {
-                "id": "caps_iii_david",
-                "name": "CAPS III David Capistrano",
-                "type": "saude",
-                "category": "Saúde Mental",
-                "address": "Rua Salomão Gebara, 136 - Vista Alegre",
-                "description": "Para transtornos mentais graves. Foca em reinserção social e autonomia.",
-                "opening_hours": "24h",
-                "coords": [
-                        -22.89,
-                        -47.1
-                ],
-                "phone": "(19) 3266-3094",
-                "effects": {
-                        "sanity": 60
-                }
-        },
-        {
-                "id": "mao_amiga",
-                "name": "Programa Mão Amiga",
-                "type": "educacao",
-                "category": "Qualificação Profissional",
-                "address": "Encaminhamento via Centro Pop / CRAS",
-                "description": "Bolsa-auxílio (aprox. R$ 1.240) para qualificação em jardinagem e construção civil. Exige frequência e compromisso.",
-                "opening_hours": "08:00 - 17:00",
-                "coords": [
-                        -22.9055,
-                        -47.0608
-                ],
-                "requirements": [
-                        "RG",
-                        "CPF",
-                        "Comprovante de Vacinação"
-                ],
-                "effects": {
-                        "money": 1240,
-                        "dignity": 100,
-                        "energy": -50
-                }
-        },
-        {
-                "id": "casa_oficinas",
-                "name": "Casa das Oficinas (Cândido Ferreira)",
-                "type": "educacao",
-                "category": "Geração de Renda",
-                "address": "Rua Domício Pacheco e Silva, 760 - Jd. Novo Campos Elíseos",
-                "description": "Oficinas de Mosaico, Vitral, Marcenaria e Culinária. Paga 'Bolsa-Oficina' conforme produção. Ambiente de convivência.",
-                "opening_hours": "08:00 - 17:00",
-                "coords": [
-                        -22.93,
-                        -47.09
-                ],
-                "effects": {
-                        "money": 50,
-                        "sanity": 30,
-                        "dignity": 40
-                }
-        },
-        {
-                "id": "curso_coletivo",
-                "name": "Formação A Rua Tem Voz",
-                "type": "educacao",
-                "category": "Direitos Humanos",
-                "address": "Itinerante / Centro",
-                "description": "Curso de 16h sobre cidadania e direitos, baseado em Paulo Freire. Forma multiplicadores e agentes de dados.",
-                "opening_hours": "Sob demanda",
-                "coords": [
-                        -22.905,
-                        -47.06
-                ],
-                "effects": {
-                        "dignity": 50,
-                        "sanity": 20
-                }
+    {
+        "id": "abrigos_municipais",
+        "name": "Abrigos Municipais (Samim / Casa de Passagem)",
+        "type": "ABRIGO",
+        "category": "Acolhimento Institucional",
+        "address": "Rua Francisco Elisiário, 240 - Bonfim",
+        "description": "Vagas por encaminhamento (Centro Pop). Banho, jantar e pernoite. Permanência limitada.",
+        "opening_hours": "08:00 - 17:00",
+        "coords": [
+            -22.9025,
+            -47.066
+        ],
+        "phone": "(19) 3235-2281",
+        "effects": {
+            "dignity": 15
         }
+    },
+    {
+        "id": "centro_pop_i",
+        "name": "Centro Pop I",
+        "type": "ASSISTENCIA",
+        "category": "Referência",
+        "address": "Rua Regente Feijó, 1240, Centro",
+        "description": "Porta de entrada para serviços da rede. Cadastro Único, banho, lavanderia e encaminhamentos.",
+        "opening_hours": "08:00 - 17:00",
+        "coords": [
+            -22.905,
+            -47.06
+        ],
+        "effects": {
+            "dignity": 20,
+            "hygiene": 50
+        }
+    },
+    {
+        "id": "bagageiro_municipal",
+        "name": "Bagageiro Municipal",
+        "type": "ASSISTENCIA",
+        "category": "Guarda-Volumes",
+        "address": "Vila Industrial (Próx. Rodoviária Antiga)",
+        "description": "Local seguro para guardar pertences e documentos (até 1.8 mil bagagens). Evita roubos na rua.",
+        "opening_hours": "08:00 - 17:00",
+        "coords": [
+            -22.915,
+            -47.07
+        ],
+        "effects": {
+            "security": 100
+        }
+    },
+    {
+        "id": "bom_prato_centro",
+        "name": "Bom Prato Centro",
+        "type": "ALIMENTACAO",
+        "category": "Restaurante Popular",
+        "address": "Av. Dr. Moraes Sales, 384, Centro",
+        "description": "Café (R$ 0,50) e Almoço/Jantar (R$ 1,00). Fila média de 40 min. Gratuito para cadastrados no CadÚnico Pop Rua.",
+        "opening_hours": "07:00, 10:30, 17:00",
+        "coords": [
+            -22.9102,
+            -47.0605
+        ],
+        "effects": {
+            "hunger": 100,
+            "money": -1
+        }
+    },
+    {
+        "id": "bom_prato_movel",
+        "name": "Bom Prato Móvel",
+        "type": "ALIMENTACAO",
+        "category": "Itinerante",
+        "address": "Jardim Florence / Região Noroeste (Variável)",
+        "description": "Caminhão que serve 300 almoços a R$ 1,00 em regiões periféricas.",
+        "opening_hours": "11:00",
+        "coords": [
+            -22.93,
+            -47.12
+        ],
+        "effects": {
+            "hunger": 100,
+            "money": -1
+        }
+    },
+    {
+        "id": "refeitorio_cidadania",
+        "name": "Refeitório da Cidadania",
+        "type": "ALIMENTACAO",
+        "category": "Gratuito",
+        "address": "Rua Álvares Machado, 766 - Centro",
+        "description": "Distribuição gratuita de jantar (200 refeições). Exige higienização das mãos. Ambiente sentado.",
+        "opening_hours": "18:00 - 19:00",
+        "coords": [
+            -22.908,
+            -47.062
+        ],
+        "effects": {
+            "hunger": 80,
+            "dignity": 10
+        }
+    },
+    {
+        "id": "consultorio_rua",
+        "name": "Consultório na Rua",
+        "type": "SAUDE",
+        "category": "Baixa Exigência",
+        "address": "Rua Fernão Lopes, 1290 - Pq. Taquaral (Sede) / Itinerante",
+        "description": "Equipe móvel que vai até as praças. Faz curativos, testes e pré-natal. Não exige abstinência ou documentos.",
+        "opening_hours": "07:00 - 18:00",
+        "coords": [
+            -22.865,
+            -47.05
+        ],
+        "phone": "(19) 3291-6094",
+        "effects": {
+            "health": 40,
+            "sanity": 10
+        }
+    },
+    {
+        "id": "caps_ad_reviver",
+        "name": "CAPS AD III Reviver",
+        "type": "SAUDE",
+        "category": "Álcool e Drogas",
+        "address": "Rua Padre Domingos Giovanini, 95 - Taquaral",
+        "description": "Atendimento 24h para crise e desintoxicação. Possui 8 leitos para pernoite de curta duração.",
+        "opening_hours": "24h",
+        "coords": [
+            -22.872,
+            -47.055
+        ],
+        "phone": "(19) 3365-4918",
+        "effects": {
+            "sanity": 50,
+            "health": 20
+        }
+    },
+    {
+        "id": "caps_ad_antonio",
+        "name": "CAPS AD III Antônio Orlando",
+        "type": "SAUDE",
+        "category": "Álcool e Drogas",
+        "address": "Rua Ferdinando Panatoni, 1040 - Jd. Paulicéia",
+        "description": "Referência para Região Noroeste/Sudoeste. Acolhimento noturno e oficinas terapêuticas.",
+        "opening_hours": "24h",
+        "coords": [
+            -22.925,
+            -47.08
+        ],
+        "phone": "(19) 3258-6098",
+        "effects": {
+            "sanity": 50,
+            "health": 20
+        }
+    },
+    {
+        "id": "caps_iii_david",
+        "name": "CAPS III David Capistrano",
+        "type": "SAUDE",
+        "category": "Saúde Mental",
+        "address": "Rua Salomão Gebara, 136 - Vista Alegre",
+        "description": "Para transtornos mentais graves. Foca em reinserção social e autonomia.",
+        "opening_hours": "24h",
+        "coords": [
+            -22.89,
+            -47.1
+        ],
+        "phone": "(19) 3266-3094",
+        "effects": {
+            "sanity": 60
+        }
+    },
+    {
+        "id": "mao_amiga",
+        "name": "Programa Mão Amiga",
+        "type": "ASSISTENCIA",
+        "category": "Qualificação Profissional",
+        "address": "Encaminhamento via Centro Pop / CRAS",
+        "description": "Bolsa-auxílio (aprox. R$ 1.240) para qualificação em jardinagem e construção civil. Exige frequência e compromisso.",
+        "opening_hours": "08:00 - 17:00",
+        "coords": [
+            -22.9055,
+            -47.0608
+        ],
+        "requirements": [
+            "RG",
+            "CPF",
+            "Comprovante de Vacinação"
+        ],
+        "effects": {
+            "money": 1240,
+            "dignity": 100,
+            "energy": -50
+        }
+    },
+    {
+        "id": "casa_oficinas",
+        "name": "Casa das Oficinas (Cândido Ferreira)",
+        "type": "ASSISTENCIA",
+        "category": "Geração de Renda",
+        "address": "Rua Domício Pacheco e Silva, 760 - Jd. Novo Campos Elíseos",
+        "description": "Oficinas de Mosaico, Vitral, Marcenaria e Culinária. Paga 'Bolsa-Oficina' conforme produção. Ambiente de convivência.",
+        "opening_hours": "08:00 - 17:00",
+        "coords": [
+            -22.93,
+            -47.09
+        ],
+        "effects": {
+            "money": 50,
+            "sanity": 30,
+            "dignity": 40
+        }
+    },
+    {
+        "id": "curso_coletivo",
+        "name": "Formação A Rua Tem Voz",
+        "type": "ASSISTENCIA",
+        "category": "Direitos Humanos",
+        "address": "Itinerante / Centro",
+        "description": "Curso de 16h sobre cidadania e direitos, baseado em Paulo Freire. Forma multiplicadores e agentes de dados.",
+        "opening_hours": "Sob demanda",
+        "coords": [
+            -22.905,
+            -47.06
+        ],
+        "effects": {
+            "dignity": 50,
+            "sanity": 20
+        }
+    }
 ]
