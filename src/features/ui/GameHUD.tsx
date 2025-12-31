@@ -9,6 +9,7 @@ import {
 	Package,
 	ShieldAlert,
 	Wallet,
+	Battery, // New Icon for Digital Barrier
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -28,6 +29,7 @@ export function GameHUD() {
 		workTool,
 		// dignity,
 		avatar,
+		phoneBattery,
 	} = useGameContext();
 
 	// Efeito de bordo pulsante para alto estigma
@@ -91,6 +93,14 @@ export function GameHUD() {
 							color="amber"
 							type="asc"
 							alertThreshold={70}
+						/>
+						<StatCard
+							icon={Battery}
+							value={phoneBattery}
+							label="BATERIA"
+							color={phoneBattery < 20 ? "amber" : "emerald"}
+							type="desc"
+							alertThreshold={20}
 						/>
 					</div>
 				</div>

@@ -1,0 +1,82 @@
+{
+    "metadata": {
+        "source": "Censo da População em Situação de Rua - Campinas/SP",
+        "year": 2024,
+        "total_population": 1557,
+        "description": "Dados oficiais extraídos do Relatório Descritivo e Metodológico."
+    },
+    "demographics": {
+        "literacy_rate": 0.955,
+        "education": {
+            "incomplete_high_school": 0.68,
+            "higher_education": 0.016
+        },
+        "documentation": {
+            "has_documents": 0.808,
+            "no_documents": 0.192,
+            "most_common": "Carteira de Identidade (RG)"
+        }
+    },
+    "economics": {
+        "unemployment_rate": 0.612,
+        "income_brackets": [
+            {
+                "range": "R$ 353 - R$ 705",
+                "percentage": 0.298
+            },
+            {
+                "range": "R$ 110 - R$ 218",
+                "percentage": 0.165
+            },
+            {
+                "range": "R$ 219 - R$ 352",
+                "percentage": 0.149
+            },
+            {
+                "range": "> 1 Salário Mínimo",
+                "percentage": 0.115
+            },
+            {
+                "range": "< R$ 109",
+                "percentage": 0.107
+            }
+        ],
+        "benefits": {
+            "none": 0.471,
+            "bolsa_familia": 0.436,
+            "bpc": 0.025,
+            "retirement": 0.032,
+            "auxilio_doenca": 0.013
+        }
+    },
+    "motives": {
+        "family_conflict": 0.715,
+        "drugs_illicit": 0.321,
+        "alcohol": 0.282,
+        "unemployment": 0.151,
+        "loss_of_housing": 0.071,
+        "health_problems": 0.038,
+        "prison_release": 0.016
+    },
+    "freakonomics_insights": {
+        "revolving_door": {
+            "returned_to_streets": 0.301,
+            "reasons_for_return": {
+                "family_conflict": 0.394,
+                "drugs": 0.277,
+                "lost_job": 0.191
+            }
+        },
+        "work_paradox": {
+            "has_formal_experience": 0.749,
+            "current_odd_jobs": 0.244,
+            "unemployed": 0.612,
+            "income_source_job": 0.298
+        },
+        "institutional_history": {
+            "prior_prison": 0.24,
+            "prior_rehab": 0.093,
+            "prior_psychiatric": 0.048
+        }
+    }
+}

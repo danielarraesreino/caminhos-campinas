@@ -9,12 +9,14 @@ interface ActionInputProps {
 	onAction: (text: string, audioBlob?: Blob | null) => void;
 	placeholder?: string;
 	isProcessing?: boolean;
+	disabled?: boolean;
 }
 
 export function ActionInput({
 	onAction,
 	placeholder = "O que você faz?",
 	isProcessing = false,
+	disabled = false,
 }: ActionInputProps) {
 	const [inputValue, setInputValue] = useState("");
 	const [isListening, setIsListening] = useState(false);
@@ -123,7 +125,7 @@ export function ActionInput({
 				variant={isListening ? "destructive" : "outline"}
 				size="icon"
 				onClick={toggleListening}
-				disabled={isProcessing}
+				disabled={isProcessing || disabled}
 				className={isListening ? "animate-pulse" : ""}
 				title={isListening ? "Parar de ouvir" : "Falar (Mic)"}
 			>
@@ -139,13 +141,13 @@ export function ActionInput({
 				onChange={(e) => setInputValue(e.target.value)}
 				placeholder={isListening ? "Ouvindo..." : placeholder}
 				className="flex-1"
-				disabled={isProcessing || isListening}
+				disabled={isProcessing || isListening || disabled}
 			/>
 
 			<Button
 				type="submit"
 				size="icon"
-				disabled={isProcessing || !inputValue.trim()}
+				disabled={isProcessing || !inputValue.trim() || disabled}
 				variant="default"
 				className="bg-blue-600 hover:bg-blue-700"
 			>

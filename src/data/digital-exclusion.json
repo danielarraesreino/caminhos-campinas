@@ -1,0 +1,29 @@
+[
+    {
+        "id": "barrier_hardware",
+        "type": "HARDWARE",
+        "title": "Barreira de Hardware",
+        "description": "Falta de bateria impede acesso ao mapa.",
+        "game_effect": "MAP_DISABLED",
+        "source": "ResearchGate",
+        "tooltip_content": "A 'Morte Digital' ocorre quando a bateria acaba. Sem GPS, a pessoa não consegue localizar abrigos ou serviços de saúde, aumentando o isolamento. (Fonte: ResearchGate)"
+    },
+    {
+        "id": "barrier_bureaucratic",
+        "type": "BUREAUCRACY",
+        "title": "Barreira Burocrática",
+        "description": "Falta de CEP impede cadastro em emprego formal.",
+        "game_effect": "JOB_DENIED",
+        "source": "ResearchGate",
+        "tooltip_content": "O 'CEPismo' é a exclusão pelo endereço. Mesmo com qualificação, a falta de um comprovante de residência bloqueia a contratação formal e abertura de contas bancárias. (Fonte: ResearchGate)"
+    },
+    {
+        "id": "barrier_connectivity",
+        "type": "CONNECTIVITY",
+        "title": "Barreira de Conectividade",
+        "description": "Falta de Wi-Fi impede agendamento no Poupatempo.",
+        "game_effect": "SERVICE_UNAVAILABLE",
+        "source": "ResearchGate",
+        "tooltip_content": "A digitalização dos serviços públicos (agendamento online) cria um muro invisível para quem não tem plano de dados, impedindo o acesso a direitos básicos como tirar o RG. (Fonte: ResearchGate)"
+    }
+]

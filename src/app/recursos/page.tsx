@@ -39,7 +39,21 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 			return false;
 		}) || [];
 
-	const canEnroll = missingreqs.length === 0;
+	// Check forbidden items
+	const { workTool, inventory } = useGameContext();
+	const forbiddenViolations =
+		service.forbidden_items?.filter((item: string) => {
+			// Check if it matches worktool
+			if (item === "Carrinho de Reciclagem" && workTool?.type === "CARRINHO_RECICLAGEM") {
+				return true;
+			}
+			// Check inventory
+			// biome-ignore lint/suspicious/noExplicitAny: Context is loosely typed
+			if (inventory.some((i: any) => i.name === item)) return true;
+			return false;
+		}) || [];
+
+	const canEnroll = missingreqs.length === 0 && forbiddenViolations.length === 0;
 
 	const handleEnroll = () => {
 		if (!canEnroll) return;
@@ -77,8 +91,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<span
 					className={`
 					px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
-					${
-						service.type === "alimentacao"
+					${service.type === "alimentacao"
 							? "bg-orange-900 text-orange-400"
 							: service.type === "abrigo"
 								? "bg-indigo-900 text-indigo-400"
@@ -87,7 +100,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 									: service.type === "educacao"
 										? "bg-blue-900 text-blue-400"
 										: "bg-slate-800 text-slate-400"
-					}
+						}
 				`}
 				>
 					{service.type}
@@ -142,6 +155,27 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				</div>
 			)}
 
+			{/* Forbidden Items Warning */}
+			{service.forbidden_items && service.forbidden_items.length > 0 && (
+				<div className="mb-4 space-y-2">
+					{service.forbidden_items.map((item: string, idx: number) => {
+						const isViolated = forbiddenViolations.includes(item);
+						if (!isViolated) return null; // Only show if violated? Or show as warning? Usually warnings are good to know beforehand.
+						// Let's show only if violated for now to declutter, or always show as restriction. 
+						// The prompt implies "entrada bloqueada", showing the reason is good.
+						return (
+							<div
+								key={`forbidden-${idx}`}
+								className="flex items-center gap-2 text-xs font-bold px-2 py-1 rounded border bg-red-950 border-red-900 text-red-500 animate-pulse"
+							>
+								<AlertTriangle size={12} />
+								Proibido: {item}
+							</div>
+						);
+					})}
+				</div>
+			)}
+
 			{service.rules && (
 				<div className="mb-3 p-2 bg-yellow-900/10 border border-yellow-700/30 rounded text-xs text-yellow-200/80 italic">
 					<p>💡 Dica: {service.rules}</p>
@@ -167,12 +201,11 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						disabled={!canEnroll || enrollmentStatus !== "idle"}
 						onClick={handleEnroll}
 						className={`flex-1 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors relative overflow-hidden
-							${
-								canEnroll
-									? enrollmentStatus === "enrolled"
-										? "bg-green-600"
-										: "bg-blue-600 hover:bg-blue-500"
-									: "bg-zinc-800 opacity-50 cursor-not-allowed"
+							${canEnroll
+								? enrollmentStatus === "enrolled"
+									? "bg-green-600"
+									: "bg-blue-600 hover:bg-blue-500"
+								: "bg-zinc-800 opacity-50 cursor-not-allowed"
 							}
 						`}
 					>

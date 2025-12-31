@@ -32,6 +32,7 @@ export interface ServiceLocation {
 	description?: string;
 	rules?: string;
 	requirements?: string[];
+	forbidden_items?: string[];
 	effects?: {
 		hunger?: number;
 		health?: number;

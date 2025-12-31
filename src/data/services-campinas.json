@@ -1,131 +1,130 @@
 [
-{
-"id": "bom-prato-centro",
-"name": "Bom Prato Centro",
-"type": "food",
-"coords": [-22.9055, -47.0608],
-"opening_hours": "07:00 - 09:00 (Café) | 10:30 - 14:00 (Almoço)",
-"description": "Almoço nutricionalmente equilibrado a R$ 1,00 e café a R$ 0,50. Crianças até 6 anos não pagam.",
-"effects": {
-"hunger": 80,
-"money": -1,
-"health": 5
-}
-},
-{
-"id": "refeitorio-metodista",
-"name": "Refeitório da Metodista",
-"type": "food",
-"coords": [-22.907, -47.063],
-"opening_hours": "11:00 - 13:00 (Seg-Sex)",
-"description": "Distribuição de refeições gratuitas com foco na dignidade (servido na mesa). Espaço seguro de convivência.",
-"effects": {
-"hunger": 60,
-"dignity": 15,
-"money": 0
-}
-},
-{
-"id": "samim",
-"name": "SAMIM (Albergue Municipal)",
-"type": "shelter",
-"coords": [-22.899, -47.07],
-"opening_hours": "19:00 - 06:00",
-"description": "Acolhimento noturno. Exige cadastro prévio e encaminhamento. Regras rígidas de horário e revista. Não aceita animais no dormitório.",
-"effects": {
-"energy": 80,
-"hygiene": 50,
-"dignity": -5
-}
-},
-{
-"id": "casa-passagem-caritas",
-"name": "Casa de Passagem (Cáritas)",
-"type": "shelter",
-"coords": [-22.91, -47.055],
-"opening_hours": "24h",
-"description": "Acolhimento mais humanizado com foco em reinserção. Auxilia na retirada de documentos e contato familiar.",
-"effects": {
-"energy": 90,
-"hygiene": 70,
-"dignity": 20,
-"stabilityGap": -10
-}
-},
-{
-"id": "lar-madre-maria",
-"name": "Lar Madre Maria (Abba)",
-"type": "shelter",
-"coords": [-22.92, -47.04],
-"opening_hours": "Encaminhamento",
-"description": "Focada em idosos em situação de abandono e vulnerabilidade. Requer triagem.",
-"effects": {
-"energy": 100,
-"health": 10,
-"stabilityGap": -20
-}
-},
-{
-"id": "caps-ad-reviver",
-"name": "CAPS AD Reviver (Centro)",
-"type": "health",
-"coords": [-22.902, -47.065],
-"opening_hours": "07:00 - 19:00",
-"description": "Atenção a usuários de álcool e drogas. Estratégia de Redução de Danos. Acolhimento a crises.",
-"effects": {
-"sanity": 30,
-"addBuff": "SEDADO_CAPS"
-}
-},
-{
-"id": "consultorio-rua",
-"name": "Consultório na Rua (Itinerante)",
-"type": "health",
-"coords": [-22.906, -47.061],
-"opening_hours": "Variável",
-"description": "Equipe de saúde que vai até o local. Realiza curativos, testes rápidos e vacinação sem burocracia.",
-"effects": {
-"health": 25,
-"sanity": 15,
-"dignity": 10
-}
-},
-{
-"id": "cpat-centro",
-"name": "CPAT (Vagas de Emprego)",
-"type": "assistance",
-"coords": [-22.908, -47.062],
-"opening_hours": "08:00 - 16:00",
-"description": "Intermediação de mão de obra. Exige documentos (RG/CPF/Carteira de Trabalho).",
-"effects": {
-"stabilityGap": -5,
-"hygiene": -5
-}
-},
-{
-"id": "centro-pop-sare",
-"name": "Centro POP I - Sare",
-"type": "assistance",
-"coords": [-22.9, -47.058],
-"opening_hours": "08:00 - 17:00",
-"description": "Serviço especializado. Oferece banho, guarda-pertences e atendimento social para documentação.",
-"effects": {
-"hygiene": 90,
-"sanity": 5,
-"dignity": 5
-}
-},
-{
-"id": "bem-da-madrugada",
-"name": "Bem da Madrugada (Voluntários)",
-"type": "food",
-"coords": [-22.905, -47.060],
-"opening_hours": "Noite (Sextas/Sábados)",
-"description": "Grupo voluntário que distribui sopa, cobertores e afeto nas noites frias do centro.",
-"effects": {
-"hunger": 40,
-"energy": 10,
-"sanity": 20
-}
-}
+  {
+    "id": "samim_bonfim",
+    "name": "SAMIM (Albergue Municipal)",
+    "type": "ABRIGO",
+    "category": "pernoite",
+    "address": "Rua Francisco Elisiário, 240 - Bonfim",
+    "coordinates": { "lat": -22.9038, "lng": -47.0652 },
+    "description": "Acolhimento emergencial. Exige triagem técnica. Não permite entrada de carroças ou animais no dormitório.",
+    "opening_hours": "18:00 - 06:00",
+    "constraints": {
+      "requires_document": true,
+      "cost": 0,
+      "capacity_status": "HIGH_DEMAND",
+      "rules": ["proibido_alcool", "horario_rigido_entrada"]
+    },
+    "effects": { "energy": 100, "hygiene": 50, "sanity": 10 },
+    "source_ref": "Portal PMC - Serviços [1]"
+  },
+  {
+    "id": "centro_pop_1",
+    "name": "Centro POP I (Sares)",
+    "type": "ASSISTENCIA",
+    "category": "dia",
+    "address": "Rua Regente Feijó, 824 - Centro",
+    "coordinates": { "lat": -22.9065, "lng": -47.0580 },
+    "description": "Referência para banho, lavagem de roupa e guarda de pertences durante o dia. Apoio para documentos.",
+    "opening_hours": "08:00 - 17:00",
+    "constraints": {
+      "requires_document": false,
+      "cost": 0
+    },
+    "effects": { "hygiene": 100, "dignity": 20 },
+    "source_ref": "Mapeamento Estrutural [2]"
+  },
+  {
+    "id": "bom_prato_centro",
+    "name": "Bom Prato (Centro)",
+    "type": "ALIMENTACAO",
+    "category": "restaurante_popular",
+    "address": "Av. Dr. Moraes Sales, 384 - Centro",
+    "coordinates": { "lat": -22.9102, "lng": -47.0605 },
+    "description": "Refeição balanceada de alta qualidade e baixo custo. Fila costuma ser longa.",
+    "opening_hours": "07:00 (Café), 10:30 (Almoço), 17:00 (Jantar)",
+    "constraints": {
+      "cost": 1.00,
+      "requires_document": false
+    },
+    "effects": { "hunger": 100, "health": 10 },
+    "source_ref": "Bom Prato Campinas - G1 [3]"
+  },
+  {
+    "id": "consultorio_rua",
+    "name": "Consultório na Rua",
+    "type": "SAUDE",
+    "category": "movel",
+    "address": "Itinerante (Base: Pq. Taquaral)",
+    "coordinates": { "lat": -22.8735, "lng": -47.0450 },
+    "description": "Equipe de saúde que vai até você. Curativos, vacinas e redução de danos sem burocracia.",
+    "opening_hours": "08:00 - 17:00",
+    "constraints": {
+      "cost": 0,
+      "requires_document": false
+    },
+    "effects": { "health": 40, "sanity": 15 },
+    "source_ref": "Cândido Ferreira [4]"
+  },
+  {
+    "id": "bagageiro_municipal",
+    "name": "Bagageiro Municipal",
+    "type": "UTILIDADE",
+    "category": "guardavolumes",
+    "address": "Vila Industrial (Próx. Rodoviária Antiga)",
+    "coordinates": { "lat": -22.9120, "lng": -47.0680 },
+    "description": "Local seguro para guardar pertences e documentos enquanto busca trabalho. Evita perda em blitz.",
+    "opening_hours": "08:00 - 17:00",
+    "constraints": {
+      "cost": 0,
+      "requires_document": true
+    },
+    "effects": { "security": 100 },
+    "source_ref": "Mapeamento Estrutural [5]"
+  },
+  {
+    "id": "casa_passagem_caritas",
+    "name": "Casa de Passagem (Cáritas)",
+    "type": "ABRIGO",
+    "category": "reintegracao",
+    "address": "Rua José Cruz Ferreira Jorge, 32 - Vila Industrial",
+    "coordinates": { "lat": -22.9150, "lng": -47.0700 },
+    "description": "Foco em autonomia e saída da rua. Vagas limitadas, exige encaminhamento.",
+    "opening_hours": "24h (Referenciado)",
+    "constraints": {
+      "requires_referral": true,
+      "cost": 0
+    },
+    "effects": { "sanity": 30, "dignity": 30 },
+    "source_ref": "Cáritas Campinas [6]"
+  }
 ]
+
+--------------------------------------------------------------------------------
+2. Glossário Sociológico (src/data/glossary.ts)
+Este arquivo alimenta os "tooltips" educativos do jogo, traduzindo as gírias da rua e termos técnicos para o jogador, baseados nas entrevistas do Censo e documentos do IPEA.
+export const GLOSSARY_TERMS = {
+  "Aporofobia": {
+    definition: "Medo, rejeição ou aversão aos pobres. Termo jurídico que define a arquitetura hostil (pedras embaixo de viadutos) e a violência gratuita contra quem está na rua.",
+    source: "Padre Júlio Lancellotti / Observatório Brasileiro [7]"
+  },
+  "Trecheiro": {
+    definition: "Pessoa em situação de rua que está em constante deslocamento entre cidades, geralmente utilizando caronas ou caminhando pelas rodovias.",
+    source: "Jornal O Trecheiro [8]"
+  },
+  "Recâmbio": {
+    definition: "Política pública que fornece passagens de ônibus para que a pessoa retorne à sua cidade de origem, visando o reestabelecimento de vínculos familiares.",
+    source: "Portal PMC - Serviços [9]"
+  },
+  "Fluxo": {
+    definition: "Concentração de pessoas em uso de substâncias psicoativas em espaço público. Exige abordagem de Redução de Danos, não apenas segurança.",
+    source: "Censo Pop Rua 2024 [10]"
+  },
+  "CadÚnico": {
+    definition: "O 'RG Social'. Cadastro do Governo Federal que é a porta de entrada para o Bolsa Família, BPC e Tarifa Social. Sem ele, você é invisível para o sistema.",
+    source: "IPEA [11]"
+  },
+  "Interdito Proibitório": {
+    definition: "Ordem judicial que, na prática, impede a permanência de pessoas em situação de rua em determinados locais, muitas vezes criminalizando a pobreza.",
+    source: "Relatório Luz [12]"
+  }
+};

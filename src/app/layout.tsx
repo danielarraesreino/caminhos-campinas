@@ -40,6 +40,7 @@ import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 import { Navbar } from "@/components/ui/Navbar";
 import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
+import { Footer } from "@/components/ui/Footer";
 
 export default function RootLayout({
 	children,
@@ -60,9 +61,10 @@ export default function RootLayout({
 								{children}
 								<SpeedInsights />
 								<Clarity />
-                                                                <Analytics />
+								<Analytics />
 								<ServiceWorkerRegister />
 								<RealitySwitcher />
+								<Footer />
 							</ServicesProvider>
 						</GameProvider>
 					</SurvivalModeProvider>

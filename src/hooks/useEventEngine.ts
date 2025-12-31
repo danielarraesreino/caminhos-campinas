@@ -84,7 +84,39 @@ export function useEventEngine() {
 
 			// Finalizar evento
 			markDilemmaResolved(activeDilemma.id);
-			setActiveDilemma(null);
+
+			// Check for chained dilemma
+			if (option.nextDilemmaId) {
+				setActiveDilemma(option.nextDilemmaId);
+			} else {
+				setActiveDilemma(null);
+			}
+
+			// 4. Telemetry Tracking (Novo: Censo 2024 Integration)
+			if (option.telemetryTag) {
+				// Determine resolution "success" or "risk" based on effect
+				// Using outcome from JSON or deriving it
+				import("@/services/telemetry").then(({ telemetryService, TelemetryAction }) => {
+					try {
+						telemetryService.track(
+							TelemetryAction.DECISION_MADE,
+							{
+								dilemmaId: activeDilemma.id,
+								optionLabel: option.label,
+								outcome: option.telemetryTag?.outcome,
+								action: option.telemetryTag?.action
+							},
+							{
+								ods_category: option.telemetryTag?.ods,
+								violation_type: option.telemetryTag?.violation_type,
+								resource_gap: option.telemetryTag?.resource_gap
+							}
+						);
+					} catch (e) {
+						console.warn("Telemetry error", e);
+					}
+				});
+			}
 		},
 		[
 			activeDilemma,

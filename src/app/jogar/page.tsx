@@ -73,7 +73,7 @@ export default function GamePage() {
 		useEventEngine();
 
 	const gameState = useGameContext();
-	const { criticalHealth, sanity, resetGame } = gameState;
+	const { criticalHealth, sanity, resetGame, phoneBattery } = gameState;
 
 	// Game Over State
 	const [gameOverResult, setGameOverResult] = useState<GameOverResult | null>(
@@ -147,21 +147,40 @@ export default function GamePage() {
 			<main className="flex-1 flex flex-col overflow-hidden relative">
 				{/* Full Screen Map */}
 				<section className="w-full h-full relative z-0">
-					<SurvivalMap />
+					{phoneBattery > 0 ? (
+						<SurvivalMap />
+					) : (
+						<div className="w-full h-full flex flex-col items-center justify-center bg-slate-950 text-slate-500 p-8 text-center space-y-4">
+							<div className="w-16 h-16 border-4 border-slate-800 rounded-lg flex items-center justify-center relative">
+								<div className="w-2 h-4 bg-slate-800 absolute -right-2 rounded-r"></div>
+								<X className="w-8 h-8 text-red-900/50" />
+							</div>
+							<div className="space-y-2">
+								<h2 className="text-xl font-bold text-slate-300">Sem bateria</h2>
+								<p className="max-w-xs">Você está digitalmente invisível. Sem celular, você não tem acesso a mapas ou auxílio digital.</p>
+							</div>
+						</div>
+					)}
 				</section>
 
 				{/* Floating Action Button */}
 				<div className="absolute bottom-6 right-6 z-20">
 					<button
 						type="button"
-						onClick={() => setIsChatOpen(!isChatOpen)}
-						className="bg-blue-600 hover:bg-blue-500 text-white p-4 rounded-full shadow-lg border-2 border-slate-900 transition-transform hover:scale-110 flex items-center justify-center"
+						onClick={() => phoneBattery > 0 && setIsChatOpen(!isChatOpen)}
+						disabled={phoneBattery <= 0}
+						className={`${phoneBattery > 0 ? 'bg-blue-600 hover:bg-blue-500' : 'bg-slate-800 grayscale cursor-not-allowed'} text-white p-4 rounded-full shadow-lg border-2 border-slate-900 transition-transform hover:scale-110 flex items-center justify-center relative`}
 						aria-label="Abrir Chat de Ação"
 					>
 						{isChatOpen ? (
 							<X className="w-6 h-6" />
 						) : (
 							<MessageCircle className="w-6 h-6" />
+						)}
+						{phoneBattery <= 0 && (
+							<div className="absolute -top-1 -right-1 bg-red-600 w-4 h-4 rounded-full flex items-center justify-center border border-slate-900">
+								<X className="w-2.5 h-2.5" />
+							</div>
 						)}
 					</button>
 				</div>

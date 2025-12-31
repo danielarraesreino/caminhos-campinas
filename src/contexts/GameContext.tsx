@@ -63,8 +63,9 @@ export interface GameState {
   activeDilemmaId: string | null;
   criticalHealth: boolean;
   avatar: Avatar | null;
-  isPaused: boolean;
+  phoneBattery: number;
   userPosition: [number, number] | null;
+  isPaused: boolean;
 }
 
 export type GameAction =
@@ -117,8 +118,9 @@ const INITIAL_STATE: GameState = {
   activeDilemmaId: null,
   criticalHealth: false,
   avatar: null,
-  isPaused: false,
+  phoneBattery: 100,
   userPosition: null,
+  isPaused: false,
 };
 
 // --- Reducer ---
@@ -225,22 +227,22 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
     case "RESET_GAME":
       return INITIAL_STATE;
-    
+
     case "SLEEP":
-        return {
-            ...state,
-            health: Math.min(100, state.health + 20),
-            energy: 100, // Fully restored
-            hunger: Math.max(0, state.hunger - 10),
-            time: (state.time + 8) % 24, // Sleep passes 8 hours? Or handled by caller? Logic below handled manual.
-            // Let's assume action only handles stats, caller handles time.
-            // Wait, previous helper did NOT advance time?
-            // "sleep" helper in previous code did NOT call advanceTime.
-            // But logic usually implies time passes.
-            // I will strictly follow previous helper logic instructions: 
-            // "modifyStat health 20, hunger -10". Energy wasn't working.
-            // I will set energy 100 here.
-        };
+      return {
+        ...state,
+        health: Math.min(100, state.health + 20),
+        energy: 100, // Fully restored
+        hunger: Math.max(0, state.hunger - 10),
+        time: (state.time + 8) % 24, // Sleep passes 8 hours? Or handled by caller? Logic below handled manual.
+        // Let's assume action only handles stats, caller handles time.
+        // Wait, previous helper did NOT advance time?
+        // "sleep" helper in previous code did NOT call advanceTime.
+        // But logic usually implies time passes.
+        // I will strictly follow previous helper logic instructions: 
+        // "modifyStat health 20, hunger -10". Energy wasn't working.
+        // I will set energy 100 here.
+      };
 
     default:
       return state;
@@ -260,7 +262,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   // 1. Hydration (Load from PouchDB)
   useEffect(() => {
     if (!db) return;
-    
+
     const loadState = async () => {
       try {
         const doc = await db.get(DOC_ID);
@@ -294,7 +296,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         } catch (_e) {
           doc = { _id: DOC_ID };
         }
-        
+
         await db.put({
           ...doc,
           ...state,
@@ -394,7 +396,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       }
       dispatch({ type: "SLEEP" });
       // Usually sleep advances time too.
-      advanceTime(8); 
+      advanceTime(8);
     },
     [state.hunger, state.health, advanceTime]
   );
@@ -410,7 +412,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   );
 
   const resetGame = useCallback(async () => {
-     if (db) {
+    if (db) {
       try {
         const doc = await db.get(DOC_ID);
         await db.remove(doc);
@@ -421,13 +423,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const clearPersistence = useCallback(async () => {
     if (db) {
-        try {
-            const doc = await db.get(DOC_ID);
-            await db.remove(doc);
-            console.log("🔥 Persistence cleared");
-        } catch (_e) {
-            // ignore
-        }
+      try {
+        const doc = await db.get(DOC_ID);
+        await db.remove(doc);
+        console.log("🔥 Persistence cleared");
+      } catch (_e) {
+        // ignore
+      }
     }
   }, [db]);
 
@@ -452,7 +454,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       eat,
       sleep,
       work,
-      resetGame, 
+      consumeBattery: (amount: number) => modifyStat("phoneBattery", -amount),
+      resetGame,
       clearPersistence
     }),
     [
@@ -480,8 +483,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   );
 
   if (!hasHydrated) {
-      // Optional: Return a loader or nothing
-      return <div className="flex h-screen w-full items-center justify-center bg-zinc-950 text-white">Carregando...</div>;
+    // Optional: Return a loader or nothing
+    return <div className="flex h-screen w-full items-center justify-center bg-zinc-950 text-white">Carregando...</div>;
   }
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

@@ -29,6 +29,11 @@ const nextConfig: NextConfig = {
 				hostname: "raw.githubusercontent.com",
 				pathname: "/**",
 			},
+			{
+				protocol: "https",
+				hostname: "lightseagreen-horse-933009.hostingersite.com",
+				pathname: "/**",
+			},
 		],
 	},
 	// Optimization to avoid timeouts in Serverless Functions

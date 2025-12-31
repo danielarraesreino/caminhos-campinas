@@ -30,7 +30,7 @@ export function useODSTracker() {
 					action: actionName,
 					...metadata,
 				},
-				odsTarget, // This maps to ods_category in TelemetryEvent
+				{ ods_category: odsTarget }, // This maps to ods_category in TelemetryEvent
 			);
 		},
 		[],
@@ -57,7 +57,7 @@ export function useODSTracker() {
 					dilemma_id: dilemmaId,
 					choice: choiceLabel,
 				},
-				odsTag || "ODS 16 - Paz, Justiça e Instituições Eficazes",
+				{ ods_category: odsTag || "ODS 16 - Paz, Justiça e Instituições Eficazes" },
 			);
 		},
 		[],

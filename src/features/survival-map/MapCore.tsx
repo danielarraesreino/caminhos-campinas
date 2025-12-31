@@ -1,7 +1,7 @@
 "use client";
 
 import L from "leaflet";
-import { useEffect } from "react";
+import { useEffect, memo } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
 // Fix for default marker icon
@@ -74,9 +74,10 @@ interface MapCoreProps {
 		lat: number;
 		lng: number;
 	}[];
+	onTravel?: (lat: number, lng: number) => void;
 }
 
-export default function MapCore({ userPosition, resources }: MapCoreProps) {
+const MapCore = memo(function MapCore({ userPosition, resources, onTravel }: MapCoreProps) {
 	// Default to Campinas center if no user position
 	const defaultPosition: [number, number] = [-22.90556, -47.06083];
 	const initialPosition = userPosition || defaultPosition;
@@ -112,12 +113,27 @@ export default function MapCore({ userPosition, resources }: MapCoreProps) {
 					icon={getIconForType(res.type)}
 				>
 					<Popup>
-						<strong>{res.name}</strong>
-						<br />
-						<span className="text-xs text-gray-600">{res.type}</span>
+						<div className="flex flex-col gap-2 min-w-[150px]">
+							<div>
+								<strong className="text-sm text-slate-900">{res.name}</strong>
+								<br />
+								<span className="text-xs text-gray-500 uppercase tracking-wide">
+									{res.type}
+								</span>
+							</div>
+							<button
+								type="button"
+								onClick={() => onTravel?.(res.lat, res.lng)}
+								className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded shadow-md transition-colors w-full"
+							>
+								👣 Ir até aqui
+							</button>
+						</div>
 					</Popup>
 				</Marker>
 			))}
 		</MapContainer>
 	);
-}
+});
+
+export default MapCore;

@@ -41,11 +41,11 @@ export const useTelemetry = () => {
 			// ODS 5 & 10 Enrichments
 			const demographicData = avatar
 				? {
-						demographic_gender: avatar.gender,
-						demographic_ethnicity: avatar.ethnicity || "unknown", // Fallback
-						demographic_age: avatar.ageRange,
-						demographic_time_street: avatar.timeOnStreet,
-					}
+					demographic_gender: avatar.gender,
+					demographic_ethnicity: avatar.ethnicity || "unknown", // Fallback
+					demographic_age: avatar.ageRange,
+					demographic_time_street: avatar.timeOnStreet,
+				}
 				: {};
 
 			const enrichedMetadata = {
@@ -53,7 +53,7 @@ export const useTelemetry = () => {
 				...demographicData,
 			};
 
-			await telemetryService.track(action, enrichedMetadata, ods_category);
+			await telemetryService.track(action, enrichedMetadata, { ods_category });
 
 			// Try to sync immediately if online
 			if (navigator.onLine) {

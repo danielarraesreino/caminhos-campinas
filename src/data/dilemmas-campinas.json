@@ -1,0 +1,1306 @@
+[
+    {
+        "id": "sanitation_locked_door_01",
+        "title": "A Porta Trancada",
+        "description": "23h da noite. Dor de barriga. O Terminal Central está fechado ou exige passagem. O posto de gasolina tem um segurança olhando. Na rua, 17,9% das pessoas não têm onde ir.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.15
+        },
+        "tags": [
+            "sanitation",
+            "higiene",
+            "crise_sanitaria",
+            "censo2024"
+        ],
+        "options": [
+            {
+                "label": "Pedir no Posto",
+                "risk": 40,
+                "consequence": "O frentista foi solidário e deixou usar a chave do banheiro.",
+                "consequence_failure": "Segurança te barrou na entrada. 'Banheiro é só pra cliente'. Te empurrou pra fora.",
+                "effect": {
+                    "hygiene": 100,
+                    "dignity": 5
+                },
+                "effect_failure": {
+                    "dignity": -15,
+                    "sanity": -10,
+                    "hygiene": -20
+                },
+                "telemetryTag": {
+                    "ods": "ODS_6_AGUA_SANEAMENTO",
+                    "action": "PEDIR_BANHEIRO",
+                    "outcome": "NEGACAO_OU_ACESSO"
+                }
+            },
+            {
+                "label": "Usar a Rua/Praça",
+                "risk": 20,
+                "consequence": "Foi humilhante e rápido. Ninguém viu, mas você se sentiu menos humano.",
+                "consequence_failure": "A GCM passou na hora. Multa moral, esculacho e ameaça de prisão por 'ato obsceno'.",
+                "effect": {
+                    "hygiene": 40,
+                    "dignity": -20,
+                    "sanity": -5
+                },
+                "effect_failure": {
+                    "dignity": -40,
+                    "sanity": -20,
+                    "socialStigma": 20
+                },
+                "telemetryTag": {
+                    "ods": "ODS_6_AGUA_SANEAMENTO",
+                    "action": "USAR_RUA",
+                    "outcome": "DEGRADACAO_PUBLICA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "fome_centro_01",
+        "title": "A Escolha do Alimento",
+        "description": "Sua barriga dói. 38,5% das pessoas na sua situação ficam um dia inteiro sem comer (Censo 2024). O Bom Prato tem fila mas é garantido por R$1. O Refeitório Metodista é de graça, mas exige cadastro.",
+        "trigger": {
+            "type": "HUNGER_LOW",
+            "value": 40
+        },
+        "tags": [
+            "fome",
+            "comida",
+            "censo2024",
+            "bom_prato"
+        ],
+        "location_trigger": {
+            "lat": -22.9075,
+            "lng": -47.0595,
+            "radius": 2000
+        },
+        "ambience": "rain_heavy",
+        "options": [
+            {
+                "label": "Ir ao Bom Prato (R$ 1,00)",
+                "risk": 10,
+                "consequence": "Você comeu bem. O Bom Prato é vital para 34,6% da população de rua. Recuperou fome, mas a fila levou 2 horas.",
+                "consequence_failure": "A fila estava enorme e a comida acabou. Você perdeu 2 horas e R$ 1,00 valioso.",
+                "effect": {
+                    "hunger": 100,
+                    "money": -1,
+                    "energy": 20,
+                    "timeAdvance": 2
+                },
+                "effect_failure": {
+                    "energy": -10,
+                    "timeAdvance": 2,
+                    "money": -1
+                },
+                "telemetryTag": {
+                    "ods": "ODS_2_FOME_ZERO",
+                    "action": "BUSCA_BOM_PRATO",
+                    "outcome": "SUCESSO"
+                }
+            },
+            {
+                "label": "Refeitório Metodista (Grátis)",
+                "risk": 30,
+                "consequence": "Acolhimento digno. Comer à mesa com talheres de metal recuperou sua humanidade.",
+                "consequence_failure": "Chegou atrasado. O portão fecha 13h em ponto. Só restou a fome.",
+                "effect": {
+                    "hunger": 100,
+                    "dignity": 15,
+                    "money": 0
+                },
+                "telemetryTag": {
+                    "ods": "ODS_2_FOME_ZERO",
+                    "action": "BUSCA_REFEITORIO",
+                    "outcome": "SUCESSO"
+                }
+            }
+        ]
+    },
+    {
+        "id": "trabalho_bico_abrigo",
+        "title": "O Dilema do Horário",
+        "description": "Você conseguiu um bico de descarga de caminhão que paga R$ 50, mas vai até as 19h. O Abrigo Municipal fecha o portão às 18h. Se trabalhar, dorme na rua. Se for pro abrigo, perde a grana.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.3
+        },
+        "tags": [
+            "trabalho",
+            "abrigo",
+            "censo2024",
+            "renda"
+        ],
+        "options": [
+            {
+                "label": "Fazer o Bico (R$ 50)",
+                "risk": 20,
+                "consequence": "Dinheiro no bolso! R$ 50 é muito hoje. Mas o abrigo fechou. Vai ter que dormir na praça.",
+                "consequence_failure": "O caminhão atrasou, o trabalho foi até 20h e o contratante pagou menos que o combinado.",
+                "effect": {
+                    "money": 50,
+                    "energy": -30,
+                    "sanity": -10,
+                    "timeAdvance": 4
+                },
+                "effect_failure": {
+                    "money": 30,
+                    "energy": -40,
+                    "sanity": -20,
+                    "timeAdvance": 5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_8_TRABALHO_DECENTE",
+                    "action": "TRABALHO_VS_ABRIGO",
+                    "outcome": "DINHEIRO_PRIORIZADO"
+                }
+            },
+            {
+                "label": "Garantir o Abrigo",
+                "risk": 0,
+                "consequence": "Você dormiu seguro e tomou banho, mas seu bolso continua vazio.",
+                "effect": {
+                    "energy": 100,
+                    "hygiene": 100,
+                    "money": 0,
+                    "timeAdvance": 12
+                },
+                "telemetryTag": {
+                    "ods": "ODS_11_CIDADES_SUSTENTAVEIS",
+                    "action": "TRABALHO_VS_ABRIGO",
+                    "outcome": "SEGURANCA_PRIORIZADA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "barreira_digital_bateria",
+        "title": "Apagão Digital",
+        "description": "Sua bateria está em 2%. Sem celular, você perde o mapa, o relógio e o contato com a rede de apoio. Uma tomada na lanchonete custa R$ 5,00 (consumação mínima).",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.25
+        },
+        "tags": [
+            "digital",
+            "bateria",
+            "tecnologia",
+            "exclusao"
+        ],
+        "options": [
+            {
+                "label": "Pagar Consumação (R$ 5)",
+                "risk": 0,
+                "consequence": "Você comprou um salgado e carregou o celular. O acesso à informação foi mantido.",
+                "effect": {
+                    "money": -5,
+                    "hunger": -10,
+                    "addBuff": "CONECTADO"
+                },
+                "telemetryTag": {
+                    "ods": "ODS_9_INOVACAO",
+                    "action": "CARGA_PAGA",
+                    "outcome": "CONEXAO_MANTIDA"
+                }
+            },
+            {
+                "label": "Ficar sem Bateria",
+                "risk": 100,
+                "consequence": "O celular morreu. O mapa sumiu. Você se sente perdido e isolado na cidade grande.",
+                "effect": {
+                    "sanity": -15,
+                    "removeBuff": "CONECTADO",
+                    "addBuff": "SEM_MAPA"
+                },
+                "telemetryTag": {
+                    "ods": "ODS_9_INOVACAO",
+                    "action": "SEM_CARGA",
+                    "outcome": "BARREIRA_DIGITAL_ATIVADA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "saude_vicio_01",
+        "title": "A Dor e o Medo",
+        "description": "Ferida na perna não cicatriza. O 'Consultório na Rua' está na praça. Eles não exigem abstinência, mas o medo de internação compulsória existe.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.2
+        },
+        "tags": [
+            "saude",
+            "consultorio_na_rua",
+            "sus"
+        ],
+        "location_trigger": {
+            "lat": -22.9085,
+            "lng": -47.0585,
+            "radius": 5000
+        },
+        "options": [
+            {
+                "label": "Aproximar-se da Van",
+                "risk": 0,
+                "consequence": "Atendimento humanizado na calçada. Curativo feito e kit higiene recebido.",
+                "effect": {
+                    "health": 20,
+                    "sanity": 10,
+                    "hygiene": 30
+                },
+                "telemetryTag": {
+                    "ods": "ODS_3_SAUDE_BEM_ESTAR",
+                    "action": "BUSCA_SAUDE",
+                    "outcome": "ATENDIMENTO_REALIZADO"
+                }
+            },
+            {
+                "label": "Esconder-se",
+                "risk": 80,
+                "consequence": "Você evitou o médico. A dor continua.",
+                "consequence_failure": "A infecção piorou. A dor agora impede caminhadas.",
+                "effect": {
+                    "health": -5
+                },
+                "effect_failure": {
+                    "health": -20,
+                    "energy": -30
+                }
+            }
+        ]
+    },
+    {
+        "id": "abrigo_samim_01",
+        "title": "A Barreira do SAMIM",
+        "description": "Noite fria no SAMIM. Você tem um carrinho cheio (R$ 40). A regra proíbe entrada de carrinhos.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.3
+        },
+        "tags": [
+            "abrigo",
+            "samim",
+            "barreira"
+        ],
+        "location_trigger": {
+            "lat": -22.9038,
+            "lng": -47.0652,
+            "radius": 1000
+        },
+        "options": [
+            {
+                "label": "Abandonar o Carrinho",
+                "risk": 100,
+                "consequence": "N/A",
+                "consequence_failure": "Dormiu no quente, mas perdeu sua ferramenta de trabalho e R$ 40 em material.",
+                "effect": {
+                    "energy": 100,
+                    "hygiene": 100,
+                    "money": 0
+                },
+                "effect_failure": {
+                    "energy": 100,
+                    "hygiene": 100,
+                    "money": 0,
+                    "clearInventory": true,
+                    "workToolUpdate": {
+                        "type": null
+                    }
+                },
+                "telemetryTag": {
+                    "ods": "ODS_1_ERRADICACAO_POBREZA",
+                    "action": "ABANDONO_FERRAMENTA",
+                    "outcome": "PERDA_PATRIMONIAL"
+                }
+            },
+            {
+                "label": "Dormir na Rua (Vigiar)",
+                "risk": 50,
+                "consequence": "Noite terrível, mas sustento garantido.",
+                "consequence_failure": "Cochilou e roubaram seus papelões. Frio, cansado e falido.",
+                "effect": {
+                    "energy": 40,
+                    "health": -10,
+                    "sanity": -10
+                },
+                "effect_failure": {
+                    "energy": 30,
+                    "health": -15,
+                    "sanity": -20,
+                    "money": 0
+                }
+            }
+        ]
+    },
+    {
+        "id": "police_stop",
+        "title": "Procedimento Padrão",
+        "description": "Enquadro da Guarda Municipal. 'Mãos na cabeça, encosta na parede'. Olhares de julgamento ao redor.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.1
+        },
+        "tags": [
+            "seguranca",
+            "policia",
+            "racismo_institucional"
+        ],
+        "options": [
+            {
+                "label": "Apresentar RG",
+                "risk": 10,
+                "consequence": "Antecedentes checados. Liberado, mas humilhado.",
+                "consequence_failure": "O sistema estava fora do ar e te seguraram por horas.",
+                "effect": {
+                    "dignity": -5,
+                    "sanity": -5
+                },
+                "effect_failure": {
+                    "dignity": -10,
+                    "sanity": -15,
+                    "timeAdvance": 3
+                },
+                "telemetryTag": {
+                    "ods": "ODS_16_PAZ_JUSTICA",
+                    "action": "ABORDAGEM_POLICIAL",
+                    "outcome": "LIBERADO"
+                }
+            },
+            {
+                "label": "Argumentar Direitos",
+                "risk": 90,
+                "consequence": "O agente recuou levemente, surpreso com sua eloquência.",
+                "consequence_failure": "Revista agressiva. Pertences espalhados no chão. 'Tá querendo ensinar meu trabalho?'",
+                "effect": {
+                    "dignity": 5
+                },
+                "effect_failure": {
+                    "dignity": -20,
+                    "health": -5,
+                    "sanity": -15,
+                    "socialStigma": 10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_16_PAZ_JUSTICA",
+                    "action": "ABORDAGEM_POLICIAL",
+                    "outcome": "VIOLENCIA_POLICIAL"
+                }
+            }
+        ]
+    },
+    {
+        "id": "jejum_forcado_01",
+        "title": "O Jejum Forçado",
+        "description": "Fome extrema. Você perdeu o Bom Prato e as doações acabaram. 38,5% das pessoas de rua ficaram um dia inteiro sem comer (Censo 2024).",
+        "repeatable": true,
+        "trigger": {
+            "type": "HUNGER_LOW",
+            "value": 10
+        },
+        "tags": [
+            "fome",
+            "sobrevivencia",
+            "censo2024"
+        ],
+        "options": [
+            {
+                "label": "Revirar lixo do Mercadão",
+                "risk": 40,
+                "consequence": "Achou frutas 'passadas' mas comestíveis. A fome diminuiu, mas o estômago embrulhou.",
+                "consequence_failure": "Comida estragada. Vômitos intensos e olhares de nojo dos passantes.",
+                "effect": {
+                    "hunger": 20,
+                    "dignity": -10,
+                    "health": -5
+                },
+                "effect_failure": {
+                    "health": -15,
+                    "dignity": -10,
+                    "energy": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_2_FOME_ZERO",
+                    "action": "REVIRAR_LIXO",
+                    "outcome": "RISCO_ALIMENTAR"
+                }
+            },
+            {
+                "label": "Pedir na Padaria",
+                "risk": 50,
+                "consequence": "Uma senhora comprou um pão com manteiga para você. 'Deus abençoe', disse ela.",
+                "consequence_failure": "Gerente saiu gritando: 'Não quero pedinte aqui!'. Clientes desviaram o olhar.",
+                "effect": {
+                    "hunger": 30,
+                    "dignity": 5
+                },
+                "effect_failure": {
+                    "sanity": -10,
+                    "dignity": -5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_2_FOME_ZERO",
+                    "action": "PEDIR_COMIDA",
+                    "outcome": "HUMILHACAO_OU_AJUDA"
+                }
+            },
+            {
+                "label": "Aguentar a dor",
+                "risk": 0,
+                "consequence": "Você bebeu água e tentou dormir para esquecer a fome. O corpo começou a consumir as próprias reservas.",
+                "effect": {
+                    "health": -20,
+                    "energy": -10,
+                    "sanity": -5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_2_FOME_ZERO",
+                    "action": "JEJUM_FORCADO",
+                    "outcome": "DETERIORACAO_FISICA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "sede_madrugada_01",
+        "title": "Sede na Madrugada",
+        "description": "Boca seca, garganta arranhando. Bebedouros públicos quebrados ou desligados. Tudo fechado.",
+        "repeatable": true,
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.15
+        },
+        "tags": [
+            "sede",
+            "agua",
+            "saude"
+        ],
+        "options": [
+            {
+                "label": "Pedir no Posto",
+                "risk": 50,
+                "consequence": "O frentista encheu sua garrafa escondido do patrão.",
+                "consequence_failure": "'Aqui não é bebedouro público. Vaza!', disse o segurança.",
+                "effect": {
+                    "energy": 5,
+                    "sanity": 5
+                },
+                "effect_failure": {
+                    "dignity": -5,
+                    "sanity": -5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_6_AGUA_SANEAMENTO",
+                    "action": "PEDIR_AGUA",
+                    "outcome": "NEGACAO_ACESSO"
+                }
+            },
+            {
+                "label": "Torneira da Praça",
+                "risk": 40,
+                "consequence": "Água com gosto de ferro, mas matou a sede.",
+                "consequence_failure": "A água estava contaminada. Cólicas fortes pouco depois.",
+                "effect": {
+                    "energy": 10
+                },
+                "effect_failure": {
+                    "health": -15,
+                    "energy": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_6_AGUA_SANEAMENTO",
+                    "action": "AGUA_IMPROPRIA",
+                    "outcome": "DOENCA_HIDRICA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "barreira_tomada_01",
+        "title": "A Barreira da Tomada",
+        "description": "Precisa do mapa para o abrigo, mas a bateria acabou. Uma tomada dá sopa numa lanchonete.",
+        "repeatable": true,
+        "trigger": {
+            "type": "STATUS",
+            "value": 0
+        },
+        "tags": [
+            "digital",
+            "bateria",
+            "inclusao"
+        ],
+        "options": [
+            {
+                "label": "Usar escondido",
+                "risk": 60,
+                "consequence": "Ninguém viu. Conseguiu 20% de carga, o suficiente para o mapa.",
+                "consequence_failure": "Segurança viu. 'Tá achando que é casa da mãe Joana? Sai!'",
+                "effect": {
+                    "phoneBattery": 20
+                },
+                "effect_failure": {
+                    "sanity": -10,
+                    "dignity": -5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_9_INOVACAO",
+                    "action": "CARGA_ILEGAL",
+                    "outcome": "EXPULSAO"
+                }
+            },
+            {
+                "label": "Pagar Café (R$ 3)",
+                "risk": 0,
+                "consequence": "Cliente pagante tem direitos. Carregou 50% e usou o Wi-Fi.",
+                "effect": {
+                    "money": -3,
+                    "phoneBattery": 50,
+                    "dignity": 5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_9_INOVACAO",
+                    "action": "CARGA_PAGA",
+                    "outcome": "ACESSO_GARANTIDO"
+                }
+            },
+            {
+                "label": "Ficar sem mapa",
+                "risk": 100,
+                "consequence": "Sem bateria, a cidade virou um labirinto.",
+                "effect": {
+                    "addBuff": "SEM_MAPA",
+                    "sanity": -5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_9_INOVACAO",
+                    "action": "DESISTENCIA_DIGITAL",
+                    "outcome": "ISOLAMENTO"
+                }
+            }
+        ]
+    },
+    {
+        "id": "cadastro_unico_01",
+        "title": "O Cadastro Único",
+        "description": "Você precisa do CadÚnico para o Bolsa Família. O CRAS exige agendamento por telefone, mas você está sem crédito.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.1
+        },
+        "tags": [
+            "burocracia",
+            "documentos",
+            "cidadania"
+        ],
+        "options": [
+            {
+                "label": "Gastar Créditos (R$ 5)",
+                "risk": 0,
+                "consequence": "Conseguiu agendar! Uma pequena vitória contra a burocracia.",
+                "effect": {
+                    "money": -5,
+                    "sanity": 10,
+                    "phoneBattery": -20
+                },
+                "telemetryTag": {
+                    "ods": "ODS_1_ERRADICACAO_POBREZA",
+                    "action": "AGENDAMENTO_CRAS",
+                    "outcome": "SUCESSO_CUSTOSO"
+                }
+            },
+            {
+                "label": "Ir a pé (Tentativa)",
+                "risk": 70,
+                "consequence": "Deu sorte! Houve uma desistência e te atenderam.",
+                "consequence_failure": "'Sem agendamento não atendemos'. Viagem perdida e cansativa.",
+                "effect": {
+                    "energy": -30,
+                    "sanity": 5
+                },
+                "effect_failure": {
+                    "energy": -30,
+                    "sanity": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_1_ERRADICACAO_POBREZA",
+                    "action": "CRAS_PRESENCIAL",
+                    "outcome": "BARREIRA_BUROCRATICA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "ciclo_menstrual_01",
+        "title": "Ciclo Menstrual",
+        "description": "Seu ciclo começou. Sem acesso a itens básicos, a situação é humilhante e desconfortável. (9,1% improvisam com panos/papéis - Censo 2024)",
+        "repeatable": true,
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.1
+        },
+        "tags": [
+            "saude_mulher",
+            "higiene",
+            "dignidade"
+        ],
+        "options": [
+            {
+                "label": "Improvisar (Papel)",
+                "risk": 30,
+                "consequence": "Resolveu por hora, mas é desconfortável e inseguro.",
+                "consequence_failure": "Vazou. A vergonha pública é devastadora. Risco de infecção.",
+                "effect": {
+                    "hygiene": -10,
+                    "sanity": -5
+                },
+                "effect_failure": {
+                    "health": -10,
+                    "dignity": -20,
+                    "sanity": -15
+                },
+                "telemetryTag": {
+                    "ods": "ODS_3_SAUDE_BEM_ESTAR",
+                    "action": "IMPROVISO_MENSTRUAL",
+                    "outcome": "PRECARIEDADE"
+                }
+            },
+            {
+                "label": "Consultório na Rua",
+                "risk": 20,
+                "consequence": "Esperou 3 horas, mas conseguiu um kit higiene digno.",
+                "consequence_failure": "A equipe não passou hoje. Perdeu tempo esperando.",
+                "effect": {
+                    "health": 10,
+                    "timeAdvance": 3,
+                    "hygiene": 20
+                },
+                "effect_failure": {
+                    "timeAdvance": 3,
+                    "sanity": -5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_5_IGUALDADE_GENERO",
+                    "action": "BUSCA_SAUDE_MULHER",
+                    "outcome": "ATENDIMENTO"
+                }
+            },
+            {
+                "label": "Farmácia (R$ 10)",
+                "risk": 0,
+                "consequence": "Comprou o necessário. Dignidade mantida, mas o bolso sentiu.",
+                "effect": {
+                    "money": -10,
+                    "dignity": 10,
+                    "hygiene": 30
+                },
+                "telemetryTag": {
+                    "ods": "ODS_5_IGUALDADE_GENERO",
+                    "action": "COMPRA_HIGIENE",
+                    "outcome": "CUSTO_VIDA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "peso_carroca_01",
+        "title": "O Peso da Carroça",
+        "description": "Já passa das 20h. O Bagageiro Municipal fechou. Você está exausto e tem que dormir, mas tem sua carroça.",
+        "repeatable": true,
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.1
+        },
+        "tags": [
+            "trabalho",
+            "seguranca",
+            "patrimonio"
+        ],
+        "options": [
+            {
+                "label": "Dormir com ela",
+                "risk": 0,
+                "consequence": "Dormiu abraçado à carroça. Sono leve, medo constante, mas ela está aí.",
+                "effect": {
+                    "energy": 50,
+                    "sanity": -5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_8_TRABALHO_DECENTE",
+                    "action": "DORMIR_COM_CARROCA",
+                    "outcome": "CANSACO_ACUMULADO"
+                }
+            },
+            {
+                "label": "Esconder no terreno",
+                "risk": 30,
+                "consequence": "Escondeu bem. Descansou 100% e a carroça estava lá de manhã.",
+                "consequence_failure": "Roubaram sua carroça! Você perdeu seu meio de sustento.",
+                "effect": {
+                    "energy": 100
+                },
+                "effect_failure": {
+                    "energy": 100,
+                    "workToolUpdate": {
+                        "type": null
+                    },
+                    "sanity": -30,
+                    "money": -20
+                },
+                "telemetryTag": {
+                    "ods": "ODS_11_CIDADES_SUSTENTAVEIS",
+                    "action": "ESCONDER_CARROCA",
+                    "outcome": "ROUBO_PATRIMONIO"
+                }
+            }
+        ]
+    },
+    {
+        "id": "limpeza_urbana_01",
+        "title": "Limpeza Urbana",
+        "description": "Madrugada. Caminhão da prefeitura chega com jatos d'água lavando as calçadas onde vocês dormem. 'Higienização'.",
+        "repeatable": true,
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.05
+        },
+        "tags": [
+            "violencia",
+            "estado",
+            "higienismo"
+        ],
+        "options": [
+            {
+                "label": "Correr com tudo",
+                "risk": 0,
+                "consequence": "Saiu correndo, tropeçando. Salvou as coisas, mas perdeu a dignidade.",
+                "effect": {
+                    "energy": -10,
+                    "dignity": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_11_CIDADES_SUSTENTAVEIS",
+                    "action": "FUGIR_JATO",
+                    "outcome": "HUMILHACAO"
+                }
+            },
+            {
+                "label": "Argumentar",
+                "risk": 80,
+                "consequence": "O funcionário hesitou e desviou o jato. Uma pequena vitória moral.",
+                "consequence_failure": "Jato d'água na cara! Molhado, frio e humilhado. Risco de hipotermia.",
+                "effect": {
+                    "dignity": 10,
+                    "sanity": 5
+                },
+                "effect_failure": {
+                    "health": -20,
+                    "sanity": -20,
+                    "dignity": -20,
+                    "addBuff": "DOENTE"
+                },
+                "telemetryTag": {
+                    "ods": "ODS_16_PAZ_JUSTICA",
+                    "action": "RESISTENCIA_JATO",
+                    "outcome": "VIOLENCIA_ESTATAL"
+                }
+            }
+        ]
+    },
+    {
+        "id": "auxilio_01_root",
+        "title": "A Notificação do Auxílio",
+        "description": "Você ouve na rua que o cadastro para o novo Auxílio Municipal abriu. É preciso baixar o app 'Campinas Digital' até as 17h. Sua bateria está em 4%.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.1
+        },
+        "tags": [
+            "digital",
+            "auxilio",
+            "censo2024"
+        ],
+        "options": [
+            {
+                "label": "Gastar R$ 5,00 (Lan House)",
+                "risk": 0,
+                "consequence": "Cadastro realizado! Você tem o protocolo. Mas lá se foi o dinheiro do jantar.",
+                "effect": {
+                    "money": -5,
+                    "sanity": 10
+                },
+                "nextDilemmaId": "auxilio_02_fome",
+                "telemetryTag": {
+                    "ods": "ODS_1_ERRADICACAO_POBREZA",
+                    "action": "CADASTRO_LANHOUSE",
+                    "outcome": "SUCESSO_COM_CUSTO"
+                }
+            },
+            {
+                "label": "Arriscar Tomada Terminal",
+                "risk": 0,
+                "consequence": "Você conectou o carregador. O segurança te viu imediatamente.",
+                "effect": {
+                    "risk": 100
+                },
+                "nextDilemmaId": "auxilio_02_seguranca",
+                "telemetryTag": {
+                    "ods": "ODS_1_ERRADICACAO_POBREZA",
+                    "action": "TENTATIVA_TOMADA",
+                    "outcome": "CONFRONTO_IMINENTE"
+                }
+            }
+        ]
+    },
+    {
+        "id": "auxilio_02_fome",
+        "title": "O Jantar Perdido",
+        "description": "Você fez o cadastro, mas gastou o dinheiro da comida. A noite caiu e o Bom Prato (R$ 1,00) já fechou. A fome dói (38,5% ficam um dia sem comer).",
+        "trigger": {
+            "type": "CHAIN",
+            "value": 0
+        },
+        "tags": [
+            "fome",
+            "consequencia"
+        ],
+        "options": [
+            {
+                "label": "Revirar Lixo (Cambuí)",
+                "risk": 40,
+                "consequence": "Achou restos de um restaurante chique. Matou a fome, mas a humilhação é amarga.",
+                "consequence_failure": "Passou mal com comida estragada. Vômito e dor.",
+                "effect": {
+                    "hunger": 30,
+                    "dignity": -20,
+                    "health": -5
+                },
+                "effect_failure": {
+                    "health": -15,
+                    "dignity": -20,
+                    "energy": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_2_FOME_ZERO",
+                    "action": "REVIRAR_LIXO_CAMBUI",
+                    "outcome": "RISCO_SAUDE"
+                }
+            },
+            {
+                "label": "Dormir com fome",
+                "risk": 0,
+                "consequence": "A dor no estômago impediu um sono profundo. Amanhã será difícil.",
+                "effect": {
+                    "hunger": -20,
+                    "energy": -30,
+                    "sanity": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_2_FOME_ZERO",
+                    "action": "DORMIR_COM_FOME",
+                    "outcome": "DEBILIDADE"
+                }
+            }
+        ]
+    },
+    {
+        "id": "auxilio_02_seguranca",
+        "title": "O Segurança (Guarda Privada)",
+        "description": "O segurança do terminal te vê usando a tomada. Ele diz que é 'furto de energia' e ameaça chamar a GM.",
+        "trigger": {
+            "type": "CHAIN",
+            "value": 0
+        },
+        "tags": [
+            "violencia",
+            "seguranca"
+        ],
+        "options": [
+            {
+                "label": "Sair correndo (Fuga)",
+                "risk": 0,
+                "consequence": "Você correu e escapou, mas perdeu a chance do cadastro e gastou energia vital.",
+                "effect": {
+                    "energy": -20,
+                    "socialStigma": 10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_16_PAZ_JUSTICA",
+                    "action": "FUGA_SEGURANCA",
+                    "outcome": "CADASTRO_FALHO"
+                }
+            },
+            {
+                "label": "Argumentar (Cidadania)",
+                "risk": 50,
+                "consequence": "Você citou seus direitos. Ele bufou e deixou você carregar por 10 minutos. Deu tempo!",
+                "consequence_failure": "Ele te expulsou aos empurrões na frente de todos. Humilhante.",
+                "effect": {
+                    "sanity": 10,
+                    "phoneBattery": 10
+                },
+                "effect_failure": {
+                    "dignity": -30,
+                    "sanity": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_16_PAZ_JUSTICA",
+                    "action": "ARGUMENTO_CIDADANIA",
+                    "outcome": "INCERTO"
+                }
+            }
+        ]
+    },
+    {
+        "id": "trabalho_reciclagem_01_root",
+        "title": "O Grande Achado",
+        "description": "Você encontra uma caçamba de obra com muito cobre e alumínio. É pesado, vai lotar o carrinho e dificultar a mobilidade.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.1
+        },
+        "tags": [
+            "trabalho",
+            "reciclagem"
+        ],
+        "options": [
+            {
+                "label": "Pegar tudo (Sobrecarga)",
+                "risk": 0,
+                "consequence": "Carrinho lotado! Potencial de lucro alto (+R$ 50), mas você está muito lento e visível.",
+                "effect": {
+                    "energy": -20
+                },
+                "nextDilemmaId": "trabalho_reciclagem_02_blitz",
+                "telemetryTag": {
+                    "ods": "ODS_8_TRABALHO_DECENTE",
+                    "action": "PEGAR_TUDO",
+                    "outcome": "RISCO_FISCALIZACAO"
+                }
+            },
+            {
+                "label": "Pegar só o leve",
+                "risk": 0,
+                "consequence": "Garantiu R$ 10,00 sem chamar atenção ou se cansar demais.",
+                "effect": {
+                    "money": 10,
+                    "energy": -5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_8_TRABALHO_DECENTE",
+                    "action": "PEGAR_LEVE",
+                    "outcome": "SEGURANCA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "trabalho_reciclagem_02_blitz",
+        "title": "A Blitz da Limpeza Urbana",
+        "description": "Com o carrinho transbordando no Centro, um caminhão da 'Operação Cidade Limpa' e a GM te param. Alegam obstrução da via.",
+        "trigger": {
+            "type": "CHAIN",
+            "value": 0
+        },
+        "tags": [
+            "violencia",
+            "fiscalizacao"
+        ],
+        "options": [
+            {
+                "label": "Entregar material",
+                "risk": 0,
+                "consequence": "Você entregou o cobre para não perder o carrinho. Todo o esforço foi em vão.",
+                "effect": {
+                    "sanity": -20,
+                    "energy": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_8_TRABALHO_DECENTE",
+                    "action": "ENTREGAR_MATERIAL",
+                    "outcome": "FRUSTRACAO"
+                }
+            },
+            {
+                "label": "Resistir",
+                "risk": 90,
+                "consequence": "Milagrosamente, desistiram da apreensão pela pressão de populares filmando.",
+                "consequence_failure": "Apreenderam TUDO, inclusive o carrinho. Violência física e B.O. registrado.",
+                "effect": {
+                    "dignity": 10,
+                    "money": 50
+                },
+                "effect_failure": {
+                    "workToolUpdate": {
+                        "type": null
+                    },
+                    "health": -20,
+                    "socialStigma": 100,
+                    "sanity": -30
+                },
+                "telemetryTag": {
+                    "ods": "ODS_16_PAZ_JUSTICA",
+                    "action": "RESISTIR_APREENSAO",
+                    "outcome": "PERDA_TOTAL"
+                }
+            }
+        ]
+    },
+    {
+        "id": "saude_ferida_01_root",
+        "title": "A Ferida no Pé",
+        "description": "O tênis doado é apertado. Uma bolha estourou e infeccionou. Você mal consegue andar (Saúde < 40).",
+        "trigger": {
+            "type": "STATUS",
+            "value": 0
+        },
+        "tags": [
+            "saude",
+            "ferida"
+        ],
+        "options": [
+            {
+                "label": "Ir à UPA",
+                "risk": 0,
+                "consequence": "Você caminha com dor até a unidade de saúde.",
+                "effect": {
+                    "energy": -10
+                },
+                "nextDilemmaId": "saude_burocracia_01",
+                "telemetryTag": {
+                    "ods": "ODS_3_SAUDE_BEM_ESTAR",
+                    "action": "BUSCA_UPA",
+                    "outcome": "INICIO_JORNADA"
+                }
+            },
+            {
+                "label": "Automedicação (Cachaça)",
+                "risk": 20,
+                "consequence": "A dor sumiu, mas a ferida parece pior. Pelo menos consegue dormir.",
+                "effect": {
+                    "health": -10,
+                    "sanity": 5
+                },
+                "telemetryTag": {
+                    "ods": "ODS_3_SAUDE_BEM_ESTAR",
+                    "action": "AUTOMEDICACAO",
+                    "outcome": "PIORA_CLINICA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "saude_burocracia_01",
+        "title": "O Comprovante de Residência",
+        "description": "Na UPA, a recepcionista pede cartão do SUS e comprovante de endereço. Você diz que mora na rua. Ela hesita.",
+        "trigger": {
+            "type": "CHAIN",
+            "value": 0
+        },
+        "tags": [
+            "saude",
+            "burocracia"
+        ],
+        "options": [
+            {
+                "label": "Insistir na Lei",
+                "risk": 40,
+                "consequence": "Você citou a Portaria do SUS. Ela te atendeu na hora, envergonhada.",
+                "consequence_failure": "Ela ignorou e chamou o próximo. Você esperou 6 horas no chão.",
+                "effect": {
+                    "health": 20,
+                    "dignity": 10
+                },
+                "effect_failure": {
+                    "timeAdvance": 6,
+                    "hunger": -30,
+                    "dignity": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_10_DESIGUALDADES",
+                    "action": "EXIGIR_DIREITO_SUS",
+                    "outcome": "ATENDIMENTO"
+                }
+            },
+            {
+                "label": "Endereço Falso/Abrigo",
+                "risk": 50,
+                "consequence": "Funcionou. O sistema aceitou e você foi atendido.",
+                "consequence_failure": "'Esse endereço é do albergue. Precisa de um fixo'. Atendimento negado.",
+                "effect": {
+                    "health": 20
+                },
+                "effect_failure": {
+                    "dignity": -20,
+                    "sanity": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_10_DESIGUALDADES",
+                    "action": "ENDERECO_FALSO",
+                    "outcome": "INCERTO"
+                }
+            }
+        ]
+    },
+    {
+        "id": "jejum_bom_prato_01",
+        "title": "O Custo da Fome (Bom Prato)",
+        "description": "O cheiro de feijão do Bom Prato é inebriante. A fila anda. Você tateia o bolso e só encontra 40 centavos. A refeição custa R$ 1,00.",
+        "trigger": {
+            "type": "HUNGER_LOW",
+            "value": 30
+        },
+        "tags": [
+            "fome",
+            "bom_prato",
+            "censo2024"
+        ],
+        "glossaryTerms": [
+            "Bom Prato"
+        ],
+        "options": [
+            {
+                "label": "Pedir uma moeda na fila",
+                "risk": 50,
+                "consequence": "Alguém te deu R$ 1,00. Você comeu com dignidade.",
+                "consequence_failure": "Olhares de desprezo. Ninguém ajudou e você perdeu o lugar na fila.",
+                "effect": {
+                    "hunger": 80,
+                    "dignity": -5,
+                    "money": -0.60
+                },
+                "effect_failure": {
+                    "dignity": -15,
+                    "socialStigma": 10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_2_FOME_ZERO",
+                    "action": "PEDIR_MOEDA",
+                    "outcome": "SUCESSO"
+                }
+            },
+            {
+                "label": "Revirar lixo do Mercado",
+                "risk": 0,
+                "consequence": "Você encontrou frutas passadas. Enganou a fome, mas se sentiu observado.",
+                "effect": {
+                    "hunger": 20,
+                    "dignity": -10,
+                    "health": -15,
+                    "socialStigma": 20
+                },
+                "telemetryTag": {
+                    "ods": "ODS_2_FOME_ZERO",
+                    "action": "REVIRAR_LIXO_MERCADO",
+                    "outcome": "RISCO_SAUDE",
+                    "resource_gap": "food_insecurity"
+                }
+            }
+        ]
+    },
+    {
+        "id": "carroca_samim_01",
+        "title": "A Barreira da Carroça (SAMIM)",
+        "description": "O portão do SAMIM está aberto, mas o segurança aponta para o seu carrinho. 'Isso não entra. Regra da casa'. Lá dentro tem banho e cama. Fora, tem sua única fonte de renda.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.1
+        },
+        "tags": [
+            "trabalho",
+            "abrigo",
+            "regra_samim"
+        ],
+        "glossaryTerms": [
+            "Samim"
+        ],
+        "options": [
+            {
+                "label": "Dormir na calçada vigiando",
+                "risk": 20,
+                "consequence": "Noite tensa. Você acordou com dor nas costas, mas o carrinho está lá.",
+                "consequence_failure": "Você cochilou e roubaram parte do material.",
+                "effect": {
+                    "energy": 30,
+                    "risk": 20
+                },
+                "effect_failure": {
+                    "energy": 20,
+                    "money": -10,
+                    "risk": 30
+                },
+                "telemetryTag": {
+                    "ods": "ODS_11_CIDADES_SUSTENTAVEIS",
+                    "action": "DORMIR_RUA_VIGIAR",
+                    "outcome": "VIOLACAO_HABITACAO",
+                    "violation_type": "housing_deficit"
+                }
+            },
+            {
+                "label": "Abandonar o carrinho (Entrar)",
+                "risk": 0,
+                "consequence": "Banho quente e cama limpa. Mas amanhã você começa do zero.",
+                "effect": {
+                    "energy": 100,
+                    "hygiene": 100,
+                    "workToolUpdate": {
+                        "type": null
+                    },
+                    "money": 0
+                },
+                "telemetryTag": {
+                    "ods": "ODS_8_TRABALHO_DECENTE",
+                    "action": "ABANDONAR_CARROCA_ENTRAR",
+                    "outcome": "PERDA_RENDA"
+                }
+            }
+        ]
+    },
+    {
+        "id": "invisibilidade_digital_poupatempo",
+        "title": "Invisibilidade Digital (Poupatempo)",
+        "description": "Você precisa agendar a 2ª via do RG para conseguir o emprego. O atendente diz: 'O agendamento é só pelo app'. Seu celular pisca 1% e apaga.",
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.05
+        },
+        "tags": [
+            "digital",
+            "documentos",
+            "poupatempo"
+        ],
+        "glossaryTerms": [
+            "Poupatempo",
+            "CadÚnico"
+        ],
+        "options": [
+            {
+                "label": "Desistir por hoje",
+                "risk": 0,
+                "consequence": "Você sai da fila frustrado. Mais um dia perdido.",
+                "effect": {
+                    "sanity": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_10_DESIGUALDADES",
+                    "action": "DESISTIR_AGENDAMENTO",
+                    "outcome": "EXCLUSAO_DIGITAL"
+                }
+            },
+            {
+                "label": "Procurar tomada na Rodoviária",
+                "risk": 0,
+                "consequence": "Você andou até a Rodoviária e conseguiu carga. Mas perdeu a manhã inteira.",
+                "effect": {
+                    "energy": -10,
+                    "phoneBattery": 20,
+                    "timeAdvance": 2
+                },
+                "telemetryTag": {
+                    "ods": "ODS_10_DESIGUALDADES",
+                    "action": "BUSCAR_TOMADA_RODOVIARIA",
+                    "outcome": "CUSTO_TEMPO"
+                }
+            }
+        ]
+    }
+]
