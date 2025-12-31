@@ -14,6 +14,7 @@ import {
 	Target,
 	X,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -448,16 +449,18 @@ export default function LandingPage() {
 							Funcionalidades Principais
 						</h3>
 						<div className="grid grid-cols-1 gap-4">
-							<div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
+							<Link href="/cofre" className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-transparent hover:border-green-200">
 								<Shield className="h-6 w-6 text-green-600 mt-1 shrink-0" />
 								<div>
-									<h4 className="font-bold text-slate-900">Cofre Digital</h4>
+									<h4 className="font-bold text-slate-900 flex items-center gap-2">
+										Cofre Digital <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold uppercase">Novo</span>
+									</h4>
 									<p className="text-sm text-slate-600">
 										Armazenamento seguro de documentos digitalizados na nuvem,
 										evitando a perda recorrente de RG e CPF.
 									</p>
 								</div>
-							</div>
+							</Link>
 							<div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
 								<MapPin className="h-6 w-6 text-orange-600 mt-1 shrink-0" />
 								<div>

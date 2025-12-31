@@ -44,8 +44,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
 	const url = new URL(event.request.url);
 
-	// ESTRATÉGIA PARA O MAPA (OpenStreetMap Tiles)
-	// Se a URL for de um tile do mapa (a.tile.openstreetmap.org...), cacheia!
+	// ESTRATÉGIA PARA O MAPA (OpenStreetMap Tiles - Cache First)
 	if (
 		url.origin.includes("tile.openstreetmap.org") ||
 		url.origin.includes("carto.com") ||
@@ -53,28 +52,35 @@ self.addEventListener("fetch", (event) => {
 	) {
 		event.respondWith(
 			caches.match(event.request).then((cachedResponse) => {
-				// Se já tem no cache (offline ou já visitado), retorna do cache
-				if (cachedResponse) {
-					return cachedResponse;
-				}
+				if (cachedResponse) return cachedResponse;
 
 				return fetch(event.request).then((networkResponse) => {
-					return caches.open(CACHE_NAME).then((cache) => {
-						const responseToCache = networkResponse.clone();
-						cache.put(event.request, responseToCache);
+					// Check for valid response
+					if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== "basic" && networkResponse.type !== "cors" && networkResponse.type !== "opaque") {
 						return networkResponse;
+					}
+
+					const responseToCache = networkResponse.clone();
+					caches.open(CACHE_NAME).then((cache) => {
+						cache.put(event.request, responseToCache);
 					});
+					return networkResponse;
 				});
 			}),
 		);
-		return; // Encerra aqui para tiles de mapa
+		return;
 	}
 
-	// ESTRATÉGIA PADRÃO (Stale-While-Revalidate para o resto)
+	// ESTRATÉGIA PADRÃO (Stale-While-Revalidate)
 	event.respondWith(
 		caches.match(event.request).then((cachedResponse) => {
 			const fetchPromise = fetch(event.request)
 				.then((networkResponse) => {
+					// Safe cloning check
+					if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== "basic") {
+						return networkResponse;
+					}
+
 					const responseToCache = networkResponse.clone();
 					caches.open(CACHE_NAME).then((cache) => {
 						cache.put(event.request, responseToCache);
@@ -82,11 +88,10 @@ self.addEventListener("fetch", (event) => {
 					return networkResponse;
 				})
 				.catch(() => {
-					// Se falhar (offline total), tenta retornar o cache
+					// Fallback implies returning cachedResponse (handled below by logic)
 					return cachedResponse;
 				});
 
-			// Retorna o cache primeiro (velocidade), atualiza em background
 			return cachedResponse || fetchPromise;
 		}),
 	);

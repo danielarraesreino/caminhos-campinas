@@ -269,6 +269,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         // biome-ignore lint/suspicious/noExplicitAny: generic doc
         const { _id, _rev, ...savedState } = doc as any;
         console.log("✅ Game State Hydrated:", savedState);
+
+        // BUGFIX: Prevent loading "Game Over" state
+        if (savedState.health <= 0 || savedState.dignity <= 0) {
+          console.warn("⚠️ Corrupt/Dead state detected. Aborting load to force Reset.");
+          throw { status: 404 }; // Force "New Game" flow
+        }
+
         dispatch({ type: "SET_STATE", payload: savedState });
       } catch (err: any) {
         if (err.status === 404) {
