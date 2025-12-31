@@ -129,7 +129,7 @@ export function GameHUD() {
 						</div>
 					</div>
 					{workTool.type && (
-						<div className="mt-1 flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-widest">
+						<div className="mt-1 flex items-center gap-2 text-[10px] text-slate-300 uppercase tracking-widest">
 							<Package className="w-3 h-3" />
 							{workTool.type.replace("_", " ")} ({workTool.condition}%)
 						</div>

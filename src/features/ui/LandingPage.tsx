@@ -161,11 +161,11 @@ export default function LandingPage() {
 				{/* Background Texture - Slideshow */}
 				<div className="absolute inset-0">
 					{[
-						"5.png", // Initial: Homem negro no banco da praça
-						"1.png",
-						"2.png",
-						"3.png",
-						"4.png",
+						"landing-bg.png", // Main background
+						"avatars/avatar_1.png", // Available asset
+						"avatars/avatar_2.png", // Available asset
+						"placeholder-map.png", // Available asset
+						"landing-bg.png", // Fallback cycle
 					].map((img, index) => (
 						<div
 							key={img}

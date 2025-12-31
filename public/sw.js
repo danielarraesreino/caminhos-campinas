@@ -58,7 +58,6 @@ self.addEventListener("fetch", (event) => {
 					return cachedResponse;
 				}
 
-				// Se não tem, busca na rede, retorna pro usuário E salva no cache pra depois
 				return fetch(event.request).then((networkResponse) => {
 					return caches.open(CACHE_NAME).then((cache) => {
 						const responseToCache = networkResponse.clone();
@@ -76,8 +75,9 @@ self.addEventListener("fetch", (event) => {
 		caches.match(event.request).then((cachedResponse) => {
 			const fetchPromise = fetch(event.request)
 				.then((networkResponse) => {
+					const responseToCache = networkResponse.clone();
 					caches.open(CACHE_NAME).then((cache) => {
-						cache.put(event.request, networkResponse.clone());
+						cache.put(event.request, responseToCache);
 					});
 					return networkResponse;
 				})

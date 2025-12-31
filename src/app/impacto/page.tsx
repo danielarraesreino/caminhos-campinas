@@ -88,10 +88,10 @@ export default function ImpactDashboardPage() {
 			{/* Visualização da Lacuna (Supply vs Demand) */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 				<div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-					<h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+					<h2 className="text-xl font-bold mb-6 flex items-center gap-2">
 						<Home className="w-5 h-5 text-blue-500" />
 						Capacidade de Acolhimento (Campinas)
-					</h3>
+					</h2>
 
 					{/* Gráfico de Barras CSS Puro */}
 					<div className="space-y-6">
@@ -123,7 +123,7 @@ export default function ImpactDashboardPage() {
 
 				{/* Insight Qualitativo */}
 				<div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-					<h3 className="text-xl font-bold mb-4">Análise de Inteligência</h3>
+					<h2 className="text-xl font-bold mb-4">Análise de Inteligência</h2>
 					<ul className="space-y-4 text-sm text-slate-300">
 						<li className="flex gap-3">
 							<span className="text-purple-500 font-bold">ALERTA SANITÁRIO:</span>
@@ -146,15 +146,15 @@ export default function ImpactDashboardPage() {
 
 function KpiCard({ title, value, icon, desc, alert = false }: any) {
 	return (
-		<div className={`p-6 rounded-xl border ${alert ? 'bg-red-950/20 border-red-900/50' : 'bg-slate-900 border-slate-800'}`}>
+		<div className={`p-6 rounded-xl border ${alert ? 'bg-red-950/40 border-red-500/50' : 'bg-slate-900 border-slate-800'}`}>
 			<div className="flex justify-between items-start mb-4">
 				<div>
-					<p className="text-slate-400 text-sm font-medium">{title}</p>
-					<h4 className="text-3xl font-black mt-1">{value}</h4>
+					<p className="text-slate-300 text-sm font-medium">{title}</p>
+					<h3 className="text-3xl font-black mt-1">{value}</h3>
 				</div>
 				<div className="p-3 bg-slate-800 rounded-lg">{icon}</div>
 			</div>
-			<p className="text-xs text-slate-500">{desc}</p>
+			<p className="text-xs text-slate-400">{desc}</p>
 		</div>
 	);
 }

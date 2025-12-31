@@ -57,8 +57,10 @@ export function GameChat() {
 		api: "/api/chat",
 		// Rate limiting handling
 		onError: (err: any) => {
-			console.error("Chat error:", err);
+			console.error("Chat error details:", err);
+			// Try to recover UI state
 			setIsThinking(false);
+			// Optional: Trigger a toast or user feedback here if needed
 		},
 		onFinish: () => {
 			setIsThinking(false);

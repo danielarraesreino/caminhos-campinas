@@ -222,17 +222,62 @@
         ]
     },
     {
+        "id": "limpeza_urbana_01",
+        "title": "Operação de Zeladoria",
+        "description": "O caminhão da prefeitura chega para 'limpar' a praça. Eles levam colchões e pertences pessoais considerados 'lixo'. É uma violação frequente, não um evento raro.",
+        "repeatable": true,
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.05
+        },
+        "tags": [
+            "violencia",
+            "estado",
+            "higienismo"
+        ],
+        "options": [
+            {
+                "label": "Segurar pertences (Resistir)",
+                "risk": 80,
+                "consequence": "Confronto com a GM. Você salvou o RG, mas apanhou.",
+                "effect": {
+                    "health": -10,
+                    "dignity": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_11_CIDADES_SUSTENTAVEIS",
+                    "action": "RESISTIR_ZELADORIA",
+                    "outcome": "VIOLENCIA_FISICA"
+                }
+            },
+            {
+                "label": "Pegar o que der e correr",
+                "risk": 0,
+                "consequence": "Você perdeu o colchão e cobertor. A noite será fria.",
+                "effect": {
+                    "energy": -20,
+                    "sanity": -20
+                },
+                "telemetryTag": {
+                    "ods": "ODS_11_CIDADES_SUSTENTAVEIS",
+                    "action": "FUGIR_ZELADORIA",
+                    "outcome": "PERDA_PERTENCES"
+                }
+            }
+        ]
+    },
+    {
         "id": "saude_vicio_01",
-        "title": "A Dor e o Medo",
-        "description": "Ferida na perna não cicatriza. O 'Consultório na Rua' está na praça. Eles não exigem abstinência, mas o medo de internação compulsória existe.",
+        "title": "O Peso da Memória",
+        "description": "A saudade de casa aperta. 71% da população de rua rompeu vínculos familiares. O CAPS AD Reviver oferece escuta, mas ir lá significa encarar a dor.",
         "trigger": {
             "type": "RANDOM",
             "value": 0.2
         },
         "tags": [
-            "saude",
-            "consultorio_na_rua",
-            "sus"
+            "saude_mental",
+            "vinculos",
+            "caps"
         ],
         "location_trigger": {
             "lat": -22.9085,
@@ -241,31 +286,75 @@
         },
         "options": [
             {
-                "label": "Aproximar-se da Van",
+                "label": "Buscar ajuda no CAPS",
                 "risk": 0,
-                "consequence": "Atendimento humanizado na calçada. Curativo feito e kit higiene recebido.",
+                "consequence": "Foi difícil falar, mas você foi acolhido. Iniciou a reconstrução do vínculo.",
                 "effect": {
-                    "health": 20,
-                    "sanity": 10,
-                    "hygiene": 30
+                    "sanity": 20
                 },
                 "telemetryTag": {
                     "ods": "ODS_3_SAUDE_BEM_ESTAR",
-                    "action": "BUSCA_SAUDE",
-                    "outcome": "ATENDIMENTO_REALIZADO"
+                    "action": "BUSCA_CAPS",
+                    "outcome": "ACOLHIMENTO_MENTAL"
                 }
             },
             {
-                "label": "Esconder-se",
-                "risk": 80,
-                "consequence": "Você evitou o médico. A dor continua.",
-                "consequence_failure": "A infecção piorou. A dor agora impede caminhadas.",
+                "label": "Beber para esquecer",
+                "risk": 10,
+                "consequence": "A dor sumiu por hora, mas você acordou pior.",
                 "effect": {
-                    "health": -5
+                    "health": -10,
+                    "sanity": -20
                 },
-                "effect_failure": {
-                    "health": -20,
-                    "energy": -30
+                "telemetryTag": {
+                    "ods": "ODS_3_SAUDE_BEM_ESTAR",
+                    "action": "AUTOMEDICACAO_ALCOOL",
+                    "outcome": "PIORA_MENTAL"
+                }
+            }
+        ]
+    },
+    {
+        "id": "ciclo_menstrual_01",
+        "title": "Dignidade Menstrual",
+        "description": "Seu ciclo começou. Apenas 11,6% da população de rua é feminina, e a cidade não tem banheiros para mulheres à noite. A vulnerabilidade é extrema.",
+        "repeatable": true,
+        "trigger": {
+            "type": "RANDOM",
+            "value": 0.1
+        },
+        "tags": [
+            "saude_mulher",
+            "higiene",
+            "dignidade"
+        ],
+        "options": [
+            {
+                "label": "Improvisar (Banheiro Bar)",
+                "risk": 50,
+                "consequence": "Exigiram consumação ou humilharam. Conseguiu usar, mas custou caro.",
+                "effect": {
+                    "money": -5,
+                    "dignity": -10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_5_IGUALDADE_GENERO",
+                    "action": "USO_BANHEIRO_PAGO",
+                    "outcome": "CUSTO_DIGNIDADE"
+                }
+            },
+            {
+                "label": "Buscar Consultório na Rua",
+                "risk": 10,
+                "consequence": "A equipe forneceu absorventes e acolhimento.",
+                "effect": {
+                    "hygiene": 30,
+                    "dignity": 10
+                },
+                "telemetryTag": {
+                    "ods": "ODS_3_SAUDE_BEM_ESTAR",
+                    "action": "BUSCA_KIT_HIGIENE",
+                    "outcome": "DIGNIDADE_RESGATADA"
                 }
             }
         ]
