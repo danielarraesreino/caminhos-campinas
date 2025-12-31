@@ -89,7 +89,7 @@ export default function PartnerRegistrationPage() {
 
 					<div className="space-y-2">
 						<Label htmlFor="area" className="text-xs uppercase tracking-widest text-slate-500">Área de Atuação</Label>
-						<Select onValueChange={(val) => setValue("area", val)}>
+						<Select onValueChange={(val: string) => setValue("area", val)}>
 							<SelectTrigger className="bg-slate-950 border-slate-800">
 								<SelectValue placeholder="Selecione a área principal" />
 							</SelectTrigger>

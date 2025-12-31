@@ -14,7 +14,8 @@ export type ServiceType =
 	| "ABRIGO"
 	| "SAUDE"
 	| "ASSISTENCIA"
-	| "ADMINISTRATIVO";
+	| "ADMINISTRATIVO"
+	| "EDUCACAO";
 
 export interface ServiceLocation {
 	id: string;

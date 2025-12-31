@@ -9,6 +9,7 @@ const SERVICE_ODS_MAP: Record<ServiceType, string> = {
 	SAUDE: "ODS 3 - Saúde e Bem-Estar",
 	ASSISTENCIA: "ODS 1 - Erradicação da Pobreza",
 	ADMINISTRATIVO: "ODS 16 - Paz, Justiça e Instituições Eficazes",
+	EDUCACAO: "ODS 4 - Educação de Qualidade",
 };
 
 export function useODSTracker() {

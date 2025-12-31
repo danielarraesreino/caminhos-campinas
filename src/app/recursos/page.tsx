@@ -72,7 +72,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 		}, 100);
 	};
 
-	const isEducation = service.type === "educacao";
+	const isEducation = service.type === "EDUCACAO";
 
 	return (
 		<div
@@ -91,13 +91,13 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<span
 					className={`
 					px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
-					${service.type === "alimentacao"
+					${service.type === "ALIMENTACAO"
 							? "bg-orange-900 text-orange-400"
-							: service.type === "abrigo"
+							: service.type === "ABRIGO"
 								? "bg-indigo-900 text-indigo-400"
-								: service.type === "saude"
+								: service.type === "SAUDE"
 									? "bg-red-900 text-red-400"
-									: service.type === "educacao"
+									: service.type === "EDUCACAO"
 										? "bg-blue-900 text-blue-400"
 										: "bg-slate-800 text-slate-400"
 						}
@@ -246,42 +246,42 @@ export default function ResourcesPage() {
 			label: "Alimentação",
 			icon: <Utensils className="w-6 h-6" />,
 			color: "bg-orange-500",
-			type: "alimentacao",
+			type: "ALIMENTACAO",
 		},
 		{
 			id: "health",
 			label: "Saúde",
 			icon: <RefreshCw className="w-6 h-6" />,
 			color: "bg-red-500",
-			type: "saude",
+			type: "SAUDE",
 		},
 		{
 			id: "hygiene",
 			label: "Higiene",
 			icon: <ShowerHead className="w-6 h-6" />,
 			color: "bg-cyan-500",
-			type: "assistencia", // Hygiene is now under Assistencia (Centro Pop)
+			type: "ASSISTENCIA", // Hygiene is now under Assistencia (Centro Pop)
 		},
 		{
 			id: "shelter",
 			label: "Dormir",
 			icon: <BedDouble className="w-6 h-6" />,
 			color: "bg-indigo-500",
-			type: "abrigo",
+			type: "ABRIGO",
 		},
 		{
 			id: "assistance",
 			label: "Documentos",
 			icon: <FileText className="w-6 h-6" />,
 			color: "bg-emerald-500",
-			type: "assistencia",
+			type: "ASSISTENCIA",
 		},
 		{
 			id: "education",
 			label: "Formação",
 			icon: <BookOpen className="w-6 h-6" />,
 			color: "bg-blue-600",
-			type: "educacao",
+			type: "EDUCACAO",
 		},
 	];
 

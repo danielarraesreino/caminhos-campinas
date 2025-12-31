@@ -195,7 +195,7 @@ export default function GamePage() {
 
 			{/* Dilemma Modal */}
 			<DilemmaModal
-				dilemma={activeDilemma || null}
+				dilemma={(activeDilemma as any) || null}
 				onResolve={resolveDilemma}
 				onClose={clearActiveDilemma}
 			/>

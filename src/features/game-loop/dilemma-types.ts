@@ -6,13 +6,15 @@ export type TriggerType =
     | "RANDOM"
     | "SOCIAL_STIGMA_HIGH"
     | "LOCATION"
-    | "STATUS";
+    | "STATUS"
+    | "CHAIN";
 
 export interface DilemmaOption {
     label: string;
     consequence: string;
     consequence_failure?: string;
     risk?: number; // 0-100
+    nextDilemmaId?: string; // ID of the next dilemma to trigger immediately
     effect: Partial<
         Omit<
             GameState,
@@ -57,6 +59,8 @@ export interface DilemmaOption {
         ods: string;
         action: string;
         outcome: string;
+        violation_type?: string;
+        resource_gap?: string;
     };
 }
 
@@ -71,6 +75,7 @@ export interface Dilemma {
         statusCondition?: Record<string, number>;
     };
     tags?: string[];
+    glossaryTerms?: string[];
     location_trigger?: {
         lat: number;
         lng: number;
@@ -80,5 +85,6 @@ export interface Dilemma {
     ambience?: string;
     soundEffect?: string;
     prerequisite?: string;
+    repeatable?: boolean;
     options: DilemmaOption[];
 }
