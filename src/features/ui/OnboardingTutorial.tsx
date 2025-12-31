@@ -28,7 +28,7 @@ const slides = [
 	{
 		title: "Bem-vindo às Ruas",
 		description:
-			"Este é um Serious Game sobre a realidade da população em situação de rua em Campinas. Seu objetivo não é apenas sobreviver, mas reconquistar sua cidadania.",
+			"Este é um Serious Game sobre a realidade da população em situação de rua em Campinas. Após o rompimento dos vínculos familiares (71% dos casos), a rua se tornou sua única opção. Seu objetivo é reconquistar sua cidadania.",
 		icon: User,
 		color: "text-blue-400",
 		bg: "bg-blue-900/20",

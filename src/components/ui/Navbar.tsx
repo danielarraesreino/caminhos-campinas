@@ -11,11 +11,27 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { BatteryIndicator } from "@/components/ui/BatteryIndicator";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Wifi, WifiOff } from "lucide-react";
 
 export function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isOnline, setIsOnline] = useState(true);
+
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			setIsOnline(navigator.onLine);
+			const handleOnline = () => setIsOnline(true);
+			const handleOffline = () => setIsOnline(false);
+			window.addEventListener("online", handleOnline);
+			window.addEventListener("offline", handleOffline);
+			return () => {
+				window.removeEventListener("online", handleOnline);
+				window.removeEventListener("offline", handleOffline);
+			};
+		}
+	}, []);
 
 	// Navigation groups for separate personas
 	const primaryLinks = [
@@ -115,10 +131,26 @@ export function Navbar() {
 								<span className="sm:hidden">Apoiar</span>
 							</Button>
 						</Link>
+
+						{/* Offline Indicator */}
+						<div
+							title={isOnline ? "Você está Online" : "Modo Offline Ativo"}
+							className={`flex items-center justify-center p-2 rounded-full transition-colors ${isOnline ? 'text-green-500/50' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}
+						>
+							{isOnline ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4 animate-pulse" />}
+						</div>
 					</div>
 
 					{/* 3. MOBILE MENU BUTTON */}
 					<div className="-mr-2 flex md:hidden">
+						<div className="mr-4 flex md:hidden items-center">
+							{!isOnline && (
+								<div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-900/30 border border-red-500/30 text-red-200 text-xs font-bold animate-pulse">
+									<WifiOff className="w-3 h-3" />
+									<span className="sr-only">Offline</span>
+								</div>
+							)}
+						</div>
 						<button
 							type="button"
 							onClick={() => setIsOpen(!isOpen)}

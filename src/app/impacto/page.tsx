@@ -78,7 +78,7 @@ export default function ImpactDashboardPage() {
 					desc="Mulheres sem insumos (ODS 3)"
 				/>
 				<KpiCard
-					title="Recorte Racial"
+					title="ODS 18 - Equidade Racial"
 					value={`${stats.racialGap}%`}
 					icon={<AlertTriangle className="text-yellow-400" />}
 					desc="Pretos ou Pardos (Desigualdade)"
