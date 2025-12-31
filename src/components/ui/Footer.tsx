@@ -44,7 +44,7 @@ export function Footer() {
 
             </div>
 
-            <div className="mt-8 pt-6 border-t border-slate-900 text-center text-[10px] text-slate-700 uppercase tracking-widest">
+            <div className="mt-8 pt-6 border-t border-slate-900 text-center text-[10px] text-slate-400 uppercase tracking-widest">
                 © 2025 Coletivo A Rua Tem Voz. Dados baseados no Censo FEAC/Prefeitura 2024.
             </div>
         </footer>
