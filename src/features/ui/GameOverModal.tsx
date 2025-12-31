@@ -47,19 +47,19 @@ export function GameOverModal({
 	};
 
 	return (
-		<div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
-			<div className="w-full max-w-2xl bg-gradient-to-b from-gray-900 to-black border-2 border-red-800 rounded-3xl overflow-hidden shadow-2xl shadow-red-900/50">
+		<div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
+			<div className="w-full max-w-2xl bg-zinc-950 border-2 border-zinc-800 rounded-3xl overflow-hidden shadow-2xl shadow-black/80">
 				{/* Header com motivo */}
 				<div
-					className={`${getReasonColor()} p-8 text-center border-b-4 border-red-700`}
+					className={`${getReasonColor()} p-8 text-center border-b border-zinc-800`}
 				>
-					<div className="flex justify-center mb-4 text-red-200">
+					<div className="flex justify-center mb-4 text-white/80">
 						{getReasonIcon()}
 					</div>
 					<h2 className="text-4xl font-black text-white mb-2 uppercase tracking-wider">
 						Fim de Jogo
 					</h2>
-					<p className="text-2xl font-bold text-red-300 uppercase tracking-widest">
+					<p className="text-2xl font-bold text-red-500 uppercase tracking-widest font-mono">
 						{reason}
 					</p>
 				</div>
@@ -74,7 +74,7 @@ export function GameOverModal({
 								return (
 									<blockquote
 										key={key}
-										className="border-l-4 border-blue-500 pl-4 italic text-blue-300 text-sm mt-4"
+										className="border-l-4 border-zinc-700 pl-4 italic text-zinc-400 text-sm mt-4 font-mono"
 									>
 										{paragraph.replace(/^\*|\*$/g, "")}
 									</blockquote>
@@ -88,7 +88,7 @@ export function GameOverModal({
 							return (
 								<p
 									key={key}
-									className="text-gray-200 leading-relaxed whitespace-pre-line"
+									className="text-zinc-300 leading-relaxed whitespace-pre-line"
 								>
 									{parts.map((part, partIdx) => {
 										if (partIdx % 2 === 1) {
@@ -111,36 +111,36 @@ export function GameOverModal({
 
 					{/* Estatísticas */}
 					{statistics && (
-						<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 p-6 bg-gray-800/50 rounded-xl border border-gray-700">
+						<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
 							<div className="text-center">
-								<p className="text-sm text-gray-400 uppercase tracking-wider mb-1">
+								<p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1 font-bold">
 									Dias
 								</p>
-								<p className="text-3xl font-black text-white">
+								<p className="text-2xl font-mono font-bold text-white">
 									{statistics.daysSurvived}
 								</p>
 							</div>
 							<div className="text-center">
-								<p className="text-sm text-gray-400 uppercase tracking-wider mb-1">
-									Dinheiro
+								<p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1 font-bold">
+									Renda
 								</p>
-								<p className="text-3xl font-black text-green-400">
+								<p className="text-2xl font-mono font-bold text-emerald-500">
 									R$ {statistics.moneyEarned}
 								</p>
 							</div>
 							<div className="text-center">
-								<p className="text-sm text-gray-400 uppercase tracking-wider mb-1">
+								<p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1 font-bold">
 									Dignidade
 								</p>
-								<p className="text-3xl font-black text-purple-400">
+								<p className="text-2xl font-mono font-bold text-purple-400">
 									{statistics.dignityFinal}
 								</p>
 							</div>
 							<div className="text-center">
-								<p className="text-sm text-gray-400 uppercase tracking-wider mb-1">
+								<p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1 font-bold">
 									Estigma
 								</p>
-								<p className="text-3xl font-black text-red-400">
+								<p className="text-2xl font-mono font-bold text-red-400">
 									{statistics.socialStigmaFinal}
 								</p>
 							</div>

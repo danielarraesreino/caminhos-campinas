@@ -42,6 +42,9 @@ self.addEventListener("activate", (event) => {
 
 // Interceptação de Requisições (A Mágica do Mapa)
 self.addEventListener("fetch", (event) => {
+	// Ignore non-GET requests (e.g., POST/PUT for Telemetry/Auth)
+	if (event.request.method !== "GET") return;
+
 	const url = new URL(event.request.url);
 
 	// ESTRATÉGIA PARA O MAPA (OpenStreetMap Tiles - Cache First)
