@@ -34,7 +34,9 @@ class TelemetryService {
 	private sessionHash: string;
 
 	private constructor() {
-		this.initDB();
+		// Lazy init: Do not call this.initDB() here. It will be called by track() when needed.
+		// prevents "Unhandled Rejection" on server-side where IndexedDB is missing.
+
 		// Step 2.3: Session-based rotating hash (not persistent user ID)
 		this.sessionHash = crypto.randomUUID();
 	}
