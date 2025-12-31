@@ -4,45 +4,17 @@ import { ArrowLeft, ExternalLink, HandHeart, Heart, Users } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-const PARTNERS = [
-    {
-        name: "Cáritas Arquidiocesana de Campinas",
-        description: "Acolhimento de alta complexidade e gestão dos abrigos municipais (Casa São Francisco, Santa Dulce). Referência na defesa de direitos.",
-        action: "Encaminhar para Acolhimento",
-        tags: ["Abrigo", "Alimentação", "Banho"],
-        color: "blue"
-    },
-    {
-        name: "Toca de Assis (Filhas da Pobreza)",
-        description: "Apoio espiritual, banho e alimentação para quem está em situação crítica de rua. Um olhar de misericórdia para as feridas da alma e do corpo.",
-        action: "Solicitar Banho/Alimento",
-        tags: ["Espiritualidade", "Higiene", "Comida"],
-        color: "amber"
-    },
-    {
-        name: "Instituto Padre Haroldo",
-        description: "Referência nacional em tratamento de dependência química e reinserção social. Abordagem terapêutica humanizada.",
-        action: "Buscar Reabilitação",
-        tags: ["Saúde", "Reabilitação", "Trabalho"],
-        color: "green"
-    },
-    {
-        name: "Rotaract Club Campinas",
-        description: "Jovens lideranças movendo ações de voluntariado e campanhas de arrecadação sazonais (Inverno/Natal/Páscoa).",
-        action: "Ser Voluntário",
-        tags: ["Voluntariado", "Doações", "Juventude"],
-        color: "pink"
-    },
-    {
-        name: "Mão Amiga (Grupo Sol)",
-        description: "Qualificação profissional com bolsa-auxílio para reinserção no mercado de trabalho. A porta de saída da rua.",
-        action: "Ver Cursos",
-        tags: ["Trabalho", "Renda", "Cursos"],
-        color: "purple"
-    },
-];
+import { useEffect, useState } from "react";
+import { hubService, type Partner } from "@/services/hubService";
+import { Award, BadgeCheck, CheckCircle2, MapPin } from "lucide-react";
 
 export default function HubPage() {
+    const [partners, setPartners] = useState<Partner[]>([]);
+
+    useEffect(() => {
+        setPartners(hubService.getPartners());
+    }, []);
+
     return (
         <div className="min-h-screen bg-slate-50 relative overflow-hidden">
             {/* Decorative Background */}
@@ -82,30 +54,60 @@ export default function HubPage() {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
-                    {PARTNERS.map((partner) => (
-                        <div key={partner.name} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
-                            <div className="flex justify-between items-start mb-4">
-                                <h3 className="font-bold text-lg text-slate-900 group-hover:text-blue-600 transition-colors">
+                    {partners.map((partner) => (
+                        <div key={partner.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow group relative">
+                            {/* Verification Badge */}
+                            <div className="absolute top-4 right-4">
+                                {partner.verificationLevel === 'gold' && (
+                                    <span title="Verificação Ouro - Auditado" className="flex items-center gap-1 bg-yellow-100 text-yellow-700 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-wider border border-yellow-200">
+                                        <Award className="w-3 h-3" /> Ouro
+                                    </span>
+                                )}
+                                {partner.verificationLevel === 'official' && (
+                                    <span title="Oficial - Governo" className="flex items-center gap-1 bg-blue-100 text-blue-700 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-wider border border-blue-200">
+                                        <BadgeCheck className="w-3 h-3" /> Oficial
+                                    </span>
+                                )}
+                                {partner.verificationLevel === 'verified' && (
+                                    <span title="Verificado" className="flex items-center gap-1 bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-wider border border-slate-200">
+                                        <CheckCircle2 className="w-3 h-3" /> Verificado
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="flex justify-between items-start mb-4 pr-20">
+                                <h3 className="font-bold text-lg text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
                                     {partner.name}
                                 </h3>
                             </div>
 
                             <div className="flex flex-wrap gap-2 mb-4">
-                                {partner.tags.map(tag => (
-                                    <span key={tag} className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 px-2 py-1 rounded-md">
-                                        #{tag}
+                                <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-md border ${partner.type === 'GOVERNO' ? 'bg-purple-100 text-purple-700 border-purple-200' :
+                                    partner.type === 'COLETIVO' ? 'bg-pink-100 text-pink-700 border-pink-200' :
+                                        'bg-blue-50 text-blue-600 border-blue-100'
+                                    }`}>
+                                    {partner.type}
+                                </span>
+                                {partner.services.map(tag => (
+                                    <span key={tag} className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-500 px-2 py-1 rounded-md">
+                                        {tag}
                                     </span>
                                 ))}
                             </div>
 
-                            <p className="text-slate-600 text-sm mb-6 leading-relaxed">
+                            <p className="text-slate-600 text-sm mb-4 leading-relaxed line-clamp-3 min-h-[60px]">
                                 {partner.description}
                             </p>
 
-                            <Button className="w-full justify-between group-hover:bg-blue-600 transition-colors" variant="outline">
-                                {partner.action}
-                                <ExternalLink className="w-4 h-4 opacity-50" />
-                            </Button>
+                            <div className="space-y-3 pt-4 border-t border-slate-50">
+                                <p className="text-xs text-slate-500 flex items-center gap-2">
+                                    <MapPin className="w-3 h-3 shrink-0" /> {partner.address}
+                                </p>
+                                <Button className="w-full justify-between group-hover:bg-blue-600 transition-colors text-xs uppercase tracking-widest font-bold" variant="outline">
+                                    Visualizar Ação
+                                    <ExternalLink className="w-4 h-4 opacity-50" />
+                                </Button>
+                            </div>
                         </div>
                     ))}
                 </div>

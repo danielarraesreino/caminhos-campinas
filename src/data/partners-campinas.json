@@ -1,0 +1,89 @@
+[
+    {
+        "id": "caritas_campinas",
+        "name": "Cáritas Arquidiocesana de Campinas",
+        "type": "ONG",
+        "services": [
+            "ACOLHIMENTO",
+            "ALIMENTACAO",
+            "DOCUMENTACAO"
+        ],
+        "description": "Gestora dos principais abrigos da cidade (Casa São Francisco, Santa Clara). Foco em reinserção social e autonomia.",
+        "address": "Rua José Paulino, 603 - Centro",
+        "contact": "(19) 3235-2281",
+        "coords": [
+            -22.9064,
+            -47.0616
+        ],
+        "verificationLevel": "gold"
+    },
+    {
+        "id": "padre_haroldo",
+        "name": "Instituto Padre Haroldo",
+        "type": "ONG",
+        "services": [
+            "SAUDE",
+            "ACOLHIMENTO",
+            "TRABALHO"
+        ],
+        "description": "Referência em tratamento de dependência química e acolhimento institucional. Parceiro do programa Mão Amiga.",
+        "address": "Rua Dr. João Quirino do Nascimento, 1601 - Jd. Boa Esperança",
+        "contact": "(19) 3794-2500",
+        "coords": [
+            -22.8689,
+            -47.0436
+        ],
+        "verificationLevel": "gold"
+    },
+    {
+        "id": "abba_social",
+        "name": "Associação Beneficente ABBA",
+        "type": "ONG",
+        "services": [
+            "ASSISTENCIA",
+            "EDUCACAO"
+        ],
+        "description": "Atua na região do Jd. Eulina e Via Norte com foco em fortalecimento de vínculos familiares e prevenção.",
+        "address": "Rua Coronel Serafim Migueis, 115 – Jardim Eulina",
+        "contact": "(19) 3307-4336",
+        "coords": [
+            -22.8950,
+            -47.0980
+        ],
+        "verificationLevel": "verified"
+    },
+    {
+        "id": "rotaract_campinas",
+        "name": "Rotaract Club Campinas",
+        "type": "COLETIVO",
+        "services": [
+            "ALIMENTACAO",
+            "HIGIENE"
+        ],
+        "description": "Ações voluntárias de distribuição de kits de higiene e marmitas. Apoio logístico em campanhas de inverno.",
+        "address": "R. Benjamin Constant, 1704 - Centro",
+        "contact": "@rotaractclubcampinas",
+        "coords": [
+            -22.9020,
+            -47.0580
+        ],
+        "verificationLevel": "verified"
+    },
+    {
+        "id": "mao_amiga",
+        "name": "Programa Mão Amiga",
+        "type": "GOVERNO",
+        "services": [
+            "TRABALHO",
+            "EDUCACAO"
+        ],
+        "description": "Programa de qualificação profissional que oferece bolsa-auxílio (R$ 1.240,00) para pessoas em situação de rua.",
+        "address": "Av. Campos Sales, 427 - Centro (CPAT)",
+        "contact": "156",
+        "coords": [
+            -22.9055,
+            -47.0608
+        ],
+        "verificationLevel": "official"
+    }
+]
