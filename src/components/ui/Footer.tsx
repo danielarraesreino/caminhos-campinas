@@ -12,7 +12,7 @@ export function Footer() {
                         CAMINHOS CAMPINAS
                     </h3>
                     <p className="text-sm text-slate-500 mt-2 max-w-xs">
-                        Um jogo sério sobre invisibilidade social, dados e cidadania baseada em evidências.
+                        Tecnologia como instrumento de emancipação. Código Aberto.
                     </p>
                 </div>
 
@@ -28,7 +28,7 @@ export function Footer() {
                 {/* Social / Credits */}
                 <div className="flex flex-col items-center md:items-end gap-2 text-xs text-slate-600">
                     <div className="flex items-center gap-2">
-                        <span>Desenvolvido por <strong>Daniel (Japa)</strong></span>
+                        <span>Desenvolvido na base do <strong>Vibe Coding</strong> ┼ <strong>Inovação Social</strong>.</span>
                         <Heart className="w-3 h-3 text-red-500 fill-red-500" />
                     </div>
                     <a
@@ -45,7 +45,7 @@ export function Footer() {
             </div>
 
             <div className="mt-8 pt-6 border-t border-slate-900 text-center text-[10px] text-slate-700 uppercase tracking-widest">
-                © {new Date().getFullYear()} Caminhos Campinas. Todos os direitos reservados.
+                © 2025 Coletivo A Rua Tem Voz. Dados baseados no Censo FEAC/Prefeitura 2024.
             </div>
         </footer>
     );
