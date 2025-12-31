@@ -175,7 +175,7 @@ export function MaslowComparison({ metrics }: MaslowProps) {
 						</div>
 					</div>
 
-					<div className="mt-auto pt-6 border-t border-slate-900 text-[10px] text-slate-600 uppercase tracking-widest font-bold">
+					<div className="mt-auto pt-6 border-t border-slate-900 text-[10px] text-slate-400 uppercase tracking-widest font-bold">
 						Dado Cruzado Anonimamente via Ponto Sagrado DB
 					</div>
 				</div>
@@ -195,7 +195,7 @@ function PyramidTier({
 	tooltipId,
 	onInfoClick,
 }: // biome-ignore lint/suspicious/noExplicitAny: legacy props
-any) {
+	any) {
 	return (
 		<div
 			className={`${width} min-h-[70px] border-2 transition-all duration-300 flex items-center justify-between px-6 py-4 relative group rounded-xl
@@ -205,14 +205,12 @@ any) {
             hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]
         `}
 		>
-			{locked && (
-				<div className="absolute inset-0 bg-black/70 backdrop-blur-[2px] flex items-center justify-center rounded-xl z-10">
-					<Lock size={24} className="text-red-600 opacity-60" />
-				</div>
-			)}
+			<div className="absolute inset-0 bg-black/70 backdrop-blur-[2px] flex items-center justify-center rounded-xl z-10">
+				<Lock size={24} className="text-red-600" />
+			</div>
 
 			<div className="flex flex-col gap-1 items-start">
-				<span className="text-[10px] uppercase tracking-widest font-black text-slate-600 group-hover:text-blue-500 transition-colors">
+				<span className="text-[10px] uppercase tracking-widest font-black text-slate-400 group-hover:text-blue-500 transition-colors">
 					{level}
 				</span>
 				<span className="text-lg font-bold tracking-tight">{label}</span>

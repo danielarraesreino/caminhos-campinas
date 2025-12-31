@@ -8,8 +8,8 @@ const LandingPage = dynamic(() => import("@/features/ui/LandingPage"), {
 
 export default function Home() {
 	return (
-		<div className="min-h-screen bg-slate-50">
+		<main className="min-h-screen bg-slate-50">
 			<LandingPage />
-		</div>
+		</main>
 	);
 }

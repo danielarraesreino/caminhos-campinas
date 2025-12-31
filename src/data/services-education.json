@@ -1,42 +1,42 @@
 [
-{
-"id": "fundacao-bradesco",
-"name": "Escola Virtual Fundação Bradesco",
-"type": "education",
-"url": "https://www.ev.org.br",
-"description": "Cursos gratuitos online com certificado. Áreas: Administração, Tecnologia, Desenvolvimento Pessoal.",
-"tags": ["certificado", "online", "iniciante"]
-},
-{
-"id": "sebrae-gratuito",
-"name": "Sebrae Gratuitos",
-"type": "education",
-"url": "https://www.sebrae.com.br/sites/PortalSebrae/cursosonline",
-"description": "Foco em empreendedorismo, MEI, marketing digital e gestão financeira básica.",
-"tags": ["empreendedorismo", "mei", "negócios"]
-},
-{
-"id": "caminho-capacitacao-sp",
-"name": "Caminho da Capacitação (Gov SP)",
-"type": "education",
-"url": "https://www.cursosp.sp.gov.br",
-"description": "Cursos rápidos voltados para inserção no mercado de trabalho e geração de renda.",
-"tags": ["governo", "rápido", "emprego"]
-},
-{
-"id": "espro-fmt",
-"name": "Espro - Formação Mundo do Trabalho",
-"type": "education",
-"url": "https://www.espro.org.br",
-"description": "Focado em jovens vulneráveis. Treinamento para primeiro emprego e comportamento profissional.",
-"tags": ["jovens", "primeiro-emprego", "soft-skills"]
-},
-{
-"id": "wr-educacional",
-"name": "WR Educacional",
-"type": "education",
-"url": "https://www.wreducacional.com.br",
-"description": "Cursos livres básicos. Útil para noções introdutórias em diversas áreas.",
-"tags": ["livre", "diversos", "online"]
-}
+	{
+		"id": "fundacao-bradesco",
+		"name": "Escola Virtual Fundação Bradesco",
+		"type": "education",
+		"url": "https://www.ev.org.br",
+		"description": "Cursos gratuitos online com certificado. Áreas: Administração, Tecnologia, Desenvolvimento Pessoal.",
+		"tags": ["certificado", "online", "iniciante"]
+	},
+	{
+		"id": "sebrae-gratuito",
+		"name": "Sebrae Gratuitos",
+		"type": "education",
+		"url": "https://www.sebrae.com.br/sites/PortalSebrae/cursosonline",
+		"description": "Foco em empreendedorismo, MEI, marketing digital e gestão financeira básica.",
+		"tags": ["empreendedorismo", "mei", "negócios"]
+	},
+	{
+		"id": "caminho-capacitacao-sp",
+		"name": "Caminho da Capacitação (Gov SP)",
+		"type": "education",
+		"url": "https://www.cursosp.sp.gov.br",
+		"description": "Cursos rápidos voltados para inserção no mercado de trabalho e geração de renda.",
+		"tags": ["governo", "rápido", "emprego"]
+	},
+	{
+		"id": "espro-fmt",
+		"name": "Espro - Formação Mundo do Trabalho",
+		"type": "education",
+		"url": "https://www.espro.org.br",
+		"description": "Focado em jovens vulneráveis. Treinamento para primeiro emprego e comportamento profissional.",
+		"tags": ["jovens", "primeiro-emprego", "soft-skills"]
+	},
+	{
+		"id": "wr-educacional",
+		"name": "WR Educacional",
+		"type": "education",
+		"url": "https://www.wreducacional.com.br",
+		"description": "Cursos livres básicos. Útil para noções introdutórias em diversas áreas.",
+		"tags": ["livre", "diversos", "online"]
+	}
 ]

@@ -12,7 +12,7 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { InteractiveText } from "@/components/ui/InteractiveText";
-import type { Dilemma } from "@/features/game-loop/dilemmas";
+import type { Dilemma } from "@/features/game-loop/dilemma-types";
 import { useAudio } from "@/hooks/useAudio";
 import { useODSTracker } from "@/hooks/useODSTracker";
 
@@ -161,7 +161,7 @@ export function DilemmaModal({
 					<div className="mt-8">
 						{!currentOption && (
 							<div className="flex flex-col gap-2">
-								{dilemma.options.map((option, index) => (
+								{dilemma.options.map((option: any, index: number) => (
 									<Button
 										key={option.label}
 										type="button"

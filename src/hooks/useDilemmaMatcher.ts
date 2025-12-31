@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
 import { useServices } from "@/contexts/ServicesContext";
-import type { Dilemma } from "@/features/game-loop/dilemmas";
+import type { Dilemma } from "@/features/game-loop/dilemma-types";
 // Dilemmas data import - assuming it's available or we maintain a subset here?
 // Ideally we should import from a central dilemma registry.
 // For now, I will use a placeholder or assume imports are possible.
 // Wait, the prompt implies "create system". I will import dilemmas from existing file if possible.
-import { ALL_DILEMMAS as dilemmas } from "@/features/game-loop/dilemmas";
+import { ALL_DILEMMAS as dilemmas } from "@/features/game-loop/all-dilemmas";
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 
 export function useDilemmaMatcher() {
@@ -78,7 +78,7 @@ export function useDilemmaMatcher() {
 				locationObj
 			) {
 				const consultorio = services.find(
-					(s) => s.type === "saude" || s.name.includes("Consultório"),
+					(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
 				);
 				if (consultorio) {
 					const _dist = calculateDist(

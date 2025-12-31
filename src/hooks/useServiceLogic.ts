@@ -56,7 +56,7 @@ export function useServiceLogic() {
 		}
 
 		// 2. SAMIM / Abrigo Check (Explicit Rule)
-		if (service.id === "samim" || service.type === "abrigo") {
+		if (service.id === "samim" || service.type === "ABRIGO") {
 			if (workTool.type === "CARRINHO_RECICLAGEM" && !workTool.isConfiscated) {
 				return {
 					allowed: false,

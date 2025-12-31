@@ -18,10 +18,10 @@ import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { DilemmaCache } from "@/utils/dilemmaCache";
 import { getAssetUrl } from "@/utils/getAssetUrl";
 import { AvatarCreation } from "./AvatarCreation";
 import { OnboardingTutorial } from "./OnboardingTutorial";
+import { REAL_DILEMMAS } from "@/features/game-loop/dilemmas-real";
 
 export default function LandingPage() {
 	const router = useRouter();
@@ -45,10 +45,10 @@ export default function LandingPage() {
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [mode, setMode] = useState<"landing" | "creation">("landing");
 
+	const [showResetConfirm, setShowResetConfirm] = useState(false);
+
 	const handleNewGame = async () => {
-		if (hasSavedGame) {
-			if (!confirm("Isso apagará seu progresso atual. Tem certeza?")) return;
-		}
+		// Confirm logic handled in UI now
 		await clearPersistence();
 		resetGame();
 
@@ -66,11 +66,12 @@ export default function LandingPage() {
 
 	const { data: _session, status } = useSession();
 
-	// AI State
+	// Local Dilemma State
 	const [aiLoading, setAiLoading] = useState(false);
 	const [dilemma, setDilemma] = useState<{
 		scenario: string;
 		options: string[];
+		raw?: any;
 	} | null>(null);
 	const [aiFeedback, setAiFeedback] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -90,91 +91,59 @@ export default function LandingPage() {
 		}
 	};
 
-	// Groq API Call Helper - API Route segura
-	const callGroq = async (prompt: string) => {
-		const response = await fetch("/api/groq", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ prompt }),
-		});
-
-		const data = await response.json();
-
-		if (!data.success) {
-			throw new Error(data.error || "Erro ao processar requisição");
-		}
-
-		return data.text || "Sem resposta da IA.";
-	};
-
 	const generateDilemma = async () => {
 		setAiLoading(true);
 		setError(null);
 		setDilemma(null);
 		setAiFeedback(null);
 
-		// Tentar cache primeiro
-		const cacheKey = "demo_scenario";
-		// Desabilitando cache para garantir variedade nos testes
-		// const cached = DilemmaCache.get(cacheKey);
-
-		// if (cached) {
-		// 	console.log("📦 Usando dilema do cache (instantâneo)");
-		// 	setDilemma({
-		// 		scenario: cached.scenario,
-		// 		options: cached.options,
-		// 	});
-		// 	setAiLoading(false);
-		// 	return;
-		// }
-
-		const systemPrompt = `Você é o motor narrativo de um 'Serious Game' sobre a população em situação de rua.
-        Gere um cenário curto (máx 50 palavras) e urgente.
-        Forneça exatamente 3 opções de ação curtas (máx 5 palavras cada).
-        Responda ESTRITAMENTE em JSON neste formato:
-        {
-            "scenario": "Texto do cenário...",
-            "options": ["Opção 1", "Opção 2", "Opção 3"]
-        }`;
-
 		try {
-			console.log("🌐 Chamando API Groq (primeira vez ou cache expirado)");
-			const text = await callGroq(systemPrompt);
-			const cleanText = text?.replace(/```json|```/g, "").trim();
-			const json = JSON.parse(cleanText || "{}");
+			// Simulate loading for effect
+			await new Promise((resolve) => setTimeout(resolve, 1500));
 
-			if (json.scenario && Array.isArray(json.options)) {
-				setDilemma(json);
-				// Salvar no cache
-				DilemmaCache.set(cacheKey, {
-					scenario: json.scenario,
-					options: json.options,
+			const dilemmaList = REAL_DILEMMAS && REAL_DILEMMAS.length > 0 ? REAL_DILEMMAS : []; // Safety check
+
+			if (dilemmaList.length === 0) {
+				throw new Error("Nenhum dilema disponível no censo.");
+			}
+
+			const randomDilemma =
+				dilemmaList[Math.floor(Math.random() * dilemmaList.length)];
+
+			if (randomDilemma) {
+				setDilemma({
+					scenario: randomDilemma.description,
+					options: randomDilemma.options.map((o: any) => o.label),
+					raw: randomDilemma,
 				});
-				console.log("💾 Dilema salvo no cache");
 			} else {
-				throw new Error("Formato inválido da IA");
+				throw new Error("Dilema não encontrado");
 			}
 		} catch (err) {
 			console.error(err);
-			setError("Erro ao gerar dilema. Tente novamente.");
+			setError("Erro ao carregar dilema.");
 		} finally {
 			setAiLoading(false);
 		}
 	};
 
-	const solveDilemma = async (action: string) => {
+	const solveDilemma = async (actionLabel: string) => {
 		setAiLoading(true);
 		setError(null);
 
-		const systemPrompt = `Contexto: Jogo sério população de rua.
-        Cenário: "${dilemma?.scenario}"
-        Ação Escolhida: "${action}"
-        
-        Analise a consequência (máx 40 palavras). Seja realista e educativo.`;
-
 		try {
-			const text = await callGroq(systemPrompt);
-			setAiFeedback(text || "Sem resposta.");
+			// Simulate processing
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+
+			const option = dilemma?.raw?.options.find(
+				(o: any) => o.label === actionLabel
+			);
+
+			if (option) {
+				setAiFeedback(option.consequence);
+			} else {
+				setAiFeedback("Consequência não encontrada para esta ação.");
+			}
 		} catch (_err) {
 			setError("Erro ao processar ação.");
 		} finally {
@@ -225,7 +194,7 @@ export default function LandingPage() {
 								</span>
 							</h1>
 
-							<p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-blue-500/30 pl-6">
+							<p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-blue-500/30 pl-6">
 								Entre na pele de quem vive nas ruas de Campinas. <br />
 								Simule dilemas reais, entenda a luta por dignidade e transforme
 								sua empatia em impacto real.
@@ -239,7 +208,7 @@ export default function LandingPage() {
 										<button
 											type="button"
 											onClick={handleContinue}
-											className="group relative px-8 py-5 bg-green-600 hover:bg-green-500 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-green-900/20 overflow-hidden"
+											className="group relative px-8 py-5 bg-green-700 hover:bg-green-600 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-green-900/20 overflow-hidden"
 										>
 											<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
 											<span className="relative flex items-center gap-3">
@@ -250,10 +219,23 @@ export default function LandingPage() {
 
 										<button
 											type="button"
-											onClick={handleNewGame}
-											className="px-6 py-5 bg-transparent border border-white/20 hover:bg-white/10 text-slate-300 rounded-2xl font-medium text-sm transition-all"
+											onClick={() => {
+												if (showResetConfirm) {
+													handleNewGame();
+													setShowResetConfirm(false);
+												} else {
+													setShowResetConfirm(true);
+													setTimeout(() => setShowResetConfirm(false), 5000); // Reset after 5s
+												}
+											}}
+											className={`px-6 py-5 border rounded-2xl font-medium text-sm transition-all ${showResetConfirm
+												? "bg-red-600 border-red-500 text-white animate-pulse"
+												: "bg-transparent border-white/20 hover:bg-white/10 text-slate-300"
+												}`}
 										>
-											Novo Jogo (Reset)
+											{showResetConfirm
+												? "Confirmar Reset?"
+												: "Novo Jogo (Reset)"}
 										</button>
 									</>
 								) : (
@@ -416,7 +398,7 @@ export default function LandingPage() {
 						<h3 className="text-2xl font-black italic uppercase tracking-tighter">
 							Portal do Parceiro Institucional
 						</h3>
-						<p className="text-slate-400 font-sans">
+						<p className="text-slate-300 font-sans">
 							Para gestores públicos, empresas ESG e acadêmicos. Acesse a
 							telemetria em tempo real das violações de direitos e demandas por
 							ODS em Campinas.
@@ -430,7 +412,7 @@ export default function LandingPage() {
 						>
 							Acessar Dashboard de Impacto <ArrowRight size={20} />
 						</button>
-						<p className="text-[10px] text-slate-500 text-center uppercase font-bold tracking-[0.2em]">
+						<p className="text-[10px] text-slate-400 text-center uppercase font-bold tracking-[0.2em]">
 							Dados processados via Protocolo Anti-Chacina (K-5)
 						</p>
 					</div>
@@ -634,7 +616,10 @@ export default function LandingPage() {
 									className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-purple-500/25 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
 								>
 									{aiLoading ? (
-										<span className="flex items-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Gerando Cenário...</span>
+										<span className="flex items-center gap-2">
+											<Loader2 className="h-5 w-5 animate-spin" /> Gerando
+											Cenário...
+										</span>
 									) : (
 										<>
 											<Sparkles className="h-5 w-5" /> ✨ Gerar Dilema Real
@@ -723,9 +708,8 @@ export default function LandingPage() {
 							</div>
 						)}
 					</div>
-					<p className="text-center text-slate-500 text-xs mt-4">
-						* As respostas são geradas por Inteligência Artificial e servem
-						apenas para simulação educativa.
+					<p className="text-center text-slate-400 text-xs mt-4">
+						* As situações são baseadas em dados reais do Censo Pop Rua 2024.
 					</p>
 				</div>
 			</section>
@@ -739,7 +723,11 @@ export default function LandingPage() {
 								Inovação Social com Custo Eficiente
 							</h2>
 							<p className="text-slate-600 mb-6 text-lg">
-								Diferente de apps tradicionais que custam milhões, construímos esta plataforma usando <strong>Inteligência Artificial</strong> como alavanca de autonomia. Eu não sabia programar, mas sabia o que precisava ser feito. A tecnologia me deu a liberdade de criar.
+								Diferente de apps tradicionais que custam milhões, construímos
+								esta plataforma usando <strong>Inteligência Artificial</strong>{" "}
+								como alavanca de autonomia. Eu não sabia programar, mas sabia o
+								que precisava ser feito. A tecnologia me deu a liberdade de
+								criar.
 							</p>
 							<ul className="space-y-4">
 								<li className="flex items-center gap-3">
@@ -747,7 +735,9 @@ export default function LandingPage() {
 										<Check className="h-4 w-4 text-green-600" />
 									</div>
 									<span className="text-slate-700">
-										<strong>Autonomia Real:</strong> Orquestrado por quem vive a realidade, sem depender de grandes equipes de TI ou burocracia.
+										<strong>Autonomia Real:</strong> Orquestrado por quem vive a
+										realidade, sem depender de grandes equipes de TI ou
+										burocracia.
 									</span>
 								</li>
 								<li className="flex items-center gap-3">
@@ -755,7 +745,9 @@ export default function LandingPage() {
 										<Check className="h-4 w-4 text-green-600" />
 									</div>
 									<span className="text-slate-700">
-										<strong>Código como Ferramenta de Poder:</strong> A tecnologia deve servir para emancipação. Se eu consegui, nós conseguimos.
+										<strong>Código como Ferramenta de Poder:</strong> A
+										tecnologia deve servir para emancipação. Se eu consegui, nós
+										conseguimos.
 									</span>
 								</li>
 								<li className="flex items-center gap-3">
@@ -763,7 +755,9 @@ export default function LandingPage() {
 										<Check className="h-4 w-4 text-green-600" />
 									</div>
 									<span className="text-slate-700">
-										<strong>Acessibilidade Nativa:</strong> Construído para rodar em qualquer celular, porque a informação é um direito de todos.
+										<strong>Acessibilidade Nativa:</strong> Construído para
+										rodar em qualquer celular, porque a informação é um direito
+										de todos.
 									</span>
 								</li>
 							</ul>
@@ -845,7 +839,7 @@ export default function LandingPage() {
 							>
 								{copied ? "Chave Copiada!" : "Copiar Chave PIX"}
 							</button>
-							<p className="text-xs text-slate-400 mt-2">
+							<p className="text-xs text-slate-600 mt-2">
 								O valor será destinado integralmente ao desenvolvimento do jogo
 								e ações do coletivo.
 							</p>
@@ -884,8 +878,9 @@ export default function LandingPage() {
 						</div>
 					</div>
 					<div className="mt-12 pt-8 border-t border-slate-800 text-center text-xs flex flex-col items-center">
-						<p className="mb-6 opacity-60">
-							&copy; 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
+						<p className="mb-6 text-slate-300">
+							&copy; 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de
+							emancipação.
 						</p>
 
 						<div className="flex items-center gap-4 bg-slate-800/50 px-6 py-3 rounded-full border border-slate-700/50 hover:bg-slate-800 transition-colors group">
@@ -893,7 +888,7 @@ export default function LandingPage() {
 								<img
 									src="/daniel_dev.jpg"
 									alt="Daniel (Japa)"
-									className="w-12 h-12 rounded-full border-2 border-slate-600 group-hover:border-blue-500 transition-colors object-cover"
+									className="w-20 h-20 rounded-full border-2 border-slate-600 group-hover:border-blue-500 transition-colors object-cover object-center"
 								/>
 								<div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"></div>
 							</div>
@@ -901,13 +896,13 @@ export default function LandingPage() {
 								<p className="text-slate-300 font-bold group-hover:text-white transition-colors">
 									Desenvolvido por Daniel (Japa/Oclinhos)
 								</p>
-								<p className="text-slate-500 text-[10px] uppercase tracking-wider group-hover:text-blue-400 transition-colors">
+								<p className="text-slate-400 text-[10px] uppercase tracking-wider group-hover:text-blue-400 transition-colors">
 									Vibe Coding &boxvh; Inovação Social
 								</p>
 							</div>
 						</div>
 
-						<p className="mt-6 text-slate-600 italic max-w-sm">
+						<p className="mt-6 text-slate-300 italic max-w-sm">
 							"Informação é a libertação real, única e verdadeira."
 						</p>
 					</div>
@@ -938,7 +933,7 @@ export default function LandingPage() {
 							<h3 className="text-2xl font-bold text-slate-800">
 								Boas-vindas!
 							</h3>
-							<p className="text-slate-500 text-sm mt-1">
+							<p className="text-slate-600 text-sm mt-1">
 								Escolha como deseja iniciar sua jornada.
 							</p>
 						</div>
@@ -980,7 +975,7 @@ export default function LandingPage() {
 								<div className="absolute inset-0 flex items-center">
 									<div className="w-full border-t border-slate-100"></div>
 								</div>
-								<span className="relative px-3 bg-white text-xs font-bold text-slate-400 uppercase tracking-widest">
+								<span className="relative px-3 bg-white text-xs font-bold text-slate-600 uppercase tracking-widest">
 									Ou
 								</span>
 							</div>
@@ -993,7 +988,7 @@ export default function LandingPage() {
 								Acesso Anônimo
 								<ArrowRight className="h-4 w-4 opacity-50" />
 							</button>
-							<p className="text-[10px] text-center text-slate-400 mt-4 leading-relaxed">
+							<p className="text-[10px] text-center text-slate-600 mt-4 leading-relaxed">
 								Ao entrar, você concorda em utilizar a plataforma para fins
 								educativos e de impacto social positivo.
 							</p>
