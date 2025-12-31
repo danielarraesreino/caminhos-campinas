@@ -55,7 +55,7 @@ export function Navbar() {
 	// if (pathname === "/jogar") return null;
 
 	return (
-		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-50">
+		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-[100]">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex items-center justify-between h-16">
 					{/* 1. BRANDING */}
@@ -111,7 +111,8 @@ export function Navbar() {
 								variant="default"
 								className="bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
 							>
-								Apoie Agora
+								<span className="hidden sm:inline">Apoie Agora</span>
+								<span className="sm:hidden">Apoiar</span>
 							</Button>
 						</Link>
 					</div>

@@ -121,7 +121,7 @@ export default function GamePage() {
 
 	return (
 		<div
-			className={`flex flex-col h-screen bg-slate-900 overflow-hidden transition-all duration-1000 ${degradationClasses}`}
+			className={`flex flex-col h-[calc(100vh-64px)] bg-slate-900 overflow-hidden transition-all duration-1000 ${degradationClasses}`}
 		>
 			{/* HUD Strip (Top Fixed) */}
 			<GameHUD />

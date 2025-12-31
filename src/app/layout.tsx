@@ -58,7 +58,7 @@ export default function RootLayout({
 						<GameProvider>
 							<ServicesProvider>
 								<Navbar />
-								<main className="flex-1 min-h-screen flex flex-col relative w-full">
+								<main className="flex-1 min-h-screen flex flex-col relative w-full pt-16">
 									{children}
 								</main>
 								<SpeedInsights />
