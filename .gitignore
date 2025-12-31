@@ -48,3 +48,11 @@ caminhoscampinas*.json
 !package-lock.json
 !tsconfig.json
 !src/data/*.json
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

@@ -315,6 +315,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return () => clearTimeout(timeout);
   }, [state, db, hasHydrated]);
 
+  // --- E2E Testing Helper ---
+  useEffect(() => {
+    // Expose state mutator for Playwright
+    if (typeof window !== "undefined") {
+      (window as any).debugSetBattery = (amount: number) => {
+        dispatch({ type: "MODIFY_STAT", payload: { stat: "phoneBattery", amount: amount - state.phoneBattery } });
+      };
+    }
+  }, [state.phoneBattery]);
+
   // --- Helpers ---
 
   const modifyStat = useCallback((stat: keyof GameState, amount: number) => {

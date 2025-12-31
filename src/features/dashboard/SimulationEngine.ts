@@ -10,6 +10,10 @@ export interface SimAgent {
         hungry: boolean;    // 38.5% risco de fome extrema [Fonte: Censo 2024]
         sanitationAccess: 'PUBLICO' | 'COMERCIO' | 'RUA'; // Baseado no Censo: 52% Público, 17% Rua [Fonte: Censo FEAC]
         menstrualDignity: boolean; // Para mulheres: 9.1% sem acesso [Fonte: Censo FEAC]
+        benefitsAccess: 'DEFERIDO' | 'INDEFERIDO_DOCS' | 'INDEFERIDO_ENDERECO' | 'NAO_SOLICITOU'; // Barreira CadÚnico
+    };
+    background: {
+        reason: 'CONFLITO_FAMILIAR' | 'DESEMPREGO' | 'SAUDE_MENTAL_ALCOOL' | 'OUTROS'; // 71.5% Conflitos
     };
     outcome: 'SUCESSO' | 'VIOLACAO_ODS_1' | 'VIOLACAO_ODS_2' | 'VIOLACAO_ODS_11' | 'VIOLACAO_ODS_6';
 }
@@ -87,6 +91,36 @@ export function runCensusSimulation(): SimAgent[] {
             }
         }
 
+        // 6. Background (Causa da Rua) - Fidelidade Sociológica
+        // Fonte: Censo Campinas 2024
+        // - Conflitos Familiares: 71.5%
+        // - Desemprego: 23%
+        // - Uso de Substâncias/Saúde Mental: ~5.5% (Frequentemente superestimado pelo senso comum)
+        let reason: SimAgent['background']['reason'] = 'OUTROS';
+        const randReason = Math.random();
+        if (randReason < 0.715) {
+            reason = 'CONFLITO_FAMILIAR';
+        } else if (randReason < 0.715 + 0.23) {
+            reason = 'DESEMPREGO';
+        } else {
+            reason = 'SAUDE_MENTAL_ALCOOL';
+        }
+
+        // 7. Acesso a Benefícios (Barreira CadÚnico)
+        // IPEA aponta dificuldades com falta de documentos ou comprovante de residência.
+        // Simulando: 40% de indeferimento por burocracia para quem tenta.
+        let benefitsAccess: SimAgent['status']['benefitsAccess'] = 'NAO_SOLICITOU';
+        if (Math.random() > 0.3) { // 70% tenta solicitar
+            const randBenefit = Math.random();
+            if (randBenefit < 0.6) {
+                benefitsAccess = 'DEFERIDO';
+            } else if (randBenefit < 0.8) {
+                benefitsAccess = 'INDEFERIDO_DOCS'; // Falta RG/CPF
+            } else {
+                benefitsAccess = 'INDEFERIDO_ENDERECO'; // Falta comprovante de residência
+            }
+        }
+
         // 6. Determinar Resultado (Violência Institucional/Negação de Direitos)
         let outcome: SimAgent['outcome'] = 'SUCESSO';
         if (!isSheltered) outcome = 'VIOLACAO_ODS_11'; // Déficit Habitacional
@@ -103,7 +137,11 @@ export function runCensusSimulation(): SimAgent[] {
                 sheltered: isSheltered,
                 hungry: isHungry,
                 sanitationAccess,
-                menstrualDignity
+                menstrualDignity,
+                benefitsAccess
+            },
+            background: {
+                reason
             },
             outcome
         });
