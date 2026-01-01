@@ -93,6 +93,8 @@ export function GameChat({
 			if (text) {
 				// Use the robustly loaded GAME_DILEMMAS
 				const dilemmasArray = GAME_DILEMMAS;
+				console.log(`[GameChat] Input: "${text}"`);
+				console.log(`[GameChat] Loaded Dilemmas: ${dilemmasArray?.length}`);
 
 				const matchedDilemma = DilemmaMatcher.findBestDilemma(
 					text,
@@ -100,7 +102,8 @@ export function GameChat({
 					dilemmasArray,
 					[], // services can be passed if available via props or context if needed, but for now empty
 				);
-				// ...
+
+				console.log(`[GameChat] Match Result:`, matchedDilemma?.id);
 
 				if (matchedDilemma) {
 					console.log(`[HybridEngine] Interceptado: ${matchedDilemma.id}`);
