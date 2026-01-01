@@ -163,28 +163,26 @@ export function GameChat({
 				}
 			}
 
-			startTransition(() => {
-				try {
-					append({
-						role: "user",
-						content: text,
-						data: {
-							audioUrl: audioUrl, // Pass audio URL in data
-							gameState: {
-								health: gameStateRef.current.health,
-								hunger: gameStateRef.current.hunger,
-								hygiene: gameStateRef.current.hygiene,
-								money: gameStateRef.current.money,
-								time: gameStateRef.current.time,
-								location: userLocation,
-							},
+			try {
+				append({
+					role: "user",
+					content: text,
+					data: {
+						audioUrl: audioUrl,
+						gameState: {
+							health: gameStateRef.current.health,
+							hunger: gameStateRef.current.hunger,
+							hygiene: gameStateRef.current.hygiene,
+							money: gameStateRef.current.money,
+							time: gameStateRef.current.time,
+							location: userLocation,
 						},
-					});
-				} catch (err) {
-					console.error("Error appending message:", err);
-					setIsThinking(false);
-				}
-			});
+					},
+				});
+			} catch (err) {
+				console.error("Error appending message:", err);
+				setIsThinking(false);
+			}
 		},
 		[append, startTransition, userLocation, onDilemmaTriggered],
 	);
