@@ -2,81 +2,61 @@
 
 ```yaml
 - generic [active] [ref=e1]:
-  - navigation [ref=e2]:
-    - generic [ref=e4]:
-      - link "C Caminhos Campinas" [ref=e5] [cursor=pointer]:
-        - /url: /
-        - generic [ref=e6]: C
-        - generic [ref=e7]: Caminhos Campinas
-      - button "Abrir menu principal" [ref=e9]:
-        - generic [ref=e10]: Abrir menu principal
-        - img [ref=e11]
-  - main [ref=e12]:
-    - generic [ref=e14]:
-      - generic [ref=e17]:
-        - generic [ref=e18]:
-          - img [ref=e19]
-          - text: Construção de Identidade
-        - heading "Quem é você nesta jornada?" [level=2] [ref=e22]
-        - paragraph [ref=e23]: Cada detalhe molda as interações e desafios que virão.
-      - generic [ref=e31]:
-        - generic [ref=e32]:
-          - generic [ref=e33]: Como seu personagem é chamado?
-          - textbox "Como seu personagem é chamado?" [ref=e34]:
-            - /placeholder: "Ex: Zé do Pátio, Maria da Praça..."
-        - generic [ref=e35]:
-          - generic [ref=e36]:
-            - generic [ref=e37]: Gênero
-            - combobox "Selecione o gênero" [ref=e38]:
-              - option "Masculino" [selected]
-              - option "Feminino"
-              - option "Trans / Travesti"
-              - option "Não-binário"
-          - generic [ref=e39]:
-            - generic [ref=e40]: Faixa Etária
-            - combobox "Selecione a faixa etária" [ref=e41]:
-              - option "Jovem (18-29)"
-              - option "Adulto (30-59)" [selected]
-              - option "Idoso (60+)"
-      - generic [ref=e42]:
-        - button "Voltar" [ref=e43]:
-          - img
-          - text: Voltar
-        - button "Próximo Passo" [disabled]:
-          - text: Próximo Passo
-          - img
-  - button "Apoiar na Realidade" [ref=e45]:
-    - img [ref=e48]
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img [ref=e8]
+        - text: Construção de Identidade
+      - heading "Quem é você nesta jornada?" [level=2] [ref=e11]
+      - paragraph [ref=e12]: Cada detalhe molda as interações e desafios que virão.
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]: Como seu personagem é chamado?
+        - textbox "Como seu personagem é chamado?" [ref=e23]:
+          - /placeholder: "Ex: Zé do Pátio, Maria da Praça..."
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]: Gênero
+          - combobox "Selecione o gênero" [ref=e27]:
+            - option "Masculino" [selected]
+            - option "Feminino"
+            - option "Trans / Travesti"
+            - option "Não-binário"
+        - generic [ref=e28]:
+          - generic [ref=e29]: Faixa Etária
+          - combobox "Selecione a faixa etária" [ref=e30]:
+            - option "Jovem (18-29)"
+            - option "Adulto (30-59)" [selected]
+            - option "Idoso (60+)"
+    - generic [ref=e31]:
+      - button "Voltar" [ref=e32]:
+        - img
+        - text: Voltar
+      - button "Próximo Passo" [disabled]:
+        - text: Próximo Passo
+        - img
+  - button "Apoiar na Realidade" [ref=e34]:
+    - img [ref=e37]
     - generic: Apoiar na Realidade
-  - contentinfo [ref=e50]:
-    - generic [ref=e51]:
-      - generic [ref=e52]:
-        - heading "CAMINHOS CAMPINAS" [level=3] [ref=e53]
-        - paragraph [ref=e54]: Tecnologia como instrumento de emancipação. Código Aberto.
-      - navigation [ref=e55]:
-        - link "Início" [ref=e56] [cursor=pointer]:
-          - /url: /
-        - link "Sobre" [ref=e57] [cursor=pointer]:
-          - /url: /sobre
-        - link "Jogar" [ref=e58] [cursor=pointer]:
-          - /url: /jogar
-        - link "Impacto" [ref=e59] [cursor=pointer]:
-          - /url: /impacto
-        - link "Apoie" [ref=e60] [cursor=pointer]:
-          - /url: /apoie
-      - generic [ref=e61]:
-        - generic [ref=e62]:
-          - generic [ref=e63]:
-            - text: Desenvolvido na base do
-            - strong [ref=e64]: Vibe Coding
-            - text: ┼
-            - strong [ref=e65]: Inovação Social
-            - text: .
-          - img [ref=e66]
-        - link "Código Aberto" [ref=e68] [cursor=pointer]:
-          - /url: https://github.com/danielarraesreino/caminhos-campinas
-          - img [ref=e69]
-          - generic [ref=e72]: Código Aberto
-    - generic [ref=e73]: © 2025 Coletivo A Rua Tem Voz. Dados baseados no Censo FEAC/Prefeitura 2024.
-  - alert [ref=e74]
+  - contentinfo [ref=e39]:
+    - generic [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - heading "Caminhos Campinas" [level=4] [ref=e43]
+          - paragraph [ref=e44]: Uma iniciativa para transformar a realidade das ruas através da tecnologia social.
+        - generic [ref=e45]:
+          - generic [ref=e46]: Siga o Coletivo
+          - link "@COLETIVOARUATEMVOZ" [ref=e47] [cursor=pointer]:
+            - /url: https://www.instagram.com/coletivoaruatemvoz
+            - img [ref=e48]
+            - text: "@COLETIVOARUATEMVOZ"
+      - generic [ref=e51]:
+        - paragraph [ref=e52]: © 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
+        - generic [ref=e53]:
+          - img "Daniel (Japa)" [ref=e55]
+          - generic [ref=e57]:
+            - paragraph [ref=e58]: Desenvolvido por Daniel (Japa/Oclinhos)
+            - paragraph [ref=e59]: Vibe Coding &boxvh; Inovação Social
+        - paragraph [ref=e60]: "\"Informação é a libertação real, única e verdadeira.\""
+  - alert [ref=e61]
 ```

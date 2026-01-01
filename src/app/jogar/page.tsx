@@ -2,18 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { useGameLoop } from "@/features/game-loop/useGameLoop";
 import {
 	checkGameOver,
 	type GameOverResult,
 } from "@/features/game-loop/gameOverConditions";
-import { useEventEngine } from "@/hooks/useEventEngine";
+import { useGameLoop } from "@/features/game-loop/useGameLoop";
 import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
-import { GameHUD } from "@/features/ui/GameHUD";
-import { DilemmaModal } from "@/features/ui/DilemmaModal";
-import { GameOverModal } from "@/features/ui/GameOverModal";
 import { AvatarCreation } from "@/features/ui/AvatarCreation";
+import { DilemmaModal } from "@/features/ui/DilemmaModal";
+import { EffectsOverlay } from "@/features/ui/EffectsOverlay";
 import { GameChat } from "@/features/ui/GameChat";
+import { GameHUD } from "@/features/ui/GameHUD";
+import { GameOverModal } from "@/features/ui/GameOverModal";
+import { useEventEngine } from "@/hooks/useEventEngine";
 
 export default function GamePage() {
 	useGameLoop();
@@ -87,6 +88,7 @@ export default function GamePage() {
 						onToggleChat={() => setIsChatOpen(!isChatOpen)}
 						onToggleMenu={() => window.open("/recursos", "_blank")}
 					/>
+					<EffectsOverlay />
 				</div>
 			</div>
 
@@ -105,6 +107,7 @@ export default function GamePage() {
 				<div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">
 					<div className="w-full h-[60vh] md:w-[400px] md:h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 relative">
 						<button
+							type="button"
 							className="absolute top-2 right-2 p-2 z-10 text-slate-400 hover:text-white"
 							onClick={() => setIsChatOpen(false)}
 						>

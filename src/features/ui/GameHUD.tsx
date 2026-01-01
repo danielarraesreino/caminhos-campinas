@@ -2,22 +2,24 @@
 
 import {
 	Activity,
+	Battery,
 	Brain,
 	Clock,
 	Menu,
 	Mic, // New Icon
 	Package,
 	ShieldAlert,
-	Wallet,
-	Battery, // New Icon for Digital Barrier
 	User,
+	Wallet,
+	Wifi,
+	WifiOff,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
 import { CitizenshipTree } from "./CitizenshipTree";
 import { VoiceReporter } from "./VoiceReporter";
-import { Button } from "@/components/ui/button";
 
 export function GameHUD({
 	onToggleChat,
@@ -28,6 +30,25 @@ export function GameHUD({
 }) {
 	const [imgError, setImgError] = useState(false);
 	const [isReporterOpen, setIsReporterOpen] = useState(false);
+	const [isOnline, setIsOnline] = useState(true);
+
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+
+		setIsOnline(navigator.onLine);
+
+		const handleOnline = () => setIsOnline(true);
+		const handleOffline = () => setIsOnline(false);
+
+		window.addEventListener("online", handleOnline);
+		window.addEventListener("offline", handleOffline);
+
+		return () => {
+			window.removeEventListener("online", handleOnline);
+			window.removeEventListener("offline", handleOffline);
+		};
+	}, []);
+
 	const {
 		health,
 		sanity,
@@ -39,10 +60,21 @@ export function GameHUD({
 		// dignity,
 		avatar,
 		phoneBattery,
+		addBuff,
+		removeBuff,
 	} = useGameContext();
 
 	// Efeito de bordo pulsante para alto estigma
 	const stigmaAlert = socialStigma > 80;
+
+	// Gerenciamento de Buff de Bateria
+	useEffect(() => {
+		if (phoneBattery < 5) {
+			addBuff("SEM_BATERIA");
+		} else {
+			removeBuff("SEM_BATERIA");
+		}
+	}, [phoneBattery, addBuff, removeBuff]);
 
 	return (
 		<div className="w-full h-full flex flex-col justify-between p-4 pointer-events-none">
@@ -132,6 +164,33 @@ export function GameHUD({
 									R$ {money.toFixed(2)}
 								</div>
 							</div>
+
+							{/* Device Stats (Desktop) */}
+							<div className="w-[1px] h-8 bg-slate-700" />
+							<div className="flex flex-col items-center">
+								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
+									CONEXÃO
+								</span>
+								<div className="flex items-center gap-2 font-mono text-xl font-bold">
+									{isOnline ? (
+										<Wifi className="w-5 h-5 text-emerald-400" />
+									) : (
+										<WifiOff className="w-5 h-5 text-red-500 animate-pulse" />
+									)}
+								</div>
+							</div>
+							<div className="w-[1px] h-8 bg-slate-700" />
+							<div className="flex flex-col items-center">
+								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
+									BATERIA
+								</span>
+								<div
+									className={`flex items-center gap-2 font-mono text-xl font-bold ${phoneBattery < 20 ? "text-red-500 animate-pulse" : "text-emerald-400"}`}
+								>
+									<Battery className="w-5 h-5" />
+									{phoneBattery}%
+								</div>
+							</div>
 						</div>
 						{workTool.type && (
 							<div className="mt-1 flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-widest">
@@ -146,9 +205,21 @@ export function GameHUD({
 					<span>
 						D{day} {time.toString().padStart(2, "0")}:00
 					</span>
-					<span className="text-emerald-400 font-bold">
-						R$ {money.toFixed(2)}
-					</span>
+					<div className="flex items-center gap-3">
+						{/* Mobile Indicators */}
+						{!isOnline && (
+							<WifiOff className="w-4 h-4 text-red-500 animate-pulse" />
+						)}
+						<div
+							className={`flex items-center gap-1 ${phoneBattery < 20 ? "text-red-500" : "text-emerald-400"}`}
+						>
+							<Battery className="w-3 h-3" />
+							<span>{phoneBattery}%</span>
+						</div>
+						<span className="text-emerald-400 font-bold border-l border-slate-700 pl-3">
+							R$ {money.toFixed(2)}
+						</span>
+					</div>
 				</div>
 			</header>
 
@@ -159,17 +230,16 @@ export function GameHUD({
 			{/* MUDANÇA 3: Posicionamento bottom-4 right-4 em coluna */}
 			<div className="pointer-events-auto flex flex-col items-end gap-3 pb-safe-offset w-fit ml-auto">
 				{/* Botão de Chat/Ação (Principal) */}
-				{/* biome-ignore lint/a11y/useButtonType: shadcn button handles type */}
 				<Button
 					size="icon"
 					className="h-14 w-14 rounded-full bg-blue-600 hover:bg-blue-500 shadow-xl shadow-blue-900/50 border-2 border-blue-400 transition-transform active:scale-95"
 					onClick={onToggleChat}
+					disabled={phoneBattery <= 0}
 				>
 					<Mic className="h-6 w-6 text-white" />
 				</Button>
 
 				{/* Botão de Menu/Inventário (Secundário) */}
-				{/* biome-ignore lint/a11y/useButtonType: shadcn button handles type */}
 				<Button
 					size="icon"
 					variant="secondary"
