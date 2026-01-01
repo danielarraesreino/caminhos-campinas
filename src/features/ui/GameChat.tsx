@@ -17,7 +17,7 @@ import {
 	GlossaryTooltip,
 } from "@/components/ui/GlossaryTooltip";
 import { useGameContext } from "@/contexts/GameContext";
-import CAMPINAS_DILEMMAS from "@/data/dilemmas-campinas.json";
+import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 import { ActionInput } from "./ActionInput";
 
@@ -91,21 +91,8 @@ export function GameChat({
 
 			// Hybrid Engine Interception
 			if (text) {
-				// biome-ignore lint/suspicious/noExplicitAny: JSON import handling
-				const rawDilemmas: any = CAMPINAS_DILEMMAS;
-
-				let dilemmasArray: any[] = [];
-				if (Array.isArray(rawDilemmas)) {
-					dilemmasArray = rawDilemmas;
-				} else if (rawDilemmas && Array.isArray(rawDilemmas.default)) {
-					dilemmasArray = rawDilemmas.default;
-				} else if (rawDilemmas && typeof rawDilemmas === "object") {
-					// Fallback: try to find an array property or assume it's like { dilemmas: [...] }
-					dilemmasArray =
-						(Object.values(rawDilemmas).find((val) =>
-							Array.isArray(val),
-						) as any[]) || [];
-				}
+				// Use the robustly loaded GAME_DILEMMAS
+				const dilemmasArray = GAME_DILEMMAS;
 
 				const matchedDilemma = DilemmaMatcher.findBestDilemma(
 					text,
@@ -113,6 +100,7 @@ export function GameChat({
 					dilemmasArray,
 					[], // services can be passed if available via props or context if needed, but for now empty
 				);
+				// ...
 
 				if (matchedDilemma) {
 					console.log(`[HybridEngine] Interceptado: ${matchedDilemma.id}`);
