@@ -4,10 +4,11 @@ import { BatteryWarning } from "lucide-react";
 import { useGameContext } from "@/contexts/GameContext";
 
 export function EffectsOverlay() {
-	const { buffs } = useGameContext();
+	const { activeBuffs } = useGameContext();
 
 	// Check if SEM_BATERIA buff is active
-	const isBatteryDead = buffs.includes("SEM_BATERIA");
+	// biome-ignore lint/complexity/useOptionalChain: activeBuffs should be array but being safe
+	const isBatteryDead = activeBuffs?.includes("SEM_BATERIA");
 
 	if (!isBatteryDead) return null;
 
