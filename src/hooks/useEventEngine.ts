@@ -49,9 +49,9 @@ export function useEventEngine() {
 			if (!option) return;
 
 			// Determine which effect to apply
-			let effectToApply = option.effect;
+			let effectToApply = option.effect || {};
 			if (outcome === "failure" && option.effect_failure) {
-				effectToApply = option.effect_failure as any;
+				effectToApply = (option.effect_failure as any) || {};
 			}
 
 			// 1. Aplicar stats básicos

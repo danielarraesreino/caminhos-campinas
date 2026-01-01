@@ -109,7 +109,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						Bolsa / Renda
 					</span>
 					<span className="text-emerald-300 font-mono font-bold">
-						R$ {service.effects.money},00
+						R$ {service.effects?.money},00
 					</span>
 				</div>
 			)}
