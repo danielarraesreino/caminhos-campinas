@@ -5,7 +5,6 @@ import { GAME_DILEMMAS } from "./dilemmas"; // Unify import source
 // ... (keep generic imports)
 
 // ... (keep generic imports)
-import { TelemetryAction, telemetryService } from "@/services/telemetry";
 
 function calculateDistance(
 	lat1: number,
@@ -61,7 +60,7 @@ export function useGameLoop() {
 
 	// Coordenadas do Centro de Campinas (Largo do Rosário/13 de Maio)
 	const CENTER_COORDS = { lat: -22.9055, lng: -47.0608 };
-	const IDLE_THRESHOLD = 3; // Horas paradas para gatilho
+	// const IDLE_THRESHOLD = 3; // Horas paradas para gatilho (Move to dilemma json if needed)
 
 	// Estado local para rastrear tempo no mesmo local
 	const [timeInLocation, setTimeInLocation] = useState(0);
@@ -92,34 +91,18 @@ export function useGameLoop() {
 	// --- Helpers ---
 	const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
 
-	const applyWeatherEffects = (state: any, raining: boolean) => {
-		// Return distinct effects to be applied
-		// This function calculates projected changes but doesn't apply them directly
-		const effects: any = {};
-		if (raining && !state.isAtShelter) {
-			effects.health = state.health - 1; // Rain hurts
-			if (state.workTool?.type === "CARRINHO_RECICLAGEM") {
-				// Rust or wet cardboard?
-			}
-		}
-		return effects;
-	};
-
 	const processRandomEvents = (state: any) => {
-		// Placeholder for "O Rapa"
-		if (Math.random() < 0.005) {
-			// 0.5% chance per tick
+		// "O Rapa" / "Protocolo de Natal": Increased probability from 0.5% to 2% per tick (every hour)
+		// This simulates the heightened police activity mentioned by user.
+		if (Math.random() < 0.02) {
+			// 2% chance per tick
 			// O Rapa logic
 			return {
 				workTool: { ...state.workTool, isConfiscated: true },
-				dignity: state.dignity - 10,
+				dignity: state.dignity - 15, // Higher dignity impact
 			};
 		}
 		return null;
-	};
-
-	const checkShelterBarrier = () => {
-		// Logic to check if user can enter shelter (ignored for now as mostly handled in NearbyList)
 	};
 
 	const checkBattery = useCallback(() => {

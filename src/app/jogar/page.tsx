@@ -14,6 +14,7 @@ import { EffectsOverlay } from "@/features/ui/EffectsOverlay";
 import { GameChat } from "@/features/ui/GameChat";
 import { GameHUD } from "@/features/ui/GameHUD";
 import { GameOverModal } from "@/features/ui/GameOverModal";
+import { OnboardingTutorial } from "@/features/ui/OnboardingTutorial";
 import { useEventEngine } from "@/hooks/useEventEngine";
 
 export default function GamePage() {
@@ -26,6 +27,15 @@ export default function GamePage() {
 		null,
 	);
 	const [isChatOpen, setIsChatOpen] = useState(false);
+	const [showTutorial, setShowTutorial] = useState(false);
+
+	useEffect(() => {
+		// Check if tutorial was seen
+		const tutorialSeen = localStorage.getItem("pop_rua_tutorial_seen");
+		if (!tutorialSeen) {
+			setShowTutorial(true);
+		}
+	}, []);
 
 	useEffect(() => {
 		const result = checkGameOver(gameState);
@@ -74,6 +84,11 @@ export default function GamePage() {
 	return (
 		// MUDANÇA 1: h-[100dvh] garante que cabe na tela real do celular sem scroll
 		<main className="relative w-full h-[100dvh] bg-slate-900 overflow-hidden">
+			<OnboardingTutorial
+				isOpen={showTutorial}
+				onClose={() => setShowTutorial(false)}
+			/>
+
 			{/* World Container - applies degradation only to the game world, not UI overlays */}
 			<div className={`absolute inset-0 z-0 ${degradationClasses}`}>
 				{/* CAMADA 0: Mapa (Fundo) */}
