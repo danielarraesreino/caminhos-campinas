@@ -7,13 +7,14 @@ import {
 	Gamepad,
 	MapPin,
 	Menu,
+	Wifi,
+	WifiOff,
 	X,
 } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { BatteryIndicator } from "@/components/ui/BatteryIndicator";
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Wifi, WifiOff } from "lucide-react";
 
 export function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -93,7 +94,8 @@ export function Navbar() {
 					</Link>
 
 					{/* 2. DESKTOP MENU (Bifurcated) */}
-					<div className="hidden md:flex items-center gap-6">
+					{/* Changed md:flex to lg:flex to avoid overflow on medium screens */}
+					<div className="hidden lg:flex items-center gap-6">
 						{/* Group A: Empathy & Data */}
 						<div className="flex items-center space-x-1 border-r border-zinc-800 pr-6">
 							<Link
@@ -132,8 +134,8 @@ export function Navbar() {
 								variant="default"
 								className="bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
 							>
-								<span className="hidden sm:inline">Apoie Agora</span>
-								<span className="sm:hidden">Apoiar</span>
+								<span className="hidden xl:inline">Apoie Agora</span>
+								<span className="xl:hidden">Apoiar</span>
 							</Button>
 						</Link>
 
@@ -151,8 +153,8 @@ export function Navbar() {
 					</div>
 
 					{/* 3. MOBILE MENU BUTTON */}
-					<div className="-mr-2 flex md:hidden">
-						<div className="mr-4 flex md:hidden items-center">
+					<div className="-mr-2 flex lg:hidden">
+						<div className="mr-4 flex lg:hidden items-center">
 							{!isOnline && (
 								<div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-900/30 border border-red-500/30 text-red-200 text-xs font-bold animate-pulse">
 									<WifiOff className="w-3 h-3" />
@@ -179,7 +181,7 @@ export function Navbar() {
 
 			{/* 4. MOBILE MENU (Drawer) */}
 			{isOpen && (
-				<div className="md:hidden bg-zinc-950 border-b border-zinc-800 animate-in slide-in-from-top-2">
+				<div className="lg:hidden bg-zinc-950 border-b border-zinc-800 animate-in slide-in-from-top-2">
 					<div className="px-4 pt-2 pb-6 space-y-4">
 						{/* Mobile Group A */}
 						<div className="space-y-1">
