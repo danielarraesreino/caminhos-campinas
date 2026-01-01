@@ -35,12 +35,11 @@ export const viewport: Viewport = {
 	// userScalable: false,
 };
 
+import { ClientLayoutWrapper } from "@/app/ClientLayoutWrapper";
 import { Providers } from "@/components/Providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
-
-import { ClientLayoutWrapper } from "@/app/ClientLayoutWrapper";
-import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
 import { Footer } from "@/components/ui/Footer";
+import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
 
 export default function RootLayout({
 	children,
@@ -63,7 +62,6 @@ export default function RootLayout({
 								<Analytics />
 								<ServiceWorkerRegister />
 								<RealitySwitcher />
-								<Footer />
 							</ServicesProvider>
 						</GameProvider>
 					</SurvivalModeProvider>
