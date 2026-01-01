@@ -13,17 +13,25 @@ import SERVICES_DATA from "@/data/services-campinas.json";
 import EDUCATION_DATA from "@/data/services-education.json";
 import EXPANSION_DATA from "@/data/services-expansion.json";
 
+// Helper to safely get array from JSON import (handles ES modules default export if needed)
+// biome-ignore lint/suspicious/noExplicitAny: JSON imports can be unpredictable in build
+const safeArray = (data: any): any[] => {
+	if (Array.isArray(data)) return data;
+	if (data && Array.isArray(data.default)) return data.default;
+	return [];
+};
+
 // Merge all datasets with normalization
 const ALL_SERVICES = [
-	...SERVICES_DATA.map((s) => ({ ...s, type: s.type as ServiceType })),
-	...EDUCATION_DATA.map((s) => ({
+	...safeArray(SERVICES_DATA).map((s) => ({ ...s, type: s.type as ServiceType })),
+	...safeArray(EDUCATION_DATA).map((s) => ({
 		...s,
 		type: "EDUCATION" as ServiceType,
 		category: "Educação Online",
 		coords: [-22.905, -47.06] as [number, number], // Default center for online
 		opening_hours: "24h",
 	})),
-	...EXPANSION_DATA.map((s) => ({
+	...safeArray(EXPANSION_DATA).map((s) => ({
 		...s,
 		coords: s.coordinates as [number, number], // Map coordinates -> coords
 		requirements: s.requirements || [],
