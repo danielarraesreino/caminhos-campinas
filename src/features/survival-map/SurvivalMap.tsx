@@ -26,13 +26,16 @@ export function SurvivalMap() {
 			(s): s is typeof s & { coords: [number, number] } =>
 				!!s.coords && Array.isArray(s.coords) && s.coords.length === 2,
 		)
-		.map((s) => ({
-			id: s.id,
-			name: s.name,
-			type: s.type,
-			lat: s.coords[0],
-			lng: s.coords[1],
-		}));
+		.map((s) => {
+			const c = s.coords;
+			return {
+				id: s.id,
+				name: s.name,
+				type: s.type,
+				lat: c[0],
+				lng: c[1],
+			};
+		});
 
 	useEffect(() => {
 		// Only fetch if not already set (or we could force refresh? Let's respect existing if valid)

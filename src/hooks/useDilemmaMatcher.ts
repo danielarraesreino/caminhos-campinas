@@ -45,12 +45,13 @@ export function useDilemmaMatcher() {
 
 			// Explicit Dynamic Checks as requested
 			if (input.includes("fome") && locationObj) {
-				if (bomPrato && bomPrato.coords) {
+				const bpCoords = bomPrato?.coords;
+				if (bomPrato && bpCoords) {
 					const dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
-						bomPrato.coords[0],
-						bomPrato.coords[1],
+						bpCoords[0],
+						bpCoords[1],
 					);
 					if (dist <= 500) {
 						return {
@@ -79,12 +80,13 @@ export function useDilemmaMatcher() {
 				const cr = targetServices.find(
 					(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
 				);
-				if (cr && cr.coords) {
+				const crCoords = cr?.coords;
+				if (cr && crCoords) {
 					const _dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
-						cr.coords[0],
-						cr.coords[1],
+						crCoords[0],
+						crCoords[1],
 					);
 					// Relaxed distance for health? Or keep 500m? Assuming global or nearest.
 					// Let's standardise on finding the NEAREST health service.
@@ -113,10 +115,13 @@ export function useDilemmaMatcher() {
 					(s): s is typeof s & { coords: [number, number] } =>
 						!!s.coords && Array.isArray(s.coords) && s.coords.length === 2,
 				)
-				.map((s) => ({
-					id: s.id,
-					coords: s.coords,
-				}));
+				.map((s) => {
+					const coords: [number, number] = [s.coords[0], s.coords[1]];
+					return {
+						id: s.id,
+						coords: coords,
+					};
+				});
 
 			const match = DilemmaMatcher.findBestDilemma(
 				userInput,

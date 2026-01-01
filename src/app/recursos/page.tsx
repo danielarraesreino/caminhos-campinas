@@ -24,6 +24,7 @@ import {
 
 function ServiceCard({ service }: { service: ServiceLocation }) {
 	const { documents, modifyStat } = useGameContext();
+	const { coords } = service;
 	const [enrollmentStatus, setEnrollmentStatus] = useState<
 		"idle" | "enrolling" | "enrolled"
 	>("idle");
@@ -187,12 +188,12 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 			)}
 
 			<div className="flex gap-2 mt-4">
-				{service.coords && service.coords.length === 2 ? (
+				{coords && coords.length === 2 ? (
 					<button
 						type="button"
 						onClick={() => {
-							if (!service.coords || service.coords.length < 2) return;
-							const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
+							if (!coords || coords.length < 2) return;
+							const url = `https://www.google.com/maps/dir/?api=1&destination=${coords[0]},${coords[1]}`;
 							window.open(url, "_blank");
 						}}
 						className="flex-1 bg-zinc-800 border border-zinc-700 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
