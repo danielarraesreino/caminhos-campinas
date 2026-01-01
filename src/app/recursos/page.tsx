@@ -153,13 +153,26 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<button
 					type="button"
 					onClick={() => {
-						const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
-						window.open(url, "_blank");
+						if (service.action_type === "link" && service.url) {
+							window.open(service.url, "_blank");
+						} else {
+							const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
+							window.open(url, "_blank");
+						}
 					}}
-					className="flex-1 bg-zinc-800 border border-zinc-700 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+					className={`flex-1 border text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors ${service.action_type === "link" ? "bg-blue-800 border-blue-700 hover:bg-blue-700" : "bg-zinc-800 border-zinc-700 hover:bg-zinc-700"}`}
 				>
-					<MapPin className="w-4 h-4" />
-					Ver Mapa
+					{service.action_type === "link" ? (
+						<>
+							<div className="w-4 h-4">🔗</div>
+							Acessar Curso
+						</>
+					) : (
+						<>
+							<MapPin className="w-4 h-4" />
+							Ver Mapa
+						</>
+					)}
 				</button>
 
 				{isEducationStyle && (

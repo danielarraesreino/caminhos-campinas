@@ -197,16 +197,20 @@ export function NearbyList() {
 								</button>
 								<button
 									type="button"
-									onClick={() =>
-										window.open(
-											`https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`,
-											"_blank",
-										)
-									}
-									className="flex items-center justify-center w-9 h-9 border rounded hover:bg-muted transition-colors text-blue-500 hover:text-blue-600 hover:border-blue-200"
-									title="Ver no Google Maps"
+									onClick={() => {
+										if (service.action_type === "link" && service.url) {
+											window.open(service.url, "_blank");
+										} else {
+											window.open(
+												`https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`,
+												"_blank",
+											);
+										}
+									}}
+									className={`flex items-center justify-center min-w-[36px] px-2 h-9 border rounded hover:opacity-90 transition-colors ${service.action_type === "link" ? "bg-blue-100 text-blue-700 border-blue-200" : "hover:bg-muted text-blue-500 hover:text-blue-600 hover:border-blue-200"}`}
+									title={service.action_type === "link" ? "Acessar Site do Curso" : "Ver no Google Maps"}
 								>
-									<Navigation size={16} />
+									{service.action_type === "link" ? <span className="text-xs font-bold mr-1">Link</span> : <Navigation size={16} />}
 								</button>
 							</div>
 						</div>

@@ -69,6 +69,9 @@ export interface ServiceLocation {
 	rules?: string;
 	requirements?: string[];
 	phone?: string;
+	opening_hours?: string;
+	requirements?: string[];
+	rules?: string;
 	effects?: {
 		hunger?: number;
 		health?: number;
@@ -79,8 +82,11 @@ export interface ServiceLocation {
 		money?: number;
 		stabilityGap?: number;
 		addBuff?: string;
-		security?: number; // Added from bagageiro check
+		security?: number;
 	};
+	interactions?: any[]; // Keep interactions flexible
+	action_type?: "map" | "link"; // New: Link vs Map intent
+	url?: string; // New: URL for online actions
 }
 
 interface ServicesContextProps {
