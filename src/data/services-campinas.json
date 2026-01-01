@@ -54,9 +54,9 @@
 		"name": "Bom Prato Centro",
 		"type": "ALIMENTACAO",
 		"category": "Restaurante Popular",
-		"address": "Av. Dr. Moraes Sales, 384, Centro",
-		"description": "Café (R$ 0,50) e Almoço/Jantar (R$ 1,00). Fila média de 40 min. Gratuito para cadastrados no CadÚnico Pop Rua.",
-		"opening_hours": "07:00, 10:30, 17:00",
+		"address": "Av. Dr. Moraes Sales, 384 - Centro",
+		"description": "Café da manhã completo a R$ 0,50 (começa às 7h). Almoço e Jantar a R$ 1,00. Chegue cedo para pegar senha.",
+		"opening_hours": "07:00 - 09:00 (Café) | 10:30 - 14:00 (Almoço) | 17:00 (Jantar)",
 		"coords": [
 			-22.9102,
 			-47.0605
@@ -64,7 +64,27 @@
 		"effects": {
 			"hunger": 100,
 			"money": -1
-		}
+		},
+		"interactions": [
+			{
+				"label": "Tomar Café (R$ 0,50)",
+				"action": "eat_breakfast",
+				"cost": 0.5,
+				"effect": {
+					"hunger": 40,
+					"energy": 10
+				}
+			},
+			{
+				"label": "Almoçar (R$ 1,00)",
+				"action": "eat_lunch",
+				"cost": 1.0,
+				"effect": {
+					"hunger": 100,
+					"energy": 20
+				}
+			}
+		]
 	},
 	{
 		"id": "bom_prato_movel",
