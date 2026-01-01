@@ -5,11 +5,11 @@ import { MapPin, Send } from "lucide-react";
 import Image from "next/image";
 import {
 	type FormEvent,
+	useCallback,
 	useEffect,
 	useRef,
 	useState,
 	useTransition,
-	useCallback,
 } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +17,8 @@ import {
 	GlossaryTooltip,
 } from "@/components/ui/GlossaryTooltip";
 import { useGameContext } from "@/contexts/GameContext";
-import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 import CAMPINAS_DILEMMAS from "@/data/dilemmas-campinas.json";
+import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 import { ActionInput } from "./ActionInput";
 
 export function GameChat({
@@ -91,16 +91,27 @@ export function GameChat({
 
 			// Hybrid Engine Interception
 			if (text) {
+				// biome-ignore lint/suspicious/noExplicitAny: JSON import handling
 				const rawDilemmas: any = CAMPINAS_DILEMMAS;
-				const dilemmasArray = Array.isArray(rawDilemmas)
-					? rawDilemmas
-					: rawDilemmas.default || [];
+
+				let dilemmasArray: any[] = [];
+				if (Array.isArray(rawDilemmas)) {
+					dilemmasArray = rawDilemmas;
+				} else if (rawDilemmas && Array.isArray(rawDilemmas.default)) {
+					dilemmasArray = rawDilemmas.default;
+				} else if (rawDilemmas && typeof rawDilemmas === "object") {
+					// Fallback: try to find an array property or assume it's like { dilemmas: [...] }
+					dilemmasArray =
+						(Object.values(rawDilemmas).find((val) =>
+							Array.isArray(val),
+						) as any[]) || [];
+				}
 
 				const matchedDilemma = DilemmaMatcher.findBestDilemma(
 					text,
 					userLocation,
-					dilemmasArray as any[],
-					[], // services can be passed if available
+					dilemmasArray,
+					[], // services can be passed if available via props or context if needed, but for now empty
 				);
 
 				if (matchedDilemma) {
@@ -119,7 +130,7 @@ export function GameChat({
 			setIsThinking(true);
 
 			// Audio Handling
-			let audioUrl = "";
+			const audioUrl = "";
 			if (audioBlob) {
 				console.log(
 					"Audio blob active - Saving locally for DEBUG/OFFLINE mode",
