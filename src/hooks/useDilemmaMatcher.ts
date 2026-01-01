@@ -45,7 +45,7 @@ export function useDilemmaMatcher() {
 
 			// Explicit Dynamic Checks as requested
 			if (input.includes("fome") && locationObj) {
-				if (bomPrato) {
+				if (bomPrato && bomPrato.coords) {
 					const dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
@@ -79,7 +79,7 @@ export function useDilemmaMatcher() {
 				const cr = targetServices.find(
 					(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
 				);
-				if (cr) {
+				if (cr && cr.coords) {
 					const _dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
@@ -111,7 +111,7 @@ export function useDilemmaMatcher() {
 			const serviceLocations = services
 				.filter(
 					(s): s is typeof s & { coords: [number, number] } =>
-						!!s.coords && Array.isArray(s.coords),
+						!!s.coords && Array.isArray(s.coords) && s.coords.length === 2,
 				)
 				.map((s) => ({
 					id: s.id,

@@ -22,13 +22,16 @@ export function SurvivalMap() {
 
 	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
 	const resources = services
-		.filter((s) => s.coords && Array.isArray(s.coords) && s.coords.length === 2)
+		.filter(
+			(s): s is typeof s & { coords: [number, number] } =>
+				!!s.coords && Array.isArray(s.coords) && s.coords.length === 2,
+		)
 		.map((s) => ({
 			id: s.id,
 			name: s.name,
 			type: s.type,
-			lat: s.coords![0],
-			lng: s.coords![1],
+			lat: s.coords[0],
+			lng: s.coords[1],
 		}));
 
 	useEffect(() => {
