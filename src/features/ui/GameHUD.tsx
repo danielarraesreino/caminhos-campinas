@@ -154,7 +154,7 @@ export function GameHUD({
 
 			{/* RODAPÉ: Floating Action Buttons (FAB) */}
 			{/* MUDANÇA 3: Posicionamento bottom-4 right-4 em coluna */}
-			<div className="pointer-events-auto flex flex-col items-end gap-3 pb-safe-offset">
+			<div className="pointer-events-auto flex flex-col items-end gap-3 pb-safe-offset w-fit ml-auto">
 				{/* Botão de Chat/Ação (Principal) */}
 				{/* biome-ignore lint/a11y/useButtonType: shadcn button handles type */}
 				<Button
