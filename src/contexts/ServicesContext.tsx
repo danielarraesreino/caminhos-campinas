@@ -61,17 +61,14 @@ export interface ServiceLocation {
 	id: string;
 	name: string;
 	type: ServiceType | string; // Allow string for raw JSON compatibility
-	coords: [number, number];
-	opening_hours: string;
+	coords: [number, number] | null;
 	address?: string;
 	category?: string;
 	description?: string;
 	rules?: string;
 	requirements?: string[];
 	phone?: string;
-	opening_hours?: string;
-	requirements?: string[];
-	rules?: string;
+	opening_hours?: string; // Optional
 	effects?: {
 		hunger?: number;
 		health?: number;
