@@ -146,7 +146,16 @@ export function NearbyList() {
 
 			<div className="flex flex-col gap-3">
 				{services.map((service) => {
-					const { allowed, reasons } = checkAvailability(service);
+					let allowed = true;
+					let reasons: string[] = [];
+					try {
+						const check = checkAvailability(service);
+						allowed = check.allowed;
+						reasons = check.reasons;
+					} catch (err) {
+						console.error("Critical error checking service availability:", service?.id, err);
+						return null;
+					}
 					const distanceDisplay =
 						service.distance < 1
 							? `${Math.round(service.distance * 1000)}m`
