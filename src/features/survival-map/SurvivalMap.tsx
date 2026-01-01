@@ -21,13 +21,15 @@ export function SurvivalMap() {
 	const { services } = useServices();
 
 	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
-	const resources = services.map((s) => ({
-		id: s.id,
-		name: s.name,
-		type: s.type,
-		lat: s.coords[0],
-		lng: s.coords[1],
-	}));
+	const resources = services
+		.filter((s): s is ServiceLocation & { coords: [number, number] } => !!s.id && !!s.coords)
+		.map((s) => ({
+			id: s.id,
+			name: s.name,
+			type: s.type,
+			lat: s.coords[0], // Safe access due to filter
+			lng: s.coords[1],
+		}));
 
 	useEffect(() => {
 		// Only fetch if not already set (or we could force refresh? Let's respect existing if valid)
