@@ -123,14 +123,12 @@ export function GameChat({
 			}
 
 			if (bestMatch) {
-				console.log("Hybrid Engine Intercepted:", bestMatch.id);
-				// Add user message to UI immediately manually since we skip AI
-				// accessing internal mutate from useChat is hard, so we just trigger the modal
-				// The modal will appear. Ideally we should append the user msg too.
-				// append({ role: 'user', content: text }) might trigger AI.
-				// We will just open the modal. The user sees their input in the input field? No, it clears.
-				// Let's rely on the modal being the feedback.
-				if (onDilemmaTriggered) onDilemmaTriggered(bestMatch.id);
+				if (typeof onDilemmaTriggered === 'function') {
+					console.log("Hybrid Engine Intercepted:", bestMatch.id);
+					onDilemmaTriggered(bestMatch.id);
+				} else {
+					console.error("ERRO CRÍTICO: onDilemmaTriggered não conectado no componente pai!");
+				}
 				return;
 			}
 
@@ -266,7 +264,7 @@ export function GameChat({
 									</div>
 								) : (
 									<Image
-										src={`https://api.dicebear.com/7.x/bottts/svg?seed=system`}
+										src="/avatars/avatar_1.png"
 										alt="Mestre"
 										width={32}
 										height={32}
@@ -295,7 +293,7 @@ export function GameChat({
 					<div className="flex gap-3 w-full px-2">
 						<div className="flex-shrink-0 mt-1">
 							<Image
-								src={`https://api.dicebear.com/7.x/bottts/svg?seed=system`}
+								src="/avatars/avatar_1.png"
 								alt="Mestre"
 								width={32}
 								height={32}
