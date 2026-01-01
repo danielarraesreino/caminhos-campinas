@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
 import { useServices } from "@/contexts/ServicesContext";
-import type { Dilemma } from "@/features/game-loop/dilemma-types";
 // Dilemmas data import - assuming it's available or we maintain a subset here?
 // Ideally we should import from a central dilemma registry.
 // For now, I will use a placeholder or assume imports are possible.
 // Wait, the prompt implies "create system". I will import dilemmas from existing file if possible.
 import { ALL_DILEMMAS as dilemmas } from "@/features/game-loop/all-dilemmas";
+import type { Dilemma } from "@/features/game-loop/dilemma-types";
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 
 export function useDilemmaMatcher() {
@@ -19,20 +19,16 @@ export function useDilemmaMatcher() {
 	const findMatch = useCallback(
 		(userInput: string, userCoords: [number, number] | null) => {
 			// Map services to the format expected by DilemmaMatcher
-			const serviceLocations = services.map((s) => ({
-				id: s.id,
-				coords: s.coords,
-			}));
+			const serviceLocations = services
+				.filter((s) => s.coords)
+				.map((s) => ({
+					id: s.id,
+					coords: s.coords as [number, number],
+				}));
 
 			const locationObj = userCoords
 				? { lat: userCoords[0], lng: userCoords[1] }
 				: null;
-
-			// Custom Logic requested: "fome" + <500m "Bom Prato" -> Suggestion
-			// We can pre-process this rule before calling the generic matcher, OR rely on the generic matcher
-			// if we add a "dilemma" that triggers on these conditions.
-			// User asked to "Calculate distance... If player says 'fome' and <500m 'Bom Prato', return card".
-			// This implies generating a dynamic dilemma-like object if not found in static list.
 
 			const normalize = (s: string) =>
 				s
@@ -41,12 +37,12 @@ export function useDilemmaMatcher() {
 					.replace(/[\u0300-\u036f]/g, "");
 			const input = normalize(userInput);
 
-			// Explicit Dynamic Checks as requested
+			// Explicit Dynamic Checks
 			if (input.includes("fome") && locationObj) {
-				const bomPrato = services.find((s) =>
-					s.name.toLowerCase().includes("bom prato"),
+				const bomPrato = services.find(
+					(s) => s.name.toLowerCase().includes("bom prato") && s.coords,
 				);
-				if (bomPrato) {
+				if (bomPrato && bomPrato.coords) {
 					const dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
@@ -68,7 +64,7 @@ export function useDilemmaMatcher() {
 									}),
 								},
 							],
-						} as unknown as Dilemma; // Casting for compatibility
+						} as unknown as Dilemma;
 					}
 				}
 			}
@@ -78,19 +74,16 @@ export function useDilemmaMatcher() {
 				locationObj
 			) {
 				const consultorio = services.find(
-					(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
+					(s) =>
+						(s.type === "SAUDE" || s.name.includes("Consultório")) && s.coords,
 				);
-				if (consultorio) {
+				if (consultorio && consultorio.coords) {
 					const _dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
 						consultorio.coords[0],
 						consultorio.coords[1],
 					);
-					// Relaxed distance for health? Or keep 500m? Assuming global or nearest.
-					// Let's standardise on finding the NEAREST health service.
-					// The prompt specifically mentioned "Consultório na Rua".
-
 					return {
 						id: "dynamic_health_cr",
 						title: "Atendimento de Saúde",

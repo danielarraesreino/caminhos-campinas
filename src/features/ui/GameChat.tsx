@@ -167,7 +167,8 @@ export function GameChat({
 				append({
 					role: "user",
 					content: text,
-					data: {
+				}, {
+					body: {
 						audioUrl: audioUrl,
 						gameState: {
 							health: gameStateRef.current.health,
