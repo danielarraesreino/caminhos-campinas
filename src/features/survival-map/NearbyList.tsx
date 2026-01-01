@@ -81,7 +81,7 @@ export function NearbyList() {
 		const reasons: string[] = [];
 
 		// 1. Money Constraint
-		if (service.effects.money && service.effects.money < 0) {
+		if (service.effects?.money && service.effects.money < 0) {
 			const cost = Math.abs(service.effects.money);
 			if (money < cost) {
 				allowed = false;
@@ -106,6 +106,8 @@ export function NearbyList() {
 		async (service: Service) => {
 			// Apply Effects
 			const { effects } = service;
+			if (!effects) return; // Safeguard
+
 			if (effects.hunger) modifyStat("hunger", effects.hunger);
 			if (effects.hygiene) modifyStat("hygiene", effects.hygiene);
 			if (effects.energy) modifyStat("energy", effects.energy);

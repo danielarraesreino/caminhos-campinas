@@ -23,18 +23,20 @@ const safeArray = (data: any): any[] => {
 
 // Merge all datasets with normalization
 const ALL_SERVICES = [
-	...safeArray(SERVICES_DATA).map((s) => ({ ...s, type: s.type as ServiceType })),
+	...safeArray(SERVICES_DATA).map((s) => ({ ...s, type: s.type as ServiceType, effects: s.effects || {} })),
 	...safeArray(EDUCATION_DATA).map((s) => ({
 		...s,
 		type: "EDUCATION" as ServiceType,
 		category: "Educação Online",
-		coords: [-22.905, -47.06] as [number, number], // Default center for online
+		coords: [-22.905, -47.06] as [number, number],
 		opening_hours: "24h",
+		effects: s.effects || {},
 	})),
 	...safeArray(EXPANSION_DATA).map((s) => ({
 		...s,
-		coords: s.coordinates as [number, number], // Map coordinates -> coords
+		coords: s.coordinates as [number, number],
 		requirements: s.requirements || [],
+		effects: s.effects || {},
 	})),
 ] as ServiceLocation[];
 
