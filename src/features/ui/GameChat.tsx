@@ -125,7 +125,7 @@ export function GameChat() {
 		// Create a regex to match any term, case insensitive
 		const regex = new RegExp(`(${terms.join("|")})`, "gi");
 
-		const parts = content.split(regex);
+		const parts = (content || "").split(regex);
 
 		return parts.map((part, i) => {
 			// Check if this part matches a term
