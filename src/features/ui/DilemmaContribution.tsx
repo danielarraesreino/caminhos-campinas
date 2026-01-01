@@ -74,8 +74,11 @@ export function DilemmaContribution() {
 			audioBlob || new Blob(["no-audio"], { type: "text/plain" });
 
 		// const result = await uploadUserDilemma(finalAudio, text, contact);
-		console.log("Saving dilemma contribution locally (Offline Mode)", { text, contact });
-		await new Promise(resolve => setTimeout(resolve, 1000));
+		console.log("Saving dilemma contribution locally (Offline Mode)", {
+			text,
+			contact,
+		});
+		await new Promise((resolve) => setTimeout(resolve, 1000));
 		const result = { success: true, message: "Relato salvo localmente!" };
 
 		if (result.success) {

@@ -36,7 +36,12 @@ export const DilemmaMatcher = {
 		// Filter by tags
 		const relevantDilemmas = gameDilemmas.filter((d) => {
 			// 1. Tag Match (High Precision)
-			if (d.tags && d.tags.some((tag: string) => normalizedInput.includes(tag.toLowerCase()))) {
+			if (
+				d.tags &&
+				d.tags.some((tag: string) =>
+					normalizedInput.includes(tag.toLowerCase()),
+				)
+			) {
 				return true;
 			}
 			// 2. Text Match (Fallback) - Search in Title and Description

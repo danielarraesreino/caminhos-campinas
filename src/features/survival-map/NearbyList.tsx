@@ -3,7 +3,7 @@
 import { useGameContext } from "@/contexts/GameContext";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
 import { Lock, MapPin, Navigation, Wallet } from "lucide-react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import servicesData from "@/data/services-campinas.json";
 
 interface ServiceEffect {
@@ -29,20 +29,25 @@ interface Service {
 }
 
 function calculateDistance(
-	lat1: number,
-	lon1: number,
-	lat2: number,
-	lon2: number,
+	lat1: number | undefined | null,
+	lon1: number | undefined | null,
+	lat2: number | undefined | null,
+	lon2: number | undefined | null,
 ) {
+	// 🛡️ BLINDAGEM: Se qualquer coordenada for inválida, retorne Infinity (muito longe)
+	if (!lat1 || !lon1 || !lat2 || !lon2) {
+		return Number.POSITIVE_INFINITY;
+	}
+
 	const R = 6371;
 	const dLat = ((lat2 - lat1) * Math.PI) / 180;
 	const dLon = ((lon2 - lon1) * Math.PI) / 180;
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-		Math.cos((lat2 * Math.PI) / 180) *
-		Math.sin(dLon / 2) *
-		Math.sin(dLon / 2);
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c; // in km
 }
@@ -51,27 +56,25 @@ export function NearbyList() {
 	const { userPosition, money, documents, modifyStat, addBuff, addMoney } =
 		useGameContext();
 	const { trackServiceAccess } = useODSMetrics();
-	// biome-ignore lint/suspicious/noExplicitAny: data structure is flexible
-	const [services, setServices] = useState<any[]>([]);
 
-	useEffect(() => {
-		if (!userPosition) return;
+	const services = useMemo(() => {
+		if (!userPosition) return servicesData;
 
-		// biome-ignore lint/suspicious/noExplicitAny: incoming data
-		const mapped = servicesData.map((s: any) => {
-			const dist = calculateDistance(
-				userPosition[0],
-				userPosition[1],
-				s.coords[0],
-				s.coords[1],
-			);
-			return { ...s, distance: dist };
-		});
-
-		// Sort by distance
-		// biome-ignore lint/suspicious/noExplicitAny: sort generic
-		const sorted = mapped.sort((a: any, b: any) => a.distance - b.distance);
-		setServices(sorted);
+		return servicesData
+			.map((s: any) => {
+				const hasCoords =
+					s.coords && Array.isArray(s.coords) && s.coords.length === 2;
+				const dist = hasCoords
+					? calculateDistance(
+							userPosition[0],
+							userPosition[1],
+							s.coords[0],
+							s.coords[1],
+						)
+					: Number.POSITIVE_INFINITY;
+				return { ...s, distance: dist };
+			})
+			.sort((a: any, b: any) => (a.distance || 0) - (b.distance || 0));
 	}, [userPosition]);
 
 	const checkAvailability = (service: Service) => {
@@ -140,7 +143,7 @@ export function NearbyList() {
 			<h2 className="text-xl font-bold font-heading">Serviços Próximos</h2>
 
 			<div className="flex flex-col gap-3">
-				{services.map((service) => {
+				{services.map((service: any) => {
 					const { allowed, reasons } = checkAvailability(service);
 					const distanceDisplay =
 						service.distance < 1

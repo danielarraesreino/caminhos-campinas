@@ -135,9 +135,13 @@ export function Navbar() {
 						{/* Offline Indicator */}
 						<div
 							title={isOnline ? "Você está Online" : "Modo Offline Ativo"}
-							className={`flex items-center justify-center p-2 rounded-full transition-colors ${isOnline ? 'text-green-500/50' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}
+							className={`flex items-center justify-center p-2 rounded-full transition-colors ${isOnline ? "text-green-500/50" : "bg-red-500/20 text-red-400 border border-red-500/30"}`}
 						>
-							{isOnline ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4 animate-pulse" />}
+							{isOnline ? (
+								<Wifi className="w-4 h-4" />
+							) : (
+								<WifiOff className="w-4 h-4 animate-pulse" />
+							)}
 						</div>
 					</div>
 

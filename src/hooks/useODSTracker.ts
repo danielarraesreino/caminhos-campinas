@@ -52,7 +52,10 @@ export function useODSTracker() {
 					dilemma_id: dilemmaId,
 					choice: choiceLabel,
 				},
-				{ ods_category: odsTag || "ODS 16 - Paz, Justiça e Instituições Eficazes" },
+				{
+					ods_category:
+						odsTag || "ODS 16 - Paz, Justiça e Instituições Eficazes",
+				},
 			);
 		},
 		[],

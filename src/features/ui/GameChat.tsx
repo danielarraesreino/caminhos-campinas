@@ -16,9 +16,15 @@ import {
 	GlossaryTooltip,
 } from "@/components/ui/GlossaryTooltip";
 import { useGameContext } from "@/contexts/GameContext";
+import dilemmasData from "@/data/dilemmas-campinas.json";
+import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 import { ActionInput } from "./ActionInput";
 
-export function GameChat() {
+interface GameChatProps {
+	onDilemmaTriggered?: (id: string) => void;
+}
+
+export function GameChat({ onDilemmaTriggered }: GameChatProps) {
 	const gameState = useGameContext();
 	const [isPending, startTransition] = useTransition();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -78,10 +84,34 @@ export function GameChat() {
 	const handleAction = async (text: string, audioBlob?: Blob | null) => {
 		if (!text.trim() && !audioBlob) return;
 
+		// Hybrid Engine Interception
+		if (text) {
+			const matchedDilemma = DilemmaMatcher.findBestDilemma(
+				text,
+				userLocation,
+				dilemmasData as any,
+				[], // services can be passed if available, empty for now
+			);
+
+			if (matchedDilemma) {
+				console.log(`[HybridEngine] Interceptado: ${matchedDilemma.id}`);
+
+				// Fix for "m is not a function" crash
+				if (typeof onDilemmaTriggered === "function") {
+					onDilemmaTriggered(matchedDilemma.id);
+				} else {
+					console.error(
+						"ERRO CRÍTICO: Função de dilema não conectada no GameChat!",
+					);
+				}
+				return; // Stop AI processing
+			}
+		}
+
 		setIsThinking(true);
 
 		// Upload Audio if exists
-		let audioUrl = "";
+		const audioUrl = "";
 		if (audioBlob) {
 			try {
 				const formData = new FormData();
@@ -208,10 +238,11 @@ export function GameChat() {
 
 							{/* Bubble */}
 							<div
-								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user"
-									? "bg-blue-600 text-white rounded-tr-none"
-									: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
-									}`}
+								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
+									m.role === "user"
+										? "bg-blue-600 text-white rounded-tr-none"
+										: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
+								}`}
 							>
 								{m.role === "assistant"
 									? renderMessageContent(m.content)

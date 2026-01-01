@@ -102,7 +102,8 @@ export default function LandingPage() {
 			// Simulate loading for effect
 			await new Promise((resolve) => setTimeout(resolve, 1500));
 
-			const dilemmaList = REAL_DILEMMAS && REAL_DILEMMAS.length > 0 ? REAL_DILEMMAS : []; // Safety check
+			const dilemmaList =
+				REAL_DILEMMAS && REAL_DILEMMAS.length > 0 ? REAL_DILEMMAS : []; // Safety check
 
 			if (dilemmaList.length === 0) {
 				throw new Error("Nenhum dilema disponível no censo.");
@@ -137,7 +138,7 @@ export default function LandingPage() {
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 
 			const option = dilemma?.raw?.options.find(
-				(o: any) => o.label === actionLabel
+				(o: any) => o.label === actionLabel,
 			);
 
 			if (option) {
@@ -170,8 +171,9 @@ export default function LandingPage() {
 					].map((img, index) => (
 						<div
 							key={img}
-							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${currentBgIndex === index ? "opacity-40" : "opacity-0"
-								}`}
+							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${
+								currentBgIndex === index ? "opacity-40" : "opacity-0"
+							}`}
 							style={{ backgroundImage: `url(${getAssetUrl(img)})` }}
 						/>
 					))}
@@ -196,8 +198,9 @@ export default function LandingPage() {
 							</h1>
 
 							<p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-blue-500/30 pl-6">
-								Campinas tem 1.557 histórias nas ruas. Simule os dilemas reais, entenda a luta por dignidade e transforme
-								sua empatia em dados que mudam políticas públicas.
+								Campinas tem 1.557 histórias nas ruas. Simule os dilemas reais,
+								entenda a luta por dignidade e transforme sua empatia em dados
+								que mudam políticas públicas.
 							</p>
 
 							{/* Dual Action Buttons */}
@@ -228,10 +231,11 @@ export default function LandingPage() {
 													setTimeout(() => setShowResetConfirm(false), 5000); // Reset after 5s
 												}
 											}}
-											className={`px-6 py-5 border rounded-2xl font-medium text-sm transition-all ${showResetConfirm
-												? "bg-red-600 border-red-500 text-white animate-pulse"
-												: "bg-transparent border-white/20 hover:bg-white/10 text-slate-300"
-												}`}
+											className={`px-6 py-5 border rounded-2xl font-medium text-sm transition-all ${
+												showResetConfirm
+													? "bg-red-600 border-red-500 text-white animate-pulse"
+													: "bg-transparent border-white/20 hover:bg-white/10 text-slate-300"
+											}`}
 										>
 											{showResetConfirm
 												? "Confirmar Reset?"
@@ -267,7 +271,9 @@ export default function LandingPage() {
 										</div>
 										<div className="flex flex-col items-start leading-none">
 											<span>Guia de Rua</span>
-											<span className="text-[10px] uppercase font-bold text-yellow-500 tracking-wider">Acesso Offline</span>
+											<span className="text-[10px] uppercase font-bold text-yellow-500 tracking-wider">
+												Acesso Offline
+											</span>
 										</div>
 									</div>
 								</button>
@@ -372,7 +378,12 @@ export default function LandingPage() {
 							Legitimar o Pertencimento.
 						</h2>
 						<p className="text-xl text-slate-600 leading-relaxed font-sans">
-							Segundo <strong>Milton Santos (2006)</strong>, a pobreza estrutural não é um acidente, é um projeto. Atuamos na intersecção entre a tecnologia e a pedagogia de <strong>Paulo Freire</strong>, transformando o "invisível" em sujeito ativo. Combatemos a "Desafiliação" (Castel) reconstruindo vínculos onde o Estado falhou.
+							Segundo <strong>Milton Santos (2006)</strong>, a pobreza
+							estrutural não é um acidente, é um projeto. Atuamos na intersecção
+							entre a tecnologia e a pedagogia de <strong>Paulo Freire</strong>,
+							transformando o "invisível" em sujeito ativo. Combatemos a
+							"Desafiliação" (Castel) reconstruindo vínculos onde o Estado
+							falhou.
 						</p>
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
 							<div className="space-y-2">
@@ -401,7 +412,11 @@ export default function LandingPage() {
 							Portal de Inteligência Social (ESG)
 						</h3>
 						<p className="text-slate-300 font-sans">
-							Não vendemos dados. Geramos evidências. Nossa plataforma monitora "Gaps de Serviço" e "Violações de Direitos" em tempo real. Transformamos a jogabilidade em relatórios auditáveis para os ODS 1 (Pobreza), 10 (Desigualdades), 11 (Cidades) e 18 (Igualdade Racial).
+							Não vendemos dados. Geramos evidências. Nossa plataforma monitora
+							"Gaps de Serviço" e "Violações de Direitos" em tempo real.
+							Transformamos a jogabilidade em relatórios auditáveis para os ODS
+							1 (Pobreza), 10 (Desigualdades), 11 (Cidades) e 18 (Igualdade
+							Racial).
 						</p>
 						<button
 							type="button"
@@ -428,7 +443,9 @@ export default function LandingPage() {
 								Para a Rua (Utilidade)
 							</h3>
 							<p className="text-slate-600 font-sans leading-relaxed">
-								Uma bússola de sobrevivência "Offline-First". Funciona sem internet para localizar o Bom Prato, banheiros e tomadas de energia, garantindo o direito à cidade mesmo sem plano de dados.
+								Uma bússola de sobrevivência "Offline-First". Funciona sem
+								internet para localizar o Bom Prato, banheiros e tomadas de
+								energia, garantindo o direito à cidade mesmo sem plano de dados.
 							</p>
 						</div>
 						<div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 hover:border-pink-200 transition-all group">
@@ -439,7 +456,9 @@ export default function LandingPage() {
 								Para a Sociedade (Simulador)
 							</h3>
 							<p className="text-slate-600 font-sans leading-relaxed">
-								O jogo combate o estigma da "vadiagem". Você sentirá na pele o "Dilema do SAMIM": escolher entre um bico de R$ 20,00 ou garantir a entrada no abrigo até as 19h?
+								O jogo combate o estigma da "vadiagem". Você sentirá na pele o
+								"Dilema do SAMIM": escolher entre um bico de R$ 20,00 ou
+								garantir a entrada no abrigo até as 19h?
 							</p>
 						</div>
 					</div>
@@ -449,11 +468,17 @@ export default function LandingPage() {
 							Funcionalidades Principais
 						</h3>
 						<div className="grid grid-cols-1 gap-4">
-							<Link href="/cofre" className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-transparent hover:border-green-200">
+							<Link
+								href="/cofre"
+								className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-transparent hover:border-green-200"
+							>
 								<Shield className="h-6 w-6 text-green-600 mt-1 shrink-0" />
 								<div>
 									<h4 className="font-bold text-slate-900 flex items-center gap-2">
-										Cofre Digital <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold uppercase">Novo</span>
+										Cofre Digital{" "}
+										<span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold uppercase">
+											Novo
+										</span>
 									</h4>
 									<p className="text-sm text-slate-600">
 										Armazenamento seguro de documentos digitalizados na nuvem,

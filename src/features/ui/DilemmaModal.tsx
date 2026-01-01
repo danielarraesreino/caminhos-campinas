@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { InteractiveText } from "@/components/ui/InteractiveText";
 import type { Dilemma } from "@/features/game-loop/dilemma-types";
-import { useAudio } from "@/hooks/useAudio";
+import { useAudioSystem } from "@/hooks/useAudioSystem";
 import { useODSTracker } from "@/hooks/useODSTracker";
 
 interface DilemmaModalProps {
@@ -29,7 +29,7 @@ export function DilemmaModal({
 }: DilemmaModalProps) {
 	const [selectedOption, setSelectedOption] = useState<number | null>(null);
 	const [outcome, setOutcome] = useState<"success" | "failure" | null>(null);
-	const { playAmbience, stopAll } = useAudio();
+	const { playAmbience, stopAmbience } = useAudioSystem();
 	const { trackDilemmaDecision } = useODSTracker();
 
 	// Effect to manage audio
@@ -40,10 +40,10 @@ export function DilemmaModal({
 
 		return () => {
 			if (dilemma?.audioId) {
-				stopAll();
+				stopAmbience();
 			}
 		};
-	}, [dilemma, playAmbience, stopAll]);
+	}, [dilemma, playAmbience, stopAmbience]);
 
 	if (!dilemma) return null;
 
@@ -79,7 +79,7 @@ export function DilemmaModal({
 		}
 		setSelectedOption(null);
 		setOutcome(null);
-		stopAll(); // Ensure audio stops when closing/continuing
+		stopAmbience(); // Ensure audio stops when closing/continuing
 	};
 
 	const currentOption =

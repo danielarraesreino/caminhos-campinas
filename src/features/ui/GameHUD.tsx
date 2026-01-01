@@ -50,7 +50,7 @@ export function GameHUD() {
 			<div className="fixed top-[88px] md:top-[100px] left-0 w-full h-20 bg-slate-950 border-b-2 border-slate-800 z-40 shadow-2xl flex items-center justify-between px-4 md:px-8">
 				{/* LEFT: Avatar & Identity */}
 				<div className="flex items-center gap-4 md:gap-6">
-					{avatar?.avatarImage ? (
+					{avatar && avatar.avatarImage ? (
 						<div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 border-slate-600 shadow-lg flex-none group hover:scale-105 transition-transform">
 							<Image
 								src={avatar.avatarImage}
@@ -62,7 +62,7 @@ export function GameHUD() {
 							{/* Name Tag Overlay */}
 							<div className="absolute bottom-0 left-0 w-full bg-black/70 p-1 text-center">
 								<span className="text-[10px] md:text-xs font-bold text-white truncate block uppercase tracking-wider">
-									{avatar.name.split(" ")[0]}
+									{avatar.name?.split(" ")[0] || "..."}
 								</span>
 							</div>
 						</div>
@@ -128,7 +128,7 @@ export function GameHUD() {
 							</div>
 						</div>
 					</div>
-					{workTool.type && (
+					{workTool?.type && (
 						<div className="mt-1 flex items-center gap-2 text-[10px] text-slate-300 uppercase tracking-widest">
 							<Package className="w-3 h-3" />
 							{workTool.type.replace("_", " ")} ({workTool.condition}%)

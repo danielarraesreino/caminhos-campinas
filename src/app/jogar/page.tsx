@@ -72,8 +72,10 @@ export default function GamePage() {
 	const { activeDilemma, resolveDilemma, clearActiveDilemma } =
 		useEventEngine();
 
+	// 2. Extraia a função setActiveDilemma do contexto
 	const gameState = useGameContext();
-	const { criticalHealth, sanity, resetGame, phoneBattery } = gameState;
+	const { criticalHealth, sanity, resetGame, phoneBattery, setActiveDilemma } =
+		gameState;
 
 	// Game Over State
 	const [gameOverResult, setGameOverResult] = useState<GameOverResult | null>(
@@ -156,8 +158,13 @@ export default function GamePage() {
 								<X className="w-8 h-8 text-red-900/50" />
 							</div>
 							<div className="space-y-2">
-								<h2 className="text-xl font-bold text-slate-300">Sem bateria</h2>
-								<p className="max-w-xs">Você está digitalmente invisível. Sem celular, você não tem acesso a mapas ou auxílio digital.</p>
+								<h2 className="text-xl font-bold text-slate-300">
+									Sem bateria
+								</h2>
+								<p className="max-w-xs">
+									Você está digitalmente invisível. Sem celular, você não tem
+									acesso a mapas ou auxílio digital.
+								</p>
 							</div>
 						</div>
 					)}
@@ -169,7 +176,7 @@ export default function GamePage() {
 						type="button"
 						onClick={() => phoneBattery > 0 && setIsChatOpen(!isChatOpen)}
 						disabled={phoneBattery <= 0}
-						className={`${phoneBattery > 0 ? 'bg-blue-600 hover:bg-blue-500' : 'bg-slate-800 grayscale cursor-not-allowed'} text-white p-4 rounded-full shadow-lg border-2 border-slate-900 transition-transform hover:scale-110 flex items-center justify-center relative`}
+						className={`${phoneBattery > 0 ? "bg-blue-600 hover:bg-blue-500" : "bg-slate-800 grayscale cursor-not-allowed"} text-white p-4 rounded-full shadow-lg border-2 border-slate-900 transition-transform hover:scale-110 flex items-center justify-center relative`}
 						aria-label="Abrir Chat de Ação"
 					>
 						{isChatOpen ? (
@@ -188,7 +195,9 @@ export default function GamePage() {
 				{/* Chat Overlay */}
 				{isChatOpen && (
 					<div className="absolute bottom-24 right-6 w-[90vw] md:w-[400px] h-[60vh] md:h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-20 overflow-hidden flex flex-col animate-in slide-in-from-bottom-5">
-						<GameChat />
+						<GameChat
+							onDilemmaTriggered={(dilemmaId) => setActiveDilemma(dilemmaId)}
+						/>
 					</div>
 				)}
 			</main>

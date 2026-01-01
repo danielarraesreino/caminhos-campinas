@@ -109,9 +109,18 @@ export default function FundraisingPage() {
 							realidade de 1.557 pessoas que vivem nas ruas da nossa cidade. Ao
 							apoiar, você financia diretamente:
 							<ul className="list-disc pl-5 mt-2 space-y-1">
-								<li><strong>1. Tecnologia Social:</strong> Manutenção do servidor e IA (Chatbot de voz).</li>
-								<li><strong>2. Educação:</strong> Bolsa-Formação para 29 educadores sociais (ex-população de rua).</li>
-								<li><strong>3. Inteligência de Dados:</strong> Monitoramento de violações de direitos para políticas públicas.</li>
+								<li>
+									<strong>1. Tecnologia Social:</strong> Manutenção do servidor
+									e IA (Chatbot de voz).
+								</li>
+								<li>
+									<strong>2. Educação:</strong> Bolsa-Formação para 29
+									educadores sociais (ex-população de rua).
+								</li>
+								<li>
+									<strong>3. Inteligência de Dados:</strong> Monitoramento de
+									violações de direitos para políticas públicas.
+								</li>
 							</ul>
 						</p>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -121,7 +130,11 @@ export default function FundraisingPage() {
 								rel="noopener noreferrer"
 								className="inline-flex items-center justify-center gap-2 bg-pink-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-700 transition-all shadow-lg hover:shadow-pink-500/30 transform hover:-translate-y-1"
 							>
-								<Heart className="animate-pulse" size={20} fill="currentColor" />
+								<Heart
+									className="animate-pulse"
+									size={20}
+									fill="currentColor"
+								/>
 								Campanha no Apoia.se (Recorrente)
 							</a>
 							<a
@@ -225,11 +238,11 @@ export default function FundraisingPage() {
 							</h2>
 							<p className="text-slate-600 text-lg leading-relaxed mb-8">
 								Vivemos na mesma cidade, mas em mundos diferentes. O{" "}
-								<strong>Coletivo A Rua Tem Voz</strong> usa a tecnologia para quebrar a
-								indiferença. Ao apoiar, você não está apenas "dando dinheiro".
-								Você está financiando uma ferramenta de educação que combate o
-								preconceito e conecta quem quer ajudar com quem precisa de
-								ajuda.
+								<strong>Coletivo A Rua Tem Voz</strong> usa a tecnologia para
+								quebrar a indiferença. Ao apoiar, você não está apenas "dando
+								dinheiro". Você está financiando uma ferramenta de educação que
+								combate o preconceito e conecta quem quer ajudar com quem
+								precisa de ajuda.
 							</p>
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
 								<div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -290,9 +303,9 @@ export default function FundraisingPage() {
 											Apoio Conectado
 										</h3>
 										<p className="text-slate-500 text-sm mb-6 min-h-[60px]">
-											Ajuda a manter a plataforma do Coletivo no ar,
-											garantindo que as informações sobre abrigos e refeições
-											estejam sempre atualizadas.
+											Ajuda a manter a plataforma do Coletivo no ar, garantindo
+											que as informações sobre abrigos e refeições estejam
+											sempre atualizadas.
 										</p>
 										<button
 											type="button"

@@ -21,13 +21,15 @@ export function SurvivalMap() {
 	const { services } = useServices();
 
 	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
-	const resources = services.map((s) => ({
-		id: s.id,
-		name: s.name,
-		type: s.type,
-		lat: s.coords[0],
-		lng: s.coords[1],
-	}));
+	const resources = services
+		.filter((s) => s.coords && Array.isArray(s.coords) && s.coords.length === 2)
+		.map((s) => ({
+			id: s.id,
+			name: s.name,
+			type: s.type,
+			lat: s.coords![0],
+			lng: s.coords![1],
+		}));
 
 	useEffect(() => {
 		// Only fetch if not already set (or we could force refresh? Let's respect existing if valid)
@@ -59,34 +61,43 @@ export function SurvivalMap() {
 	const { phoneBattery, consumeBattery } = useGameContext();
 
 	// FIX: Memoize handleTravel to prevent MapCore re-renders during animation
-	const handleTravel = useCallback((lat: number, lng: number) => {
-		if (phoneBattery <= 0) {
-			alert("Sem bateria! Você não consegue usar o GPS para navegar.");
-			// Optionally open GameChat or show toast
-			return;
-		}
-
-		setIsWalking(true);
-		setWalkProgress(0);
-
-		// Consume Battery
-		consumeBattery(5);
-
-		// Animate
-		let progress = 0;
-		const interval = setInterval(() => {
-			progress += 5; // 20 steps * 100ms = 2s
-			setWalkProgress(progress);
-			if (progress >= 100) {
-				clearInterval(interval);
-				setIsWalking(false);
-				setUserPosition([lat, lng]);
+	const handleTravel = useCallback(
+		(lat: number, lng: number) => {
+			if (phoneBattery <= 0) {
+				alert("Sem bateria! Você não consegue usar o GPS para navegar.");
+				// Optionally open GameChat or show toast
+				return;
 			}
-		}, 100);
-	}, [phoneBattery, consumeBattery, setUserPosition]);
+
+			setIsWalking(true);
+			setWalkProgress(0);
+
+			// Consume Battery
+			consumeBattery(5);
+
+			// Animate
+			let progress = 0;
+			const interval = setInterval(() => {
+				progress += 5; // 20 steps * 100ms = 2s
+				setWalkProgress(progress);
+				if (progress >= 100) {
+					clearInterval(interval);
+					setIsWalking(false);
+					setUserPosition([lat, lng]);
+				}
+			}, 100);
+		},
+		[phoneBattery, consumeBattery, setUserPosition],
+	);
 
 	return (
-		<div className="flex flex-col h-full w-full bg-slate-100 relative" style={{ filter: phoneBattery === 0 ? "grayscale(100%)" : "none", transition: "filter 1s ease" }}>
+		<div
+			className="flex flex-col h-full w-full bg-slate-100 relative"
+			style={{
+				filter: phoneBattery === 0 ? "grayscale(100%)" : "none",
+				transition: "filter 1s ease",
+			}}
+		>
 			{/* Walking Overlay */}
 			{isWalking && (
 				<div className="absolute inset-0 z-[2000] bg-black/80 flex flex-col items-center justify-center p-8 backdrop-blur-sm animate-in fade-in">
@@ -134,7 +145,13 @@ export function SurvivalMap() {
 
 				<MapCore
 					userPosition={userPosition}
-					resources={resources}
+					resources={resources.filter(
+						(res) =>
+							res.lat !== null &&
+							res.lng !== null &&
+							!isNaN(Number(res.lat)) &&
+							!isNaN(Number(res.lng)),
+					)}
 					onTravel={handleTravel}
 				/>
 			</div>

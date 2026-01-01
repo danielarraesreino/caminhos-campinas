@@ -89,7 +89,7 @@ class TelemetryService {
 			ods_category?: string;
 			violation_type?: string;
 			resource_gap?: string;
-		}
+		},
 	): Promise<void> {
 		try {
 			const db = await this.initDB();

@@ -18,21 +18,9 @@ export function useDilemmaMatcher() {
 
 	const findMatch = useCallback(
 		(userInput: string, userCoords: [number, number] | null) => {
-			// Map services to the format expected by DilemmaMatcher
-			const serviceLocations = services.map((s) => ({
-				id: s.id,
-				coords: s.coords,
-			}));
-
 			const locationObj = userCoords
 				? { lat: userCoords[0], lng: userCoords[1] }
 				: null;
-
-			// Custom Logic requested: "fome" + <500m "Bom Prato" -> Suggestion
-			// We can pre-process this rule before calling the generic matcher, OR rely on the generic matcher
-			// if we add a "dilemma" that triggers on these conditions.
-			// User asked to "Calculate distance... If player says 'fome' and <500m 'Bom Prato', return card".
-			// This implies generating a dynamic dilemma-like object if not found in static list.
 
 			const normalize = (s: string) =>
 				s
@@ -41,11 +29,22 @@ export function useDilemmaMatcher() {
 					.replace(/[\u0300-\u036f]/g, "");
 			const input = normalize(userInput);
 
+			// 2. Crie a lista de alvos APENAS com quem tem coordenadas válidas
+			const targetServices = services.filter(
+				(s): s is typeof s & { coords: [number, number] } => {
+					return !!s.coords && Array.isArray(s.coords) && s.coords.length === 2;
+				},
+			);
+
+			const bomPrato = targetServices.find((s) =>
+				s.name.toLowerCase().includes("bom prato"),
+			);
+			const consultorio = targetServices.find(
+				(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
+			);
+
 			// Explicit Dynamic Checks as requested
 			if (input.includes("fome") && locationObj) {
-				const bomPrato = services.find((s) =>
-					s.name.toLowerCase().includes("bom prato"),
-				);
 				if (bomPrato) {
 					const dist = calculateDist(
 						locationObj.lat,
@@ -77,15 +76,15 @@ export function useDilemmaMatcher() {
 				(input.includes("dor") || input.includes("machucado")) &&
 				locationObj
 			) {
-				const consultorio = services.find(
+				const cr = targetServices.find(
 					(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
 				);
-				if (consultorio) {
+				if (cr) {
 					const _dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
-						consultorio.coords[0],
-						consultorio.coords[1],
+						cr.coords[0],
+						cr.coords[1],
 					);
 					// Relaxed distance for health? Or keep 500m? Assuming global or nearest.
 					// Let's standardise on finding the NEAREST health service.
@@ -109,6 +108,16 @@ export function useDilemmaMatcher() {
 			}
 
 			// Fallback to generic matcher
+			const serviceLocations = services
+				.filter(
+					(s): s is typeof s & { coords: [number, number] } =>
+						!!s.coords && Array.isArray(s.coords),
+				)
+				.map((s) => ({
+					id: s.id,
+					coords: s.coords,
+				}));
+
 			const match = DilemmaMatcher.findBestDilemma(
 				userInput,
 				locationObj,

@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
-import { runCensusSimulation, SimAgent } from "@/features/dashboard/SimulationEngine";
+import {
+	runCensusSimulation,
+	SimAgent,
+} from "@/features/dashboard/SimulationEngine";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle, Home, Utensils, Users, Droplets } from "lucide-react";
 
@@ -15,31 +18,46 @@ export default function ImpactDashboardPage() {
 	// Métricas Calculadas
 	const stats = useMemo(() => {
 		const total = data.length;
-		const homeless = data.filter(a => !a.status.sheltered).length;
-		const hungry = data.filter(a => a.status.hungry).length;
-		const blackPopulation = data.filter(a => a.demographics.race === 'PRETA_PARDA').length;
+		const homeless = data.filter((a) => !a.status.sheltered).length;
+		const hungry = data.filter((a) => a.status.hungry).length;
+		const blackPopulation = data.filter(
+			(a) => a.demographics.race === "PRETA_PARDA",
+		).length;
 
 		// Sanitation Metrics
-		const forcedStreetSanitation = data.filter(a => a.status.sanitationAccess === 'RUA').length;
-		const womenCount = data.filter(a => a.demographics.gender === 'FEMININO').length;
-		const menstrualDignityFail = data.filter(a => a.demographics.gender === 'FEMININO' && !a.status.menstrualDignity).length;
+		const forcedStreetSanitation = data.filter(
+			(a) => a.status.sanitationAccess === "RUA",
+		).length;
+		const womenCount = data.filter(
+			(a) => a.demographics.gender === "FEMININO",
+		).length;
+		const menstrualDignityFail = data.filter(
+			(a) => a.demographics.gender === "FEMININO" && !a.status.menstrualDignity,
+		).length;
 
 		return {
 			total,
 			housingDeficit: total > 0 ? Math.round((homeless / total) * 100) : 0,
 			foodInsecurity: total > 0 ? Math.round((hungry / total) * 100) : 0,
 			racialGap: total > 0 ? Math.round((blackPopulation / total) * 100) : 0,
-			sanitationCrisis: total > 0 ? Math.round((forcedStreetSanitation / total) * 100) : 0,
-			menstrualPoverty: womenCount > 0 ? Math.round((menstrualDignityFail / womenCount) * 100) : 0
+			sanitationCrisis:
+				total > 0 ? Math.round((forcedStreetSanitation / total) * 100) : 0,
+			menstrualPoverty:
+				womenCount > 0
+					? Math.round((menstrualDignityFail / womenCount) * 100)
+					: 0,
 		};
 	}, [data]);
 
 	return (
 		<div className="min-h-screen bg-slate-950 text-white p-8">
 			<header className="mb-12">
-				<h1 className="text-4xl font-bold mb-2">Painel de Inteligência Social</h1>
+				<h1 className="text-4xl font-bold mb-2">
+					Painel de Inteligência Social
+				</h1>
 				<p className="text-slate-400">
-					Simulação baseada no Censo Pop. Rua Campinas 2024 (1.557 pessoas mapeadas)
+					Simulação baseada no Censo Pop. Rua Campinas 2024 (1.557 pessoas
+					mapeadas)
 				</p>
 			</header>
 
@@ -107,7 +125,9 @@ export default function ImpactDashboardPage() {
 
 						<div>
 							<div className="flex justify-between text-sm mb-2">
-								<span className="text-slate-400">Vagas Disponíveis (SAMIM + OSCs)</span>
+								<span className="text-slate-400">
+									Vagas Disponíveis (SAMIM + OSCs)
+								</span>
 								<span className="font-bold text-green-400">~300 Vagas</span>
 							</div>
 							<div className="h-4 bg-slate-700 rounded-full overflow-hidden">
@@ -126,16 +146,22 @@ export default function ImpactDashboardPage() {
 					<h2 className="text-xl font-bold mb-4">Análise de Inteligência</h2>
 					<ul className="space-y-4 text-sm text-slate-300">
 						<li className="flex gap-3">
-							<span className="text-purple-500 font-bold">ALERTA SANITÁRIO:</span>
-							{stats.sanitationCrisis}% da população simulada foi forçada a usar a rua para necessidades fisiológicas hoje, devido a barreiras em comércios e falta de banheiros públicos 24h.
+							<span className="text-purple-500 font-bold">
+								ALERTA SANITÁRIO:
+							</span>
+							{stats.sanitationCrisis}% da população simulada foi forçada a usar
+							a rua para necessidades fisiológicas hoje, devido a barreiras em
+							comércios e falta de banheiros públicos 24h.
 						</li>
 						<li className="flex gap-3">
-							<span className="text-red-500 font-bold">CRÍTICO:</span>
-							O sistema detectou que a "Barreira do RG" impede 19% da população de acessar o Bom Prato (exige cadastro/documento em alguns casos).
+							<span className="text-red-500 font-bold">CRÍTICO:</span>O sistema
+							detectou que a "Barreira do RG" impede 19% da população de acessar
+							o Bom Prato (exige cadastro/documento em alguns casos).
 						</li>
 						<li className="flex gap-3">
-							<span className="text-green-500 font-bold">OPORTUNIDADE:</span>
-							O "Consultório na Rua" é o serviço mais eficaz para reduzir danos, mas opera com apenas 3 equipes para 1.557 pessoas.
+							<span className="text-green-500 font-bold">OPORTUNIDADE:</span>O
+							"Consultório na Rua" é o serviço mais eficaz para reduzir danos,
+							mas opera com apenas 3 equipes para 1.557 pessoas.
 						</li>
 					</ul>
 				</div>
@@ -146,7 +172,9 @@ export default function ImpactDashboardPage() {
 
 function KpiCard({ title, value, icon, desc, alert = false }: any) {
 	return (
-		<div className={`p-6 rounded-xl border ${alert ? 'bg-red-950/40 border-red-500/50' : 'bg-slate-900 border-slate-800'}`}>
+		<div
+			className={`p-6 rounded-xl border ${alert ? "bg-red-950/40 border-red-500/50" : "bg-slate-900 border-slate-800"}`}
+		>
 			<div className="flex justify-between items-start mb-4">
 				<div>
 					<p className="text-slate-300 text-sm font-medium">{title}</p>

@@ -77,7 +77,11 @@ interface MapCoreProps {
 	onTravel?: (lat: number, lng: number) => void;
 }
 
-const MapCore = memo(function MapCore({ userPosition, resources, onTravel }: MapCoreProps) {
+const MapCore = memo(function MapCore({
+	userPosition,
+	resources,
+	onTravel,
+}: MapCoreProps) {
 	// Default to Campinas center if no user position
 	const defaultPosition: [number, number] = [-22.90556, -47.06083];
 	const initialPosition = userPosition || defaultPosition;

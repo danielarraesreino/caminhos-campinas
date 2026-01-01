@@ -44,7 +44,10 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 	const forbiddenViolations =
 		service.forbidden_items?.filter((item: string) => {
 			// Check if it matches worktool
-			if (item === "Carrinho de Reciclagem" && workTool?.type === "CARRINHO_RECICLAGEM") {
+			if (
+				item === "Carrinho de Reciclagem" &&
+				workTool?.type === "CARRINHO_RECICLAGEM"
+			) {
 				return true;
 			}
 			// Check inventory
@@ -53,7 +56,8 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 			return false;
 		}) || [];
 
-	const canEnroll = missingreqs.length === 0 && forbiddenViolations.length === 0;
+	const canEnroll =
+		missingreqs.length === 0 && forbiddenViolations.length === 0;
 
 	const handleEnroll = () => {
 		if (!canEnroll) return;
@@ -91,7 +95,8 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<span
 					className={`
 					px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
-					${service.type === "ALIMENTACAO"
+					${
+						service.type === "ALIMENTACAO"
 							? "bg-orange-900 text-orange-400"
 							: service.type === "ABRIGO"
 								? "bg-indigo-900 text-indigo-400"
@@ -100,7 +105,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 									: service.type === "EDUCACAO"
 										? "bg-blue-900 text-blue-400"
 										: "bg-slate-800 text-slate-400"
-						}
+					}
 				`}
 				>
 					{service.type}
@@ -161,7 +166,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 					{service.forbidden_items.map((item: string, idx: number) => {
 						const isViolated = forbiddenViolations.includes(item);
 						if (!isViolated) return null; // Only show if violated? Or show as warning? Usually warnings are good to know beforehand.
-						// Let's show only if violated for now to declutter, or always show as restriction. 
+						// Let's show only if violated for now to declutter, or always show as restriction.
 						// The prompt implies "entrada bloqueada", showing the reason is good.
 						return (
 							<div
@@ -183,17 +188,25 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 			)}
 
 			<div className="flex gap-2 mt-4">
-				<button
-					type="button"
-					onClick={() => {
-						const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
-						window.open(url, "_blank");
-					}}
-					className="flex-1 bg-zinc-800 border border-zinc-700 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
-				>
-					<MapPin className="w-4 h-4" />
-					Ver Mapa
-				</button>
+				{service.coords ? (
+					<button
+						type="button"
+						onClick={() => {
+							if (!service.coords) return;
+							const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
+							window.open(url, "_blank");
+						}}
+						className="flex-1 bg-zinc-800 border border-zinc-700 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
+					>
+						<MapPin className="w-4 h-4" />
+						Ver Mapa
+					</button>
+				) : (
+					<div className="flex-1 bg-zinc-900/50 border border-zinc-800 text-zinc-500 py-3 rounded-lg font-bold text-[10px] uppercase flex items-center justify-center gap-2">
+						<MapPin className="w-3 h-3 opacity-30" />
+						Local Virtual / Variável
+					</div>
+				)}
 
 				{isEducation && (
 					<button
@@ -201,11 +214,12 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						disabled={!canEnroll || enrollmentStatus !== "idle"}
 						onClick={handleEnroll}
 						className={`flex-1 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors relative overflow-hidden
-							${canEnroll
-								? enrollmentStatus === "enrolled"
-									? "bg-green-600"
-									: "bg-blue-600 hover:bg-blue-500"
-								: "bg-zinc-800 opacity-50 cursor-not-allowed"
+							${
+								canEnroll
+									? enrollmentStatus === "enrolled"
+										? "bg-green-600"
+										: "bg-blue-600 hover:bg-blue-500"
+									: "bg-zinc-800 opacity-50 cursor-not-allowed"
 							}
 						`}
 					>

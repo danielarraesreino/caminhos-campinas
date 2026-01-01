@@ -1,12 +1,13 @@
 import type { GameState } from "@/contexts/GameContext";
 
-
 export type TriggerType =
 	| "HUNGER_LOW"
 	| "HYGIENE_LOW"
 	| "RANDOM"
 	| "SOCIAL_STIGMA_HIGH"
-	| "LOCATION" | "STATUS" | "CHAIN";
+	| "LOCATION"
+	| "STATUS"
+	| "CHAIN";
 
 export interface DilemmaOption {
 	label: string;
@@ -71,7 +72,8 @@ export interface Dilemma {
 	trigger: {
 		type: TriggerType;
 		value: number;
-		locationId?: string; statusCondition?: Record<string, number>;
+		locationId?: string;
+		statusCondition?: Record<string, number>;
 	};
 	tags?: string[];
 	glossaryTerms?: string[];

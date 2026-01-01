@@ -2,7 +2,7 @@ let dbInstance: PouchDB.Database | null = null;
 
 export const getDB = async () => {
 	// 1. Absolute Server Guard (Next.js specific)
-	if (typeof process !== 'undefined' && process.env.NEXT_RUNTIME === 'nodejs') {
+	if (typeof process !== "undefined" && process.env.NEXT_RUNTIME === "nodejs") {
 		return null;
 	}
 
@@ -20,7 +20,7 @@ export const getDB = async () => {
 
 			dbInstance = new PouchDB("pop_rua_game_db", {
 				auto_compaction: true,
-				adapter: 'idb' // Force IndexedDB adapter to avoid guessing
+				adapter: "idb", // Force IndexedDB adapter to avoid guessing
 			});
 			console.log("✅ PouchDB initialized successfully (client-side)");
 		} catch (error) {

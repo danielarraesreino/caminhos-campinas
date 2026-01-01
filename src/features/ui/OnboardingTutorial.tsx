@@ -5,6 +5,7 @@ import {
 	Heart,
 	MessageSquare,
 	Mic,
+	MapPin,
 	Shield,
 	User,
 	X,
@@ -82,7 +83,7 @@ export function OnboardingTutorial({
 		} else {
 			setIsExiting(true);
 			// Defer close to allow UI update
-			await new Promise(resolve => setTimeout(resolve, 50));
+			await new Promise((resolve) => setTimeout(resolve, 50));
 			handleClose();
 		}
 	};
@@ -138,8 +139,9 @@ export function OnboardingTutorial({
 						<div
 							// biome-ignore lint/suspicious/noArrayIndexKey: slides are static constant
 							key={idx}
-							className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? "w-6 bg-blue-500" : "w-1.5 bg-slate-700"
-								}`}
+							className={`h-1.5 rounded-full transition-all duration-300 ${
+								idx === currentSlide ? "w-6 bg-blue-500" : "w-1.5 bg-slate-700"
+							}`}
 						/>
 					))}
 				</div>
