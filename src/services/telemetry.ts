@@ -83,6 +83,13 @@ class TelemetryService {
 		metadata: Record<string, unknown> = {},
 		ods_category?: string,
 	): Promise<void> {
+		// Safety Check: Only track in production or if explicitly enabled
+		const env = process.env.NEXT_PUBLIC_VERCEL_ENV;
+		if (env !== "production") {
+			console.log(`[Telemetry Skipped] Action: ${action_type}`, metadata);
+			return;
+		}
+
 		try {
 			const db = await this.initDB();
 

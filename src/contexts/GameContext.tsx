@@ -252,6 +252,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 const GameContext = createContext<any>(undefined);
 const DOC_ID = "game_state_v1";
 
+const GAME_VERSION = "1.1"; // Census 2024 Refactor & Fixes
+
 export function GameProvider({ children }: { children: React.ReactNode }) {
 	const [state, dispatch] = useReducer(gameReducer, INITIAL_STATE);
 	const [hasHydrated, setHasHydrated] = useState(false);
@@ -266,6 +268,24 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				const doc = await db.get(DOC_ID);
 				// biome-ignore lint/suspicious/noExplicitAny: generic doc
 				const { _id, _rev, ...savedState } = doc as any;
+
+				// VERSION CHECK (Reset if outdated)
+				if (savedState.version !== GAME_VERSION) {
+					console.warn("♻️ Version mismatch. Resetting game data...");
+
+					// 1. Clear PouchDB
+					await db.remove(doc);
+
+					// 2. Clear LocalStorage (Services, etc)
+					if (typeof window !== "undefined") {
+						localStorage.clear();
+					}
+
+					// 3. Reset State
+					dispatch({ type: "RESET_GAME" });
+					return;
+				}
+
 				console.log("✅ Game State Hydrated:", savedState);
 				dispatch({ type: "SET_STATE", payload: savedState });
 			} catch (err: any) {
@@ -298,6 +318,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				await db.put({
 					...doc,
 					...state,
+					version: GAME_VERSION, // Inject Version
 					_id: DOC_ID,
 				});
 				console.log("💾 Auto-saved");

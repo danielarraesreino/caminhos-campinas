@@ -54,66 +54,20 @@ const ServicesContext = createContext<ServicesContextProps | undefined>(
 
 const STORAGE_KEY = "services_data";
 
+import SERVICES_DATA from "@/data/services-campinas.json";
+
 export function ServicesProvider({ children }: { children: React.ReactNode }) {
-	const [services, setServices] = useState<ServiceLocation[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [services, setServices] = useState<ServiceLocation[]>(SERVICES_DATA as unknown as ServiceLocation[]); // Cast if type mismatch
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const loadFromStorage = useCallback(() => {
-		if (typeof window === "undefined") return null;
-		try {
-			const stored = localStorage.getItem(STORAGE_KEY);
-			if (stored) {
-				return JSON.parse(stored) as ServiceLocation[];
-			}
-		} catch (e) {
-			console.warn("Failed to parse services from storage", e);
-		}
-		return null;
-	}, []);
+	// Optional: Still allow local storage override if we plan to support dynamic updates
+	/* const loadFromStorage = useCallback(() => { ... */
 
-	const saveToStorage = useCallback((data: ServiceLocation[]) => {
-		if (typeof window === "undefined") return;
-		try {
-			localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-		} catch (e) {
-			console.warn("Failed to save services to storage", e);
-		}
-	}, []);
+	// Since the data is static and imported, we don't need a frantic fetch effect.
+	// If we want to simulate async or allow overrides, we can keep some logic, 
+	// but for now, direct import fulfills "read from this JSON".
 
-	const fetchServices = useCallback(async () => {
-		try {
-			setLoading(true);
-			setError(null);
-
-			// Try reading from storage first to show something immediately
-			const cached = loadFromStorage();
-			if (cached) {
-				setServices(cached);
-			}
-
-			// If we are online, fetch fresh data
-			if (navigator.onLine) {
-				const response = await fetch("/data/services-campinas.json");
-				if (!response.ok) throw new Error("Failed to fetch services");
-				const data: ServiceLocation[] = await response.json();
-
-				setServices(data);
-				saveToStorage(data);
-			}
-		} catch (err) {
-			console.error(err);
-			if (!loadFromStorage()) {
-				setError("Erro ao carregar serviços. Verifique sua conexão.");
-			}
-		} finally {
-			setLoading(false);
-		}
-	}, [loadFromStorage, saveToStorage]);
-
-	useEffect(() => {
-		fetchServices();
-	}, [fetchServices]);
 
 	const filterServices = useCallback(
 		(type: ServiceType | "all") => {
@@ -148,7 +102,7 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 				loading,
 				error,
 				filterServices,
-				refreshServices: fetchServices,
+				refreshServices: async () => { },
 			}}
 		>
 			{children}

@@ -77,16 +77,20 @@ export function SurvivalMap() {
 					resources={resources}
 					onResourceInteract={(res: any) => {
 						console.log("Interagindo com:", res.name);
-						// Basic interaction logic mapping
-						if (res.type === "food" || res.type === "alimentacao") {
+						const type = res.type.toUpperCase();
+						// Interaction logic mapping - Portuguese Only
+						if (type === "ALIMENTACAO") {
 							eat(20);
-							alert(`Você visitou ${res.name} e comeu!`);
-						} else if (res.type === "health" || res.type === "saude") {
+							alert(`Você visitou ${res.name} e conseguiu se alimentar! (+20 Fome)`);
+						} else if (type === "SAUDE") {
 							modifyStat("health", 15);
-							alert(`Você recebeu atendimento em ${res.name}.`);
-						} else if (res.type === "shelter" || res.type === "abrigo") {
+							alert(`Você recebeu atendimento em ${res.name}. (+15 Saúde)`);
+						} else if (type === "ABRIGO") {
 							modifyStat("energy", 30);
-							alert(`Você descansou em ${res.name}.`);
+							alert(`Você conseguiu descansar em ${res.name}. (+30 Energia)`);
+						} else if (type === "ASSISTENCIA") {
+							modifyStat("dignity", 10);
+							alert(`Você recebeu apoio em ${res.name}. (+10 Dignidade)`);
 						} else {
 							alert(`Você visitou ${res.name}.`);
 						}

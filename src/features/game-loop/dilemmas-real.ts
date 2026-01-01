@@ -211,4 +211,46 @@ export const REAL_DILEMMAS: Dilemma[] = [
 			},
 		],
 	},
+	{
+		id: "dilema_exclusao_digital_poupatempo",
+		title: "Exclusão Digital",
+		description:
+			"Você precisa agendar a 2ª via do RG no Poupatempo. O agendamento é 100% online. Você não tem celular nem dados móveis. A Lan House cobra R$ 5,00 por 15 minutos.",
+		trigger: { type: "RANDOM", value: 0.05 },
+		options: [
+			{
+				label: "Pagar a Lan House",
+				consequence:
+					"Você gastou o dinheiro do almoço para acessar o site. O sistema do governo caiu e você perdeu o dinheiro e o tempo.",
+				effect: { money: -5, hunger: 20, sanity: -15 },
+			},
+			{
+				label: "Pedir favor a um passante",
+				consequence:
+					"Apareceu alguém apressado que te emprestou o celular. Você agendou, mas a humilhação de segurar um aparelho de 5 mil reais com as mãos sujas doeu.",
+				effect: { dignity: -10, sanity: 5, stabilityGap: -5 },
+			},
+		],
+	},
+	{
+		id: "dilema_cep_impossivel",
+		title: "O CEP Impossível (Catch-22)",
+		description:
+			"Você conseguiu uma entrevista de emprego! O RH pede comprovante de residência. Sem endereço, não tem emprego. Sem emprego, não tem endereço para alugar quarto.",
+		trigger: { type: "LOCATION", value: 0.15, locationId: "cpat_centro" },
+		options: [
+			{
+				label: "Usar endereço do SAMIM",
+				consequence:
+					"O recrutador reconheceu o endereço do albergue municipal: 'Rua Francisco Elisiário'. O preconceito venceu. A vaga 'já foi preenchida'.",
+				effect: { dignity: -20, sanity: -20, socialStigma: 20 },
+			},
+			{
+				label: "Mentir (Endereço de Parente)",
+				consequence:
+					"Você deu o endereço de uma tia distante. Passou na triagem, mas vive com o medo constante de descobrirem a mentira e te demitirem por justa causa.",
+				effect: { money: 0, sanity: -10, stabilityGap: -10 },
+			},
+		],
+	},
 ];

@@ -38,7 +38,7 @@ export const viewport: Viewport = {
 import { Providers } from "@/components/Providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
-import { Navbar } from "@/components/ui/Navbar";
+import { ClientLayoutWrapper } from "@/app/ClientLayoutWrapper";
 
 export default function RootLayout({
 	children,
@@ -55,8 +55,9 @@ export default function RootLayout({
 					<SurvivalModeProvider>
 						<GameProvider>
 							<ServicesProvider>
-								<Navbar />
-								{children}
+								<ClientLayoutWrapper>
+									{children}
+								</ClientLayoutWrapper>
 								<SpeedInsights />
 								<Clarity />
 								<Analytics />

@@ -34,6 +34,13 @@ export function useEventEngine() {
 		[setActiveDilemma],
 	);
 
+	const triggerDilemma = useCallback(
+		(dilemmaId: string) => {
+			setActiveDilemma(dilemmaId);
+		},
+		[setActiveDilemma],
+	);
+
 	const resolveDilemma = useCallback(
 		(optionIndex: number, outcome: "success" | "failure" = "success") => {
 			if (!activeDilemma) return;
@@ -84,7 +91,13 @@ export function useEventEngine() {
 
 			// Finalizar evento
 			markDilemmaResolved(activeDilemma.id);
-			setActiveDilemma(null);
+
+			// Chain Logic: If there is a next dilemma, trigger it immediately
+			if (option.nextDilemmaId) {
+				setActiveDilemma(option.nextDilemmaId);
+			} else {
+				setActiveDilemma(null);
+			}
 		},
 		[
 			activeDilemma,
@@ -105,5 +118,6 @@ export function useEventEngine() {
 		activeDilemma,
 		resolveDilemma,
 		clearActiveDilemma,
+		triggerDilemma,
 	};
 }

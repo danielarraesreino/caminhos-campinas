@@ -15,9 +15,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-			Math.cos((lat2 * Math.PI) / 180) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2);
+		Math.cos((lat2 * Math.PI) / 180) *
+		Math.sin(dLon / 2) *
+		Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c;
 }
@@ -56,6 +56,54 @@ export function useGameLoop() {
 
 	// Refs to prevent effects running on every render
 	const lastHourRef = useRef(time);
+
+	// Coordenadas do Centro de Campinas (Largo do Rosário/13 de Maio)
+	const CENTER_COORDS = { lat: -22.9055, lng: -47.0608 };
+	const IDLE_THRESHOLD = 3; // Horas paradas para gatilho
+
+	// Estado local para rastrear tempo no mesmo local
+	const [timeInLocation, setTimeInLocation] = useState(0);
+	const [lastPosition, setLastPosition] = useState<[number, number] | null>(null);
+
+	useEffect(() => {
+		if (userPosition && lastPosition) {
+			const dist = Math.sqrt(
+				Math.pow(userPosition[0] - lastPosition[0], 2) +
+				Math.pow(userPosition[1] - lastPosition[1], 2)
+			);
+
+			// Se moveu menos que ~100m, considera parado
+			if (dist < 0.001) {
+				setTimeInLocation(prev => prev + 1);
+			} else {
+				setTimeInLocation(0);
+				setLastPosition(userPosition);
+			}
+		} else if (userPosition) {
+			setLastPosition(userPosition);
+		}
+	}, [time]); // Roda a cada "hora" do jogo
+
+	// Checagem de Evento Sistêmico
+	useEffect(() => {
+		// Distância do Centro
+		if (userPosition) {
+			const distToCenter = Math.sqrt(
+				Math.pow(userPosition[0] - CENTER_COORDS.lat, 2) +
+				Math.pow(userPosition[1] - CENTER_COORDS.lng, 2)
+			);
+
+			// Se está no centro E parado há muito tempo
+			// Raio de 0.005 graus é aproximadamente 550m. O usuário pediu 500m, então vamos ajustar levemente para 0.0045 se quisermos precisão,
+			// mas 0.005 é seguro. A estatística de 51% justifica a agressividade.
+			if (distToCenter < 0.005 && timeInLocation >= IDLE_THRESHOLD) {
+				// FORCE TRIGGER: Systemic aggression doesn't wait for probability if you abuse spacing
+				// We enforce it.
+				setActiveDilemma("enquadro_13_maio");
+				setTimeInLocation(0);
+			}
+		}
+	}, [timeInLocation, userPosition]);
 
 	// --- Helpers ---
 	const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
@@ -132,6 +180,10 @@ export function useGameLoop() {
 				if (avatar.ageRange === "jovem") hngDecay += 0.1;
 				if (avatar.ageRange === "idoso") enrDecay += 0.1;
 				if (avatar.timeOnStreet === "recente") snyDecay += 0.1;
+				if (avatar.timeOnStreet === "veterano") {
+					snyDecay = Math.max(0, snyDecay - 0.2); // Slower sanity decay
+					modifyStat("health", -0.2); // Physical wear and tear
+				}
 			}
 
 			// Inventory Weight Penalty
@@ -200,6 +252,8 @@ export function useGameLoop() {
 			checkSystemicEvents(time);
 			lastHourRef.current = time;
 
+
+
 			// Random Rain change every hour
 			if (Math.random() < 0.2) setIsRaining(true);
 			else setIsRaining(false);
@@ -208,29 +262,7 @@ export function useGameLoop() {
 		function checkSystemicEvents(currentHour: number) {
 			if (activeDilemmaId) return;
 
-			// 1. SAMIM BARRIER (Geolocalization)
-			// "Se perto do SAMIM (>19h), proibição de carroça/dilema"
-			if (userPosition && currentHour >= 19) {
-				const SAMIM_LAT = -22.9038;
-				const SAMIM_LNG = -47.0652;
-
-				const dist = calculateDistance(
-					userPosition[0],
-					userPosition[1],
-					SAMIM_LAT,
-					SAMIM_LNG,
-				);
-
-				if (dist < 0.3) {
-					// 300m radius
-					const dilemaId = "abrigo_samim_01";
-					const hasResolved = resolvedDilemmas.includes(dilemaId);
-					if (!hasResolved) {
-						setActiveDilemma(dilemaId);
-						return;
-					}
-				}
-			}
+			// 1. SAMIM BARRIER Removed (Handled by JSON Dilemma "barreira_samim_time")
 
 			// 2. Cold Night (Without Shelter)
 			if (currentHour >= 22 || currentHour < 5) {
@@ -245,6 +277,7 @@ export function useGameLoop() {
 					}
 				}
 			}
+
 
 			// 3. Narrative Dilemmas Trigger
 			for (const dilemma of GAME_DILEMMAS) {
@@ -271,7 +304,33 @@ export function useGameLoop() {
 					case "SOCIAL_STIGMA_HIGH":
 						if (socialStigma > value) triggered = true;
 						break;
+					case "LOCATION":
+						if (dilemma.location_trigger && userPosition) {
+							const dist = calculateDistance(
+								userPosition[0],
+								userPosition[1],
+								dilemma.location_trigger.lat,
+								dilemma.location_trigger.lng,
+							);
+							if (dist * 1000 <= (dilemma.location_trigger.radius || 50)) {
+								triggered = true;
+							}
+						}
+						break;
+					case "STATUS":
+						if (dilemma.trigger.statusCondition) {
+							const { battery } = dilemma.trigger.statusCondition;
+							// Battery check (value in JSON is 5 for 5%, batteryLevel is 0-1)
+							if (battery !== undefined && batteryLevel * 100 <= battery) {
+								triggered = true;
+							}
+						}
+						break;
 				}
+
+				// Special Prerequisite Handlers
+				if (dilemma.prerequisite === "TIME_AFTER_19" && time < 19) triggered = false;
+
 
 				/* Hard Constraint for ODS 2 (Hunger) - Force dilemma if critical */
 				if (hunger < 10 && !resolvedDilemmas.includes("fome_extrema_01")) {

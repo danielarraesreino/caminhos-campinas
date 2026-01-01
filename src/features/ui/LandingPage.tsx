@@ -161,15 +161,11 @@ export default function LandingPage() {
 				{/* Background Texture - Slideshow */}
 				<div className="absolute inset-0">
 					{[
-						"5.png", // Initial: Homem negro no banco da praça
-						"1.png",
-						"2.png",
-						"3.png",
-						"4.png",
+						"/assets/images/landing-bg.png",
 					].map((img, index) => (
 						<div
 							key={img}
-							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${currentBgIndex === index ? "opacity-40" : "opacity-0"
+							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${currentBgIndex === index ? "opacity-40" : "opacity-40" // Simplified for single image
 								}`}
 							style={{ backgroundImage: `url(${getAssetUrl(img)})` }}
 						/>
@@ -195,9 +191,9 @@ export default function LandingPage() {
 							</h1>
 
 							<p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-blue-500/30 pl-6">
-								Entre na pele de quem vive nas ruas de Campinas. <br />
-								Simule dilemas reais, entenda a luta por dignidade e transforme
-								sua empatia em impacto real.
+								Entre na pele de uma das <strong className="text-white">1.557 pessoas</strong> que vivem nas ruas de Campinas (Censo 2024). <br />
+								A principal causa? <strong className="text-white">Conflitos familiares</strong>, não "vagabundagem".
+								Transforme sua empatia em impacto real.
 							</p>
 
 							{/* Dual Action Buttons */}
@@ -364,11 +360,10 @@ export default function LandingPage() {
 							Legitimar o Pertencimento.
 						</h2>
 						<p className="text-xl text-slate-600 leading-relaxed font-sans">
-							Segundo <strong>Santos (2006)</strong>, a pobreza estrutural no
-							Brasil é uma dívida social deliberada. Nosso projeto atua na
-							intersecção entre a tecnologia e a consciência libertadora de{" "}
-							<strong>Paulo Freire</strong>, transformando o "invisível" em um
-							sujeito ativo de sua própria história.
+							Segundo o <strong>Censo 2024</strong>, <strong>1.557 pessoas</strong> vivem nas ruas de Campinas.
+							A principal causa não é o vício, mas os <strong>conflitos familiares</strong> (38%).
+							Nosso projeto atua na intersecção entre essa realidade dura e a consciência libertadora de
+							<strong>Paulo Freire</strong>, transformando estatística em sujeito político.
 						</p>
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
 							<div className="space-y-2">
@@ -849,65 +844,7 @@ export default function LandingPage() {
 			</section>
 
 			{/* Footer */}
-			<footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex flex-col md:flex-row justify-between items-center gap-8">
-						<div className="text-center md:text-left">
-							<h4 className="text-white text-lg font-bold mb-2">
-								Caminhos Campinas
-							</h4>
-							<p className="text-sm max-w-xs">
-								Uma iniciativa para transformar a realidade das ruas através da
-								tecnologia social.
-							</p>
-						</div>
-
-						<div className="flex flex-col items-center">
-							<span className="text-sm font-medium text-slate-400 mb-2">
-								Siga o Coletivo
-							</span>
-							<a
-								href="https://www.instagram.com/coletivoaruatemvoz"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center gap-2 text-white hover:text-pink-500 transition-colors bg-slate-800 px-4 py-2 rounded-full"
-							>
-								<Instagram className="h-5 w-5" />
-								@COLETIVOARUATEMVOZ
-							</a>
-						</div>
-					</div>
-					<div className="mt-12 pt-8 border-t border-slate-800 text-center text-xs flex flex-col items-center">
-						<p className="mb-6 text-slate-300">
-							&copy; 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de
-							emancipação.
-						</p>
-
-						<div className="flex items-center gap-4 bg-slate-800/50 px-6 py-3 rounded-full border border-slate-700/50 hover:bg-slate-800 transition-colors group">
-							<div className="relative">
-								<img
-									src="/daniel_dev.jpg"
-									alt="Daniel (Japa)"
-									className="w-20 h-20 rounded-full border-2 border-slate-600 group-hover:border-blue-500 transition-colors object-cover object-center"
-								/>
-								<div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"></div>
-							</div>
-							<div className="text-left">
-								<p className="text-slate-300 font-bold group-hover:text-white transition-colors">
-									Desenvolvido por Daniel (Japa/Oclinhos)
-								</p>
-								<p className="text-slate-400 text-[10px] uppercase tracking-wider group-hover:text-blue-400 transition-colors">
-									Vibe Coding &boxvh; Inovação Social
-								</p>
-							</div>
-						</div>
-
-						<p className="mt-6 text-slate-300 italic max-w-sm">
-							"Informação é a libertação real, única e verdadeira."
-						</p>
-					</div>
-				</div>
-			</footer>
+			{/* Footer moved to global layout */}
 
 			{/* Login Modal */}
 			{showLoginModal && (
@@ -939,7 +876,8 @@ export default function LandingPage() {
 						</div>
 
 						<div className="space-y-4 relative">
-							<button
+							{/* Google Login Removed for Production Simplification
+                            <button
 								type="button"
 								onClick={() => signIn("google", { callbackUrl: "/jogar" })}
 								className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 py-3.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 hover:border-blue-300 transition-all shadow-sm group"
@@ -967,7 +905,7 @@ export default function LandingPage() {
 										fill="currentColor"
 										d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
 									/>
-								</svg>
+									</svg>
 								Entrar com Google
 							</button>
 
@@ -979,6 +917,7 @@ export default function LandingPage() {
 									Ou
 								</span>
 							</div>
+                            */}
 
 							<button
 								type="button"

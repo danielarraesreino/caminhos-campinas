@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  channel = "stable-23.11";
+  channel = "stable-24.05";
   packages = [
     pkgs.nodejs_20
     pkgs.nodePackages.pnpm
@@ -11,6 +11,14 @@
       "bradlc.vscode-tailwindcss"
       "esbenp.prettier-vscode"
     ];
+    workspace = {
+      onCreate = {
+        npm-install = "npm install";
+      };
+      onStart = {
+        npm-install = "npm install";
+      };
+    };
     previews = {
       enable = true;
       previews = {

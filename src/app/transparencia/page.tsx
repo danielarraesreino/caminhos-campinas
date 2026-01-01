@@ -48,21 +48,7 @@ export default function TransparenciaPage() {
 	return (
 		<main className="min-h-screen bg-slate-950 text-slate-100 font-sans">
 			{/* Header */}
-			<header className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
-				<div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-					<Link
-						href="/"
-						className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
-					>
-						<ArrowLeft size={20} />
-						<span>Voltar</span>
-					</Link>
-					<h1 className="font-bold text-xl tracking-tight">
-						Planejamento do Piloto - 2026
-					</h1>
-					<div className="w-20" /> {/* Spacer for centering */}
-				</div>
-			</header>
+			{/* Header removed to use global Navbar */}
 
 			<div className="pt-24 pb-20 max-w-7xl mx-auto px-6 space-y-12">
 				{/* Intro Section */}

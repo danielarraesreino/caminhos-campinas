@@ -123,10 +123,11 @@ export function NearbyList() {
 
 			// DISPARO DE TELEMETRIA ODS
 			let actionType = "OUTROS";
-			if (service.type === "ABRIGO") actionType = "ABRIGO"; // ODS 11.1
-			if (service.type === "ALIMENTACAO") actionType = "ALIMENTACAO"; // ODS 2.1
-			if (service.type === "SAUDE") actionType = "SAUDE"; // ODS 3.8
-			if (service.type === "ASSISTENCIA") actionType = "CIDADANIA"; // ODS 10
+			const type = service.type.toUpperCase();
+			if (type === "ABRIGO") actionType = "ABRIGO"; // ODS 11.1
+			if (type === "ALIMENTACAO") actionType = "ALIMENTACAO"; // ODS 2.1
+			if (type === "SAUDE") actionType = "SAUDE"; // ODS 3.8
+			if (type === "ASSISTENCIA") actionType = "CIDADANIA"; // ODS 10
 
 			trackServiceAccess(actionType, service.name);
 		},

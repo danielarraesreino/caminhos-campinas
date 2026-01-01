@@ -1,0 +1,19 @@
+[
+    {
+        "id": "1",
+        "title": "A Invisibilidade é uma Escolha Política?",
+        "date": "2025-12-27",
+        "author": "Coletivo A Rua Tem Voz",
+        "category": "Editorial",
+        "content": "Segundo o Censo 2024, Campinas tem 1.557 pessoas em situação de rua. Não são apenas números; são histórias interrompidas por conflitos familiares (71,5%) e desemprego (45%). A tecnologia social deste projeto visa quebrar essa estatística, transformando dados em empatia e ação direta.",
+        "imageUrl": "/assets/images/landing-bg.png"
+    },
+    {
+        "id": "2",
+        "title": "A Barreira Digital: Quando o Celular é Sobrevivência",
+        "date": "2025-12-26",
+        "author": "Daniel Arraes",
+        "category": "Tecnologia Social",
+        "content": "Estudos indicam que a exclusão digital é uma violação de direitos humanos. Sem bateria ou dados, o cidadão não acessa o Conecte SUS, não agenda o Poupatempo e perde o Auxílio. Nosso jogo simula essa bateria acabando para mostrar que, na rua, um carregador vale ouro."
+    }
+]

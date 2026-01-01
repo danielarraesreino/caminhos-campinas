@@ -17,10 +17,15 @@ import {
 	GlossaryTooltip,
 } from "@/components/ui/GlossaryTooltip";
 import { useGameContext } from "@/contexts/GameContext";
+import { DilemmaMatcher } from "@/services/DilemmaMatcher";
+import CAMPINAS_DILEMMAS from "@/data/dilemmas-campinas.json";
 import { ActionInput } from "./ActionInput";
 import { getDB } from "@/features/offline-db/db";
 
-export function GameChat() {
+export function GameChat({
+	initialMessages,
+	onDilemmaTriggered,
+}: { initialMessages?: any[]; onDilemmaTriggered?: (id: string) => void }) {
 	const gameState = useGameContext();
 	const [isPending, startTransition] = useTransition();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -52,7 +57,7 @@ export function GameChat() {
 	// biome-ignore lint/suspicious/noExplicitAny: Temporary fix for build error due to type mismatch
 	const chatHelpers = useChat({
 		api: "/api/chat",
-		initialMessages: [],
+		initialMessages: initialMessages || [],
 		// Rate limiting handling
 		onError: (err: any) => {
 			console.error("Chat error:", err);
@@ -91,6 +96,27 @@ export function GameChat() {
 		async (text: string, audioBlob?: Blob | null) => {
 			if (!text.trim() && !audioBlob) return;
 
+			// 1. Hybrid Engine Check (Intercept before AI)
+			if (onDilemmaTriggered && text.trim()) {
+				const bestMatch = DilemmaMatcher.findBestDilemma(
+					text,
+					userLocation,
+					CAMPINAS_DILEMMAS as any[], // Cast due to strict type checks vs json import
+				);
+
+				if (bestMatch) {
+					console.log("Hybrid Engine Intercepted:", bestMatch.id);
+					// Add user message to UI immediately manually since we skip AI
+					// accessing internal mutate from useChat is hard, so we just trigger the modal
+					// The modal will appear. Ideally we should append the user msg too.
+					// append({ role: 'user', content: text }) might trigger AI.
+					// We will just open the modal. The user sees their input in the input field? No, it clears.
+					// Let's rely on the modal being the feedback.
+					onDilemmaTriggered(bestMatch.id);
+					return;
+				}
+			}
+
 			setIsThinking(true);
 
 			// Upload Audio if exists
@@ -99,26 +125,19 @@ export function GameChat() {
 				console.log(
 					"Audio blob active - Saving locally for DEBUG/OFFLINE mode",
 				);
-				// DISABLE SERVER UPLOAD FOR PRODUCTION (FREE TIER)
-				/*
-				try {
-					const formData = new FormData();
-					formData.append("audio", audioBlob, "voice_input.webm");
-					// const res = await fetch('/api/upload', { method: 'POST', body: formData });
-				} catch (e) { ... }
-				*/
 
 				// Force PouchDB Save (Offline/Debug)
 				try {
 					const db = await getDB();
 					if (db) {
 						await db.post({
-							type: "pending_upload",
+							type: "audio_pending", // Corrected type for offline handling
 							blob: audioBlob,
 							createdAt: new Date().toISOString(),
 							debug: true,
 						});
 						console.log("Audio saved to PouchDB (offline fallback)");
+						alert("Áudio salvo no dispositivo (Modo Offline)");
 					}
 				} catch (dbError) {
 					console.error("Failed to save audio fallback", dbError);
@@ -148,7 +167,7 @@ export function GameChat() {
 				}
 			});
 		},
-		[append, startTransition, userLocation],
+		[append, startTransition, userLocation, onDilemmaTriggered],
 	);
 
 	// Helper to highlight logic

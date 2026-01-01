@@ -35,6 +35,11 @@ export function Navbar() {
 			icon: <FileText className="w-4 h-4" />,
 		},
 		{
+			href: "/jornal",
+			label: "Jornal da Rua",
+			icon: <FileText className="w-4 h-4" />,
+		},
+		{
 			href: "/parceiros",
 			label: "Parceiros ESG",
 			icon: <Building2 className="w-4 h-4" />,

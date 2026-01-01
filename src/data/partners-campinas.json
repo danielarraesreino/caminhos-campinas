@@ -1,0 +1,64 @@
+[
+    {
+        "id": "caritas_campinas",
+        "name": "Cáritas Arquidiocesana de Campinas",
+        "address": "Rua José Paulino, 603 - Centro",
+        "description": "Oferece acolhimento, serviço de banho solidário e encaminhamento para rede de serviços.",
+        "services": [
+            "Banho",
+            "Acolhimento",
+            "Orientação"
+        ],
+        "type": "ONG",
+        "coordinates": {
+            "lat": -22.905,
+            "lng": -47.060
+        }
+    },
+    {
+        "id": "toca_de_assis",
+        "name": "Toca de Assis",
+        "address": "Vila Industrial",
+        "description": "Irmandade católica que oferece alimentação noturna e acolhimento espiritual nas ruas.",
+        "services": [
+            "Alimentação",
+            "Acolhimento Espiritual"
+        ],
+        "type": "RELIGIOSO",
+        "coordinates": {
+            "lat": -22.915,
+            "lng": -47.070
+        }
+    },
+    {
+        "id": "instituto_padre_haroldo",
+        "name": "Instituto Padre Haroldo",
+        "address": "Rua Dr. João Quirino do Nascimento, 1601",
+        "description": "Referência em reabilitação de dependência química e reinserção social.",
+        "services": [
+            "Reabilitação",
+            "Acolhimento",
+            "Trabalho"
+        ],
+        "type": "ONG",
+        "coordinates": {
+            "lat": -22.850,
+            "lng": -47.050
+        }
+    },
+    {
+        "id": "mao_amiga",
+        "name": "Programa Mão Amiga",
+        "address": "Av. Campos Sales, 427 - Centro",
+        "description": "Programa municipal de bolsa-trabalho (R$ 1.240,00) para qualificação profissional e reinserção.",
+        "services": [
+            "Bolsa-Trabalho",
+            "Qualificação"
+        ],
+        "type": "PUBLICO",
+        "coordinates": {
+            "lat": -22.900,
+            "lng": -47.060
+        }
+    }
+]

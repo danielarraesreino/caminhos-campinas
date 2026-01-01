@@ -1,15 +1,11 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-const LandingPage = dynamic(() => import("@/features/ui/LandingPage"), {
-	ssr: false,
-});
+import { UnifiedDashboard } from "@/features/ui/UnifiedDashboard";
 
 export default function Home() {
 	return (
 		<main className="min-h-screen bg-slate-50">
-			<LandingPage />
+			<UnifiedDashboard />
 		</main>
 	);
 }
