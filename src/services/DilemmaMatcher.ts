@@ -81,7 +81,7 @@ export const DilemmaMatcher = {
 				const service = services.find(
 					(s) => s.id === dilemma.trigger.locationId,
 				);
-				if (service) {
+				if (service && service.coords && service.coords.length === 2) {
 					const distance = calculateDistance(userLocation, {
 						lat: service.coords[0],
 						lng: service.coords[1],
