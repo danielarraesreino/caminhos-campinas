@@ -21,12 +21,12 @@
 		"name": "Centro Pop I",
 		"type": "ASSISTENCIA",
 		"category": "Referência",
-		"address": "Rua Regente Feijó, 1240, Centro",
+		"address": "Rua Regente Feijó, 824, Centro",
 		"description": "Porta de entrada para serviços da rede. Cadastro Único, banho, lavanderia e encaminhamentos.",
 		"opening_hours": "08:00 - 17:00",
 		"coords": [
-			-22.905,
-			-47.06
+			-22.9069,
+			-47.0594
 		],
 		"effects": {
 			"dignity": 20,
@@ -38,7 +38,7 @@
 		"name": "Bagageiro Municipal",
 		"type": "ASSISTENCIA",
 		"category": "Guarda-Volumes",
-		"address": "Vila Industrial (Próx. Rodoviária Antiga)",
+		"address": "Rua Francisco Theodoro, 138 - Vila Industrial",
 		"description": "Local seguro para guardar pertences e documentos (até 1.8 mil bagagens). Evita roubos na rua.",
 		"opening_hours": "08:00 - 17:00",
 		"coords": [
@@ -71,12 +71,12 @@
 		"name": "Bom Prato Móvel",
 		"type": "ALIMENTACAO",
 		"category": "Itinerante",
-		"address": "Jardim Florence / Região Noroeste (Variável)",
-		"description": "Caminhão que serve 300 almoços a R$ 1,00 em regiões periféricas.",
+		"address": "Rua Lourival de Almeida, 349 - Jd. Fernanda (Endereço Variável)",
+		"description": "Caminhão que serve 300 almoços a R$ 1,00 em regiões periféricas. Atualmente no Jd. Fernanda.",
 		"opening_hours": "11:00",
 		"coords": [
-			-22.93,
-			-47.12
+			-23.0451,
+			-47.1245
 		],
 		"effects": {
 			"hunger": 100,
