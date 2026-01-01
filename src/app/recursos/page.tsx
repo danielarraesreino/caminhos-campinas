@@ -60,7 +60,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 
 	const isEducation = false; // "educacao" removed from ServiceType, handled as ASSISTENCIA generally or via specific ID checking if needed.
 	// We can check category if we want specific styling for education
-	const isEducationStyle = service.category === "Qualificação Profissional" || service.category === "Geração de Renda" || service.category === "Direitos Humanos";
+	const isEducationStyle = service.type === "EDUCATION" || service.type === "DOCUMENTS" || service.category === "Qualificação Profissional" || service.category === "Geração de Renda";
 
 	return (
 		<div
@@ -241,14 +241,14 @@ export default function ResourcesPage() {
 			label: "Documentos",
 			icon: <FileText className="w-6 h-6" />,
 			color: "bg-emerald-500",
-			type: "ASSISTENCIA",
+			type: "DOCUMENTS",
 		},
 		{
 			id: "education",
 			label: "Formação",
 			icon: <BookOpen className="w-6 h-6" />,
 			color: "bg-blue-600",
-			type: "ASSISTENCIA",
+			type: "EDUCATION",
 		},
 	];
 

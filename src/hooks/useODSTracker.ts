@@ -3,12 +3,17 @@ import type { ServiceType } from "@/contexts/ServicesContext";
 import { TelemetryAction, telemetryService } from "@/services/telemetry";
 
 // ODS Mappings
+// ODS Mappings
 const SERVICE_ODS_MAP: Record<ServiceType, string> = {
 	ALIMENTACAO: "ODS 2 - Fome Zero e Agricultura Sustentável",
 	ABRIGO: "ODS 11 - Cidades e Comunidades Sustentáveis",
 	SAUDE: "ODS 3 - Saúde e Bem-Estar",
+	HEALTH_MENTAL: "ODS 3 - Saúde e Bem-Estar",
 	ASSISTENCIA: "ODS 1 - Erradicação da Pobreza",
-	ADMINISTRATIVO: "ODS 16 - Paz, Justiça e Instituições Eficazes",
+	EDUCATION: "ODS 4 - Educação de Qualidade",
+	TRABALHO: "ODS 8 - Trabalho Decente e Crescimento Econômico",
+	DOCUMENTS: "ODS 16 - Paz, Justiça e Instituições Eficazes",
+	OUTRO: "ODS 10 - Redução das Desigualdades",
 };
 
 export function useODSTracker() {

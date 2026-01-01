@@ -1,52 +1,90 @@
 [
 	{
-		"id": "candido_sede",
-		"name": "Serviço de Saúde Dr. Cândido Ferreira (Sede)",
-		"type": "health_mental",
-		"coords": [-22.8885, -46.9653],
-		"address": "R. Antônio Prado, 430 - Sousas",
-		"description": "Referência em saúde mental e reabilitação psicossocial. Sede do Núcleo de Oficinas e Trabalho (NOT).",
-		"opening_hours": "07:00 - 17:00",
-		"services": ["Psiquiatria", "Oficinas de Trabalho", "Geração de Renda"]
+		"id": "caps_ad_centro",
+		"name": "CAPS AD III Centro",
+		"type": "HEALTH_MENTAL",
+		"category": "Saúde Mental",
+		"address": "R. Dr. Buarque de Macedo, 150 - Guanabara",
+		"description": "Atendimento 24h para álcool e drogas. Acolhimento noturno e equipe multidisciplinar (redução de danos).",
+		"opening_hours": "24 horas",
+		"coordinates": [
+			-22.885,
+			-47.070
+		],
+		"effects": {
+			"sanity": 15,
+			"health": 5
+		}
 	},
 	{
-		"id": "casa_oficinas",
-		"name": "Casa das Oficinas (Cândido Ferreira)",
-		"type": "work_inclusion",
-		"coords": [-22.932, -47.085],
-		"address": "R. Domício Pacheco e Silva, 760 - Jd. Novo Campos Elíseos",
-		"description": "Espaço de inclusão social pelo trabalho. Oferece oficinas de mosaico, marcenaria e culinária com bolsa-oficina.",
+		"id": "consultorio_rua",
+		"name": "Consultório na Rua",
+		"type": "SAUDE",
+		"category": "Saúde Básica",
+		"address": "Unidade Móvel (Região Central)",
+		"description": "Equipe de saúde que vai até você. Curativos, medicação e testes rápidos sem exigir documentos.",
 		"opening_hours": "08:00 - 17:00",
-		"services": ["Bolsa-Oficina", "Capacitação", "Convivência"]
+		"coordinates": [
+			-22.906,
+			-47.061
+		],
+		"effects": {
+			"health": 20
+		}
 	},
 	{
-		"id": "consultorio_rua_leste",
-		"name": "Consultório na Rua (Base Leste)",
-		"type": "health_mobile",
-		"coords": [-22.865, -47.05],
-		"address": "R. Fernão Lopes, 1290 - Pq. Taquaral (Base)",
-		"description": "Equipe itinerante. Realiza curativos, testes rápidos e redução de danos nas praças do Centro e Região Leste.",
-		"opening_hours": "07:00 - 18:00",
-		"services": ["Redução de Danos", "Clínica Geral", "Pré-natal"]
+		"id": "poupatempo_centro",
+		"name": "Poupatempo Centro",
+		"type": "DOCUMENTS",
+		"category": "Documentação",
+		"address": "Av. Francisco Glicério, 935 - Centro",
+		"description": "Emissão de RG (1ª e 2ª via), Carteira de Trabalho e CPF. Isenção de taxas com encaminhamento do CRAS/Centro Pop.",
+		"opening_hours": "09:00 - 17:00 (Agendado)",
+		"coordinates": [
+			-22.9055,
+			-47.0577
+		],
+		"effects": {
+			"dignity": 10
+		},
+		"requirements": [
+			"Agendamento"
+		]
 	},
 	{
-		"id": "cras_anhumas",
-		"name": "CRAS Recanto Anhumas",
-		"type": "social_assistance",
-		"coords": [-22.85, -47.03],
-		"address": "R. Dona Luiza de Gusmão, 2200 - Vila Nogueira",
-		"description": "Porta de entrada para CadÚnico e Bolsa Família. Atende região Leste/Norte.",
-		"opening_hours": "08:00 - 17:00",
-		"services": ["CadÚnico", "Bolsa Família", "Encaminhamento"]
+		"id": "poupatempo_shopping",
+		"name": "Poupatempo Campinas Shopping",
+		"type": "DOCUMENTS",
+		"category": "Documentação",
+		"address": "R. Jacy Teixeira de Camargo, 940 - Jd. do Lago",
+		"description": "Unidade localizada no Campinas Shopping. Realiza todos os serviços de documentação.",
+		"opening_hours": "09:00 - 19:00 (Agendado)",
+		"coordinates": [
+			-22.915,
+			-47.069
+		],
+		"effects": {
+			"dignity": 10
+		},
+		"requirements": [
+			"Agendamento",
+			"Passagem"
+		]
 	},
 	{
-		"id": "cras_satelite",
-		"name": "CRAS Satélite Íris",
-		"type": "social_assistance",
-		"coords": [-22.94, -47.12],
-		"address": "R. Prof. Mário Scolari, 91 - Cidade Satélite Íris I",
-		"description": "Atendimento social para região Noroeste. Foco em famílias vulneráveis.",
+		"id": "cras_centro",
+		"name": "CRAS Centro",
+		"type": "ASSISTENCIA",
+		"category": "Assistência Social",
+		"address": "R. Barão de Jaguara, 123",
+		"description": "Porta de entrada para CadÚnico e Bolsa Família. Encaminhamento para isenção de documentos.",
 		"opening_hours": "08:00 - 16:00",
-		"services": ["CadÚnico", "Benefícios Eventuais"]
+		"coordinates": [
+			-22.908,
+			-47.063
+		],
+		"effects": {
+			"dignity": 5
+		}
 	}
 ]

@@ -9,17 +9,42 @@ import {
 	useState,
 } from "react";
 
+import SERVICES_DATA from "@/data/services-campinas.json";
+import EDUCATION_DATA from "@/data/services-education.json";
+import EXPANSION_DATA from "@/data/services-expansion.json";
+
+// Merge all datasets with normalization
+const ALL_SERVICES = [
+	...SERVICES_DATA.map((s) => ({ ...s, type: s.type as ServiceType })),
+	...EDUCATION_DATA.map((s) => ({
+		...s,
+		type: "EDUCATION" as ServiceType,
+		category: "Educação Online",
+		coords: [-22.905, -47.06] as [number, number], // Default center for online
+		opening_hours: "24h",
+	})),
+	...EXPANSION_DATA.map((s) => ({
+		...s,
+		coords: s.coordinates as [number, number], // Map coordinates -> coords
+		requirements: s.requirements || [],
+	})),
+] as ServiceLocation[];
+
 export type ServiceType =
 	| "ALIMENTACAO"
 	| "ABRIGO"
 	| "SAUDE"
 	| "ASSISTENCIA"
-	| "ADMINISTRATIVO";
+	| "TRABALHO"
+	| "EDUCATION"
+	| "DOCUMENTS"
+	| "HEALTH_MENTAL"
+	| "OUTRO";
 
 export interface ServiceLocation {
 	id: string;
 	name: string;
-	type: ServiceType;
+	type: ServiceType | string; // Allow string for raw JSON compatibility
 	coords: [number, number];
 	opening_hours: string;
 	address?: string;
@@ -27,6 +52,7 @@ export interface ServiceLocation {
 	description?: string;
 	rules?: string;
 	requirements?: string[];
+	phone?: string;
 	effects?: {
 		hunger?: number;
 		health?: number;
@@ -37,6 +63,7 @@ export interface ServiceLocation {
 		money?: number;
 		stabilityGap?: number;
 		addBuff?: string;
+		security?: number; // Added from bagageiro check
 	};
 }
 
@@ -54,10 +81,10 @@ const ServicesContext = createContext<ServicesContextProps | undefined>(
 
 const STORAGE_KEY = "services_data";
 
-import SERVICES_DATA from "@/data/services-campinas.json";
-
 export function ServicesProvider({ children }: { children: React.ReactNode }) {
-	const [services, setServices] = useState<ServiceLocation[]>(SERVICES_DATA as unknown as ServiceLocation[]); // Cast if type mismatch
+	const [services, setServices] = useState<ServiceLocation[]>(
+		ALL_SERVICES,
+	);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 

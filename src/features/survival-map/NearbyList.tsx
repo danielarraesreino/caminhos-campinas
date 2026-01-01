@@ -4,7 +4,8 @@ import { useGameContext } from "@/contexts/GameContext";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
 import { Lock, MapPin, Navigation, Wallet } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
-import servicesData from "@/data/services-campinas.json";
+import { useServices } from "@/contexts/ServicesContext";
+// import servicesData from "@/data/services-campinas.json"; // Removed direct import
 
 interface ServiceEffect {
 	hunger?: number;
@@ -50,15 +51,16 @@ function calculateDistance(
 export function NearbyList() {
 	const { userPosition, money, documents, modifyStat, addBuff, addMoney } =
 		useGameContext();
+	const { services: contextServices } = useServices(); // Use context services
 	const { trackServiceAccess } = useODSMetrics();
 	// biome-ignore lint/suspicious/noExplicitAny: data structure is flexible
 	const [services, setServices] = useState<any[]>([]);
 
 	useEffect(() => {
-		if (!userPosition) return;
+		if (!userPosition || !contextServices) return;
 
 		// biome-ignore lint/suspicious/noExplicitAny: incoming data
-		const mapped = servicesData.map((s: any) => {
+		const mapped = contextServices.map((s: any) => {
 			const dist = calculateDistance(
 				userPosition[0],
 				userPosition[1],
@@ -72,7 +74,7 @@ export function NearbyList() {
 		// biome-ignore lint/suspicious/noExplicitAny: sort generic
 		const sorted = mapped.sort((a: any, b: any) => a.distance - b.distance);
 		setServices(sorted);
-	}, [userPosition]);
+	}, [userPosition, contextServices]);
 
 	const checkAvailability = (service: Service) => {
 		let allowed = true;
