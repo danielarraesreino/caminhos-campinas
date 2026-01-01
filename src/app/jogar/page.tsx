@@ -109,13 +109,11 @@ export default function GamePage() {
 
 			{/* CAMADA 50: Modais de Decisão e Chat (Bloqueantes ou Interativos) */}
 			{activeDilemma && (
-				<div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-					<DilemmaModal
-						dilemma={activeDilemma}
-						onResolve={resolveDilemma}
-						onClose={clearActiveDilemma}
-					/>
-				</div>
+				<DilemmaModal
+					dilemma={activeDilemma}
+					onResolve={resolveDilemma}
+					onClose={clearActiveDilemma}
+				/>
 			)}
 
 			{isChatOpen && (
