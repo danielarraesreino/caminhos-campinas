@@ -124,8 +124,12 @@ export function GameChat({
 
 			if (bestMatch) {
 				if (typeof onDilemmaTriggered === 'function') {
-					console.log("Hybrid Engine Intercepted:", bestMatch.id);
-					onDilemmaTriggered(bestMatch.id);
+					try {
+						console.log("Hybrid Engine Intercepted:", bestMatch.id);
+						onDilemmaTriggered(bestMatch.id);
+					} catch (cbError) {
+						console.error("Erro ao executar onDilemmaTriggered:", cbError);
+					}
 				} else {
 					console.error("ERRO CRÍTICO: onDilemmaTriggered não conectado no componente pai!");
 				}
