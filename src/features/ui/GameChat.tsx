@@ -9,6 +9,7 @@ import {
 	useRef,
 	useState,
 	useTransition,
+	useCallback,
 } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,15 +17,17 @@ import {
 	GlossaryTooltip,
 } from "@/components/ui/GlossaryTooltip";
 import { useGameContext } from "@/contexts/GameContext";
-import dilemmasData from "@/data/dilemmas-campinas.json";
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
+import CAMPINAS_DILEMMAS from "@/data/dilemmas-campinas.json";
 import { ActionInput } from "./ActionInput";
 
-interface GameChatProps {
+export function GameChat({
+	initialMessages,
+	onDilemmaTriggered,
+}: {
+	initialMessages?: any[];
 	onDilemmaTriggered?: (id: string) => void;
-}
-
-export function GameChat({ onDilemmaTriggered }: GameChatProps) {
+}) {
 	const gameState = useGameContext();
 	const [isPending, startTransition] = useTransition();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -61,6 +64,7 @@ export function GameChat({ onDilemmaTriggered }: GameChatProps) {
 		append,
 	} = useChat({
 		api: "/api/chat",
+		initialMessages: initialMessages || [],
 		// Rate limiting handling
 		onError: (err: any) => {
 			console.error("Chat error details:", err);
@@ -81,72 +85,84 @@ export function GameChat({ onDilemmaTriggered }: GameChatProps) {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
-	const handleAction = async (text: string, audioBlob?: Blob | null) => {
-		if (!text.trim() && !audioBlob) return;
+	const handleAction = useCallback(
+		async (text: string, audioBlob?: Blob | null) => {
+			if (!text.trim() && !audioBlob) return;
 
-		// Hybrid Engine Interception
-		if (text) {
-			const matchedDilemma = DilemmaMatcher.findBestDilemma(
-				text,
-				userLocation,
-				dilemmasData as any,
-				[], // services can be passed if available, empty for now
-			);
+			// Hybrid Engine Interception
+			if (text) {
+				const rawDilemmas: any = CAMPINAS_DILEMMAS;
+				const dilemmasArray = Array.isArray(rawDilemmas)
+					? rawDilemmas
+					: rawDilemmas.default || [];
 
-			if (matchedDilemma) {
-				console.log(`[HybridEngine] Interceptado: ${matchedDilemma.id}`);
+				const matchedDilemma = DilemmaMatcher.findBestDilemma(
+					text,
+					userLocation,
+					dilemmasArray as any[],
+					[], // services can be passed if available
+				);
 
-				// Fix for "m is not a function" crash
-				if (typeof onDilemmaTriggered === "function") {
-					onDilemmaTriggered(matchedDilemma.id);
-				} else {
+				if (matchedDilemma) {
+					console.log(`[HybridEngine] Interceptado: ${matchedDilemma.id}`);
+					if (typeof onDilemmaTriggered === "function") {
+						onDilemmaTriggered(matchedDilemma.id);
+						return;
+					}
 					console.error(
-						"ERRO CRÍTICO: Função de dilema não conectada no GameChat!",
+						"ERRO CRITICAL: Função de dilema não conectada no GameChat!",
 					);
+					return;
 				}
-				return; // Stop AI processing
 			}
-		}
 
-		setIsThinking(true);
+			setIsThinking(true);
 
-		// Upload Audio if exists
-		const audioUrl = "";
-		if (audioBlob) {
+			// Audio Handling
+			let audioUrl = "";
+			if (audioBlob) {
+				console.log(
+					"Audio blob active - Saving locally for DEBUG/OFFLINE mode",
+				);
+				try {
+					const { getDB } = await import("@/features/offline-db/db");
+					const db = await getDB();
+					if (db) {
+						await db.post({
+							type: "audio_pending",
+							blob: audioBlob,
+							createdAt: new Date().toISOString(),
+							debug: true,
+						});
+					}
+				} catch (dbError) {
+					console.error("Failed to save audio fallback", dbError);
+				}
+			}
+
 			try {
-				const formData = new FormData();
-				formData.append("audio", audioBlob, "voice_input.webm");
-
-				// Assuming you have an upload endpoint
-				// const res = await fetch('/api/upload', { method: 'POST', body: formData });
-				// const data = await res.json();
-				// audioUrl = data.url;
-
-				// For prototype: mock url or base64
-				console.log("Audio blob ready for upload processing");
-			} catch (e) {
-				console.error("Audio upload failed", e);
-			}
-		}
-
-		startTransition(() => {
-			append({
-				role: "user",
-				content: text,
-				data: {
-					audioUrl: audioUrl, // Pass audio URL in data
-					gameState: {
-						health: gameState.health,
-						hunger: gameState.hunger,
-						hygiene: gameState.hygiene,
-						money: gameState.money,
-						time: gameState.time,
-						location: userLocation,
+				append({
+					role: "user",
+					content: text,
+					data: {
+						audioUrl: audioUrl,
+						gameState: {
+							health: gameState.health,
+							hunger: gameState.hunger,
+							hygiene: gameState.hygiene,
+							money: gameState.money,
+							time: gameState.time,
+							location: userLocation,
+						},
 					},
-				},
-			});
-		});
-	};
+				});
+			} catch (err) {
+				console.error("Error appending message:", err);
+				setIsThinking(false);
+			}
+		},
+		[append, userLocation, onDilemmaTriggered, gameState],
+	);
 
 	// Helper to highlight logic
 	const renderMessageContent = (content: string) => {
@@ -227,7 +243,7 @@ export function GameChat({ onDilemmaTriggered }: GameChatProps) {
 									</div>
 								) : (
 									<Image
-										src={`https://api.dicebear.com/7.x/bottts/svg?seed=system`}
+										src="/avatars/avatar_1.png"
 										alt="Mestre"
 										width={32}
 										height={32}
@@ -257,7 +273,7 @@ export function GameChat({ onDilemmaTriggered }: GameChatProps) {
 					<div className="flex gap-3 w-full px-2">
 						<div className="flex-shrink-0 mt-1">
 							<Image
-								src={`https://api.dicebear.com/7.x/bottts/svg?seed=system`}
+								src="/avatars/avatar_1.png"
 								alt="Mestre"
 								width={32}
 								height={32}

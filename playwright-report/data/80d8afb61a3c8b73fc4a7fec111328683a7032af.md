@@ -1,0 +1,109 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "C Caminhos Campinas" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: C
+        - generic [ref=e7]: Caminhos Campinas
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - link "Início" [ref=e10] [cursor=pointer]:
+            - /url: /
+          - link "Simulador" [ref=e11] [cursor=pointer]:
+            - /url: /jogar
+            - img [ref=e12]
+            - text: Simulador
+          - link "Dados Abertos" [ref=e14] [cursor=pointer]:
+            - /url: /impacto
+            - img [ref=e15]
+            - text: Dados Abertos
+          - link "Transparência" [ref=e16] [cursor=pointer]:
+            - /url: /transparencia
+            - img [ref=e17]
+            - text: Transparência
+          - link "Parceiros ESG" [ref=e20] [cursor=pointer]:
+            - /url: /parceiros
+            - img [ref=e21]
+            - text: Parceiros ESG
+        - link "Guia de Rua" [ref=e25] [cursor=pointer]:
+          - /url: /recursos
+          - img [ref=e26]
+          - text: Guia de Rua
+        - link "Apoie Agora" [ref=e29] [cursor=pointer]:
+          - /url: /apoie
+          - button "Apoie Agora" [ref=e30]:
+            - generic [ref=e31]: Apoie Agora
+        - generic "Você está Online" [ref=e32]:
+          - img [ref=e33]
+  - main [ref=e37]:
+    - generic [ref=e39]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - img [ref=e44]
+          - text: Construção de Identidade
+        - heading "Quem é você nesta jornada?" [level=2] [ref=e47]
+        - paragraph [ref=e48]: Cada detalhe molda as interações e desafios que virão.
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - generic [ref=e58]: Como seu personagem é chamado?
+          - textbox "Como seu personagem é chamado?" [ref=e59]:
+            - /placeholder: "Ex: Zé do Pátio, Maria da Praça..."
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]: Gênero
+            - combobox "Selecione o gênero" [ref=e63]:
+              - option "Masculino" [selected]
+              - option "Feminino"
+              - option "Trans / Travesti"
+              - option "Não-binário"
+          - generic [ref=e64]:
+            - generic [ref=e65]: Faixa Etária
+            - combobox "Selecione a faixa etária" [ref=e66]:
+              - option "Jovem (18-29)"
+              - option "Adulto (30-59)" [selected]
+              - option "Idoso (60+)"
+      - generic [ref=e67]:
+        - button "Voltar" [ref=e68]:
+          - img
+          - text: Voltar
+        - button "Próximo Passo" [disabled]:
+          - text: Próximo Passo
+          - img
+  - button "Apoiar na Realidade" [ref=e70]:
+    - img [ref=e73]
+    - generic: Apoiar na Realidade
+  - contentinfo [ref=e75]:
+    - generic [ref=e76]:
+      - generic [ref=e77]:
+        - heading "CAMINHOS CAMPINAS" [level=3] [ref=e78]
+        - paragraph [ref=e79]: Tecnologia como instrumento de emancipação. Código Aberto.
+      - navigation [ref=e80]:
+        - link "Início" [ref=e81] [cursor=pointer]:
+          - /url: /
+        - link "Sobre" [ref=e82] [cursor=pointer]:
+          - /url: /sobre
+        - link "Jogar" [ref=e83] [cursor=pointer]:
+          - /url: /jogar
+        - link "Impacto" [ref=e84] [cursor=pointer]:
+          - /url: /impacto
+        - link "Apoie" [ref=e85] [cursor=pointer]:
+          - /url: /apoie
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - generic [ref=e88]:
+            - text: Desenvolvido na base do
+            - strong [ref=e89]: Vibe Coding
+            - text: ┼
+            - strong [ref=e90]: Inovação Social
+            - text: .
+          - img [ref=e91]
+        - link "Código Aberto" [ref=e93] [cursor=pointer]:
+          - /url: https://github.com/danielarraesreino/caminhos-campinas
+          - img [ref=e94]
+          - generic [ref=e97]: Código Aberto
+    - generic [ref=e98]: © 2025 Coletivo A Rua Tem Voz. Dados baseados no Censo FEAC/Prefeitura 2024.
+  - alert [ref=e99]
+```

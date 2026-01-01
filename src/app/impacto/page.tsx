@@ -11,41 +11,40 @@ export default function ImpactDashboardPage() {
 	const [data, setData] = useState<SimAgent[]>([]);
 
 	useEffect(() => {
-		// Executa a simulação ao carregar
 		setData(runCensusSimulation());
 	}, []);
 
-	// Métricas Calculadas
 	const stats = useMemo(() => {
-		const total = data.length;
-		const homeless = data.filter((a) => !a.status.sheltered).length;
-		const hungry = data.filter((a) => a.status.hungry).length;
-		const blackPopulation = data.filter(
-			(a) => a.demographics.race === "PRETA_PARDA",
-		).length;
+		if (data.length === 0)
+			return {
+				total: 0,
+				housingDeficit: 0,
+				foodInsecurity: 0,
+				sanitationCrisis: 0,
+				menstrualPoverty: 0,
+				racialGap: 0,
+			};
 
-		// Sanitation Metrics
-		const forcedStreetSanitation = data.filter(
+		const total = data.length;
+		const housing = data.filter((a) => !a.status.sheltered).length;
+		const food = data.filter((a) => a.status.hungry).length;
+		const sanitation = data.filter(
 			(a) => a.status.sanitationAccess === "RUA",
 		).length;
-		const womenCount = data.filter(
-			(a) => a.demographics.gender === "FEMININO",
-		).length;
-		const menstrualDignityFail = data.filter(
+		const menstrual = data.filter(
 			(a) => a.demographics.gender === "FEMININO" && !a.status.menstrualDignity,
+		).length;
+		const racial = data.filter(
+			(a) => a.demographics.race === "PRETA_PARDA",
 		).length;
 
 		return {
 			total,
-			housingDeficit: total > 0 ? Math.round((homeless / total) * 100) : 0,
-			foodInsecurity: total > 0 ? Math.round((hungry / total) * 100) : 0,
-			racialGap: total > 0 ? Math.round((blackPopulation / total) * 100) : 0,
-			sanitationCrisis:
-				total > 0 ? Math.round((forcedStreetSanitation / total) * 100) : 0,
-			menstrualPoverty:
-				womenCount > 0
-					? Math.round((menstrualDignityFail / womenCount) * 100)
-					: 0,
+			housingDeficit: Math.round((housing / total) * 100),
+			foodInsecurity: Math.round((food / total) * 100),
+			sanitationCrisis: Math.round((sanitation / total) * 100),
+			menstrualPoverty: Math.round((menstrual / total) * 100),
+			racialGap: Math.round((racial / total) * 100),
 		};
 	}, [data]);
 

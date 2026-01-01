@@ -34,6 +34,13 @@ export function useEventEngine() {
 		[setActiveDilemma],
 	);
 
+	const triggerDilemma = useCallback(
+		(dilemmaId: string) => {
+			setActiveDilemma(dilemmaId);
+		},
+		[setActiveDilemma],
+	);
+
 	const resolveDilemma = useCallback(
 		(optionIndex: number, outcome: "success" | "failure" = "success") => {
 			if (!activeDilemma) return;
@@ -42,9 +49,9 @@ export function useEventEngine() {
 			if (!option) return;
 
 			// Determine which effect to apply
-			let effectToApply = option.effect;
+			let effectToApply = option.effect || {};
 			if (outcome === "failure" && option.effect_failure) {
-				effectToApply = option.effect_failure as any;
+				effectToApply = (option.effect_failure as any) || {};
 			}
 
 			// 1. Aplicar stats básicos
@@ -85,39 +92,11 @@ export function useEventEngine() {
 			// Finalizar evento
 			markDilemmaResolved(activeDilemma.id);
 
-			// Check for chained dilemma
+			// Chain Logic: If there is a next dilemma, trigger it immediately
 			if (option.nextDilemmaId) {
 				setActiveDilemma(option.nextDilemmaId);
 			} else {
 				setActiveDilemma(null);
-			}
-
-			// 4. Telemetry Tracking (Novo: Censo 2024 Integration)
-			if (option.telemetryTag) {
-				// Determine resolution "success" or "risk" based on effect
-				// Using outcome from JSON or deriving it
-				import("@/services/telemetry").then(
-					({ telemetryService, TelemetryAction }) => {
-						try {
-							telemetryService.track(
-								TelemetryAction.DECISION_MADE,
-								{
-									dilemmaId: activeDilemma.id,
-									optionLabel: option.label,
-									outcome: option.telemetryTag?.outcome,
-									action: option.telemetryTag?.action,
-								},
-								{
-									ods_category: option.telemetryTag?.ods,
-									violation_type: option.telemetryTag?.violation_type,
-									resource_gap: option.telemetryTag?.resource_gap,
-								},
-							);
-						} catch (e) {
-							console.warn("Telemetry error", e);
-						}
-					},
-				);
 			}
 		},
 		[
@@ -139,5 +118,6 @@ export function useEventEngine() {
 		activeDilemma,
 		resolveDilemma,
 		clearActiveDilemma,
+		triggerDilemma,
 	};
 }

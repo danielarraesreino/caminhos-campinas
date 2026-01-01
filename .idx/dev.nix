@@ -1,9 +1,6 @@
 # .idx/dev.nix - Project IDX Configuration
 { pkgs, ... }: {
-  # Enable previews
-  channel = "stable-23.11"; # or "unstable"
-  
-  # Use packages from Nixpkgs
+  channel = "stable-24.05";
   packages = [
     pkgs.nodejs_20
     pkgs.yarn
@@ -19,8 +16,14 @@
       "biomejs.biome"
       "bradlc.vscode-tailwindcss"
     ];
-
-    # Enable previews
+    workspace = {
+      onCreate = {
+        npm-install = "npm install";
+      };
+      onStart = {
+        npm-install = "npm install";
+      };
+    };
     previews = {
       enable = true;
       previews = {

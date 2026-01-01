@@ -14,7 +14,7 @@ export interface DilemmaOption {
 	consequence: string;
 	consequence_failure?: string;
 	risk?: number; // 0-100
-	nextDilemmaId?: string; // ID of the next dilemma to trigger immediately
+	nextDilemmaId?: string; // ID for chained dilemma (immediate trigger)
 	effect: Partial<
 		Omit<
 			GameState,
@@ -59,8 +59,6 @@ export interface DilemmaOption {
 		ods: string;
 		action: string;
 		outcome: string;
-		violation_type?: string;
-		resource_gap?: string;
 	};
 }
 

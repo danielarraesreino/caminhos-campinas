@@ -9,25 +9,70 @@ import {
 	useState,
 } from "react";
 
+import SERVICES_DATA from "@/data/services-campinas.json";
+import EDUCATION_DATA from "@/data/services-education.json";
+import EXPANSION_DATA from "@/data/services-expansion.json";
+
+// Helper to safely get array from JSON import (handles ES modules default export if needed)
+// biome-ignore lint/suspicious/noExplicitAny: JSON imports can be unpredictable in build
+const safeArray = (data: any): any[] => {
+	if (Array.isArray(data)) return data;
+	if (data && Array.isArray(data.default)) return data.default;
+	return [];
+};
+
+// Merge all datasets with normalization
+const ALL_SERVICES = [
+	...safeArray(SERVICES_DATA)
+		.filter((s) => s && typeof s === "object" && s.id)
+		.map((s) => ({
+			...s,
+			type: s.type as ServiceType,
+			effects: s.effects || {},
+		})),
+	...safeArray(EDUCATION_DATA)
+		.filter((s) => s && typeof s === "object" && s.id)
+		.map((s) => ({
+			...s,
+			type: "EDUCATION" as ServiceType,
+			category: "Educação Online",
+			coords: [-22.905, -47.06] as [number, number],
+			opening_hours: "24h",
+			effects: s.effects || {},
+		})),
+	...safeArray(EXPANSION_DATA)
+		.filter((s) => s && typeof s === "object" && s.id)
+		.map((s) => ({
+			...s,
+			coords: s.coordinates as [number, number],
+			requirements: s.requirements || [],
+			effects: s.effects || {},
+		})),
+] as ServiceLocation[];
+
 export type ServiceType =
 	| "ALIMENTACAO"
 	| "ABRIGO"
 	| "SAUDE"
 	| "ASSISTENCIA"
-	| "ADMINISTRATIVO"
-	| "EDUCACAO";
+	| "TRABALHO"
+	| "EDUCATION"
+	| "DOCUMENTS"
+	| "HEALTH_MENTAL"
+	| "OUTRO";
 
 export interface ServiceLocation {
 	id: string;
 	name: string;
-	type: ServiceType;
-	coords: [number, number];
-	opening_hours: string;
+	type: ServiceType | string; // Allow string for raw JSON compatibility
+	coords: [number, number] | null;
 	address?: string;
 	category?: string;
 	description?: string;
 	rules?: string;
 	requirements?: string[];
+	phone?: string;
+	opening_hours?: string; // Optional
 	forbidden_items?: string[];
 	effects?: {
 		hunger?: number;
@@ -39,7 +84,11 @@ export interface ServiceLocation {
 		money?: number;
 		stabilityGap?: number;
 		addBuff?: string;
+		security?: number;
 	};
+	interactions?: any[]; // Keep interactions flexible
+	action_type?: "map" | "link"; // New: Link vs Map intent
+	url?: string; // New: URL for online actions
 }
 
 interface ServicesContextProps {
@@ -57,65 +106,16 @@ const ServicesContext = createContext<ServicesContextProps | undefined>(
 const STORAGE_KEY = "services_data";
 
 export function ServicesProvider({ children }: { children: React.ReactNode }) {
-	const [services, setServices] = useState<ServiceLocation[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [services, setServices] = useState<ServiceLocation[]>(ALL_SERVICES);
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const loadFromStorage = useCallback(() => {
-		if (typeof window === "undefined") return null;
-		try {
-			const stored = localStorage.getItem(STORAGE_KEY);
-			if (stored) {
-				return JSON.parse(stored) as ServiceLocation[];
-			}
-		} catch (e) {
-			console.warn("Failed to parse services from storage", e);
-		}
-		return null;
-	}, []);
+	// Optional: Still allow local storage override if we plan to support dynamic updates
+	/* const loadFromStorage = useCallback(() => { ... */
 
-	const saveToStorage = useCallback((data: ServiceLocation[]) => {
-		if (typeof window === "undefined") return;
-		try {
-			localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-		} catch (e) {
-			console.warn("Failed to save services to storage", e);
-		}
-	}, []);
-
-	const fetchServices = useCallback(async () => {
-		try {
-			setLoading(true);
-			setError(null);
-
-			// Try reading from storage first to show something immediately
-			const cached = loadFromStorage();
-			if (cached) {
-				setServices(cached);
-			}
-
-			// If we are online, fetch fresh data
-			if (navigator.onLine) {
-				const response = await fetch("/data/services-campinas.json");
-				if (!response.ok) throw new Error("Failed to fetch services");
-				const data: ServiceLocation[] = await response.json();
-
-				setServices(data);
-				saveToStorage(data);
-			}
-		} catch (err) {
-			console.error(err);
-			if (!loadFromStorage()) {
-				setError("Erro ao carregar serviços. Verifique sua conexão.");
-			}
-		} finally {
-			setLoading(false);
-		}
-	}, [loadFromStorage, saveToStorage]);
-
-	useEffect(() => {
-		fetchServices();
-	}, [fetchServices]);
+	// Since the data is static and imported, we don't need a frantic fetch effect.
+	// If we want to simulate async or allow overrides, we can keep some logic,
+	// but for now, direct import fulfills "read from this JSON".
 
 	const filterServices = useCallback(
 		(type: ServiceType | "all") => {
@@ -150,7 +150,7 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 				loading,
 				error,
 				filterServices,
-				refreshServices: fetchServices,
+				refreshServices: async () => {},
 			}}
 		>
 			{children}

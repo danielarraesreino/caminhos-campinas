@@ -1,81 +1,115 @@
+"use client";
+
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, BookOpen, FileText, Target, Users } from "lucide-react";
+import { EcoButton } from "@/components/ui/EcoButton";
 
 export default function SobrePage() {
 	return (
-		<div className="min-h-screen bg-slate-950 text-slate-300 py-12 px-4 sm:px-6 lg:px-8">
-			<div className="max-w-3xl mx-auto space-y-12">
-				{/* Header Section */}
-				<div className="text-center space-y-4">
-					<div className="inline-block bg-blue-900/30 text-blue-400 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider border border-blue-800">
-						O Manifesto
-					</div>
-					<h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
-						Sobre o Projeto
-					</h1>
-					<p className="text-xl text-slate-400 max-w-2xl mx-auto">
-						Tecnologia Social para dar voz, visibilidade e dignidade.
-					</p>
-				</div>
-
-				{/* Content */}
-				<article className="prose prose-invert prose-lg mx-auto bg-slate-900/50 p-8 rounded-3xl border border-slate-800 shadow-xl">
-					<h3 className="text-white font-bold text-2xl">
-						A Invisibilidade é uma Escolha?
-					</h3>
-					<p>
-						Este não é apenas um jogo. É uma ferramenta de{" "}
-						<strong className="text-blue-400">
-							conscientização e sobrevivência
-						</strong>
-						.
-					</p>
-					<p>
-						Baseado em dados reais da cidade de Campinas (SP), este aplicativo
-						tem dois objetivos fundamentais:
-					</p>
-
-					<div className="grid md:grid-cols-2 gap-6 my-8 not-prose">
-						<div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-							<h4 className="text-blue-400 font-bold mb-2 uppercase tracking-wide text-sm">
-								Para quem joga (Empatia)
-							</h4>
-							<p className="text-sm text-slate-300">
-								Sentir na pele os dilemas diários de quem vive na rua. A fome, o
-								frio, a burocracia do estado e os olhares de julgamento.
-							</p>
-						</div>
-						<div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-							<h4 className="text-green-400 font-bold mb-2 uppercase tracking-wide text-sm">
-								Para quem vive (Utilidade)
-							</h4>
-							<p className="text-sm text-slate-300">
-								Funciona como um mapa offline real conectando serviços
-								essenciais (Centro Pop, Bom Prato, Abrigos) a quem mais precisa.
-							</p>
-						</div>
-					</div>
-
-					<blockquote className="border-l-4 border-yellow-500 pl-4 italic text-yellow-200/80 bg-yellow-900/10 p-4 rounded-r-xl">
-						"Não olhe para o outro lado. Olhe nos olhos."
-					</blockquote>
-
-					<h4 className="text-white font-bold mt-8">Tecnologia Social</h4>
-					<p>
-						Desenvolvido como PWA (Progressive Web App) para rodar em qualquer
-						celular, otimizado para baixo consumo de dados e funcionamento
-						offline. Uma resposta técnica para um problema humano severo.
-					</p>
-				</article>
-
-				{/* Footer CTA */}
-				<div className="text-center pt-8">
-					<Link href="/apoie">
-						<Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg rounded-xl font-bold shadow-lg shadow-blue-900/20">
-							Seja um Apoiador do Projeto
-						</Button>
+		<div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
+			<div className="max-w-4xl mx-auto space-y-8 p-6 pt-24">
+				<header className="flex items-center gap-4 border-b border-slate-800 pb-6">
+					<Link
+						href="/"
+						className="p-2 hover:bg-slate-900 rounded-full transition-colors group"
+					>
+						<ArrowLeft className="w-6 h-6 text-slate-400 group-hover:text-white" />
 					</Link>
-				</div>
+					<div>
+						<h1 className="text-3xl font-black uppercase tracking-tighter text-white">
+							Sobre o Projeto
+						</h1>
+						<p className="text-slate-400">Tecnologia Social & Dignidade</p>
+					</div>
+				</header>
+
+				<section className="bg-slate-900/50 border border-slate-800 p-8 rounded-2xl space-y-6">
+					<h2 className="text-2xl font-bold text-white mb-4">O Manifesto</h2>
+					<div className="prose prose-invert max-w-none text-slate-300 leading-relaxed space-y-4">
+						<p>
+							O{" "}
+							<span className="text-blue-400 font-bold">Caminhos Campinas</span>{" "}
+							não é apenas um jogo; é uma ferramenta de auditoria sociotécnica.
+							Baseado nos dados do Censo 2024, que identificou{" "}
+							<strong>1.557 pessoas em situação de rua</strong> na cidade, e na
+							teoria de Milton Santos sobre a cidadania mutilada, criamos uma
+							simulação que expõe as barreiras invisíveis da burocracia.
+						</p>
+						<p>Nosso objetivo é duplo:</p>
+						<ul className="grid md:grid-cols-2 gap-4 not-prose">
+							<li className="bg-slate-800 p-4 rounded-xl border border-slate-700">
+								<strong className="text-white flex items-center gap-2 mb-2">
+									<Users className="w-4 h-4 text-purple-400" /> Para a Sociedade
+								</strong>
+								Gerar empatia através da simulação da escassez (fome, frio,
+								falta de bateria).
+							</li>
+							<li className="bg-slate-800 p-4 rounded-xl border border-slate-700">
+								<strong className="text-white flex items-center gap-2 mb-2">
+									<Target className="w-4 h-4 text-emerald-400" /> Para a Gestão
+									Pública
+								</strong>
+								Gerar dados sobre onde a rede de proteção falha (gaps de
+								serviço).
+							</li>
+						</ul>
+					</div>
+					<div className="pt-4 mt-4 border-t border-slate-800">
+						<p className="text-xs text-slate-500 italic">
+							Fontes: Censo FEAC 2024, Auditoria Sociotécnica.
+						</p>
+					</div>
+				</section>
+
+				<section className="grid md:grid-cols-2 gap-6">
+					<div className="bg-blue-900/20 border border-blue-800/50 p-6 rounded-xl">
+						<BookOpen className="w-8 h-8 text-blue-400 mb-4" />
+						<h3 className="font-bold text-xl text-white mb-2">Fundamentação</h3>
+						<p className="text-slate-400 text-sm">
+							Inspirado na pedagogia de Paulo Freire, utilizamos a tecnologia
+							como meio de leitura do mundo e libertação.
+						</p>
+					</div>
+					<div className="bg-purple-900/20 border border-purple-800/50 p-6 rounded-xl">
+						<Target className="w-8 h-8 text-purple-400 mb-4" />
+						<h3 className="font-bold text-xl text-white mb-2">ODS ONU</h3>
+						<p className="text-slate-400 text-sm">
+							Alinhado aos objetivos 1 (Erradicação da Pobreza) e 10 (Redução
+							das Desigualdades).
+						</p>
+					</div>
+				</section>
+
+				<section className="bg-slate-900/80 border border-yellow-500/30 p-8 rounded-2xl space-y-6 relative overflow-hidden">
+					<div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
+					<h2 className="text-2xl font-bold text-yellow-400 mb-4 relative z-10">
+						Transparência Pedagógica
+					</h2>
+					<div className="prose prose-invert max-w-none text-slate-300 leading-relaxed space-y-4 relative z-10">
+						<p className="italic text-lg">
+							"Você sabe o que é o 'corró'. Você sabe onde o frio dói mais. Essa
+							sabedoria não é apenas sobrevivência; é{" "}
+							<strong>TECNOLOGIA SOCIAL</strong>. O Coletivo A Rua Tem Voz
+							transforma vivência em qualificação técnica (Redução de Danos)."
+						</p>
+					</div>
+					<div className="pt-4 relative z-10">
+						<EcoButton
+							variant="primary"
+							size="lg"
+							className="w-full sm:w-auto gap-3 font-bold bg-yellow-500 text-black hover:bg-yellow-400 border-yellow-400"
+							onClick={() =>
+								window.open(
+									"/downloads/projeto-pedagogico-completo.docx",
+									"_blank",
+								)
+							}
+						>
+							<FileText className="w-5 h-5" />
+							Baixar Projeto Pedagógico Original (.DOCX)
+						</EcoButton>
+					</div>
+				</section>
 			</div>
 		</div>
 	);

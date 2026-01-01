@@ -75,12 +75,14 @@ interface MapCoreProps {
 		lng: number;
 	}[];
 	onTravel?: (lat: number, lng: number) => void;
+	onResourceInteract?: (res: any) => void;
 }
 
 const MapCore = memo(function MapCore({
 	userPosition,
 	resources,
 	onTravel,
+	onResourceInteract,
 }: MapCoreProps) {
 	// Default to Campinas center if no user position
 	const defaultPosition: [number, number] = [-22.90556, -47.06083];
@@ -127,10 +129,13 @@ const MapCore = memo(function MapCore({
 							</div>
 							<button
 								type="button"
-								onClick={() => onTravel?.(res.lat, res.lng)}
+								onClick={() => {
+									onTravel?.(res.lat, res.lng);
+									onResourceInteract?.(res);
+								}}
 								className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded shadow-md transition-colors w-full"
 							>
-								👣 Ir até aqui
+								👣 Ir e Interagir
 							</button>
 						</div>
 					</Popup>

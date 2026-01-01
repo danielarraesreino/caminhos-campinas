@@ -38,6 +38,7 @@ export const DilemmaMatcher = {
 			// 1. Tag Match (High Precision)
 			if (
 				d.tags &&
+				Array.isArray(d.tags) &&
 				d.tags.some((tag: string) =>
 					normalizedInput.includes(tag.toLowerCase()),
 				)
@@ -45,6 +46,7 @@ export const DilemmaMatcher = {
 				return true;
 			}
 			// 2. Text Match (Fallback) - Search in Title and Description
+			if (!d.title || !d.description) return false;
 			const titleMatch = d.title.toLowerCase().includes(normalizedInput);
 			const descMatch = d.description.toLowerCase().includes(normalizedInput);
 

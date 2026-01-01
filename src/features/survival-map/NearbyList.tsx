@@ -4,7 +4,8 @@ import { useGameContext } from "@/contexts/GameContext";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
 import { Lock, MapPin, Navigation, Wallet } from "lucide-react";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import servicesData from "@/data/services-campinas.json";
+import { useServices } from "@/contexts/ServicesContext";
+// import servicesData from "@/data/services-campinas.json"; // Removed direct import
 
 interface ServiceEffect {
 	hunger?: number;
@@ -45,9 +46,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-		Math.cos((lat2 * Math.PI) / 180) *
-		Math.sin(dLon / 2) *
-		Math.sin(dLon / 2);
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c; // in km
 }
@@ -55,34 +56,35 @@ function calculateDistance(
 export function NearbyList() {
 	const { userPosition, money, documents, modifyStat, addBuff, addMoney } =
 		useGameContext();
+	const { services: contextServices } = useServices(); // Use context services
 	const { trackServiceAccess } = useODSMetrics();
 
 	const services = useMemo(() => {
-		if (!userPosition) return servicesData;
+		if (!userPosition || !contextServices) return contextServices || [];
 
-		return servicesData
+		return contextServices
 			.map((s: any) => {
 				const hasCoords =
 					s.coords && Array.isArray(s.coords) && s.coords.length === 2;
 				const dist = hasCoords
 					? calculateDistance(
-						userPosition[0],
-						userPosition[1],
-						s.coords[0],
-						s.coords[1],
-					)
+							userPosition[0],
+							userPosition[1],
+							s.coords[0],
+							s.coords[1],
+						)
 					: Number.POSITIVE_INFINITY;
 				return { ...s, distance: dist };
 			})
 			.sort((a: any, b: any) => (a.distance || 0) - (b.distance || 0));
-	}, [userPosition]);
+	}, [userPosition, contextServices]);
 
 	const checkAvailability = (service: Service) => {
 		let allowed = true;
 		const reasons: string[] = [];
 
 		// 1. Money Constraint
-		if (service.effects.money && service.effects.money < 0) {
+		if (service.effects?.money && service.effects.money < 0) {
 			const cost = Math.abs(service.effects.money);
 			if (money < cost) {
 				allowed = false;
@@ -107,6 +109,8 @@ export function NearbyList() {
 		async (service: Service) => {
 			// Apply Effects
 			const { effects } = service;
+			if (!effects) return; // Safeguard
+
 			if (effects.hunger) modifyStat("hunger", effects.hunger);
 			if (effects.hygiene) modifyStat("hygiene", effects.hygiene);
 			if (effects.energy) modifyStat("energy", effects.energy);
@@ -126,10 +130,11 @@ export function NearbyList() {
 
 			// DISPARO DE TELEMETRIA ODS
 			let actionType = "OUTROS";
-			if (service.type === "ABRIGO") actionType = "ABRIGO"; // ODS 11.1
-			if (service.type === "ALIMENTACAO") actionType = "ALIMENTACAO"; // ODS 2.1
-			if (service.type === "SAUDE") actionType = "SAUDE"; // ODS 3.8
-			if (service.type === "ASSISTENCIA") actionType = "CIDADANIA"; // ODS 10
+			const type = service.type.toUpperCase();
+			if (type === "ABRIGO") actionType = "ABRIGO"; // ODS 11.1
+			if (type === "ALIMENTACAO") actionType = "ALIMENTACAO"; // ODS 2.1
+			if (type === "SAUDE") actionType = "SAUDE"; // ODS 3.8
+			if (type === "ASSISTENCIA") actionType = "CIDADANIA"; // ODS 10
 
 			trackServiceAccess(actionType, service.name);
 		},
@@ -143,8 +148,21 @@ export function NearbyList() {
 			<h2 className="text-xl font-bold font-heading">Serviços Próximos</h2>
 
 			<div className="flex flex-col gap-3">
-				{services.map((service: any) => {
-					const { allowed, reasons } = checkAvailability(service);
+				{services.map((service) => {
+					let allowed = true;
+					let reasons: string[] = [];
+					try {
+						const check = checkAvailability(service);
+						allowed = check.allowed;
+						reasons = check.reasons;
+					} catch (err) {
+						console.error(
+							"Critical error checking service availability:",
+							service?.id,
+							err,
+						);
+						return null;
+					}
 					const distanceDisplay =
 						service.distance < 1
 							? `${Math.round(service.distance * 1000)}m`
@@ -187,17 +205,28 @@ export function NearbyList() {
 								<button
 									type="button"
 									onClick={() => {
-										if (service.coords && service.coords.length >= 2) {
+										if (service.action_type === "link" && service.url) {
+											window.open(service.url, "_blank");
+										} else if (service.coords && service.coords.length >= 2) {
+											const [lat, lng] = service.coords;
 											window.open(
-												`https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`,
+												`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
 												"_blank",
 											);
 										}
 									}}
-									className="flex items-center justify-center w-9 h-9 border rounded hover:bg-muted transition-colors text-blue-500 hover:text-blue-600 hover:border-blue-200"
-									title="Ver no Google Maps"
+									className={`flex items-center justify-center min-w-[36px] px-2 h-9 border rounded hover:opacity-90 transition-colors ${service.action_type === "link" ? "bg-blue-100 text-blue-700 border-blue-200" : "hover:bg-muted text-blue-500 hover:text-blue-600 hover:border-blue-200"}`}
+									title={
+										service.action_type === "link"
+											? "Acessar Site do Curso"
+											: "Ver no Google Maps"
+									}
 								>
-									<Navigation size={16} />
+									{service.action_type === "link" ? (
+										<span className="text-xs font-bold mr-1">Link</span>
+									) : (
+										<Navigation size={16} />
+									)}
 								</button>
 							</div>
 						</div>

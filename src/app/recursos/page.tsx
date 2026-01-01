@@ -77,7 +77,13 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 		}, 100);
 	};
 
-	const isEducation = service.type === "EDUCACAO";
+	const isEducation = false; // "educacao" removed from ServiceType, handled as ASSISTENCIA generally or via specific ID checking if needed.
+	// We can check category if we want specific styling for education
+	const isEducationStyle =
+		service.type === "EDUCATION" ||
+		service.type === "DOCUMENTS" ||
+		service.category === "Qualificação Profissional" ||
+		service.category === "Geração de Renda";
 
 	return (
 		<div
@@ -96,7 +102,8 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<span
 					className={`
 					px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
-					${service.type === "ALIMENTACAO"
+					${
+						service.type === "ALIMENTACAO"
 							? "bg-orange-900 text-orange-400"
 							: service.type === "ABRIGO"
 								? "bg-indigo-900 text-indigo-400"
@@ -105,7 +112,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 									: service.type === "EDUCACAO"
 										? "bg-blue-900 text-blue-400"
 										: "bg-slate-800 text-slate-400"
-						}
+					}
 				`}
 				>
 					{service.type}
@@ -126,7 +133,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						Bolsa / Renda
 					</span>
 					<span className="text-emerald-300 font-mono font-bold">
-						R$ {service.effects.money},00
+						R$ {service.effects?.money},00
 					</span>
 				</div>
 			)}
@@ -188,25 +195,35 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 			)}
 
 			<div className="flex gap-2 mt-4">
-				{coords && coords.length === 2 ? (
-					<button
-						type="button"
-						onClick={() => {
-							if (!coords || coords.length < 2) return;
-							const url = `https://www.google.com/maps/dir/?api=1&destination=${coords[0]},${coords[1]}`;
+				<button
+					type="button"
+					onClick={() => {
+						const localCoords = service.coords;
+						if (service.action_type === "link" && service.url) {
+							window.open(service.url, "_blank");
+						} else if (
+							localCoords &&
+							Array.isArray(localCoords) &&
+							localCoords.length === 2
+						) {
+							const url = `https://www.google.com/maps/dir/?api=1&destination=${localCoords[0]},${localCoords[1]}`;
 							window.open(url, "_blank");
-						}}
-						className="flex-1 bg-zinc-800 border border-zinc-700 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 hover:bg-zinc-700 transition-colors"
-					>
-						<MapPin className="w-4 h-4" />
-						Ver Mapa
-					</button>
-				) : (
-					<div className="flex-1 bg-zinc-900/50 border border-zinc-800 text-zinc-500 py-3 rounded-lg font-bold text-[10px] uppercase flex items-center justify-center gap-2">
-						<MapPin className="w-3 h-3 opacity-30" />
-						Local Virtual / Variável
-					</div>
-				)}
+						}
+					}}
+					className={`flex-1 border text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors ${service.action_type === "link" ? "bg-blue-800 border-blue-700 hover:bg-blue-700" : "bg-zinc-800 border-zinc-700 hover:bg-zinc-700"}`}
+				>
+					{service.action_type === "link" ? (
+						<>
+							<div className="w-4 h-4">🔗</div>
+							Acessar Curso
+						</>
+					) : (
+						<>
+							<MapPin className="w-4 h-4" />
+							Ver Mapa
+						</>
+					)}
+				</button>
 
 				{isEducation && (
 					<button
@@ -214,11 +231,12 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						disabled={!canEnroll || enrollmentStatus !== "idle"}
 						onClick={handleEnroll}
 						className={`flex-1 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors relative overflow-hidden
-							${canEnroll
-								? enrollmentStatus === "enrolled"
-									? "bg-green-600"
-									: "bg-blue-600 hover:bg-blue-500"
-								: "bg-zinc-800 opacity-50 cursor-not-allowed"
+							${
+								canEnroll
+									? enrollmentStatus === "enrolled"
+										? "bg-green-600"
+										: "bg-blue-600 hover:bg-blue-500"
+									: "bg-zinc-800 opacity-50 cursor-not-allowed"
 							}
 						`}
 					>
@@ -287,14 +305,14 @@ export default function ResourcesPage() {
 			label: "Documentos",
 			icon: <FileText className="w-6 h-6" />,
 			color: "bg-emerald-500",
-			type: "ASSISTENCIA",
+			type: "DOCUMENTS",
 		},
 		{
 			id: "education",
 			label: "Formação",
 			icon: <BookOpen className="w-6 h-6" />,
 			color: "bg-blue-600",
-			type: "EDUCACAO",
+			type: "EDUCATION",
 		},
 	];
 

@@ -38,7 +38,7 @@ export const viewport: Viewport = {
 import { Providers } from "@/components/Providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
-import { Navbar } from "@/components/ui/Navbar";
+import { ClientLayoutWrapper } from "@/app/ClientLayoutWrapper";
 import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
 import { Footer } from "@/components/ui/Footer";
 
@@ -48,7 +48,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="pt-BR" suppressHydrationWarning>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 				suppressHydrationWarning
@@ -57,10 +57,7 @@ export default function RootLayout({
 					<SurvivalModeProvider>
 						<GameProvider>
 							<ServicesProvider>
-								<Navbar />
-								<main className="flex-1 min-h-screen flex flex-col relative w-full pt-16">
-									{children}
-								</main>
+								<ClientLayoutWrapper>{children}</ClientLayoutWrapper>
 								<SpeedInsights />
 								<Clarity />
 								<Analytics />

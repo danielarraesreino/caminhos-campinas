@@ -14,28 +14,41 @@ const MapCore = dynamic(() => import("./MapCore"), {
 });
 
 export function SurvivalMap() {
-	const { userPosition, setUserPosition } = useGameContext();
+	const { userPosition, setUserPosition, eat, modifyStat } = useGameContext();
 	const [loadingLocation, setLoadingLocation] = useState(false);
 
 	// Use ServicesContext for real data
 	const { services } = useServices();
 
+	// Define a custom type guard ensuring coords is [number, number]
+	const hasValidCoords = (
+		s: any,
+	): s is {
+		coords: [number, number];
+		id: string;
+		name: string;
+		type: string;
+	} => {
+		return (
+			s &&
+			Array.isArray(s.coords) &&
+			s.coords.length === 2 &&
+			s.coords[0] != null &&
+			s.coords[1] != null
+		);
+	};
+
 	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
-	const resources = services
-		.filter(
-			(s): s is typeof s & { coords: [number, number] } =>
-				!!s.coords && Array.isArray(s.coords) && s.coords.length === 2,
-		)
-		.map((s) => {
-			const c = s.coords;
-			return {
-				id: s.id,
-				name: s.name,
-				type: s.type,
-				lat: c[0],
-				lng: c[1],
-			};
-		});
+	const resources = (services || []).filter(hasValidCoords).map((s) => {
+		const c = s.coords; // TypeScript now knows this is [number, number]
+		return {
+			id: s.id,
+			name: s.name,
+			type: s.type as string,
+			lat: c[0],
+			lng: c[1],
+		};
+	});
 
 	useEffect(() => {
 		// Only fetch if not already set (or we could force refresh? Let's respect existing if valid)
@@ -151,14 +164,29 @@ export function SurvivalMap() {
 
 				<MapCore
 					userPosition={userPosition}
-					resources={resources.filter(
-						(res) =>
-							res.lat !== null &&
-							res.lng !== null &&
-							!isNaN(Number(res.lat)) &&
-							!isNaN(Number(res.lng)),
-					)}
-					onTravel={handleTravel}
+					resources={resources}
+					onResourceInteract={(res: any) => {
+						console.log("Interagindo com:", res.name);
+						const type = res.type.toUpperCase();
+						// Interaction logic mapping - Portuguese Only
+						if (type === "ALIMENTACAO") {
+							eat(20);
+							alert(
+								`Você visitou ${res.name} e conseguiu se alimentar! (+20 Fome)`,
+							);
+						} else if (type === "SAUDE") {
+							modifyStat("health", 15);
+							alert(`Você recebeu atendimento em ${res.name}. (+15 Saúde)`);
+						} else if (type === "ABRIGO") {
+							modifyStat("energy", 30);
+							alert(`Você conseguiu descansar em ${res.name}. (+30 Energia)`);
+						} else if (type === "ASSISTENCIA") {
+							modifyStat("dignity", 10);
+							alert(`Você recebeu apoio em ${res.name}. (+10 Dignidade)`);
+						} else {
+							alert(`Você visitou ${res.name}.`);
+						}
+					}}
 				/>
 			</div>
 
