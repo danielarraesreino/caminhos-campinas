@@ -83,12 +83,14 @@ export function GameHUD({
 			)}
 
 			{/* Citizenship Tree (PDU) - Top Bar */}
-			<div className="fixed top-0 left-0 w-full z-50 pointer-events-auto">
+			{/* Use pointer-events-none wrapper to prevent blocking, inner content has auto if needed */}
+			<div className="fixed top-0 left-0 w-full z-50 pointer-events-none">
 				<CitizenshipTree />
 			</div>
 
 			{/* TOPO: Barra de Status (Com gradiente para leitura) */}
 			<header className="pointer-events-auto bg-gradient-to-b from-black/90 to-transparent pb-6 pt-2 px-2 -mx-4 -mt-4 flex flex-col gap-2 mt-[60px] md:mt-[60px]">
+				{/* ... header content ... */}
 				<div className="flex w-full justify-between items-center px-2">
 					{/* LEFT: Avatar & Identity */}
 					<div className="flex items-center gap-4 md:gap-6">
@@ -245,8 +247,25 @@ export function GameHUD({
 					variant="secondary"
 					className="h-10 w-10 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 transition-transform active:scale-95"
 					onClick={onToggleMenu}
+					title="Guia de Recursos e Ajuda"
 				>
-					<Menu className="h-5 w-5 text-slate-300" />
+					{/* Changed to BookOpen for clarity as 'Guide' or 'Resources' */}
+					{/* biome-ignore lint/a11y/noSvgWithoutTitle: title is in button */}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						className="text-slate-300"
+					>
+						<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+						<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+					</svg>
 				</Button>
 			</div>
 

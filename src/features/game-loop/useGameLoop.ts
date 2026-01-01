@@ -1,6 +1,10 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { REAL_DILEMMAS as GAME_DILEMMAS } from "./dilemmas-real"; // Using the real dilemmas file
+import { GAME_DILEMMAS } from "./dilemmas"; // Unify import source
+
+// ... (keep generic imports)
+
+// ... (keep generic imports)
 import { TelemetryAction, telemetryService } from "@/services/telemetry";
 
 function calculateDistance(
@@ -65,11 +69,12 @@ export function useGameLoop() {
 		null,
 	);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: run only on time change to track hours
 	useEffect(() => {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
-				Math.pow(userPosition[0] - lastPosition[0], 2) +
-					Math.pow(userPosition[1] - lastPosition[1], 2),
+				(userPosition[0] - lastPosition[0]) ** 2 +
+					(userPosition[1] - lastPosition[1]) ** 2,
 			);
 
 			// Se moveu menos que ~100m, considera parado
@@ -83,27 +88,6 @@ export function useGameLoop() {
 			setLastPosition(userPosition);
 		}
 	}, [time]); // Roda a cada "hora" do jogo
-
-	// Checagem de Evento Sistêmico
-	useEffect(() => {
-		// Distância do Centro
-		if (userPosition) {
-			const distToCenter = Math.sqrt(
-				Math.pow(userPosition[0] - CENTER_COORDS.lat, 2) +
-					Math.pow(userPosition[1] - CENTER_COORDS.lng, 2),
-			);
-
-			// Se está no centro E parado há muito tempo
-			// Raio de 0.005 graus é aproximadamente 550m. O usuário pediu 500m, então vamos ajustar levemente para 0.0045 se quisermos precisão,
-			// mas 0.005 é seguro. A estatística de 51% justifica a agressividade.
-			if (distToCenter < 0.005 && timeInLocation >= IDLE_THRESHOLD) {
-				// FORCE TRIGGER: Systemic aggression doesn't wait for probability if you abuse spacing
-				// We enforce it.
-				setActiveDilemma("enquadro_13_maio");
-				setTimeInLocation(0);
-			}
-		}
-	}, [timeInLocation, userPosition]);
 
 	// --- Helpers ---
 	const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
@@ -151,6 +135,7 @@ export function useGameLoop() {
 	}, [phoneBattery, activeBuffs, addBuff, removeBuff]);
 
 	// --- Main Tick (Real-time to Game-time) ---
+	// biome-ignore lint/correctness/useExhaustiveDependencies: complex loop dependencies handled via refs/refs/callbacks
 	useEffect(() => {
 		if (isPaused) return;
 
@@ -161,7 +146,7 @@ export function useGameLoop() {
 
 			// Calculate Decay
 			let hngDecay = 2; // Base Hunger
-			let hygDecay = 1; // Base Hygiene
+			const hygDecay = 1; // Base Hygiene
 			let enrDecay = 1; // Base Energy
 			let snyDecay = 0.5 * getSanityDecayMultiplier(socialStigma);
 
@@ -313,6 +298,32 @@ export function useGameLoop() {
 							}
 						}
 						break;
+					case "LOCATION_IDLE":
+						if (timeInLocation >= value) {
+							if (dilemma.location_trigger && userPosition) {
+								const dist = calculateDistance(
+									userPosition[0],
+									userPosition[1],
+									dilemma.location_trigger.lat,
+									dilemma.location_trigger.lng,
+								);
+								if (dist * 1000 <= (dilemma.location_trigger.radius || 50)) {
+									triggered = true;
+								}
+							} else if (dilemma.id === "enquadro_13_maio" && userPosition) {
+								// Specific logic for enquadro if not in JSON trigger
+								const dist = calculateDistance(
+									userPosition[0],
+									userPosition[1],
+									CENTER_COORDS.lat,
+									CENTER_COORDS.lng,
+								);
+								if (dist < 0.005) triggered = true;
+							} else {
+								triggered = true;
+							}
+						}
+						break;
 					case "STATUS":
 						if (dilemma.trigger.statusCondition) {
 							const { battery } = dilemma.trigger.statusCondition;
@@ -357,6 +368,8 @@ export function useGameLoop() {
 		modifyStat,
 		socialStigma,
 		userPosition,
+		phoneBattery,
+		timeInLocation,
 	]);
 
 	return { isRaining, batteryLevel: phoneBattery / 100 };

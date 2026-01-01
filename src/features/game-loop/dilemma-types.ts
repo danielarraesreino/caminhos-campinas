@@ -7,7 +7,8 @@ export type TriggerType =
 	| "SOCIAL_STIGMA_HIGH"
 	| "LOCATION"
 	| "STATUS"
-	| "CHAIN";
+	| "CHAIN"
+	| "LOCATION_IDLE";
 
 export interface DilemmaOption {
 	label: string;
