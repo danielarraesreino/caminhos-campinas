@@ -6,7 +6,13 @@ export type TriggerType =
 	| "RANDOM"
 	| "SOCIAL_STIGMA_HIGH"
 	| "LOCATION"
+<<<<<<< HEAD
 	| "STATUS";
+=======
+	| "STATUS"
+	| "CHAIN"
+	| "LOCATION_IDLE";
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 
 export interface DilemmaOption {
 	label: string;
@@ -72,6 +78,10 @@ export interface Dilemma {
 		statusCondition?: Record<string, number>;
 	};
 	tags?: string[];
+<<<<<<< HEAD
+=======
+	glossaryTerms?: string[];
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 	location_trigger?: {
 		lat: number;
 		lng: number;
@@ -81,5 +91,9 @@ export interface Dilemma {
 	ambience?: string;
 	soundEffect?: string;
 	prerequisite?: string;
+<<<<<<< HEAD
+=======
+	repeatable?: boolean;
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 	options: DilemmaOption[];
 }

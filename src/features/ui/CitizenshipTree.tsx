@@ -9,10 +9,10 @@ export function CitizenshipTree() {
 
 	// Logic for stages
 	const hasSurvival = true; // Always active
-	const hasDocs = documents.hasRG;
-	const hasBenefits = documents.hasCPF; // Proxy for CadÚnico/Benefits as per plan
+	const hasDocs = documents?.hasRG || false;
+	const hasBenefits = documents?.hasCPF || false; // Proxy for CadÚnico/Benefits as per plan
 	// "Autonomia" -> Work Tool or Job. Checking workTool existence.
-	const hasAutonomy = workTool.type !== null;
+	const hasAutonomy = workTool?.type !== null && workTool?.type !== undefined;
 
 	// Calculate overall progress (0 to 100)
 	// 4 stages: 25% each?

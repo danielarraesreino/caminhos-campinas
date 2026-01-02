@@ -14,6 +14,7 @@ import {
 	Target,
 	X,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -179,7 +180,7 @@ export default function LandingPage() {
 							<div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-400/20 rounded-full px-4 py-1.5 mb-8 animate-fade-in-up">
 								<span className="flex h-2 w-2 rounded-full bg-blue-400 animate-pulse"></span>
 								<span className="text-blue-200 font-semibold text-xs tracking-widest uppercase">
-									Serious Game & Tecnologia Social
+									Serious Game & Tecnologia Social • Censo 2024
 								</span>
 							</div>
 
@@ -246,7 +247,8 @@ export default function LandingPage() {
 										<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
 										<span className="relative flex items-center gap-3">
 											<ArrowRight className="h-5 w-5" />
-											Começar Nova História
+											<ArrowRight className="h-5 w-5" />
+											Iniciar Jornada (Simulador)
 										</span>
 									</button>
 								)}
@@ -259,8 +261,17 @@ export default function LandingPage() {
 									}}
 									className="px-8 py-5 bg-transparent border border-slate-700 hover:border-yellow-500/50 text-slate-300 hover:text-yellow-400 rounded-2xl font-medium text-lg transition-all flex items-center justify-center gap-3"
 								>
-									<MapPin className="h-5 w-5" />
-									Preciso de Ajuda Agora
+									<div className="flex items-center gap-2">
+										<div className="bg-yellow-500/20 p-1 rounded">
+											<MapPin className="h-5 w-5 text-yellow-500" />
+										</div>
+										<div className="flex flex-col items-start leading-none">
+											<span>Guia de Rua</span>
+											<span className="text-[10px] uppercase font-bold text-yellow-500 tracking-wider">
+												Acesso Offline
+											</span>
+										</div>
+									</div>
 								</button>
 							</div>
 
@@ -359,7 +370,7 @@ export default function LandingPage() {
 							Fundamentação Teórica
 						</div>
 						<h2 className="text-4xl font-black text-slate-900 leading-tight">
-							Denunciar Práticas Brutais. <br />
+							Denunciar a Brutalidade. <br />
 							Legitimar o Pertencimento.
 						</h2>
 						<p className="text-xl text-slate-600 leading-relaxed font-sans">
@@ -375,20 +386,18 @@ export default function LandingPage() {
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
 							<div className="space-y-2">
 								<h3 className="font-black text-slate-900 uppercase tracking-tight">
-									Combate à Desafiliação
+									Combate à Fome (ODS 2)
 								</h3>
 								<p className="text-sm text-slate-600">
-									Reconstrução de vínculos em estruturas que fazem sentido para
-									a vida.
+									Mapeamento em tempo real de onde falta comida.
 								</p>
 							</div>
 							<div className="space-y-2">
 								<h3 className="font-black text-slate-900 uppercase tracking-tight">
-									Apartação Social
+									Igualdade Racial (ODS 18)
 								</h3>
 								<p className="text-sm text-slate-600">
-									O reconhecimento do outro como um semelhante, não apenas um
-									objeto de caridade.
+									Foco na população negra (67%), a mais afetada pela exclusão.
 								</p>
 							</div>
 						</div>
@@ -398,12 +407,14 @@ export default function LandingPage() {
 							<BarChart3 className="w-64 h-64" />
 						</div>
 						<h3 className="text-2xl font-black italic uppercase tracking-tighter">
-							Portal do Parceiro Institucional
+							Portal de Inteligência Social (ESG)
 						</h3>
 						<p className="text-slate-300 font-sans">
-							Para gestores públicos, empresas ESG e acadêmicos. Acesse a
-							telemetria em tempo real das violações de direitos e demandas por
-							ODS em Campinas.
+							Não vendemos dados. Geramos evidências. Nossa plataforma monitora
+							"Gaps de Serviço" e "Violações de Direitos" em tempo real.
+							Transformamos a jogabilidade em relatórios auditáveis para os ODS
+							1 (Pobreza), 10 (Desigualdades), 11 (Cidades) e 18 (Igualdade
+							Racial).
 						</p>
 						<button
 							type="button"
@@ -427,13 +438,12 @@ export default function LandingPage() {
 								<Target className="h-7 w-7 text-red-600" />
 							</div>
 							<h3 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">
-								Jornada da Autonomia
+								Para a Rua (Utilidade)
 							</h3>
 							<p className="text-slate-600 font-sans leading-relaxed">
-								Um utilitário gamificado que transforma a burocracia em missões
-								claras. O app orienta onde comer, como tirar documentos e onde
-								encontrar abrigo, oferecendo recompensas reais por cada passo de
-								autonomia conquistado.
+								Uma bússola de sobrevivência "Offline-First". Funciona sem
+								internet para localizar o Bom Prato, banheiros e tomadas de
+								energia, garantindo o direito à cidade mesmo sem plano de dados.
 							</p>
 						</div>
 						<div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 hover:border-pink-200 transition-all group">
@@ -441,13 +451,12 @@ export default function LandingPage() {
 								<Heart className="h-7 w-7 text-pink-600" />
 							</div>
 							<h3 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">
-								Simulador de Empatia
+								Para a Sociedade (Simulador)
 							</h3>
 							<p className="text-slate-600 font-sans leading-relaxed">
-								Colocamos a sociedade civil diante da{" "}
-								<strong>desqualificação social</strong> (Gohn, 2021). O jogo
-								combate o estigma ao humanizar os dilemas de quem vive à margem,
-								gerando consciência universal.
+								O jogo combate o estigma da "vadiagem". Você sentirá na pele o
+								"Dilema do SAMIM": escolher entre um bico de R$ 20,00 ou
+								garantir a entrada no abrigo até as 19h?
 							</p>
 						</div>
 					</div>
@@ -457,16 +466,24 @@ export default function LandingPage() {
 							Funcionalidades Principais
 						</h3>
 						<div className="grid grid-cols-1 gap-4">
-							<div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
+							<Link
+								href="/cofre"
+								className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-transparent hover:border-green-200"
+							>
 								<Shield className="h-6 w-6 text-green-600 mt-1 shrink-0" />
 								<div>
-									<h4 className="font-bold text-slate-900">Cofre Digital</h4>
+									<h4 className="font-bold text-slate-900 flex items-center gap-2">
+										Cofre Digital{" "}
+										<span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold uppercase">
+											Novo
+										</span>
+									</h4>
 									<p className="text-sm text-slate-600">
 										Armazenamento seguro de documentos digitalizados na nuvem,
 										evitando a perda recorrente de RG e CPF.
 									</p>
 								</div>
-							</div>
+							</Link>
 							<div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
 								<MapPin className="h-6 w-6 text-orange-600 mt-1 shrink-0" />
 								<div>

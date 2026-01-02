@@ -22,6 +22,21 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+<<<<<<< HEAD
+=======
+import {
+	ArrowLeft,
+	BookOpen,
+	Download,
+	HardHat,
+	Phone,
+	Send,
+	User,
+	Users,
+} from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 
 export default function CoursePage() {
 	const [contactMethod, setContactMethod] = useState<

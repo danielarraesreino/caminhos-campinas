@@ -63,8 +63,9 @@ export interface GameState {
 	activeDilemmaId: string | null;
 	criticalHealth: boolean;
 	avatar: Avatar | null;
-	isPaused: boolean;
+	phoneBattery: number;
 	userPosition: [number, number] | null;
+	isPaused: boolean;
 }
 
 export type GameAction =
@@ -117,8 +118,9 @@ const INITIAL_STATE: GameState = {
 	activeDilemmaId: null,
 	criticalHealth: false,
 	avatar: null,
-	isPaused: false,
+	phoneBattery: 100,
 	userPosition: null,
+	isPaused: false,
 };
 
 // --- Reducer ---
@@ -287,6 +289,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				}
 
 				console.log("✅ Game State Hydrated:", savedState);
+
+				// BUGFIX: Prevent loading "Game Over" state
+				if (savedState.health <= 0 || savedState.dignity <= 0) {
+					console.warn(
+						"⚠️ Corrupt/Dead state detected. Aborting load to force Reset.",
+					);
+					throw { status: 404 }; // Force "New Game" flow
+				}
+
 				dispatch({ type: "SET_STATE", payload: savedState });
 			} catch (err: any) {
 				if (err.status === 404) {
@@ -333,6 +344,22 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		const timeout = setTimeout(saveState, 1000);
 		return () => clearTimeout(timeout);
 	}, [state, db, hasHydrated]);
+
+	// --- E2E Testing Helper ---
+	useEffect(() => {
+		// Expose state mutator for Playwright
+		if (typeof window !== "undefined") {
+			(window as any).debugSetBattery = (amount: number) => {
+				dispatch({
+					type: "MODIFY_STAT",
+					payload: {
+						stat: "phoneBattery",
+						amount: amount - state.phoneBattery,
+					},
+				});
+			};
+		}
+	}, [state.phoneBattery]);
 
 	// --- Helpers ---
 
@@ -454,12 +481,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		}
 	}, [db]);
 
-	const forceUnlock = useCallback(() => {
-		setActiveDilemma(null);
-		setPaused(false);
-		console.log("🔓 Map force unlocked");
-	}, [setActiveDilemma, setPaused]);
-
 	const value = useMemo(
 		() => ({
 			...state,
@@ -481,9 +502,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			eat,
 			sleep,
 			work,
+			consumeBattery: (amount: number) => modifyStat("phoneBattery", -amount),
 			resetGame,
 			clearPersistence,
-			forceUnlock,
 		}),
 		[
 			state,

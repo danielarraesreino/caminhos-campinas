@@ -18,6 +18,7 @@ export function useDilemmaMatcher() {
 
 	const findMatch = useCallback(
 		(userInput: string, userCoords: [number, number] | null) => {
+<<<<<<< HEAD
 			// Map services to the format expected by DilemmaMatcher
 			const serviceLocations = services
 				.filter((s) => s.coords)
@@ -26,6 +27,8 @@ export function useDilemmaMatcher() {
 					coords: s.coords as [number, number],
 				}));
 
+=======
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 			const locationObj = userCoords
 				? { lat: userCoords[0], lng: userCoords[1] }
 				: null;
@@ -37,17 +40,41 @@ export function useDilemmaMatcher() {
 					.replace(/[\u0300-\u036f]/g, "");
 			const input = normalize(userInput);
 
+<<<<<<< HEAD
 			// Explicit Dynamic Checks
 			if (input.includes("fome") && locationObj) {
 				const bomPrato = services.find(
 					(s) => s.name.toLowerCase().includes("bom prato") && s.coords,
 				);
 				if (bomPrato && bomPrato.coords) {
+=======
+			// 2. Crie a lista de alvos APENAS com quem tem coordenadas válidas
+			const targetServices = services.filter(
+				(s): s is typeof s & { coords: [number, number] } => {
+					return !!s.coords && Array.isArray(s.coords) && s.coords.length === 2;
+				},
+			);
+
+			const bomPrato = targetServices.find((s) =>
+				s.name.toLowerCase().includes("bom prato"),
+			);
+			const consultorio = targetServices.find(
+				(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
+			);
+
+			// Explicit Dynamic Checks as requested
+			if (input.includes("fome") && locationObj) {
+				const bpCoords =
+					bomPrato && bomPrato.coords && Array.isArray(bomPrato.coords)
+						? bomPrato.coords
+						: null;
+				if (bomPrato && bpCoords && bpCoords.length === 2) {
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 					const dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
-						bomPrato.coords[0],
-						bomPrato.coords[1],
+						bpCoords[0],
+						bpCoords[1],
 					);
 					if (dist <= 500) {
 						return {
@@ -73,16 +100,25 @@ export function useDilemmaMatcher() {
 				(input.includes("dor") || input.includes("machucado")) &&
 				locationObj
 			) {
+<<<<<<< HEAD
 				const consultorio = services.find(
 					(s) =>
 						(s.type === "SAUDE" || s.name.includes("Consultório")) && s.coords,
 				);
 				if (consultorio && consultorio.coords) {
+=======
+				const cr = targetServices.find(
+					(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
+				);
+				const crCoords =
+					cr && cr.coords && Array.isArray(cr.coords) ? cr.coords : null;
+				if (cr && crCoords && crCoords.length === 2) {
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 					const _dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
-						consultorio.coords[0],
-						consultorio.coords[1],
+						crCoords[0],
+						crCoords[1],
 					);
 					return {
 						id: "dynamic_health_cr",
@@ -102,6 +138,24 @@ export function useDilemmaMatcher() {
 			}
 
 			// Fallback to generic matcher
+			const serviceLocations = services
+				.filter(
+					(s): s is typeof s & { coords: [number, number] } =>
+						!!s.coords &&
+						Array.isArray(s.coords) &&
+						s.coords.length === 2 &&
+						s.coords[0] != null &&
+						s.coords[1] != null,
+				)
+				.map((s) => {
+					// Explicitly capture and check again (though predicate guarantees it)
+					const coordsToUse = s.coords;
+					return {
+						id: s.id,
+						coords: coordsToUse,
+					};
+				});
+
 			const match = DilemmaMatcher.findBestDilemma(
 				userInput,
 				locationObj,

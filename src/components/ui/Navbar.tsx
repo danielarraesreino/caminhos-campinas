@@ -7,15 +7,36 @@ import {
 	Gamepad,
 	MapPin,
 	Menu,
+	Wifi,
+	WifiOff,
 	X,
 } from "lucide-react";
 import Link from "next/link";
+<<<<<<< HEAD
 import { useState } from "react";
+=======
+import { useEffect, useState } from "react";
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 import { BatteryIndicator } from "@/components/ui/BatteryIndicator";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isOnline, setIsOnline] = useState(true);
+
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			setIsOnline(navigator.onLine);
+			const handleOnline = () => setIsOnline(true);
+			const handleOffline = () => setIsOnline(false);
+			window.addEventListener("online", handleOnline);
+			window.addEventListener("offline", handleOffline);
+			return () => {
+				window.removeEventListener("online", handleOnline);
+				window.removeEventListener("offline", handleOffline);
+			};
+		}
+	}, []);
 
 	// Navigation groups for separate personas
 	const primaryLinks = [
@@ -60,7 +81,7 @@ export function Navbar() {
 	// if (pathname === "/jogar") return null;
 
 	return (
-		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-50">
+		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-[100]">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex items-center justify-between h-16">
 					{/* 1. BRANDING */}
@@ -77,7 +98,8 @@ export function Navbar() {
 					</Link>
 
 					{/* 2. DESKTOP MENU (Bifurcated) */}
-					<div className="hidden md:flex items-center gap-6">
+					{/* Changed md:flex to lg:flex to avoid overflow on medium screens */}
+					<div className="hidden lg:flex items-center gap-6">
 						{/* Group A: Empathy & Data */}
 						<div className="flex items-center space-x-1 border-r border-zinc-800 pr-6">
 							<Link
@@ -116,13 +138,34 @@ export function Navbar() {
 								variant="default"
 								className="bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
 							>
-								Apoie Agora
+								<span className="hidden xl:inline">Apoie Agora</span>
+								<span className="xl:hidden">Apoiar</span>
 							</Button>
 						</Link>
+
+						{/* Offline Indicator */}
+						<div
+							title={isOnline ? "Você está Online" : "Modo Offline Ativo"}
+							className={`flex items-center justify-center p-2 rounded-full transition-colors ${isOnline ? "text-green-500/50" : "bg-red-500/20 text-red-400 border border-red-500/30"}`}
+						>
+							{isOnline ? (
+								<Wifi className="w-4 h-4" />
+							) : (
+								<WifiOff className="w-4 h-4 animate-pulse" />
+							)}
+						</div>
 					</div>
 
 					{/* 3. MOBILE MENU BUTTON */}
-					<div className="-mr-2 flex md:hidden">
+					<div className="-mr-2 flex lg:hidden">
+						<div className="mr-4 flex lg:hidden items-center">
+							{!isOnline && (
+								<div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-900/30 border border-red-500/30 text-red-200 text-xs font-bold animate-pulse">
+									<WifiOff className="w-3 h-3" />
+									<span className="sr-only">Offline</span>
+								</div>
+							)}
+						</div>
 						<button
 							type="button"
 							onClick={() => setIsOpen(!isOpen)}
@@ -142,7 +185,7 @@ export function Navbar() {
 
 			{/* 4. MOBILE MENU (Drawer) */}
 			{isOpen && (
-				<div className="md:hidden bg-zinc-950 border-b border-zinc-800 animate-in slide-in-from-top-2">
+				<div className="lg:hidden bg-zinc-950 border-b border-zinc-800 animate-in slide-in-from-top-2">
 					<div className="px-4 pt-2 pb-6 space-y-4">
 						{/* Mobile Group A */}
 						<div className="space-y-1">

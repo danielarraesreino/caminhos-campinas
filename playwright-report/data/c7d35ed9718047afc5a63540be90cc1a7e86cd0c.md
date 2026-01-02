@@ -1,0 +1,143 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - link "🚨 SOS EMERGÊNCIA" [ref=e7] [cursor=pointer]:
+            - /url: "https://wa.me/?text=SOS! Estou em situação de emergência. Minha localização aproximada: Desconhecida"
+          - generic [ref=e8]:
+            - generic:
+              - generic:
+                - button "Marker" [ref=e9] [cursor=pointer]
+                - button "Marker" [ref=e10] [cursor=pointer]
+                - button "Marker" [ref=e11] [cursor=pointer]
+                - button "Marker" [ref=e12] [cursor=pointer]
+                - button "Marker" [ref=e13] [cursor=pointer]
+                - button "Marker" [ref=e14] [cursor=pointer]
+                - button "Marker" [ref=e15] [cursor=pointer]
+                - button "Marker" [ref=e16] [cursor=pointer]
+                - button "Marker" [ref=e17] [cursor=pointer]
+                - button "Marker" [ref=e18] [cursor=pointer]
+                - button "Marker" [ref=e19] [cursor=pointer]
+                - button "Marker" [ref=e20] [cursor=pointer]
+                - button "Marker" [ref=e21] [cursor=pointer]
+                - button "Marker" [ref=e22] [cursor=pointer]
+                - button "Marker" [ref=e23] [cursor=pointer]
+                - button "Marker" [ref=e24] [cursor=pointer]
+                - button "Marker" [ref=e25] [cursor=pointer]
+                - button "Marker" [ref=e26] [cursor=pointer]
+                - button "Marker" [ref=e27] [cursor=pointer]
+                - button "Marker" [ref=e28] [cursor=pointer]
+                - button "Marker" [ref=e29] [cursor=pointer]
+                - button "Marker" [ref=e30] [cursor=pointer]
+                - button "Marker" [ref=e31] [cursor=pointer]
+                - button "Marker" [ref=e32] [cursor=pointer]
+                - button "Marker" [ref=e33] [cursor=pointer]
+                - button "Marker" [ref=e34] [cursor=pointer]
+            - generic:
+              - generic [ref=e35]:
+                - button "Zoom in" [ref=e36] [cursor=pointer]: +
+                - button "Zoom out" [ref=e37] [cursor=pointer]: −
+              - generic [ref=e38]:
+                - link "Leaflet" [ref=e39] [cursor=pointer]:
+                  - /url: https://leafletjs.com
+                  - img [ref=e40]
+                  - text: Leaflet
+                - text: "| ©"
+                - link "OpenStreetMap" [ref=e44] [cursor=pointer]:
+                  - /url: https://www.openstreetmap.org/copyright
+                - text: contributors
+        - generic [ref=e46]: Aguardando GPS...
+      - generic:
+        - generic:
+          - generic [ref=e49]:
+            - generic [ref=e50]:
+              - generic [ref=e51]: Plano de Vida (PDU)
+              - generic [ref=e52]: 25% Concluído
+            - progressbar [ref=e53]
+            - generic [ref=e55]:
+              - generic [ref=e56]:
+                - img [ref=e58]
+                - generic [ref=e60]: Sobrevivência
+              - generic [ref=e61]:
+                - img [ref=e63]
+                - generic [ref=e66]: Documentos
+              - generic [ref=e67]:
+                - img [ref=e69]
+                - generic [ref=e72]: Benefícios
+              - generic [ref=e73]:
+                - img [ref=e75]
+                - generic [ref=e81]: Autonomia
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - generic [ref=e85]:
+                - img "Tester Playwright" [ref=e86]
+                - generic [ref=e88]: Tester
+              - generic [ref=e89]:
+                - generic [ref=e90]:
+                  - generic [ref=e91]:
+                    - img [ref=e92]
+                    - generic [ref=e94]: SAÚDE
+                  - generic [ref=e95]: "100"
+                - generic [ref=e98]:
+                  - generic [ref=e99]:
+                    - img [ref=e100]
+                    - generic [ref=e108]: MENTE
+                  - generic [ref=e109]: "80"
+                - generic [ref=e112]:
+                  - generic [ref=e113]:
+                    - img [ref=e114]
+                    - generic [ref=e116]: ESTIGMA
+                  - generic [ref=e117]: "10"
+            - generic [ref=e121]:
+              - generic [ref=e122]:
+                - generic [ref=e123]: DIA 1
+                - generic [ref=e124]:
+                  - img [ref=e125]
+                  - text: 08:00
+              - generic [ref=e129]:
+                - generic [ref=e130]: CAIXA
+                - generic [ref=e131]:
+                  - img [ref=e132]
+                  - text: R$ 10.00
+              - generic [ref=e136]:
+                - generic [ref=e137]: CONEXÃO
+                - img [ref=e139]
+              - generic [ref=e144]:
+                - generic [ref=e145]: BATERIA
+                - generic [ref=e146]:
+                  - img [ref=e147]
+                  - text: 100%
+          - generic [ref=e149]:
+            - button [ref=e150]:
+              - img
+            - button [ref=e151]:
+              - img
+  - button "Apoiar na Realidade" [ref=e153]:
+    - img [ref=e156]
+    - generic: Apoiar na Realidade
+  - contentinfo [ref=e158]:
+    - generic [ref=e159]:
+      - generic [ref=e160]:
+        - generic [ref=e161]:
+          - heading "Caminhos Campinas" [level=4] [ref=e162]
+          - paragraph [ref=e163]: Uma iniciativa para transformar a realidade das ruas através da tecnologia social.
+        - generic [ref=e164]:
+          - generic [ref=e165]: Siga o Coletivo
+          - link "@COLETIVOARUATEMVOZ" [ref=e166] [cursor=pointer]:
+            - /url: https://www.instagram.com/coletivoaruatemvoz
+            - img [ref=e167]
+            - text: "@COLETIVOARUATEMVOZ"
+      - generic [ref=e170]:
+        - paragraph [ref=e171]: © 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
+        - generic [ref=e172]:
+          - img "Daniel (Japa)" [ref=e174]
+          - generic [ref=e176]:
+            - paragraph [ref=e177]: Desenvolvido por Daniel (Japa/Oclinhos)
+            - paragraph [ref=e178]: Vibe Coding &boxvh; Inovação Social
+        - paragraph [ref=e179]: "\"Informação é a libertação real, única e verdadeira.\""
+  - alert [ref=e180]
+```

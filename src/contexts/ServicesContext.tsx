@@ -73,6 +73,7 @@ export interface ServiceLocation {
 	requirements?: string[];
 	phone?: string;
 	opening_hours?: string; // Optional
+	forbidden_items?: string[];
 	effects?: {
 		hunger?: number;
 		health?: number;

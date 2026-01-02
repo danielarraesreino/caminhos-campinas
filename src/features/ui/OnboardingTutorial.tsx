@@ -5,6 +5,7 @@ import {
 	Heart,
 	MessageSquare,
 	Mic,
+	MapPin,
 	Shield,
 	User,
 	X,
@@ -24,6 +25,7 @@ interface OnboardingTutorialProps {
 	onClose: () => void;
 }
 
+<<<<<<< HEAD
 import onboardingData from "@/data/onboarding.json";
 
 // Map string names to Lucide components
@@ -39,6 +41,50 @@ const slides = onboardingData.map((slide) => ({
 	...slide,
 	icon: IconMap[slide.iconName] || User, // Fallback to User icon
 }));
+=======
+const slides = [
+	{
+		title: "Bem-vindo às Ruas",
+		description:
+			"Este é um Serious Game sobre a realidade da população em situação de rua em Campinas. Após o rompimento dos vínculos familiares (71% dos casos), a rua se tornou sua única opção. Seu objetivo é reconquistar sua cidadania.",
+		icon: User,
+		color: "text-blue-400",
+		bg: "bg-blue-900/20",
+	},
+	{
+		title: "Sobrevivência Diária",
+		description:
+			"Monitore seus sinais vitais no topo da tela: Fome, Energia, Higiene e Integridade Física. Se algum chegar a zero, você corre riscos graves.",
+		icon: Heart,
+		color: "text-red-400",
+		bg: "bg-red-900/20",
+	},
+	{
+		title: "Plano de Cidadania (PDU)",
+		description:
+			"Acompanhe seu progresso na barra 'Plano de Vida'. Você começa pela Sobrevivência e deve buscar Documentos (RG/CPF), Benefícios e Autonomia (Trabalho).",
+		icon: Shield,
+		color: "text-emerald-400",
+		bg: "bg-emerald-900/20",
+	},
+	{
+		title: "Sua Voz Importa",
+		description:
+			"Use o Chat para interagir. Você pode DIGITAR ou FALAR (ícone de microfone). Sua voz é transcrita e enviada para análise para criar respostas mais reais.",
+		icon: Mic,
+		color: "text-purple-400",
+		bg: "bg-purple-900/20",
+	},
+	{
+		title: "Contribua com a Realidade",
+		description:
+			"O jogo é alimentado por histórias reais. Você pode submeter dilemas que vivenciou ou presenciou para enriquecer a simulação e ajudar na conscientização.",
+		icon: MessageSquare,
+		color: "text-yellow-400",
+		bg: "bg-yellow-900/20",
+	},
+];
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 
 export function OnboardingTutorial({
 	isOpen,

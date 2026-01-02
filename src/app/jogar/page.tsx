@@ -10,9 +10,17 @@ import { useGameLoop } from "@/features/game-loop/useGameLoop";
 import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
 import { AvatarCreation } from "@/features/ui/AvatarCreation";
 import { DilemmaModal } from "@/features/ui/DilemmaModal";
+<<<<<<< HEAD
 import { GameChat } from "@/features/ui/GameChat";
 import { GameHUD } from "@/features/ui/GameHUD";
 import { GameOverModal } from "@/features/ui/GameOverModal";
+=======
+import { EffectsOverlay } from "@/features/ui/EffectsOverlay";
+import { GameChat } from "@/features/ui/GameChat";
+import { GameHUD } from "@/features/ui/GameHUD";
+import { GameOverModal } from "@/features/ui/GameOverModal";
+import { OnboardingTutorial } from "@/features/ui/OnboardingTutorial";
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 import { useEventEngine } from "@/hooks/useEventEngine";
 
 export default function GamePage() {
@@ -25,6 +33,15 @@ export default function GamePage() {
 		null,
 	);
 	const [isChatOpen, setIsChatOpen] = useState(false);
+	const [showTutorial, setShowTutorial] = useState(false);
+
+	useEffect(() => {
+		// Check if tutorial was seen
+		const tutorialSeen = localStorage.getItem("pop_rua_tutorial_seen");
+		if (!tutorialSeen) {
+			setShowTutorial(true);
+		}
+	}, []);
 
 	useEffect(() => {
 		const result = checkGameOver(gameState);
@@ -73,6 +90,11 @@ export default function GamePage() {
 	return (
 		// MUDANÇA 1: h-[100dvh] garante que cabe na tela real do celular sem scroll
 		<main className="relative w-full h-[100dvh] bg-slate-900 overflow-hidden">
+			<OnboardingTutorial
+				isOpen={showTutorial}
+				onClose={() => setShowTutorial(false)}
+			/>
+
 			{/* World Container - applies degradation only to the game world, not UI overlays */}
 			<div className={`absolute inset-0 z-0 ${degradationClasses}`}>
 				{/* CAMADA 0: Mapa (Fundo) */}
@@ -87,24 +109,24 @@ export default function GamePage() {
 						onToggleChat={() => setIsChatOpen(!isChatOpen)}
 						onToggleMenu={() => window.open("/recursos", "_blank")}
 					/>
+					<EffectsOverlay />
 				</div>
 			</div>
 
 			{/* CAMADA 50: Modais de Decisão e Chat (Bloqueantes ou Interativos) */}
 			{activeDilemma && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-					<DilemmaModal
-						dilemma={activeDilemma}
-						onResolve={resolveDilemma}
-						onClose={clearActiveDilemma}
-					/>
-				</div>
+				<DilemmaModal
+					dilemma={activeDilemma}
+					onResolve={resolveDilemma}
+					onClose={clearActiveDilemma}
+				/>
 			)}
 
 			{isChatOpen && (
 				<div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">
 					<div className="w-full h-[60vh] md:w-[400px] md:h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 relative">
 						<button
+							type="button"
 							className="absolute top-2 right-2 p-2 z-10 text-slate-400 hover:text-white"
 							onClick={() => setIsChatOpen(false)}
 						>

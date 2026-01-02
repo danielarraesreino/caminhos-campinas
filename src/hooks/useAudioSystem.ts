@@ -1,20 +1,32 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
 
 // Global Audio State (Module Level)
-// This ensures that even if the hook is used in multiple components,
-// there is only ONE ambient track playing at a time.
 let globalAmbience: HTMLAudioElement | null = null;
 let globalVolume = 0.5;
+let fadeInterval: NodeJS.Timeout | null = null;
 
-type AudioState = "IDLE" | "PLAYING" | "MUTED";
+const FADE_STEP_MS = 50;
+const DEFAULT_FADE_DURATION = 1000;
 
 interface AudioSystemCallbacks {
-	playAmbience: (trackId: string) => void;
+	playAmbience: (trackId: string, options?: { fade?: boolean }) => void;
 	playSfx: (trackId: string) => void;
-	stopAmbience: () => void;
+	stopAmbience: (options?: { fade?: boolean }) => void;
 	setVolume: (volume: number) => void;
 	initAudio: () => void;
 }
+
+// Track Mapping
+const TRACK_MAP: Record<string, string> = {
+	rain_heavy: "rain_heavy",
+	chuva: "rain_heavy",
+	traffic: "traffic",
+	transito: "traffic",
+	click: "click",
+	clique: "click",
+};
 
 export function useAudioSystem(): AudioSystemCallbacks {
 	const [pendingTrack, setPendingTrack] = useState<string | null>(null);
@@ -24,80 +36,121 @@ export function useAudioSystem(): AudioSystemCallbacks {
 	const initAudio = useCallback(() => {
 		if (isInitialized) return;
 		setIsInitialized(true);
-		// Resume context if needed (browsers usually handle this on play)
 	}, [isInitialized]);
 
-	// Effect to play pending track once initialized
-	useEffect(() => {
-		if (isInitialized && pendingTrack) {
-			const src = `/sounds/${pendingTrack}.mp3`;
-			// Check if already playing
-			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
-				setPendingTrack(null);
-				return;
-			}
+	const stopAmbience = useCallback((options?: { fade?: boolean }) => {
+		if (!globalAmbience) return;
 
-			// Stop existing
-			if (globalAmbience) {
-				globalAmbience.pause();
-				globalAmbience = null;
-			}
+		if (options?.fade) {
+			if (fadeInterval) clearInterval(fadeInterval);
 
-			const audio = new Audio(src);
-			audio.loop = true;
-			audio.volume = globalVolume; // Use module variable for latest volume
-			audio.play().catch((e) => console.warn("Pending audio play failed:", e));
-			globalAmbience = audio;
-			setPendingTrack(null);
-		}
-	}, [isInitialized, pendingTrack]);
+			const audio = globalAmbience;
+			const steps = DEFAULT_FADE_DURATION / FADE_STEP_MS;
+			const stepVol = audio.volume / steps;
 
-	const playAmbience = useCallback(
-		(trackId: string) => {
-			if (!isInitialized) {
-				setPendingTrack(trackId);
-				return;
-			}
-
-			// Construct path
-			const src = `/sounds/${trackId}.mp3`;
-
-			// Check if same src is already playing
-			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
-				return;
-			}
-
-			// Stop existing
-			if (globalAmbience) {
-				globalAmbience.pause();
-				globalAmbience = null;
-			}
-
-			// Create new
-			const audio = new Audio(src);
-			audio.loop = true;
-			audio.volume = globalVolume;
-
-			audio.play().catch((e) => {
-				console.warn("Audio play failed (waiting for interaction):", e);
-			});
-
-			globalAmbience = audio;
-		},
-		[isInitialized],
-	);
-
-	const stopAmbience = useCallback(() => {
-		if (globalAmbience) {
+			fadeInterval = setInterval(() => {
+				if (audio.volume > stepVol) {
+					audio.volume -= stepVol;
+				} else {
+					audio.volume = 0;
+					audio.pause();
+					if (fadeInterval) clearInterval(fadeInterval);
+					if (globalAmbience === audio) globalAmbience = null;
+				}
+			}, FADE_STEP_MS);
+		} else {
 			globalAmbience.pause();
 			globalAmbience = null;
 		}
 	}, []);
 
+	// Effect to play pending track once initialized
+	useEffect(() => {
+		if (isInitialized && pendingTrack) {
+			const mappedId = TRACK_MAP[pendingTrack] || pendingTrack;
+			const src = `/sounds/${mappedId}.mp3`;
+
+			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
+				setPendingTrack(null);
+				return;
+			}
+
+			stopAmbience();
+
+			try {
+				const audio = new Audio(src);
+				audio.loop = true;
+				audio.volume = globalVolume;
+				audio
+					.play()
+					.catch((e) => console.warn("Pending audio play failed:", e));
+				globalAmbience = audio;
+			} catch (err) {
+				console.error("Audio init error:", err);
+			}
+			setPendingTrack(null);
+		}
+	}, [isInitialized, pendingTrack, stopAmbience]);
+
+	const playAmbience = useCallback(
+		(trackId: string, options?: { fade?: boolean }) => {
+			if (!isInitialized) {
+				setPendingTrack(trackId);
+				return;
+			}
+
+			const mappedId = TRACK_MAP[trackId] || trackId;
+			const src = `/sounds/${mappedId}.mp3`;
+
+			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
+				return;
+			}
+
+			stopAmbience(options);
+
+			try {
+				const audio = new Audio(src);
+				audio.loop = true;
+
+				if (options?.fade) {
+					audio.volume = 0;
+					audio.play().catch(() => {});
+
+					const steps = DEFAULT_FADE_DURATION / FADE_STEP_MS;
+					const stepVol = globalVolume / steps;
+					let currentVol = 0;
+
+					const interval = setInterval(() => {
+						if (currentVol < globalVolume) {
+							currentVol = Math.min(globalVolume, currentVol + stepVol);
+							audio.volume = currentVol;
+						} else {
+							clearInterval(interval);
+						}
+					}, FADE_STEP_MS);
+				} else {
+					audio.volume = globalVolume;
+					audio.play().catch((e) => {
+						console.warn("Audio play failed:", e);
+					});
+				}
+				globalAmbience = audio;
+			} catch (err) {
+				console.error("Audio play runtime error:", err);
+			}
+		},
+		[isInitialized, stopAmbience],
+	);
+
 	const playSfx = useCallback((trackId: string) => {
-		const audio = new Audio(`/sounds/${trackId}.mp3`);
-		audio.volume = globalVolume;
-		audio.play().catch((e) => console.warn("SFX fail:", e));
+		try {
+			const mappedId = TRACK_MAP[trackId] || trackId;
+			const audio = new Audio(`/sounds/${mappedId}.mp3`);
+			audio.volume = globalVolume;
+			audio.play().catch((e) => console.warn("SFX fail:", e));
+		} catch (err) {
+			console.error("SFX runtime error:", err);
+		}
 	}, []);
 
 	const setVolume = useCallback((vol: number) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import L from "leaflet";
-import { useEffect } from "react";
+import { useEffect, memo } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
 // Fix for default marker icon
@@ -74,12 +74,20 @@ interface MapCoreProps {
 		lat: number;
 		lng: number;
 	}[];
-	onResourceInteract?: (resource: any) => void;
+	onTravel?: (lat: number, lng: number) => void;
+	onResourceInteract?: (res: any) => void;
 }
 
+<<<<<<< HEAD
 export default function MapCore({
 	userPosition,
 	resources,
+=======
+const MapCore = memo(function MapCore({
+	userPosition,
+	resources,
+	onTravel,
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 	onResourceInteract,
 }: MapCoreProps) {
 	// Default to Campinas center if no user position
@@ -118,17 +126,30 @@ export default function MapCore({
 				>
 					<Popup>
 						<div className="flex flex-col gap-2 min-w-[150px]">
+<<<<<<< HEAD
 							<strong className="text-sm font-bold">{res.name}</strong>
 							<span className="text-xs uppercase tracking-wide text-slate-500 font-bold">
 								{res.type}
 							</span>
 							<hr className="border-slate-200" />
+=======
+							<div>
+								<strong className="text-sm text-slate-900">{res.name}</strong>
+								<br />
+								<span className="text-xs text-gray-500 uppercase tracking-wide">
+									{res.type}
+								</span>
+							</div>
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 							<button
 								type="button"
-								onClick={() => onResourceInteract?.(res)}
-								className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded shadow transition-colors"
+								onClick={() => {
+									onTravel?.(res.lat, res.lng);
+									onResourceInteract?.(res);
+								}}
+								className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded shadow-md transition-colors w-full"
 							>
-								IR / INTERAGIR
+								👣 Ir e Interagir
 							</button>
 						</div>
 					</Popup>
@@ -136,4 +157,6 @@ export default function MapCore({
 			))}
 		</MapContainer>
 	);
-}
+});
+
+export default MapCore;

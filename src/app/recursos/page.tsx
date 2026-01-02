@@ -24,6 +24,7 @@ import {
 
 function ServiceCard({ service }: { service: ServiceLocation }) {
 	const { documents, modifyStat } = useGameContext();
+	const { coords } = service;
 	const [enrollmentStatus, setEnrollmentStatus] = useState<
 		"idle" | "enrolling" | "enrolled"
 	>("idle");
@@ -39,7 +40,25 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 			return false;
 		}) || [];
 
-	const canEnroll = missingreqs.length === 0;
+	// Check forbidden items
+	const { workTool, inventory } = useGameContext();
+	const forbiddenViolations =
+		service.forbidden_items?.filter((item: string) => {
+			// Check if it matches worktool
+			if (
+				item === "Carrinho de Reciclagem" &&
+				workTool?.type === "CARRINHO_RECICLAGEM"
+			) {
+				return true;
+			}
+			// Check inventory
+			// biome-ignore lint/suspicious/noExplicitAny: Context is loosely typed
+			if (inventory.some((i: any) => i.name === item)) return true;
+			return false;
+		}) || [];
+
+	const canEnroll =
+		missingreqs.length === 0 && forbiddenViolations.length === 0;
 
 	const handleEnroll = () => {
 		if (!canEnroll) return;
@@ -68,9 +87,9 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 
 	return (
 		<div
-			className={`bg-zinc-900 border ${isEducationStyle ? "border-blue-900/50" : "border-zinc-800"} rounded-xl p-5 active:bg-zinc-800 transition-colors relative overflow-hidden`}
+			className={`bg-zinc-900 border ${isEducation ? "border-blue-900/50" : "border-zinc-800"} rounded-xl p-5 active:bg-zinc-800 transition-colors relative overflow-hidden`}
 		>
-			{isEducationStyle && (
+			{isEducation && (
 				<div className="absolute top-0 right-0 p-2">
 					<BookOpen className="text-blue-500/20 w-12 h-12 -mr-2 -mt-2" />
 				</div>
@@ -90,8 +109,8 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 								? "bg-indigo-900 text-indigo-400"
 								: service.type === "SAUDE"
 									? "bg-red-900 text-red-400"
-									: service.type === "ASSISTENCIA"
-										? "bg-emerald-900 text-emerald-400"
+									: service.type === "EDUCACAO"
+										? "bg-blue-900 text-blue-400"
 										: "bg-slate-800 text-slate-400"
 					}
 				`}
@@ -108,7 +127,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 			</div>
 
 			{/* Education Specifics */}
-			{isEducationStyle && service.effects?.money && (
+			{isEducation && service.effects?.money && (
 				<div className="mb-4 bg-emerald-900/20 border border-emerald-500/30 p-3 rounded-lg flex items-center justify-between">
 					<span className="text-xs text-emerald-400 font-bold uppercase">
 						Bolsa / Renda
@@ -148,6 +167,27 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				</div>
 			)}
 
+			{/* Forbidden Items Warning */}
+			{service.forbidden_items && service.forbidden_items.length > 0 && (
+				<div className="mb-4 space-y-2">
+					{service.forbidden_items.map((item: string, idx: number) => {
+						const isViolated = forbiddenViolations.includes(item);
+						if (!isViolated) return null; // Only show if violated? Or show as warning? Usually warnings are good to know beforehand.
+						// Let's show only if violated for now to declutter, or always show as restriction.
+						// The prompt implies "entrada bloqueada", showing the reason is good.
+						return (
+							<div
+								key={`forbidden-${idx}`}
+								className="flex items-center gap-2 text-xs font-bold px-2 py-1 rounded border bg-red-950 border-red-900 text-red-500 animate-pulse"
+							>
+								<AlertTriangle size={12} />
+								Proibido: {item}
+							</div>
+						);
+					})}
+				</div>
+			)}
+
 			{service.rules && (
 				<div className="mb-3 p-2 bg-yellow-900/10 border border-yellow-700/30 rounded text-xs text-yellow-200/80 italic">
 					<p>💡 Dica: {service.rules}</p>
@@ -158,10 +198,20 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<button
 					type="button"
 					onClick={() => {
+						const localCoords = service.coords;
 						if (service.action_type === "link" && service.url) {
 							window.open(service.url, "_blank");
+<<<<<<< HEAD
 						} else if (service.coords) {
 							const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
+=======
+						} else if (
+							localCoords &&
+							Array.isArray(localCoords) &&
+							localCoords.length === 2
+						) {
+							const url = `https://www.google.com/maps/dir/?api=1&destination=${localCoords[0]},${localCoords[1]}`;
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 							window.open(url, "_blank");
 						}
 					}}
@@ -180,7 +230,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 					)}
 				</button>
 
-				{isEducationStyle && (
+				{isEducation && (
 					<button
 						type="button"
 						disabled={!canEnroll || enrollmentStatus !== "idle"}

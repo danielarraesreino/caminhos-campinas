@@ -17,7 +17,9 @@ export interface TelemetryEvent {
 	action_type: TelemetryAction;
 	metadata: Record<string, unknown>;
 	ods_category?: string; // Step 2.2
-	ods_target?: string; // ODS Goal (e.g., "ODS 2")
+	ods_target?: string;
+	violation_type?: string;
+	resource_gap?: string;
 	user_hash: string; // Step 2.3
 	synced: number;
 }
@@ -32,7 +34,9 @@ class TelemetryService {
 	private sessionHash: string;
 
 	private constructor() {
-		this.initDB();
+		// Lazy init: Do not call this.initDB() here. It will be called by track() when needed.
+		// prevents "Unhandled Rejection" on server-side where IndexedDB is missing.
+
 		// Step 2.3: Session-based rotating hash (not persistent user ID)
 		this.sessionHash = crypto.randomUUID();
 	}
@@ -81,7 +85,11 @@ class TelemetryService {
 	public async track(
 		action_type: TelemetryAction,
 		metadata: Record<string, unknown> = {},
-		ods_category?: string,
+		options?: {
+			ods_category?: string;
+			violation_type?: string;
+			resource_gap?: string;
+		},
 	): Promise<void> {
 		// Safety Check: Only track in production or if explicitly enabled
 		const env = process.env.NEXT_PUBLIC_VERCEL_ENV;
@@ -112,7 +120,9 @@ class TelemetryService {
 				timestamp: safeTimestamp, // Jittered
 				action_type,
 				metadata: safeMetadata,
-				ods_category,
+				ods_category: options?.ods_category,
+				violation_type: options?.violation_type,
+				resource_gap: options?.resource_gap,
 				user_hash: this.sessionHash, // Anonymous Session ID
 				synced: 0,
 			};

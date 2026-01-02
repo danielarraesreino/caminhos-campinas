@@ -1,8 +1,12 @@
 "use client";
 
 import { Lock, MapPin, Navigation, Wallet } from "lucide-react";
+<<<<<<< HEAD
 import { useCallback, useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+=======
+import { useEffect, useState, useCallback, useMemo } from "react";
+>>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 import { useServices } from "@/contexts/ServicesContext";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
 
@@ -31,11 +35,16 @@ interface Service {
 }
 
 function calculateDistance(
-	lat1: number,
-	lon1: number,
-	lat2: number,
-	lon2: number,
+	lat1: number | undefined | null,
+	lon1: number | undefined | null,
+	lat2: number | undefined | null,
+	lon2: number | undefined | null,
 ) {
+	// 🛡️ BLINDAGEM: Se qualquer coordenada for inválida, retorne Infinity (muito longe)
+	if (!lat1 || !lon1 || !lat2 || !lon2) {
+		return Number.POSITIVE_INFINITY;
+	}
+
 	const R = 6371;
 	const dLat = ((lat2 - lat1) * Math.PI) / 180;
 	const dLon = ((lon2 - lon1) * Math.PI) / 180;
@@ -54,27 +63,25 @@ export function NearbyList() {
 		useGameContext();
 	const { services: contextServices } = useServices(); // Use context services
 	const { trackServiceAccess } = useODSMetrics();
-	// biome-ignore lint/suspicious/noExplicitAny: data structure is flexible
-	const [services, setServices] = useState<any[]>([]);
 
-	useEffect(() => {
-		if (!userPosition || !contextServices) return;
+	const services = useMemo(() => {
+		if (!userPosition || !contextServices) return contextServices || [];
 
-		// biome-ignore lint/suspicious/noExplicitAny: incoming data
-		const mapped = contextServices.map((s: any) => {
-			const dist = calculateDistance(
-				userPosition[0],
-				userPosition[1],
-				s.coords[0],
-				s.coords[1],
-			);
-			return { ...s, distance: dist };
-		});
-
-		// Sort by distance
-		// biome-ignore lint/suspicious/noExplicitAny: sort generic
-		const sorted = mapped.sort((a: any, b: any) => a.distance - b.distance);
-		setServices(sorted);
+		return contextServices
+			.map((s: any) => {
+				const hasCoords =
+					s.coords && Array.isArray(s.coords) && s.coords.length === 2;
+				const dist = hasCoords
+					? calculateDistance(
+							userPosition[0],
+							userPosition[1],
+							s.coords[0],
+							s.coords[1],
+						)
+					: Number.POSITIVE_INFINITY;
+				return { ...s, distance: dist };
+			})
+			.sort((a: any, b: any) => (a.distance || 0) - (b.distance || 0));
 	}, [userPosition, contextServices]);
 
 	const checkAvailability = (service: Service) => {
@@ -205,9 +212,10 @@ export function NearbyList() {
 									onClick={() => {
 										if (service.action_type === "link" && service.url) {
 											window.open(service.url, "_blank");
-										} else {
+										} else if (service.coords && service.coords.length >= 2) {
+											const [lat, lng] = service.coords;
 											window.open(
-												`https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`,
+												`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
 												"_blank",
 											);
 										}

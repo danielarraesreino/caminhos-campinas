@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
 			},
 			{
 				protocol: "https",
-				hostname: "**.hostingersite.com",
+				hostname: "lightseagreen-horse-933009.hostingersite.com",
 				pathname: "/**",
 			},
 		],

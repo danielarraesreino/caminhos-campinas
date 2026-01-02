@@ -53,7 +53,7 @@ export const useTelemetry = () => {
 				...demographicData,
 			};
 
-			await telemetryService.track(action, enrichedMetadata, ods_category);
+			await telemetryService.track(action, enrichedMetadata, { ods_category });
 
 			// Try to sync immediately if online
 			if (navigator.onLine) {
