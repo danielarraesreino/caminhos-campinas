@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 
 export function VaultPage() {
@@ -23,8 +23,11 @@ export function VaultPage() {
 				🔐 Cofre Digital
 			</h2>
 			<p className="text-slate-400 mb-8 max-w-sm">
-				Guarde cópias seguras de seus documentos (RG, CPF, Carteira de Trabalho).
-				{isGuestMode ? " (Modo Visitante: Dados salvos apenas neste dispositivo)" : " (Modo Cloud: Dados salvos na nuvem)"}
+				Guarde cópias seguras de seus documentos (RG, CPF, Carteira de
+				Trabalho).
+				{isGuestMode
+					? " (Modo Visitante: Dados salvos apenas neste dispositivo)"
+					: " (Modo Cloud: Dados salvos na nuvem)"}
 			</p>
 
 			{showVault ? (

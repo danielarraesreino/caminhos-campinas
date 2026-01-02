@@ -10,8 +10,8 @@ import {
 	X,
 } from "lucide-react";
 import Link from "next/link";
-import { BatteryIndicator } from "@/components/ui/BatteryIndicator";
 import { useState } from "react";
+import { BatteryIndicator } from "@/components/ui/BatteryIndicator";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {

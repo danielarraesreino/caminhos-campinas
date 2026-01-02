@@ -2,22 +2,28 @@
 
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import {
+	checkGameOver,
+	type GameOverResult,
+} from "@/features/game-loop/gameOverConditions";
 import { useGameLoop } from "@/features/game-loop/useGameLoop";
-import { checkGameOver, type GameOverResult } from "@/features/game-loop/gameOverConditions";
-import { useEventEngine } from "@/hooks/useEventEngine";
 import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
-import { GameHUD } from "@/features/ui/GameHUD";
-import { DilemmaModal } from "@/features/ui/DilemmaModal";
-import { GameOverModal } from "@/features/ui/GameOverModal";
 import { AvatarCreation } from "@/features/ui/AvatarCreation";
+import { DilemmaModal } from "@/features/ui/DilemmaModal";
 import { GameChat } from "@/features/ui/GameChat";
+import { GameHUD } from "@/features/ui/GameHUD";
+import { GameOverModal } from "@/features/ui/GameOverModal";
+import { useEventEngine } from "@/hooks/useEventEngine";
 
 export default function GamePage() {
 	useGameLoop();
-	const { activeDilemma, resolveDilemma, clearActiveDilemma, triggerDilemma } = useEventEngine();
+	const { activeDilemma, resolveDilemma, clearActiveDilemma, triggerDilemma } =
+		useEventEngine();
 	const gameState = useGameContext();
 	const { criticalHealth, sanity, resetGame } = gameState;
-	const [gameOverResult, setGameOverResult] = useState<GameOverResult | null>(null);
+	const [gameOverResult, setGameOverResult] = useState<GameOverResult | null>(
+		null,
+	);
 	const [isChatOpen, setIsChatOpen] = useState(false);
 
 	useEffect(() => {
@@ -56,9 +62,13 @@ export default function GamePage() {
 
 	// Efeitos visuais de degradação (baseado nas regras de design "Realismo Sóbrio") [2]
 	const degradationClasses = [
-		criticalHealth ? "grayscale-50 border-[10px] border-red-900/30 ring-inset ring-8 ring-red-900/20" : "",
+		criticalHealth
+			? "grayscale-50 border-[10px] border-red-900/30 ring-inset ring-8 ring-red-900/20"
+			: "",
 		sanity < 20 ? "blur-[0.5px]" : "",
-	].filter(Boolean).join(" ");
+	]
+		.filter(Boolean)
+		.join(" ");
 
 	return (
 		// MUDANÇA 1: h-[100dvh] garante que cabe na tela real do celular sem scroll
@@ -75,7 +85,7 @@ export default function GamePage() {
 				<div className="relative z-40 w-full h-full pointer-events-none">
 					<GameHUD
 						onToggleChat={() => setIsChatOpen(!isChatOpen)}
-						onToggleMenu={() => window.open('/recursos', '_blank')}
+						onToggleMenu={() => window.open("/recursos", "_blank")}
 					/>
 				</div>
 			</div>

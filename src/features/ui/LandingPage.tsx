@@ -18,10 +18,10 @@ import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { REAL_DILEMMAS } from "@/features/game-loop/dilemmas-real";
 import { getAssetUrl } from "@/utils/getAssetUrl";
 import { AvatarCreation } from "./AvatarCreation";
 import { OnboardingTutorial } from "./OnboardingTutorial";
-import { REAL_DILEMMAS } from "@/features/game-loop/dilemmas-real";
 
 export default function LandingPage() {
 	const router = useRouter();
@@ -101,7 +101,8 @@ export default function LandingPage() {
 			// Simulate loading for effect
 			await new Promise((resolve) => setTimeout(resolve, 1500));
 
-			const dilemmaList = REAL_DILEMMAS && REAL_DILEMMAS.length > 0 ? REAL_DILEMMAS : []; // Safety check
+			const dilemmaList =
+				REAL_DILEMMAS && REAL_DILEMMAS.length > 0 ? REAL_DILEMMAS : []; // Safety check
 
 			if (dilemmaList.length === 0) {
 				throw new Error("Nenhum dilema disponível no censo.");
@@ -136,7 +137,7 @@ export default function LandingPage() {
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 
 			const option = dilemma?.raw?.options.find(
-				(o: any) => o.label === actionLabel
+				(o: any) => o.label === actionLabel,
 			);
 
 			if (option) {
@@ -160,13 +161,12 @@ export default function LandingPage() {
 			<section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-slate-950 text-white relative overflow-hidden min-h-[90vh] flex items-center">
 				{/* Background Texture - Slideshow */}
 				<div className="absolute inset-0">
-					{[
-						"/assets/images/landing-bg.png",
-					].map((img, index) => (
+					{["/assets/images/landing-bg.png"].map((img, index) => (
 						<div
 							key={img}
-							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${currentBgIndex === index ? "opacity-40" : "opacity-40" // Simplified for single image
-								}`}
+							className={`absolute inset-0 bg-cover bg-center mix-blend-overlay transition-opacity duration-1000 ${
+								currentBgIndex === index ? "opacity-40" : "opacity-40" // Simplified for single image
+							}`}
 							style={{ backgroundImage: `url(${getAssetUrl(img)})` }}
 						/>
 					))}
@@ -191,9 +191,11 @@ export default function LandingPage() {
 							</h1>
 
 							<p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-blue-500/30 pl-6">
-								Entre na pele de uma das <strong className="text-white">1.557 pessoas</strong> que vivem nas ruas de Campinas (Censo 2024). <br />
-								A principal causa? <strong className="text-white">Conflitos familiares</strong>, não "vagabundagem".
-								Transforme sua empatia em impacto real.
+								Entre na pele de uma das{" "}
+								<strong className="text-white">1.557 pessoas</strong> que vivem
+								nas ruas de Campinas (Censo 2024). <br />A principal causa?{" "}
+								<strong className="text-white">Conflitos familiares</strong>,
+								não "vagabundagem". Transforme sua empatia em impacto real.
 							</p>
 
 							{/* Dual Action Buttons */}
@@ -224,10 +226,11 @@ export default function LandingPage() {
 													setTimeout(() => setShowResetConfirm(false), 5000); // Reset after 5s
 												}
 											}}
-											className={`px-6 py-5 border rounded-2xl font-medium text-sm transition-all ${showResetConfirm
-												? "bg-red-600 border-red-500 text-white animate-pulse"
-												: "bg-transparent border-white/20 hover:bg-white/10 text-slate-300"
-												}`}
+											className={`px-6 py-5 border rounded-2xl font-medium text-sm transition-all ${
+												showResetConfirm
+													? "bg-red-600 border-red-500 text-white animate-pulse"
+													: "bg-transparent border-white/20 hover:bg-white/10 text-slate-300"
+											}`}
 										>
 											{showResetConfirm
 												? "Confirmar Reset?"
@@ -360,10 +363,14 @@ export default function LandingPage() {
 							Legitimar o Pertencimento.
 						</h2>
 						<p className="text-xl text-slate-600 leading-relaxed font-sans">
-							Segundo o <strong>Censo 2024</strong>, <strong>1.557 pessoas</strong> vivem nas ruas de Campinas.
-							A principal causa não é o vício, mas os <strong>conflitos familiares</strong> (38%).
-							Nosso projeto atua na intersecção entre essa realidade dura e a consciência libertadora de
-							<strong>Paulo Freire</strong>, transformando estatística em sujeito político.
+							Segundo o <strong>Censo 2024</strong>,{" "}
+							<strong>1.557 pessoas</strong> vivem nas ruas de Campinas. A
+							principal causa não é o vício, mas os{" "}
+							<strong>conflitos familiares</strong> (38%). Nosso projeto atua na
+							intersecção entre essa realidade dura e a consciência libertadora
+							de
+							<strong>Paulo Freire</strong>, transformando estatística em
+							sujeito político.
 						</p>
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
 							<div className="space-y-2">

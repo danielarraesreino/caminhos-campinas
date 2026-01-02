@@ -77,7 +77,11 @@ interface MapCoreProps {
 	onResourceInteract?: (resource: any) => void;
 }
 
-export default function MapCore({ userPosition, resources, onResourceInteract }: MapCoreProps) {
+export default function MapCore({
+	userPosition,
+	resources,
+	onResourceInteract,
+}: MapCoreProps) {
 	// Default to Campinas center if no user position
 	const defaultPosition: [number, number] = [-22.90556, -47.06083];
 	const initialPosition = userPosition || defaultPosition;
@@ -115,7 +119,9 @@ export default function MapCore({ userPosition, resources, onResourceInteract }:
 					<Popup>
 						<div className="flex flex-col gap-2 min-w-[150px]">
 							<strong className="text-sm font-bold">{res.name}</strong>
-							<span className="text-xs uppercase tracking-wide text-slate-500 font-bold">{res.type}</span>
+							<span className="text-xs uppercase tracking-wide text-slate-500 font-bold">
+								{res.type}
+							</span>
 							<hr className="border-slate-200" />
 							<button
 								type="button"

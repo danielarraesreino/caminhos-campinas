@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { REAL_DILEMMAS as GAME_DILEMMAS } from "./dilemmas-real"; // Using the real dilemmas file
 import { TelemetryAction, telemetryService } from "@/services/telemetry";
+import { REAL_DILEMMAS as GAME_DILEMMAS } from "./dilemmas-real"; // Using the real dilemmas file
 
 function calculateDistance(
 	lat1: number,
@@ -15,9 +15,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-		Math.cos((lat2 * Math.PI) / 180) *
-		Math.sin(dLon / 2) *
-		Math.sin(dLon / 2);
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c;
 }
@@ -63,18 +63,20 @@ export function useGameLoop() {
 
 	// Estado local para rastrear tempo no mesmo local
 	const [timeInLocation, setTimeInLocation] = useState(0);
-	const [lastPosition, setLastPosition] = useState<[number, number] | null>(null);
+	const [lastPosition, setLastPosition] = useState<[number, number] | null>(
+		null,
+	);
 
 	useEffect(() => {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
-				Math.pow(userPosition[0] - lastPosition[0], 2) +
-				Math.pow(userPosition[1] - lastPosition[1], 2)
+				(userPosition[0] - lastPosition[0]) ** 2 +
+					(userPosition[1] - lastPosition[1]) ** 2,
 			);
 
 			// Se moveu menos que ~100m, considera parado
 			if (dist < 0.001) {
-				setTimeInLocation(prev => prev + 1);
+				setTimeInLocation((prev) => prev + 1);
 			} else {
 				setTimeInLocation(0);
 				setLastPosition(userPosition);
@@ -89,8 +91,8 @@ export function useGameLoop() {
 		// Distância do Centro
 		if (userPosition) {
 			const distToCenter = Math.sqrt(
-				Math.pow(userPosition[0] - CENTER_COORDS.lat, 2) +
-				Math.pow(userPosition[1] - CENTER_COORDS.lng, 2)
+				(userPosition[0] - CENTER_COORDS.lat) ** 2 +
+					(userPosition[1] - CENTER_COORDS.lng) ** 2,
 			);
 
 			// Se está no centro E parado há muito tempo
@@ -171,7 +173,7 @@ export function useGameLoop() {
 
 			// Calculate Decay
 			let hngDecay = 2; // Base Hunger
-			let hygDecay = 1; // Base Hygiene
+			const hygDecay = 1; // Base Hygiene
 			let enrDecay = 1; // Base Energy
 			let snyDecay = 0.5 * getSanityDecayMultiplier(socialStigma);
 
@@ -252,8 +254,6 @@ export function useGameLoop() {
 			checkSystemicEvents(time);
 			lastHourRef.current = time;
 
-
-
 			// Random Rain change every hour
 			if (Math.random() < 0.2) setIsRaining(true);
 			else setIsRaining(false);
@@ -277,7 +277,6 @@ export function useGameLoop() {
 					}
 				}
 			}
-
 
 			// 3. Narrative Dilemmas Trigger
 			for (const dilemma of GAME_DILEMMAS) {
@@ -329,8 +328,8 @@ export function useGameLoop() {
 				}
 
 				// Special Prerequisite Handlers
-				if (dilemma.prerequisite === "TIME_AFTER_19" && time < 19) triggered = false;
-
+				if (dilemma.prerequisite === "TIME_AFTER_19" && time < 19)
+					triggered = false;
 
 				/* Hard Constraint for ODS 2 (Hunger) - Force dilemma if critical */
 				if (hunger < 10 && !resolvedDilemmas.includes("fome_extrema_01")) {

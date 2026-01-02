@@ -39,7 +39,9 @@ export const DilemmaMatcher = {
 			if (
 				d.tags &&
 				Array.isArray(d.tags) &&
-				d.tags.some((tag: string) => normalizedInput.includes(tag.toLowerCase()))
+				d.tags.some((tag: string) =>
+					normalizedInput.includes(tag.toLowerCase()),
+				)
 			) {
 				return true;
 			}

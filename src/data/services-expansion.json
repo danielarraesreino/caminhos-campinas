@@ -7,10 +7,7 @@
 		"address": "R. Dr. Buarque de Macedo, 150 - Guanabara",
 		"description": "Atendimento 24h para álcool e drogas. Acolhimento noturno e equipe multidisciplinar (redução de danos).",
 		"opening_hours": "24 horas",
-		"coordinates": [
-			-22.885,
-			-47.070
-		],
+		"coordinates": [-22.885, -47.07],
 		"effects": {
 			"sanity": 15,
 			"health": 5
@@ -24,10 +21,7 @@
 		"address": "Unidade Móvel (Região Central)",
 		"description": "Equipe de saúde que vai até você. Curativos, medicação e testes rápidos sem exigir documentos.",
 		"opening_hours": "08:00 - 17:00",
-		"coordinates": [
-			-22.906,
-			-47.061
-		],
+		"coordinates": [-22.906, -47.061],
 		"effects": {
 			"health": 20
 		}
@@ -40,16 +34,11 @@
 		"address": "Av. Francisco Glicério, 935 - Centro",
 		"description": "Emissão de RG (1ª e 2ª via), Carteira de Trabalho e CPF. Isenção de taxas com encaminhamento do CRAS/Centro Pop.",
 		"opening_hours": "09:00 - 17:00 (Agendado)",
-		"coordinates": [
-			-22.9055,
-			-47.0577
-		],
+		"coordinates": [-22.9055, -47.0577],
 		"effects": {
 			"dignity": 10
 		},
-		"requirements": [
-			"Agendamento"
-		]
+		"requirements": ["Agendamento"]
 	},
 	{
 		"id": "poupatempo_shopping",
@@ -59,17 +48,11 @@
 		"address": "R. Jacy Teixeira de Camargo, 940 - Jd. do Lago",
 		"description": "Unidade localizada no Campinas Shopping. Realiza todos os serviços de documentação.",
 		"opening_hours": "09:00 - 19:00 (Agendado)",
-		"coordinates": [
-			-22.915,
-			-47.069
-		],
+		"coordinates": [-22.915, -47.069],
 		"effects": {
 			"dignity": 10
 		},
-		"requirements": [
-			"Agendamento",
-			"Passagem"
-		]
+		"requirements": ["Agendamento", "Passagem"]
 	},
 	{
 		"id": "cras_centro",
@@ -79,10 +62,7 @@
 		"address": "R. Barão de Jaguara, 123",
 		"description": "Porta de entrada para CadÚnico e Bolsa Família. Encaminhamento para isenção de documentos.",
 		"opening_hours": "08:00 - 16:00",
-		"coordinates": [
-			-22.908,
-			-47.063
-		],
+		"coordinates": [-22.908, -47.063],
 		"effects": {
 			"dignity": 5
 		}

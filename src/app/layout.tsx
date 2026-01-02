@@ -35,10 +35,9 @@ export const viewport: Viewport = {
 	// userScalable: false,
 };
 
+import { ClientLayoutWrapper } from "@/app/ClientLayoutWrapper";
 import { Providers } from "@/components/Providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
-
-import { ClientLayoutWrapper } from "@/app/ClientLayoutWrapper";
 
 export default function RootLayout({
 	children,
@@ -55,9 +54,7 @@ export default function RootLayout({
 					<SurvivalModeProvider>
 						<GameProvider>
 							<ServicesProvider>
-								<ClientLayoutWrapper>
-									{children}
-								</ClientLayoutWrapper>
+								<ClientLayoutWrapper>{children}</ClientLayoutWrapper>
 								<SpeedInsights />
 								<Clarity />
 								<Analytics />

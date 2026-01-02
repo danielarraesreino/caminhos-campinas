@@ -17,15 +17,18 @@ import {
 	GlossaryTooltip,
 } from "@/components/ui/GlossaryTooltip";
 import { useGameContext } from "@/contexts/GameContext";
-import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 import CAMPINAS_DILEMMAS from "@/data/dilemmas-campinas.json";
-import { ActionInput } from "./ActionInput";
 import { getDB } from "@/features/offline-db/db";
+import { DilemmaMatcher } from "@/services/DilemmaMatcher";
+import { ActionInput } from "./ActionInput";
 
 export function GameChat({
 	initialMessages,
 	onDilemmaTriggered,
-}: { initialMessages?: any[]; onDilemmaTriggered?: (id: string) => void }) {
+}: {
+	initialMessages?: any[];
+	onDilemmaTriggered?: (id: string) => void;
+}) {
 	const gameState = useGameContext();
 	const [isPending, startTransition] = useTransition();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -100,7 +103,9 @@ export function GameChat({
 			// SAFEGUARD: Ensure valid array from JSON import
 			// biome-ignore lint/suspicious/noExplicitAny: Handle potential default export in some bundlers
 			const rawDilemmas: any = CAMPINAS_DILEMMAS;
-			const dilemmasArray = Array.isArray(rawDilemmas) ? rawDilemmas : rawDilemmas.default || [];
+			const dilemmasArray = Array.isArray(rawDilemmas)
+				? rawDilemmas
+				: rawDilemmas.default || [];
 
 			console.log("Hybrid Engine - Input:", text);
 			console.log("Hybrid Engine - Dilemmas Count:", dilemmasArray.length);
@@ -123,7 +128,7 @@ export function GameChat({
 			}
 
 			if (bestMatch) {
-				if (typeof onDilemmaTriggered === 'function') {
+				if (typeof onDilemmaTriggered === "function") {
 					try {
 						console.log("Hybrid Engine Intercepted:", bestMatch.id);
 						onDilemmaTriggered(bestMatch.id);
@@ -131,7 +136,9 @@ export function GameChat({
 						console.error("Erro ao executar onDilemmaTriggered:", cbError);
 					}
 				} else {
-					console.error("ERRO CRÍTICO: onDilemmaTriggered não conectado no componente pai!");
+					console.error(
+						"ERRO CRÍTICO: onDilemmaTriggered não conectado no componente pai!",
+					);
 				}
 				return;
 			}
@@ -139,7 +146,7 @@ export function GameChat({
 			setIsThinking(true);
 
 			// Upload Audio if exists
-			let audioUrl = "";
+			const audioUrl = "";
 			if (audioBlob) {
 				console.log(
 					"Audio blob active - Saving locally for DEBUG/OFFLINE mode",
@@ -164,22 +171,25 @@ export function GameChat({
 			}
 
 			try {
-				append({
-					role: "user",
-					content: text,
-				}, {
-					body: {
-						audioUrl: audioUrl,
-						gameState: {
-							health: gameStateRef.current.health,
-							hunger: gameStateRef.current.hunger,
-							hygiene: gameStateRef.current.hygiene,
-							money: gameStateRef.current.money,
-							time: gameStateRef.current.time,
-							location: userLocation,
+				append(
+					{
+						role: "user",
+						content: text,
+					},
+					{
+						body: {
+							audioUrl: audioUrl,
+							gameState: {
+								health: gameStateRef.current.health,
+								hunger: gameStateRef.current.hunger,
+								hygiene: gameStateRef.current.hygiene,
+								money: gameStateRef.current.money,
+								time: gameStateRef.current.time,
+								location: userLocation,
+							},
 						},
 					},
-				});
+				);
 			} catch (err) {
 				console.error("Error appending message:", err);
 				setIsThinking(false);
@@ -278,10 +288,11 @@ export function GameChat({
 
 							{/* Bubble */}
 							<div
-								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user"
-									? "bg-blue-600 text-white rounded-tr-none"
-									: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
-									}`}
+								className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
+									m.role === "user"
+										? "bg-blue-600 text-white rounded-tr-none"
+										: "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"
+								}`}
 							>
 								{m.role === "assistant"
 									? renderMessageContent(m.content)

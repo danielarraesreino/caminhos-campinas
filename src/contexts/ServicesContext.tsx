@@ -24,10 +24,14 @@ const safeArray = (data: any): any[] => {
 // Merge all datasets with normalization
 const ALL_SERVICES = [
 	...safeArray(SERVICES_DATA)
-		.filter(s => s && typeof s === 'object' && s.id)
-		.map((s) => ({ ...s, type: s.type as ServiceType, effects: s.effects || {} })),
+		.filter((s) => s && typeof s === "object" && s.id)
+		.map((s) => ({
+			...s,
+			type: s.type as ServiceType,
+			effects: s.effects || {},
+		})),
 	...safeArray(EDUCATION_DATA)
-		.filter(s => s && typeof s === 'object' && s.id)
+		.filter((s) => s && typeof s === "object" && s.id)
 		.map((s) => ({
 			...s,
 			type: "EDUCATION" as ServiceType,
@@ -37,7 +41,7 @@ const ALL_SERVICES = [
 			effects: s.effects || {},
 		})),
 	...safeArray(EXPANSION_DATA)
-		.filter(s => s && typeof s === 'object' && s.id)
+		.filter((s) => s && typeof s === "object" && s.id)
 		.map((s) => ({
 			...s,
 			coords: s.coordinates as [number, number],
@@ -101,9 +105,7 @@ const ServicesContext = createContext<ServicesContextProps | undefined>(
 const STORAGE_KEY = "services_data";
 
 export function ServicesProvider({ children }: { children: React.ReactNode }) {
-	const [services, setServices] = useState<ServiceLocation[]>(
-		ALL_SERVICES,
-	);
+	const [services, setServices] = useState<ServiceLocation[]>(ALL_SERVICES);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -111,9 +113,8 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 	/* const loadFromStorage = useCallback(() => { ... */
 
 	// Since the data is static and imported, we don't need a frantic fetch effect.
-	// If we want to simulate async or allow overrides, we can keep some logic, 
+	// If we want to simulate async or allow overrides, we can keep some logic,
 	// but for now, direct import fulfills "read from this JSON".
-
 
 	const filterServices = useCallback(
 		(type: ServiceType | "all") => {
@@ -148,7 +149,7 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 				loading,
 				error,
 				filterServices,
-				refreshServices: async () => { },
+				refreshServices: async () => {},
 			}}
 		>
 			{children}

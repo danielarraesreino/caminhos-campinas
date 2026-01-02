@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 // Simulating the Game/Survival Logic
 // Ideally this would be imported from a pure logic file, but for now we define the contract here

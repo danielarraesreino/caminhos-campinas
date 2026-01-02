@@ -1,4 +1,4 @@
-import { Dilemma } from "./dilemma-types";
+import type { Dilemma } from "./dilemma-types";
 
 export const REAL_DILEMMAS: Dilemma[] = [
 	{

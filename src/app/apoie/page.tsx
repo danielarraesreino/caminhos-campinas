@@ -9,13 +9,13 @@ import {
 	Download,
 	Globe,
 	Heart,
+	Instagram,
 	MapPin,
 	Phone,
 	QrCode,
 	ShieldCheck,
 	Smartphone,
 	Users,
-	Instagram,
 	Wallet,
 } from "lucide-react";
 import Link from "next/link";

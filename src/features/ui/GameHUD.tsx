@@ -14,15 +14,18 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
 import { CitizenshipTree } from "./CitizenshipTree";
 import { VoiceReporter } from "./VoiceReporter";
-import { Button } from "@/components/ui/button";
 
 export function GameHUD({
 	onToggleChat,
 	onToggleMenu,
-}: { onToggleChat?: () => void; onToggleMenu?: () => void }) {
+}: {
+	onToggleChat?: () => void;
+	onToggleMenu?: () => void;
+}) {
 	const [imgError, setImgError] = useState(false);
 	const [isReporterOpen, setIsReporterOpen] = useState(false);
 	const {

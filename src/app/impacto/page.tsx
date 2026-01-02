@@ -5,8 +5,6 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { ImpactDashboard } from "@/features/dashboard/ImpactDashboard";
 
-
-
 export default function ImpactPage() {
 	return (
 		<main className="bg-black min-h-screen">

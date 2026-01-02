@@ -58,11 +58,10 @@ export function VoiceReporter() {
 		try {
 			// OFFLINE MODE: Save Locally / Log
 			console.log("Saving voice report locally (Offline Mode)");
-			await new Promise(resolve => setTimeout(resolve, 1000)); // Fake delay
+			await new Promise((resolve) => setTimeout(resolve, 1000)); // Fake delay
 
 			// const result = await uploadUserDilemma(blob, "Voice Report");
 			setUploadStatus("success");
-
 		} catch (error) {
 			console.error("Upload error:", error);
 			setUploadStatus("error");
@@ -80,10 +79,11 @@ export function VoiceReporter() {
 				{uploadStatus === "idle" && (
 					<button
 						onClick={isRecording ? stopRecording : startRecording}
-						className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${isRecording
-							? "bg-red-500 hover:bg-red-600 animate-pulse ring-4 ring-red-500/30"
-							: "bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20"
-							}`}
+						className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
+							isRecording
+								? "bg-red-500 hover:bg-red-600 animate-pulse ring-4 ring-red-500/30"
+								: "bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20"
+						}`}
 					>
 						{isRecording ? (
 							<Square className="w-6 h-6 text-white fill-current" />

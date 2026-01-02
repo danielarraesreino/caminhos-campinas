@@ -7,10 +7,7 @@
 		"address": "Rua Francisco Elisiário, 240 - Bonfim",
 		"description": "Vagas por encaminhamento (Centro Pop). Banho, jantar e pernoite. Permanência limitada.",
 		"opening_hours": "08:00 - 17:00",
-		"coords": [
-			-22.9025,
-			-47.066
-		],
+		"coords": [-22.9025, -47.066],
 		"phone": "(19) 3235-2281",
 		"effects": {
 			"dignity": 15
@@ -24,10 +21,7 @@
 		"address": "Rua Regente Feijó, 824, Centro",
 		"description": "Porta de entrada para serviços da rede. Cadastro Único, banho, lavanderia e encaminhamentos.",
 		"opening_hours": "08:00 - 17:00",
-		"coords": [
-			-22.9069,
-			-47.0594
-		],
+		"coords": [-22.9069, -47.0594],
 		"effects": {
 			"dignity": 20,
 			"hygiene": 50
@@ -41,10 +35,7 @@
 		"address": "Rua Francisco Theodoro, 138 - Vila Industrial",
 		"description": "Local seguro para guardar pertences e documentos (até 1.8 mil bagagens). Evita roubos na rua.",
 		"opening_hours": "08:00 - 17:00",
-		"coords": [
-			-22.915,
-			-47.07
-		],
+		"coords": [-22.915, -47.07],
 		"effects": {
 			"security": 100
 		}
@@ -57,10 +48,7 @@
 		"address": "Av. Dr. Moraes Sales, 384 - Centro",
 		"description": "Café da manhã completo a R$ 0,50 (começa às 7h). Almoço e Jantar a R$ 1,00. Chegue cedo para pegar senha.",
 		"opening_hours": "07:00 - 09:00 (Café) | 10:30 - 14:00 (Almoço) | 17:00 (Jantar)",
-		"coords": [
-			-22.9102,
-			-47.0605
-		],
+		"coords": [-22.9102, -47.0605],
 		"effects": {
 			"hunger": 100,
 			"money": -1
@@ -94,10 +82,7 @@
 		"address": "Rua Lourival de Almeida, 349 - Jd. Fernanda (Endereço Variável)",
 		"description": "Caminhão que serve 300 almoços a R$ 1,00 em regiões periféricas. Atualmente no Jd. Fernanda.",
 		"opening_hours": "11:00",
-		"coords": [
-			-23.0451,
-			-47.1245
-		],
+		"coords": [-23.0451, -47.1245],
 		"effects": {
 			"hunger": 100,
 			"money": -1
@@ -111,10 +96,7 @@
 		"address": "Rua Álvares Machado, 766 - Centro",
 		"description": "Distribuição gratuita de jantar (200 refeições). Exige higienização das mãos. Ambiente sentado.",
 		"opening_hours": "18:00 - 19:00",
-		"coords": [
-			-22.908,
-			-47.062
-		],
+		"coords": [-22.908, -47.062],
 		"effects": {
 			"hunger": 80,
 			"dignity": 10
@@ -128,10 +110,7 @@
 		"address": "Rua Fernão Lopes, 1290 - Pq. Taquaral (Sede) / Itinerante",
 		"description": "Equipe móvel que vai até as praças. Faz curativos, testes e pré-natal. Não exige abstinência ou documentos.",
 		"opening_hours": "07:00 - 18:00",
-		"coords": [
-			-22.865,
-			-47.05
-		],
+		"coords": [-22.865, -47.05],
 		"phone": "(19) 3291-6094",
 		"effects": {
 			"health": 40,
@@ -146,10 +125,7 @@
 		"address": "Rua Padre Domingos Giovanini, 95 - Taquaral",
 		"description": "Atendimento 24h para crise e desintoxicação. Possui 8 leitos para pernoite de curta duração.",
 		"opening_hours": "24h",
-		"coords": [
-			-22.872,
-			-47.055
-		],
+		"coords": [-22.872, -47.055],
 		"phone": "(19) 3365-4918",
 		"effects": {
 			"sanity": 50,
@@ -164,10 +140,7 @@
 		"address": "Rua Ferdinando Panatoni, 1040 - Jd. Paulicéia",
 		"description": "Referência para Região Noroeste/Sudoeste. Acolhimento noturno e oficinas terapêuticas.",
 		"opening_hours": "24h",
-		"coords": [
-			-22.925,
-			-47.08
-		],
+		"coords": [-22.925, -47.08],
 		"phone": "(19) 3258-6098",
 		"effects": {
 			"sanity": 50,
@@ -182,10 +155,7 @@
 		"address": "Rua Salomão Gebara, 136 - Vista Alegre",
 		"description": "Para transtornos mentais graves. Foca em reinserção social e autonomia.",
 		"opening_hours": "24h",
-		"coords": [
-			-22.89,
-			-47.1
-		],
+		"coords": [-22.89, -47.1],
 		"phone": "(19) 3266-3094",
 		"effects": {
 			"sanity": 60
@@ -199,15 +169,8 @@
 		"address": "Encaminhamento via Centro Pop / CRAS",
 		"description": "Bolsa-auxílio (aprox. R$ 1.240) para qualificação em jardinagem e construção civil. Exige frequência e compromisso.",
 		"opening_hours": "08:00 - 17:00",
-		"coords": [
-			-22.9055,
-			-47.0608
-		],
-		"requirements": [
-			"RG",
-			"CPF",
-			"Comprovante de Vacinação"
-		],
+		"coords": [-22.9055, -47.0608],
+		"requirements": ["RG", "CPF", "Comprovante de Vacinação"],
 		"effects": {
 			"money": 1240,
 			"dignity": 100,
@@ -222,10 +185,7 @@
 		"address": "Rua Domício Pacheco e Silva, 760 - Jd. Novo Campos Elíseos",
 		"description": "Oficinas de Mosaico, Vitral, Marcenaria e Culinária. Paga 'Bolsa-Oficina' conforme produção. Ambiente de convivência.",
 		"opening_hours": "08:00 - 17:00",
-		"coords": [
-			-22.93,
-			-47.09
-		],
+		"coords": [-22.93, -47.09],
 		"effects": {
 			"money": 50,
 			"sanity": 30,
@@ -240,10 +200,7 @@
 		"address": "Itinerante / Centro",
 		"description": "Curso de 16h sobre cidadania e direitos, baseado em Paulo Freire. Forma multiplicadores e agentes de dados.",
 		"opening_hours": "Sob demanda",
-		"coords": [
-			-22.905,
-			-47.06
-		],
+		"coords": [-22.905, -47.06],
 		"effects": {
 			"dignity": 50,
 			"sanity": 20
@@ -257,10 +214,7 @@
 		"address": "Rua José Paulino (Esq. Ferreira Penteado)",
 		"description": "Servido em mesa com talheres. Restaura a dignidade de ser tratado como cliente, não pedinte.",
 		"opening_hours": "12:00",
-		"coords": [
-			-22.906,
-			-47.061
-		],
+		"coords": [-22.906, -47.061],
 		"effects": {
 			"hunger": 100,
 			"dignity": 30,
@@ -275,10 +229,7 @@
 		"address": "Largo do Rosário, Centro",
 		"description": "Ponto de distribuição noturna de voluntários. O 'Rádio Peão' da rua acontece aqui.",
 		"opening_hours": "18:00 - 22:00",
-		"coords": [
-			-22.905,
-			-47.06
-		],
+		"coords": [-22.905, -47.06],
 		"effects": {
 			"dignity": 10
 		}
@@ -291,14 +242,8 @@
 		"address": "Centro",
 		"description": "Balcão de empregos. Exige banho tomado e RG para cadastro.",
 		"opening_hours": "08:00 - 16:00",
-		"coords": [
-			-22.904,
-			-47.059
-		],
-		"requirements": [
-			"RG",
-			"Higiene > 50"
-		],
+		"coords": [-22.904, -47.059],
+		"requirements": ["RG", "Higiene > 50"],
 		"effects": {
 			"dignity": 50,
 			"stabilityGap": -50

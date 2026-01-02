@@ -1,10 +1,11 @@
 "use client";
 
-import { useGameContext } from "@/contexts/GameContext";
-import { useODSMetrics } from "@/hooks/useODSMetrics";
 import { Lock, MapPin, Navigation, Wallet } from "lucide-react";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
+import { useODSMetrics } from "@/hooks/useODSMetrics";
+
 // import servicesData from "@/data/services-campinas.json"; // Removed direct import
 
 interface ServiceEffect {
@@ -41,9 +42,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-		Math.cos((lat2 * Math.PI) / 180) *
-		Math.sin(dLon / 2) *
-		Math.sin(dLon / 2);
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c; // in km
 }
@@ -153,7 +154,11 @@ export function NearbyList() {
 						allowed = check.allowed;
 						reasons = check.reasons;
 					} catch (err) {
-						console.error("Critical error checking service availability:", service?.id, err);
+						console.error(
+							"Critical error checking service availability:",
+							service?.id,
+							err,
+						);
 						return null;
 					}
 					const distanceDisplay =
@@ -208,9 +213,17 @@ export function NearbyList() {
 										}
 									}}
 									className={`flex items-center justify-center min-w-[36px] px-2 h-9 border rounded hover:opacity-90 transition-colors ${service.action_type === "link" ? "bg-blue-100 text-blue-700 border-blue-200" : "hover:bg-muted text-blue-500 hover:text-blue-600 hover:border-blue-200"}`}
-									title={service.action_type === "link" ? "Acessar Site do Curso" : "Ver no Google Maps"}
+									title={
+										service.action_type === "link"
+											? "Acessar Site do Curso"
+											: "Ver no Google Maps"
+									}
 								>
-									{service.action_type === "link" ? <span className="text-xs font-bold mr-1">Link</span> : <Navigation size={16} />}
+									{service.action_type === "link" ? (
+										<span className="text-xs font-bold mr-1">Link</span>
+									) : (
+										<Navigation size={16} />
+									)}
 								</button>
 							</div>
 						</div>
