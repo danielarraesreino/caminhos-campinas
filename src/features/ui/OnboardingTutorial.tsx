@@ -24,48 +24,21 @@ interface OnboardingTutorialProps {
 	onClose: () => void;
 }
 
-const slides = [
-	{
-		title: "Bem-vindo às Ruas",
-		description:
-			"Este é um Serious Game sobre a realidade da população em situação de rua em Campinas. Seu objetivo não é apenas sobreviver, mas reconquistar sua cidadania.",
-		icon: User,
-		color: "text-blue-400",
-		bg: "bg-blue-900/20",
-	},
-	{
-		title: "Sobrevivência Diária",
-		description:
-			"Monitore seus sinais vitais no topo da tela: Fome, Energia, Higiene e Integridade Física. Se algum chegar a zero, você corre riscos graves.",
-		icon: Heart,
-		color: "text-red-400",
-		bg: "bg-red-900/20",
-	},
-	{
-		title: "Plano de Cidadania (PDU)",
-		description:
-			"Acompanhe seu progresso na barra 'Plano de Vida'. Você começa pela Sobrevivência e deve buscar Documentos (RG/CPF), Benefícios e Autonomia (Trabalho).",
-		icon: Shield,
-		color: "text-emerald-400",
-		bg: "bg-emerald-900/20",
-	},
-	{
-		title: "Sua Voz Importa",
-		description:
-			"Use o Chat para interagir. Você pode DIGITAR ou FALAR (ícone de microfone). Sua voz é transcrita e enviada para análise para criar respostas mais reais.",
-		icon: Mic,
-		color: "text-purple-400",
-		bg: "bg-purple-900/20",
-	},
-	{
-		title: "Contribua com a Realidade",
-		description:
-			"O jogo é alimentado por histórias reais. Você pode submeter dilemas que vivenciou ou presenciou para enriquecer a simulação e ajudar na conscientização.",
-		icon: MessageSquare,
-		color: "text-yellow-400",
-		bg: "bg-yellow-900/20",
-	},
-];
+import onboardingData from "@/data/onboarding.json";
+
+// Map string names to Lucide components
+const IconMap: Record<string, React.ElementType> = {
+	User,
+	Heart,
+	Shield,
+	Mic,
+	MessageSquare,
+};
+
+const slides = onboardingData.map((slide) => ({
+	...slide,
+	icon: IconMap[slide.iconName] || User, // Fallback to User icon
+}));
 
 export function OnboardingTutorial({
 	isOpen,
@@ -82,7 +55,7 @@ export function OnboardingTutorial({
 		} else {
 			setIsExiting(true);
 			// Defer close to allow UI update
-			await new Promise(resolve => setTimeout(resolve, 50));
+			await new Promise((resolve) => setTimeout(resolve, 50));
 			handleClose();
 		}
 	};
@@ -138,8 +111,9 @@ export function OnboardingTutorial({
 						<div
 							// biome-ignore lint/suspicious/noArrayIndexKey: slides are static constant
 							key={idx}
-							className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? "w-6 bg-blue-500" : "w-1.5 bg-slate-700"
-								}`}
+							className={`h-1.5 rounded-full transition-all duration-300 ${
+								idx === currentSlide ? "w-6 bg-blue-500" : "w-1.5 bg-slate-700"
+							}`}
 						/>
 					))}
 				</div>

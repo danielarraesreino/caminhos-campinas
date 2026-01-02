@@ -1,0 +1,23 @@
+{
+	"census2024": {
+		"totalPopulation": 1557,
+		"source": "Censo da População de Rua de Campinas 2024"
+	},
+	"stats": [
+		{
+			"label": "Conflito Familiar",
+			"value": "71%",
+			"description": "Principal motivo citado para ida às ruas."
+		},
+		{
+			"label": "Insegurança Alimentar",
+			"value": "38.5%",
+			"description": "Relataram passar fome recentemente (pelo menos 1 vez na semana)."
+		},
+		{
+			"label": "Violência Institucional",
+			"value": "51%",
+			"description": "Afirmam ter sofrido violência ou humilhação por agentes do estado ou segurança privada."
+		}
+	]
+}

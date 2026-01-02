@@ -1,0 +1,47 @@
+[
+	{
+		"id": "caritas_campinas",
+		"name": "Cáritas Arquidiocesana",
+		"type": "ONG",
+		"services": ["AC", "BANHO", "ROUPAS", "ORIENTACAO"],
+		"address": "Rua José Paulino, 603 - Centro",
+		"contact": "site: caritascampinas.org.br",
+		"description": "Oferece acolhimento, serviço de banho solidário e encaminhamento para rede de serviços."
+	},
+	{
+		"id": "toca_de_assis",
+		"name": "Toca de Assis",
+		"type": "IGREJA",
+		"services": ["ALIMENTACAO", "ESPIRITUALIDADE"],
+		"address": "Vila Industrial (Itinerante na Catedral)",
+		"contact": "Presencial",
+		"description": "Irmandade católica que oferece alimentação noturna e acolhimento espiritual nas ruas."
+	},
+	{
+		"id": "anjos_da_madrugada",
+		"name": "Anjos da Madrugada",
+		"type": "COLETIVO",
+		"services": ["ALIMENTACAO", "COBERTOR"],
+		"address": "Centro / Praça da Catedral",
+		"contact": "facebook.com/anjosdamadrugada",
+		"description": "Grupo voluntário que distribui marmitas e cobertores durante a noite."
+	},
+	{
+		"id": "associacao_abba",
+		"name": "ABBA - Promoção Social",
+		"type": "ONG",
+		"services": ["EDUCACAO", "ESPORTE", "FAMILIA"],
+		"address": "Jardim São Marcos",
+		"contact": "Tel: (19) 3000-0000",
+		"description": "Foco em prevenção e fortalecimento de vínculos familiares e comunitários."
+	},
+	{
+		"id": "instituto_padre_haroldo",
+		"name": "Instituto Padre Haroldo",
+		"type": "ONG",
+		"services": ["REABILITACAO", "ACOLHIMENTO", "TRABALHO"],
+		"address": "Rua Dr. João Quirino do Nascimento, 1601",
+		"contact": "padreharoldo.org.br",
+		"description": "Referência em reabilitação de dependência química, reinserção social e cursos profissionalizantes."
+	}
+]

@@ -1,0 +1,37 @@
+[
+	{
+		"title": "Bem-vindo às Ruas",
+		"description": "Este é um Serious Game sobre a realidade da população em situação de rua em Campinas. Seu objetivo não é apenas sobreviver, mas reconquistar sua cidadania.",
+		"iconName": "User",
+		"color": "text-blue-400",
+		"bg": "bg-blue-900/20"
+	},
+	{
+		"title": "Sinais Vitais (Fome/Sanidade)",
+		"description": "Monitore seus sinais vitais no topo da tela: Fome, Energia, Higiene e Integridade Física. Se algum chegar a zero, você corre riscos graves.",
+		"iconName": "Heart",
+		"color": "text-red-400",
+		"bg": "bg-red-900/20"
+	},
+	{
+		"title": "PDU (Plano de Desenvolvimento)",
+		"description": "Acompanhe seu progresso na barra 'Plano de Vida'. Você começa pela Sobrevivência e deve buscar Documentos (RG/CPF), Benefícios e Autonomia (Trabalho).",
+		"iconName": "Shield",
+		"color": "text-emerald-400",
+		"bg": "bg-emerald-900/20"
+	},
+	{
+		"title": "Sua Voz Importa",
+		"description": "Use o Chat para interagir. Você pode DIGITAR ou FALAR (ícone de microfone). Sua voz é transcrita e enviada para análise para criar respostas mais reais.",
+		"iconName": "Mic",
+		"color": "text-purple-400",
+		"bg": "bg-purple-900/20"
+	},
+	{
+		"title": "Contribua com a Realidade",
+		"description": "O jogo é alimentado por histórias reais. Você pode submeter dilemas que vivenciou ou presenciou para enriquecer a simulação e ajudar na conscientização.",
+		"iconName": "MessageSquare",
+		"color": "text-yellow-400",
+		"bg": "bg-yellow-900/20"
+	}
+]

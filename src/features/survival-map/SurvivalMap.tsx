@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { useServices } from "@/contexts/ServicesContext";
+import { type ServiceLocation, useServices } from "@/contexts/ServicesContext";
 import { NearbyList } from "./NearbyList";
 
 const MapCore = dynamic(() => import("./MapCore"), {
@@ -22,7 +22,10 @@ export function SurvivalMap() {
 
 	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
 	const resources = services
-		.filter((s): s is ServiceLocation & { coords: [number, number] } => !!s.id && !!s.coords)
+		.filter(
+			(s): s is ServiceLocation & { coords: [number, number] } =>
+				!!s.id && !!s.coords,
+		)
 		.map((s) => ({
 			id: s.id,
 			name: s.name,
@@ -83,7 +86,9 @@ export function SurvivalMap() {
 						// Interaction logic mapping - Portuguese Only
 						if (type === "ALIMENTACAO") {
 							eat(20);
-							alert(`Você visitou ${res.name} e conseguiu se alimentar! (+20 Fome)`);
+							alert(
+								`Você visitou ${res.name} e conseguiu se alimentar! (+20 Fome)`,
+							);
 						} else if (type === "SAUDE") {
 							modifyStat("health", 15);
 							alert(`Você recebeu atendimento em ${res.name}. (+15 Saúde)`);

@@ -1,6 +1,15 @@
 "use client";
 
-import { GLOSSARY } from "@/data/glossary";
+import glossaryData from "@/data/glossary.json";
+
+// Transform JSON array to Record<string, string> for compatibility
+const GLOSSARY: Record<string, string> = glossaryData.reduce(
+	(acc, item) => {
+		acc[item.term] = item.definition;
+		return acc;
+	},
+	{} as Record<string, string>,
+);
 
 interface InteractiveTextProps {
 	text: string;
