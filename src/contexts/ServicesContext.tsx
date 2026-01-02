@@ -21,34 +21,52 @@ const safeArray = (data: any): any[] => {
 	return [];
 };
 
-// Merge all datasets with normalization
-const ALL_SERVICES = [
-	...safeArray(SERVICES_DATA)
-		.filter((s) => s && typeof s === "object" && s.id)
-		.map((s) => ({
+// Merge all datasets with normalization and deduplication
+const ALL_SERVICES_MAP = new Map<string, ServiceLocation>();
+
+// 1. Process Base Services
+safeArray(SERVICES_DATA).forEach((s) => {
+	if (s && typeof s === "object" && s.id) {
+		ALL_SERVICES_MAP.set(s.id, {
 			...s,
 			type: s.type as ServiceType,
 			effects: s.effects || {},
-		})),
-	...safeArray(EDUCATION_DATA)
-		.filter((s) => s && typeof s === "object" && s.id)
-		.map((s) => ({
+		});
+	}
+});
+
+// 2. Process Education Services (overrides/augments)
+safeArray(EDUCATION_DATA).forEach((s) => {
+	if (s && typeof s === "object" && s.id) {
+		// If it already exists, education might be an extra metadata layer
+		const existing = ALL_SERVICES_MAP.get(s.id);
+		ALL_SERVICES_MAP.set(s.id, {
+			...existing,
 			...s,
 			type: "EDUCATION" as ServiceType,
 			category: "Educação Online",
-			coords: [-22.905, -47.06] as [number, number],
-			opening_hours: "24h",
-			effects: s.effects || {},
-		})),
-	...safeArray(EXPANSION_DATA)
-		.filter((s) => s && typeof s === "object" && s.id)
-		.map((s) => ({
+			coords: s.coords || existing?.coords || ([-22.905, -47.06] as [number, number]),
+			opening_hours: s.opening_hours || "24h",
+			effects: s.effects || existing?.effects || {},
+		});
+	}
+});
+
+// 3. Process Expansion Services (overrides/augments)
+safeArray(EXPANSION_DATA).forEach((s) => {
+	if (s && typeof s === "object" && s.id) {
+		const existing = ALL_SERVICES_MAP.get(s.id);
+		ALL_SERVICES_MAP.set(s.id, {
+			...existing,
 			...s,
-			coords: s.coordinates as [number, number],
-			requirements: s.requirements || [],
-			effects: s.effects || {},
-		})),
-] as ServiceLocation[];
+			coords: (s.coordinates || existing?.coords) as [number, number],
+			requirements: s.requirements || existing?.requirements || [],
+			effects: s.effects || existing?.effects || {},
+		});
+	}
+});
+
+const ALL_SERVICES = Array.from(ALL_SERVICES_MAP.values());
 
 export type ServiceType =
 	| "ALIMENTACAO"
@@ -89,6 +107,7 @@ export interface ServiceLocation {
 	interactions?: any[]; // Keep interactions flexible
 	action_type?: "map" | "link"; // New: Link vs Map intent
 	url?: string; // New: URL for online actions
+	relatedLink?: string; // New: External link for side actions (e.g. scheduling)
 }
 
 interface ServicesContextProps {
@@ -150,7 +169,7 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 				loading,
 				error,
 				filterServices,
-				refreshServices: async () => {},
+				refreshServices: async () => { },
 			}}
 		>
 			{children}

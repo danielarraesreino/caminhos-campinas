@@ -23,6 +23,7 @@ function calculateDistance(
 
 export function useGameLoop() {
 	const {
+		day,
 		time,
 		health,
 		hunger,
@@ -51,7 +52,10 @@ export function useGameLoop() {
 	} = useGameContext();
 
 	const [isRaining, setIsRaining] = useState(false);
-	const lastHourRef = useRef(time);
+	// Refs to prevent effects running on every render
+	const lastHourRef = useRef<number | null>(null);
+
+	// Coordenadas do Centro de Campinas (Largo do Rosário/13 de Maio)
 	const CENTER_COORDS = { lat: -22.9055, lng: -47.0608 };
 	const IDLE_THRESHOLD = 3;
 
@@ -90,7 +94,7 @@ export function useGameLoop() {
 
 	const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
 
-	const processRandomEvents = (state: any) => {
+	const processRandomEvents = (state: { dignity: number; workTool: any }) => {
 		if (Math.random() < 0.02) {
 			return {
 				workTool: { ...state.workTool, isConfiscated: true },
@@ -146,14 +150,16 @@ export function useGameLoop() {
 				if (rand.workTool) setWorkTool(rand.workTool);
 				if (rand.dignity) modifyStat("dignity", rand.dignity - dignity);
 			}
+
 			checkBattery();
 			advanceTime(1);
 		}, 10000);
 		return () => clearInterval(interval);
-	}, [health, hunger, hygiene, sanity, energy, socialStigma, isPaused, modifyStat, advanceTime, avatar, inventory, workTool, isRaining, isAtShelter, dignity, phoneBattery, checkBattery]);
+	}, [health, hunger, hygiene, sanity, energy, socialStigma, isPaused, modifyStat, advanceTime, avatar, inventory, workTool, isRaining, isAtShelter, dignity, phoneBattery, checkBattery, setWorkTool]);
 
 	useEffect(() => {
-		if (time !== lastHourRef.current) {
+		// Run on mount (lastHourRef.current is null) or when time changes
+		if (lastHourRef.current === null || time !== lastHourRef.current) {
 			checkSystemicEvents(time);
 			lastHourRef.current = time;
 			if (Math.random() < 0.2) setIsRaining(true);
@@ -162,6 +168,28 @@ export function useGameLoop() {
 
 		function checkSystemicEvents(currentHour: number) {
 			if (activeDilemmaId) return;
+
+			// 0. Forced Initial Dilemma (intro_acordar_praca)
+			if (day === 1 && currentHour === 8 && !resolvedDilemmas.includes("intro_acordar_praca")) {
+				setActiveDilemma("intro_acordar_praca");
+				return;
+			}
+
+			// 1. "O Rapa" / "Protocolo de Natal": 2% chance per tick if in central area
+			if (userPosition) {
+				const distToCenter = calculateDistance(
+					userPosition[0],
+					userPosition[1],
+					CENTER_COORDS.lat,
+					CENTER_COORDS.lng,
+				);
+				if (distToCenter < 0.5 && Math.random() < 0.02) {
+					setActiveDilemma("enquadro_13_maio");
+					return;
+				}
+			}
+
+			// 2. Cold Night (Without Shelter)
 			if (currentHour >= 22 || currentHour < 5) {
 				if (!isAtShelter) {
 					const hasCardboard = inventory.some((i: any) => i.name === "Papelão");
@@ -205,7 +233,7 @@ export function useGameLoop() {
 			}
 			if (activeBuffs.includes("SEDADO_CAPS")) modifyStat("energy", -5);
 		}
-	}, [time, activeDilemmaId, resolvedDilemmas, hunger, hygiene, activeBuffs, isAtShelter, inventory, setActiveDilemma, modifyStat, socialStigma, userPosition, phoneBattery, timeInLocation]);
+	}, [day, time, activeDilemmaId, resolvedDilemmas, hunger, hygiene, activeBuffs, isAtShelter, inventory, setActiveDilemma, modifyStat, socialStigma, userPosition, phoneBattery, timeInLocation]);
 
 	return { isRaining, batteryLevel: phoneBattery / 100 };
 }

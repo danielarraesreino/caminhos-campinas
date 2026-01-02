@@ -12,37 +12,20 @@ import {
 	YAxis,
 } from "recharts";
 
-const MOCK_FINANCIAL_DATA = [
-	{ name: "Meta Piloto", value: 13970, label: "Necessário" },
-	{ name: "Arrecadado", value: 0, label: "Atual" },
-];
+import FINANCIAL_DATA from "@/data/financial-goals.json";
 
-const MOCK_PILOT_TARGETS = [
-	{
-		id: 1,
-		title: "Jovens Capacitados",
-		value: "20",
-		target: "/ 20",
-		icon: Users,
-		description: "Meta: Turma Piloto (16h de formação)",
-	},
-	{
-		id: 2,
-		title: "Educadores Sociais",
-		value: "02",
-		target: "/ 02",
-		icon: Heart,
-		description: "Meta: Contratação para acompanhamento",
-	},
-	{
-		id: 3,
-		title: "Previsão de Início",
-		value: "Q1",
-		target: "2026",
-		icon: Wallet,
-		description: "Condicionado à captação de recursos",
-	},
-];
+const ICON_MAP = {
+	Users,
+	Heart,
+	Wallet,
+};
+
+const MOCK_FINANCIAL_DATA = FINANCIAL_DATA.breakdown;
+
+const MOCK_PILOT_TARGETS = FINANCIAL_DATA.pilot_targets.map((target) => ({
+	...target,
+	icon: ICON_MAP[target.icon as keyof typeof ICON_MAP] || Wallet,
+}));
 
 export default function TransparenciaPage() {
 	return (
@@ -80,7 +63,10 @@ export default function TransparenciaPage() {
 								Meta de Captação
 							</span>
 							<span className="text-white font-mono font-bold text-xl">
-								R$ 13.970,00
+								{new Intl.NumberFormat("pt-BR", {
+									style: "currency",
+									currency: "BRL",
+								}).format(FINANCIAL_DATA.fundraising.target)}
 							</span>
 						</div>
 					</div>
@@ -89,18 +75,35 @@ export default function TransparenciaPage() {
 						<div className="flex mb-2 items-center justify-between">
 							<div>
 								<span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-emerald-600 bg-emerald-200">
-									Progresso (0%)
+									Progresso (
+									{Math.round(
+										(FINANCIAL_DATA.fundraising.current /
+											FINANCIAL_DATA.fundraising.target) *
+										100,
+									)}
+									%)
 								</span>
 							</div>
 							<div className="text-right">
 								<span className="text-xs font-semibold inline-block text-emerald-600">
-									R$ 0,00 arrecadados
+									{new Intl.NumberFormat("pt-BR", {
+										style: "currency",
+										currency: "BRL",
+									}).format(FINANCIAL_DATA.fundraising.current)}{" "}
+									arrecadados
 								</span>
 							</div>
 						</div>
 						<div className="overflow-hidden h-4 mb-4 text-xs flex rounded bg-slate-700">
 							<div
-								style={{ width: "0%" }}
+								style={{
+									width: `${Math.min(
+										100,
+										(FINANCIAL_DATA.fundraising.current /
+											FINANCIAL_DATA.fundraising.target) *
+										100,
+									)}%`,
+								}}
 								className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500"
 							></div>
 						</div>

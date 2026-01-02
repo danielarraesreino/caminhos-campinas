@@ -32,6 +32,9 @@ interface Service {
 	opening_hours: string;
 	description: string;
 	effects: ServiceEffect;
+	relatedLink?: string;
+	action_type?: string;
+	url?: string;
 }
 
 function calculateDistance(
@@ -51,9 +54,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-			Math.cos((lat2 * Math.PI) / 180) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2);
+		Math.cos((lat2 * Math.PI) / 180) *
+		Math.sin(dLon / 2) *
+		Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c; // in km
 }
@@ -73,11 +76,11 @@ export function NearbyList() {
 					s.coords && Array.isArray(s.coords) && s.coords.length === 2;
 				const dist = hasCoords
 					? calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							s.coords[0],
-							s.coords[1],
-						)
+						userPosition[0],
+						userPosition[1],
+						s.coords[0],
+						s.coords[1],
+					)
 					: Number.POSITIVE_INFINITY;
 				return { ...s, distance: dist };
 			})
@@ -207,6 +210,17 @@ export function NearbyList() {
 								>
 									{allowed ? "Utilizar Serviço" : "Indisponível"}
 								</button>
+
+								{service.relatedLink && (
+									<button
+										type="button"
+										onClick={() => window.open(service.relatedLink, "_blank")}
+										className="flex-1 text-[10px] uppercase font-bold h-9 bg-blue-600 border-blue-500 hover:bg-blue-700 text-white rounded flex items-center justify-center gap-1"
+									>
+										📅 Agendar
+									</button>
+								)}
+
 								<button
 									type="button"
 									onClick={() => {

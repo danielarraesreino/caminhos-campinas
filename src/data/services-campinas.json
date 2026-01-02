@@ -1,252 +1,198 @@
 [
 	{
-		"id": "abrigos_municipais",
-		"name": "Abrigos Municipais (Samim / Casa de Passagem)",
+		"id": "samim_bonfim",
+		"name": "SAMIM (Albergue Municipal)",
 		"type": "ABRIGO",
-		"category": "Acolhimento Institucional",
+		"description": "Albergue municipal for pernoite emergencial. Oferece banho, jantar e cama. Regras rígidas de horário.",
 		"address": "Rua Francisco Elisiário, 240 - Bonfim",
-		"description": "Vagas por encaminhamento (Centro Pop). Banho, jantar e pernoite. Permanência limitada.",
-		"opening_hours": "08:00 - 17:00",
-		"coords": [-22.9025, -47.066],
-		"phone": "(19) 3235-2281",
-		"effects": {
-			"dignity": 15
-		}
-	},
-	{
-		"id": "centro_pop_i",
-		"name": "Centro Pop I",
-		"type": "ASSISTENCIA",
-		"category": "Referência",
-		"address": "Rua Regente Feijó, 824, Centro",
-		"description": "Porta de entrada para serviços da rede. Cadastro Único, banho, lavanderia e encaminhamentos.",
-		"opening_hours": "08:00 - 17:00",
-		"coords": [-22.9069, -47.0594],
-		"effects": {
-			"dignity": 20,
-			"hygiene": 50
-		}
-	},
-	{
-		"id": "bagageiro_municipal",
-		"name": "Bagageiro Municipal",
-		"type": "ASSISTENCIA",
-		"category": "Guarda-Volumes",
-		"address": "Rua Francisco Theodoro, 138 - Vila Industrial",
-		"description": "Local seguro para guardar pertences e documentos (até 1.8 mil bagagens). Evita roubos na rua.",
-		"opening_hours": "08:00 - 17:00",
-		"coords": [-22.915, -47.07],
-		"effects": {
-			"security": 100
-		}
+		"coords": [
+			-22.9035,
+			-47.0689
+		],
+		"operatingHours": "18:00 - 06:00",
+		"cost": 0,
+		"requiresDocument": true,
+		"rules": [
+			"Entrada permitida apenas até as 19h",
+			"Proibida a entrada de carroças",
+			"Proibida a entrada de animais",
+			"Exige RG ou Boletim de Ocorrência"
+		],
+		"source": "Prefeitura Municipal de Campinas [1]"
 	},
 	{
 		"id": "bom_prato_centro",
-		"name": "Bom Prato Centro",
+		"name": "Bom Prato (Centro)",
 		"type": "ALIMENTACAO",
-		"category": "Restaurante Popular",
+		"description": "Restaurante popular estadual. Segurança alimentar de baixo custo.",
 		"address": "Av. Dr. Moraes Sales, 384 - Centro",
-		"description": "Café da manhã completo a R$ 0,50 (começa às 7h). Almoço e Jantar a R$ 1,00. Chegue cedo para pegar senha.",
-		"opening_hours": "07:00 - 09:00 (Café) | 10:30 - 14:00 (Almoço) | 17:00 (Jantar)",
-		"coords": [-22.9102, -47.0605],
-		"effects": {
-			"hunger": 100,
-			"money": -1
-		},
-		"interactions": [
-			{
-				"label": "Tomar Café (R$ 0,50)",
-				"action": "eat_breakfast",
-				"cost": 0.5,
-				"effect": {
-					"hunger": 40,
-					"energy": 10
-				}
-			},
-			{
-				"label": "Almoçar (R$ 1,00)",
-				"action": "eat_lunch",
-				"cost": 1.0,
-				"effect": {
-					"hunger": 100,
-					"energy": 20
-				}
-			}
-		]
+		"coords": [
+			-22.9102,
+			-47.0605
+		],
+		"operatingHours": "Café: 07h-09h | Almoço: 10h30-14h | Jantar: 17h-18h",
+		"cost": 1.00,
+		"requiresDocument": false,
+		"rules": [
+			"Custo: R$ 1,00 (Almoço/Jantar) e R$ 0,50 (Café)",
+			"Gratuidade apenas com cartão de isenção (via Centro Pop)",
+			"Finais de semana: Apenas marmitex (sábados e feriados)"
+		],
+		"source": "Governo de SP / G1 Campinas [2][3]"
 	},
 	{
-		"id": "bom_prato_movel",
-		"name": "Bom Prato Móvel",
-		"type": "ALIMENTACAO",
-		"category": "Itinerante",
-		"address": "Rua Lourival de Almeida, 349 - Jd. Fernanda (Endereço Variável)",
-		"description": "Caminhão que serve 300 almoços a R$ 1,00 em regiões periféricas. Atualmente no Jd. Fernanda.",
-		"opening_hours": "11:00",
-		"coords": [-23.0451, -47.1245],
-		"effects": {
-			"hunger": 100,
-			"money": -1
-		}
+		"id": "centro_pop_i",
+		"name": "Centro POP I (Sares)",
+		"type": "ASSISTENCIA",
+		"description": "Ponto de apoio diurno. Referência para banho, lavanderia e guarda de pertences.",
+		"address": "Rua Regente Feijó, 1240 - Centro",
+		"coords": [
+			-22.9056,
+			-47.0592
+		],
+		"operatingHours": "08:00 - 17:00",
+		"cost": 0,
+		"requiresDocument": false,
+		"rules": [
+			"Senhas de banho limitadas pela manhã",
+			"Local para cadastro no CadÚnico"
+		],
+		"source": "Prefeitura Municipal de Campinas [4]"
+	},
+	{
+		"id": "consultorio_na_rua",
+		"name": "Consultório na Rua (Base)",
+		"type": "SAUDE",
+		"description": "Equipe itinerante de saúde. Realiza curativos, testes e vacinação sem exigir endereço.",
+		"address": "Rua Fernão Lopes, 1290 - Pq. Taquaral (Base Operacional)",
+		"coords": [
+			-22.8765,
+			-47.0520
+		],
+		"operatingHours": "08:00 - 17:00 (Itinerante)",
+		"cost": 0,
+		"requiresDocument": false,
+		"rules": [
+			"Atendimento no local onde a pessoa está",
+			"Não exige documento para primeiros socorros",
+			"Foco em redução de danos"
+		],
+		"source": "Cândido Ferreira [5]"
+	},
+	{
+		"id": "casa_santa_clara",
+		"name": "Casa de Apoio Santa Clara (Cáritas)",
+		"type": "ABRIGO",
+		"description": "Abrigo específico para mulheres e mulheres com filhos. Foco em ressignificação de vida.",
+		"address": "Região Central (Endereço Sigiloso/Referenciado)",
+		"coords": [
+			-22.9099,
+			-47.0620
+		],
+		"operatingHours": "24 Horas (Via Encaminhamento)",
+		"cost": 0,
+		"requiresDocument": true,
+		"rules": [
+			"Exclusivo para mulheres",
+			"Apenas via encaminhamento (CREAS/Centro Pop)",
+			"Permite crianças"
+		],
+		"source": "Cáritas Campinas [6][7]"
 	},
 	{
 		"id": "refeitorio_cidadania",
 		"name": "Refeitório da Cidadania",
 		"type": "ALIMENTACAO",
-		"category": "Gratuito",
+		"description": "Jantar gratuito servido com dignidade (mesas e cadeiras).",
 		"address": "Rua Álvares Machado, 766 - Centro",
-		"description": "Distribuição gratuita de jantar (200 refeições). Exige higienização das mãos. Ambiente sentado.",
-		"opening_hours": "18:00 - 19:00",
-		"coords": [-22.908, -47.062],
-		"effects": {
-			"hunger": 80,
-			"dignity": 10
-		}
-	},
-	{
-		"id": "consultorio_rua",
-		"name": "Consultório na Rua",
-		"type": "SAUDE",
-		"category": "Baixa Exigência",
-		"address": "Rua Fernão Lopes, 1290 - Pq. Taquaral (Sede) / Itinerante",
-		"description": "Equipe móvel que vai até as praças. Faz curativos, testes e pré-natal. Não exige abstinência ou documentos.",
-		"opening_hours": "07:00 - 18:00",
-		"coords": [-22.865, -47.05],
-		"phone": "(19) 3291-6094",
-		"effects": {
-			"health": 40,
-			"sanity": 10
-		}
+		"coords": [
+			-22.9080,
+			-47.0615
+		],
+		"operatingHours": "18:00 - 19:00",
+		"cost": 0,
+		"requiresDocument": false,
+		"rules": [
+			"Exige higienização das mãos na entrada",
+			"Capacidade limitada a 200 pessoas"
+		],
+		"source": "Prefeitura Municipal de Campinas [8]"
 	},
 	{
 		"id": "caps_ad_reviver",
 		"name": "CAPS AD III Reviver",
 		"type": "SAUDE",
-		"category": "Álcool e Drogas",
-		"address": "Rua Padre Domingos Giovanini, 95 - Taquaral",
-		"description": "Atendimento 24h para crise e desintoxicação. Possui 8 leitos para pernoite de curta duração.",
-		"opening_hours": "24h",
-		"coords": [-22.872, -47.055],
-		"phone": "(19) 3365-4918",
-		"effects": {
-			"sanity": 50,
-			"health": 20
-		}
-	},
-	{
-		"id": "caps_ad_antonio",
-		"name": "CAPS AD III Antônio Orlando",
-		"type": "SAUDE",
-		"category": "Álcool e Drogas",
-		"address": "Rua Ferdinando Panatoni, 1040 - Jd. Paulicéia",
-		"description": "Referência para Região Noroeste/Sudoeste. Acolhimento noturno e oficinas terapêuticas.",
-		"opening_hours": "24h",
-		"coords": [-22.925, -47.08],
-		"phone": "(19) 3258-6098",
-		"effects": {
-			"sanity": 50,
-			"health": 20
-		}
-	},
-	{
-		"id": "caps_iii_david",
-		"name": "CAPS III David Capistrano",
-		"type": "SAUDE",
-		"category": "Saúde Mental",
-		"address": "Rua Salomão Gebara, 136 - Vista Alegre",
-		"description": "Para transtornos mentais graves. Foca em reinserção social e autonomia.",
-		"opening_hours": "24h",
-		"coords": [-22.89, -47.1],
-		"phone": "(19) 3266-3094",
-		"effects": {
-			"sanity": 60
-		}
-	},
-	{
-		"id": "mao_amiga",
-		"name": "Programa Mão Amiga",
-		"type": "ASSISTENCIA",
-		"category": "Qualificação Profissional",
-		"address": "Encaminhamento via Centro Pop / CRAS",
-		"description": "Bolsa-auxílio (aprox. R$ 1.240) para qualificação em jardinagem e construção civil. Exige frequência e compromisso.",
-		"opening_hours": "08:00 - 17:00",
-		"coords": [-22.9055, -47.0608],
-		"requirements": ["RG", "CPF", "Comprovante de Vacinação"],
-		"effects": {
-			"money": 1240,
-			"dignity": 100,
-			"energy": -50
-		}
-	},
-	{
-		"id": "casa_oficinas",
-		"name": "Casa das Oficinas (Cândido Ferreira)",
-		"type": "ASSISTENCIA",
-		"category": "Geração de Renda",
-		"address": "Rua Domício Pacheco e Silva, 760 - Jd. Novo Campos Elíseos",
-		"description": "Oficinas de Mosaico, Vitral, Marcenaria e Culinária. Paga 'Bolsa-Oficina' conforme produção. Ambiente de convivência.",
-		"opening_hours": "08:00 - 17:00",
-		"coords": [-22.93, -47.09],
-		"effects": {
-			"money": 50,
-			"sanity": 30,
-			"dignity": 40
-		}
-	},
-	{
-		"id": "curso_coletivo",
-		"name": "Formação A Rua Tem Voz",
-		"type": "ASSISTENCIA",
-		"category": "Direitos Humanos",
-		"address": "Itinerante / Centro",
-		"description": "Curso de 16h sobre cidadania e direitos, baseado em Paulo Freire. Forma multiplicadores e agentes de dados.",
-		"opening_hours": "Sob demanda",
-		"coords": [-22.905, -47.06],
-		"effects": {
-			"dignity": 50,
-			"sanity": 20
-		}
-	},
-	{
-		"id": "refeitorio_metodista",
-		"name": "Refeitório Metodista (ACIC)",
-		"type": "ALIMENTACAO",
-		"category": "Dignidade",
-		"address": "Rua José Paulino (Esq. Ferreira Penteado)",
-		"description": "Servido em mesa com talheres. Restaura a dignidade de ser tratado como cliente, não pedinte.",
-		"opening_hours": "12:00",
-		"coords": [-22.906, -47.061],
-		"effects": {
-			"hunger": 100,
-			"dignity": 30,
-			"stabilityGap": -5
-		}
-	},
-	{
-		"id": "catedral_rosario",
-		"name": "Catedral (Largo do Rosário)",
-		"type": "ASSISTENCIA",
-		"category": "Ponto de Encontro",
-		"address": "Largo do Rosário, Centro",
-		"description": "Ponto de distribuição noturna de voluntários. O 'Rádio Peão' da rua acontece aqui.",
-		"opening_hours": "18:00 - 22:00",
-		"coords": [-22.905, -47.06],
-		"effects": {
-			"dignity": 10
-		}
+		"description": "Atenção a usuários de álcool e drogas. Funciona 24h para crises.",
+		"address": "Rua Padre Domingos Giovanini, 95 - Parque Taquaral",
+		"coords": [
+			-22.8750,
+			-47.0500
+		],
+		"operatingHours": "24 Horas",
+		"cost": 0,
+		"requiresDocument": false,
+		"rules": [
+			"Acolhimento porta aberta",
+			"Possui leitos de desintoxicação (curta permanência)"
+		],
+		"source": "Cândido Ferreira [9]"
 	},
 	{
 		"id": "cpat_centro",
-		"name": "CPAT - Centro de Apoio",
+		"name": "CPAT - Centro de Apoio ao Trabalhador",
 		"type": "ASSISTENCIA",
-		"category": "Emprego",
-		"address": "Centro",
-		"description": "Balcão de empregos. Exige banho tomado e RG para cadastro.",
-		"opening_hours": "08:00 - 16:00",
-		"coords": [-22.904, -47.059],
-		"requirements": ["RG", "Higiene > 50"],
-		"effects": {
-			"dignity": 50,
-			"stabilityGap": -50
-		}
+		"description": "Intermediação de vagas de emprego e emissão de Carteira de Trabalho.",
+		"address": "Av. Campos Salles, 427 - Centro",
+		"coords": [
+			-22.9065,
+			-47.0600
+		],
+		"operatingHours": "08:00 - 16:00",
+		"cost": 0,
+		"requiresDocument": true,
+		"rules": [
+			"Exige RG e CPF",
+			"Exige vestimenta adequada (Barreira de estigma)"
+		],
+		"source": "Plano Diretor Estratégico [10]"
+	},
+	{
+		"id": "poupatempo_centro",
+		"name": "Poupatempo Campinas Centro",
+		"type": "DOCUMENTOS",
+		"description": "Emissão de RG, CPF e antecedentes criminais.",
+		"address": "Av. Francisco Glicério, 935 - Centro",
+		"coords": [
+			-22.9050,
+			-47.0580
+		],
+		"operatingHours": "09:00 - 17:00 (Agendado)",
+		"relatedLink": "https://www.poupatempo.sp.gov.br",
+		"cost": 0,
+		"requiresDocument": false,
+		"rules": [
+			"Exige agendamento prévio (Digital)",
+			"Isenção de taxa para 2ª via (Requer declaração de pobreza)"
+		],
+		"source": "Governo de SP [11]"
+	},
+	{
+		"id": "casa_antonio_fernando",
+		"name": "Casa Antônio Fernando (Cáritas)",
+		"type": "ABRIGO",
+		"description": "Acolhimento masculino de longa permanência. Foco em autonomia.",
+		"address": "Rua (Localização Referenciada na Região Leste)",
+		"coords": [
+			-22.9100,
+			-47.0500
+		],
+		"operatingHours": "24 Horas (Via Encaminhamento)",
+		"cost": 0,
+		"requiresDocument": true,
+		"rules": [
+			"Apenas via encaminhamento técnico",
+			"Foco em reinserção (não é albergue de pernoite)"
+		],
+		"source": "Cáritas Campinas [6]"
 	}
 ]

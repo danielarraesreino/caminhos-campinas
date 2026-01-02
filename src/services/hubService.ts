@@ -1,5 +1,5 @@
-import SEED_DATA from "@/data/partners-campinas.json";
 import type { Partner } from "@/types/Partner";
+import SEED_DATA from "@/data/partners.json";
 
 const STORAGE_KEY = "caminhos_hub_partners_v1";
 
@@ -14,7 +14,7 @@ const CAMPINAS_BOUNDS = {
 export class HubService {
 	private static instance: HubService;
 
-	private constructor() {}
+	private constructor() { }
 
 	public static getInstance(): HubService {
 		if (!HubService.instance) {
