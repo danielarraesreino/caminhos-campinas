@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { type ServiceLocation, useServices } from "@/contexts/ServicesContext";
 import { NearbyList } from "./NearbyList";
@@ -39,20 +39,6 @@ export function SurvivalMap() {
 	};
 
 	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
-<<<<<<< HEAD
-	const resources = services
-		.filter(
-			(s): s is ServiceLocation & { coords: [number, number] } =>
-				!!s.id && !!s.coords,
-		)
-		.map((s) => ({
-			id: s.id,
-			name: s.name,
-			type: s.type,
-			lat: s.coords[0], // Safe access due to filter
-			lng: s.coords[1],
-		}));
-=======
 	const resources = (services || []).filter(hasValidCoords).map((s) => {
 		const c = s.coords; // TypeScript now knows this is [number, number]
 		return {
@@ -63,7 +49,6 @@ export function SurvivalMap() {
 			lng: c[1],
 		};
 	});
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 
 	useEffect(() => {
 		// Only fetch if not already set (or we could force refresh? Let's respect existing if valid)

@@ -1,33 +1,33 @@
 {
-    "TOTAL_POPULATION": 1557,
-    "DEMOGRAPHICS": {
-        "RACE_PRETA_PARDA": 0.678,
-        "GENDER_MALE": 0.811
-    },
-    "RESOURCES": {
-        "SHELTER_BEDS": 300,
-        "FREE_MEALS": 200,
-        "CHEAP_MEALS": 2700
-    },
-    "STATUS": {
-        "SHELTERED_PROBABILITY": 0.165,
-        "SHELTERED_EXTRA_PROBABILITY": 0.1,
-        "HUNGRY_PROBABILITY": 0.385,
-        "MONEY_PROBABILITY": 0.5,
-        "SANITATION": {
-            "PUBLICO": 0.522,
-            "COMERCIO": 0.167,
-            "NEGATION_RISK": 0.3
-        },
-        "MENSTRUAL_VULNERABILITY": 0.091,
-        "BENEFITS": {
-            "SOLICIT_PROBABILITY": 0.7,
-            "DEFERED": 0.6,
-            "INDEFERED_DOCS": 0.2
-        }
-    },
-    "MOTIVES": {
-        "CONFLITO_FAMILIAR": 0.715,
-        "DESEMPREGO": 0.23
-    }
+	"TOTAL_POPULATION": 1557,
+	"DEMOGRAPHICS": {
+		"RACE_PRETA_PARDA": 0.678,
+		"GENDER_MALE": 0.811
+	},
+	"RESOURCES": {
+		"SHELTER_BEDS": 300,
+		"FREE_MEALS": 200,
+		"CHEAP_MEALS": 2700
+	},
+	"STATUS": {
+		"SHELTERED_PROBABILITY": 0.165,
+		"SHELTERED_EXTRA_PROBABILITY": 0.1,
+		"HUNGRY_PROBABILITY": 0.385,
+		"MONEY_PROBABILITY": 0.5,
+		"SANITATION": {
+			"PUBLICO": 0.522,
+			"COMERCIO": 0.167,
+			"NEGATION_RISK": 0.3
+		},
+		"MENSTRUAL_VULNERABILITY": 0.091,
+		"BENEFITS": {
+			"SOLICIT_PROBABILITY": 0.7,
+			"DEFERED": 0.6,
+			"INDEFERED_DOCS": 0.2
+		}
+	},
+	"MOTIVES": {
+		"CONFLITO_FAMILIAR": 0.715,
+		"DESEMPREGO": 0.23
+	}
 }

@@ -79,7 +79,7 @@ export default function TransparenciaPage() {
 									{Math.round(
 										(FINANCIAL_DATA.fundraising.current /
 											FINANCIAL_DATA.fundraising.target) *
-										100,
+											100,
 									)}
 									%)
 								</span>
@@ -101,7 +101,7 @@ export default function TransparenciaPage() {
 										100,
 										(FINANCIAL_DATA.fundraising.current /
 											FINANCIAL_DATA.fundraising.target) *
-										100,
+											100,
 									)}%`,
 								}}
 								className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500"

@@ -14,9 +14,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-		Math.cos((lat2 * Math.PI) / 180) *
-		Math.sin(dLon / 2) *
-		Math.sin(dLon / 2);
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c;
 }
@@ -60,13 +60,15 @@ export function useGameLoop() {
 	const IDLE_THRESHOLD = 3;
 
 	const [timeInLocation, setTimeInLocation] = useState(0);
-	const [lastPosition, setLastPosition] = useState<[number, number] | null>(null);
+	const [lastPosition, setLastPosition] = useState<[number, number] | null>(
+		null,
+	);
 
 	useEffect(() => {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
 				(userPosition[0] - lastPosition[0]) ** 2 +
-				(userPosition[1] - lastPosition[1]) ** 2,
+					(userPosition[1] - lastPosition[1]) ** 2,
 			);
 			if (dist < 0.001) {
 				setTimeInLocation((prev) => prev + 1);
@@ -83,7 +85,7 @@ export function useGameLoop() {
 		if (userPosition) {
 			const distToCenter = Math.sqrt(
 				(userPosition[0] - CENTER_COORDS.lat) ** 2 +
-				(userPosition[1] - CENTER_COORDS.lng) ** 2,
+					(userPosition[1] - CENTER_COORDS.lng) ** 2,
 			);
 			if (distToCenter < 0.005 && timeInLocation >= IDLE_THRESHOLD) {
 				setActiveDilemma("enquadro_13_maio");
@@ -130,8 +132,12 @@ export function useGameLoop() {
 				}
 			}
 
-			const totalWeight = inventory.reduce((acc: number, i: any) => acc + i.weight, 0);
-			if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM") enrDecay += 0.3;
+			const totalWeight = inventory.reduce(
+				(acc: number, i: any) => acc + i.weight,
+				0,
+			);
+			if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM")
+				enrDecay += 0.3;
 
 			if (isRaining && !isAtShelter) {
 				snyDecay += 1;
@@ -155,7 +161,26 @@ export function useGameLoop() {
 			advanceTime(1);
 		}, 10000);
 		return () => clearInterval(interval);
-	}, [health, hunger, hygiene, sanity, energy, socialStigma, isPaused, modifyStat, advanceTime, avatar, inventory, workTool, isRaining, isAtShelter, dignity, phoneBattery, checkBattery, setWorkTool]);
+	}, [
+		health,
+		hunger,
+		hygiene,
+		sanity,
+		energy,
+		socialStigma,
+		isPaused,
+		modifyStat,
+		advanceTime,
+		avatar,
+		inventory,
+		workTool,
+		isRaining,
+		isAtShelter,
+		dignity,
+		phoneBattery,
+		checkBattery,
+		setWorkTool,
+	]);
 
 	useEffect(() => {
 		// Run on mount (lastHourRef.current is null) or when time changes
@@ -170,7 +195,11 @@ export function useGameLoop() {
 			if (activeDilemmaId) return;
 
 			// 0. Forced Initial Dilemma (intro_acordar_praca)
-			if (day === 1 && currentHour === 8 && !resolvedDilemmas.includes("intro_acordar_praca")) {
+			if (
+				day === 1 &&
+				currentHour === 8 &&
+				!resolvedDilemmas.includes("intro_acordar_praca")
+			) {
 				setActiveDilemma("intro_acordar_praca");
 				return;
 			}
@@ -198,42 +227,95 @@ export function useGameLoop() {
 				}
 			}
 			for (const dilemma of GAME_DILEMMAS) {
-				if (resolvedDilemmas.includes(dilemma.id) && !dilemma.repeatable) continue;
-				if (dilemma.prerequisite && !resolvedDilemmas.includes(dilemma.prerequisite)) continue;
+				if (resolvedDilemmas.includes(dilemma.id) && !dilemma.repeatable)
+					continue;
+				if (
+					dilemma.prerequisite &&
+					!resolvedDilemmas.includes(dilemma.prerequisite)
+				)
+					continue;
 
 				let triggered = false;
 				const { type, value } = dilemma.trigger;
 				switch (type) {
-					case "RANDOM": if (Math.random() < value) triggered = true; break;
-					case "HUNGER_LOW": if (hunger < value) triggered = true; break;
-					case "HYGIENE_LOW": if (hygiene < value) triggered = true; break;
-					case "SOCIAL_STIGMA_HIGH": if (socialStigma > value) triggered = true; break;
+					case "RANDOM":
+						if (Math.random() < value) triggered = true;
+						break;
+					case "HUNGER_LOW":
+						if (hunger < value) triggered = true;
+						break;
+					case "HYGIENE_LOW":
+						if (hygiene < value) triggered = true;
+						break;
+					case "SOCIAL_STIGMA_HIGH":
+						if (socialStigma > value) triggered = true;
+						break;
 					case "LOCATION":
 						if (dilemma.location_trigger && userPosition) {
-							const dist = calculateDistance(userPosition[0], userPosition[1], dilemma.location_trigger.lat, dilemma.location_trigger.lng);
-							if (dist * 1000 <= (dilemma.location_trigger.radius || 50)) triggered = true;
+							const dist = calculateDistance(
+								userPosition[0],
+								userPosition[1],
+								dilemma.location_trigger.lat,
+								dilemma.location_trigger.lng,
+							);
+							if (dist * 1000 <= (dilemma.location_trigger.radius || 50))
+								triggered = true;
 						}
 						break;
 					case "LOCATION_IDLE":
 						if (timeInLocation >= value) {
 							if (dilemma.location_trigger && userPosition) {
-								const dist = calculateDistance(userPosition[0], userPosition[1], dilemma.location_trigger.lat, dilemma.location_trigger.lng);
-								if (dist * 1000 <= (dilemma.location_trigger.radius || 50)) triggered = true;
+								const dist = calculateDistance(
+									userPosition[0],
+									userPosition[1],
+									dilemma.location_trigger.lat,
+									dilemma.location_trigger.lng,
+								);
+								if (dist * 1000 <= (dilemma.location_trigger.radius || 50))
+									triggered = true;
 							} else if (dilemma.id === "enquadro_13_maio" && userPosition) {
-								const dist = calculateDistance(userPosition[0], userPosition[1], CENTER_COORDS.lat, CENTER_COORDS.lng);
+								const dist = calculateDistance(
+									userPosition[0],
+									userPosition[1],
+									CENTER_COORDS.lat,
+									CENTER_COORDS.lng,
+								);
 								if (dist < 0.005) triggered = true;
 							} else triggered = true;
 						}
 						break;
 					case "STATUS":
-						if (dilemma.trigger.statusCondition?.battery !== undefined && phoneBattery <= dilemma.trigger.statusCondition.battery) triggered = true;
+						if (
+							dilemma.trigger.statusCondition?.battery !== undefined &&
+							phoneBattery <= dilemma.trigger.statusCondition.battery
+						)
+							triggered = true;
 						break;
 				}
-				if (triggered) { setActiveDilemma(dilemma.id); return; }
+				if (triggered) {
+					setActiveDilemma(dilemma.id);
+					return;
+				}
 			}
 			if (activeBuffs.includes("SEDADO_CAPS")) modifyStat("energy", -5);
 		}
-	}, [day, time, activeDilemmaId, resolvedDilemmas, hunger, hygiene, activeBuffs, isAtShelter, inventory, setActiveDilemma, modifyStat, socialStigma, userPosition, phoneBattery, timeInLocation]);
+	}, [
+		day,
+		time,
+		activeDilemmaId,
+		resolvedDilemmas,
+		hunger,
+		hygiene,
+		activeBuffs,
+		isAtShelter,
+		inventory,
+		setActiveDilemma,
+		modifyStat,
+		socialStigma,
+		userPosition,
+		phoneBattery,
+		timeInLocation,
+	]);
 
 	return { isRaining, batteryLevel: phoneBattery / 100 };
 }

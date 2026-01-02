@@ -1,46 +1,46 @@
 {
-    "fundraising": {
-        "target": 13970,
-        "current": 0,
-        "currency": "R$",
-        "label": "Projeto Piloto"
-    },
-    "pilot_targets": [
-        {
-            "id": 1,
-            "title": "Jovens Capacitados",
-            "value": "20",
-            "target": "/ 20",
-            "icon": "Users",
-            "description": "Meta: Turma Piloto (16h de formação)"
-        },
-        {
-            "id": 2,
-            "title": "Educadores Sociais",
-            "value": "02",
-            "target": "/ 02",
-            "icon": "Heart",
-            "description": "Meta: Contratação para acompanhamento"
-        },
-        {
-            "id": 3,
-            "title": "Previsão de Início",
-            "value": "Q1",
-            "target": "2026",
-            "icon": "Wallet",
-            "description": "Condicionado à captação de recursos"
-        }
-    ],
-    "breakdown": [
-        {
-            "name": "Meta Piloto",
-            "value": 13970,
-            "label": "Necessário"
-        },
-        {
-            "name": "Arrecadado",
-            "value": 0,
-            "label": "Atual"
-        }
-    ]
+	"fundraising": {
+		"target": 13970,
+		"current": 0,
+		"currency": "R$",
+		"label": "Projeto Piloto"
+	},
+	"pilot_targets": [
+		{
+			"id": 1,
+			"title": "Jovens Capacitados",
+			"value": "20",
+			"target": "/ 20",
+			"icon": "Users",
+			"description": "Meta: Turma Piloto (16h de formação)"
+		},
+		{
+			"id": 2,
+			"title": "Educadores Sociais",
+			"value": "02",
+			"target": "/ 02",
+			"icon": "Heart",
+			"description": "Meta: Contratação para acompanhamento"
+		},
+		{
+			"id": 3,
+			"title": "Previsão de Início",
+			"value": "Q1",
+			"target": "2026",
+			"icon": "Wallet",
+			"description": "Condicionado à captação de recursos"
+		}
+	],
+	"breakdown": [
+		{
+			"name": "Meta Piloto",
+			"value": 13970,
+			"label": "Necessário"
+		},
+		{
+			"name": "Arrecadado",
+			"value": 0,
+			"label": "Atual"
+		}
+	]
 }

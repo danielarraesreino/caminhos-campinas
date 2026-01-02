@@ -5,10 +5,7 @@
 		"type": "ABRIGO",
 		"description": "Albergue municipal for pernoite emergencial. Oferece banho, jantar e cama. Regras rígidas de horário.",
 		"address": "Rua Francisco Elisiário, 240 - Bonfim",
-		"coords": [
-			-22.9035,
-			-47.0689
-		],
+		"coords": [-22.9035, -47.0689],
 		"operatingHours": "18:00 - 06:00",
 		"cost": 0,
 		"requiresDocument": true,
@@ -26,12 +23,9 @@
 		"type": "ALIMENTACAO",
 		"description": "Restaurante popular estadual. Segurança alimentar de baixo custo.",
 		"address": "Av. Dr. Moraes Sales, 384 - Centro",
-		"coords": [
-			-22.9102,
-			-47.0605
-		],
+		"coords": [-22.9102, -47.0605],
 		"operatingHours": "Café: 07h-09h | Almoço: 10h30-14h | Jantar: 17h-18h",
-		"cost": 1.00,
+		"cost": 1.0,
 		"requiresDocument": false,
 		"rules": [
 			"Custo: R$ 1,00 (Almoço/Jantar) e R$ 0,50 (Café)",
@@ -46,10 +40,7 @@
 		"type": "ASSISTENCIA",
 		"description": "Ponto de apoio diurno. Referência para banho, lavanderia e guarda de pertences.",
 		"address": "Rua Regente Feijó, 1240 - Centro",
-		"coords": [
-			-22.9056,
-			-47.0592
-		],
+		"coords": [-22.9056, -47.0592],
 		"operatingHours": "08:00 - 17:00",
 		"cost": 0,
 		"requiresDocument": false,
@@ -65,10 +56,7 @@
 		"type": "SAUDE",
 		"description": "Equipe itinerante de saúde. Realiza curativos, testes e vacinação sem exigir endereço.",
 		"address": "Rua Fernão Lopes, 1290 - Pq. Taquaral (Base Operacional)",
-		"coords": [
-			-22.8765,
-			-47.0520
-		],
+		"coords": [-22.8765, -47.052],
 		"operatingHours": "08:00 - 17:00 (Itinerante)",
 		"cost": 0,
 		"requiresDocument": false,
@@ -85,10 +73,7 @@
 		"type": "ABRIGO",
 		"description": "Abrigo específico para mulheres e mulheres com filhos. Foco em ressignificação de vida.",
 		"address": "Região Central (Endereço Sigiloso/Referenciado)",
-		"coords": [
-			-22.9099,
-			-47.0620
-		],
+		"coords": [-22.9099, -47.062],
 		"operatingHours": "24 Horas (Via Encaminhamento)",
 		"cost": 0,
 		"requiresDocument": true,
@@ -105,10 +90,7 @@
 		"type": "ALIMENTACAO",
 		"description": "Jantar gratuito servido com dignidade (mesas e cadeiras).",
 		"address": "Rua Álvares Machado, 766 - Centro",
-		"coords": [
-			-22.9080,
-			-47.0615
-		],
+		"coords": [-22.908, -47.0615],
 		"operatingHours": "18:00 - 19:00",
 		"cost": 0,
 		"requiresDocument": false,
@@ -124,10 +106,7 @@
 		"type": "SAUDE",
 		"description": "Atenção a usuários de álcool e drogas. Funciona 24h para crises.",
 		"address": "Rua Padre Domingos Giovanini, 95 - Parque Taquaral",
-		"coords": [
-			-22.8750,
-			-47.0500
-		],
+		"coords": [-22.875, -47.05],
 		"operatingHours": "24 Horas",
 		"cost": 0,
 		"requiresDocument": false,
@@ -143,10 +122,7 @@
 		"type": "ASSISTENCIA",
 		"description": "Intermediação de vagas de emprego e emissão de Carteira de Trabalho.",
 		"address": "Av. Campos Salles, 427 - Centro",
-		"coords": [
-			-22.9065,
-			-47.0600
-		],
+		"coords": [-22.9065, -47.06],
 		"operatingHours": "08:00 - 16:00",
 		"cost": 0,
 		"requiresDocument": true,
@@ -162,10 +138,7 @@
 		"type": "DOCUMENTOS",
 		"description": "Emissão de RG, CPF e antecedentes criminais.",
 		"address": "Av. Francisco Glicério, 935 - Centro",
-		"coords": [
-			-22.9050,
-			-47.0580
-		],
+		"coords": [-22.905, -47.058],
 		"operatingHours": "09:00 - 17:00 (Agendado)",
 		"relatedLink": "https://www.poupatempo.sp.gov.br",
 		"cost": 0,
@@ -182,10 +155,7 @@
 		"type": "ABRIGO",
 		"description": "Acolhimento masculino de longa permanência. Foco em autonomia.",
 		"address": "Rua (Localização Referenciada na Região Leste)",
-		"coords": [
-			-22.9100,
-			-47.0500
-		],
+		"coords": [-22.91, -47.05],
 		"operatingHours": "24 Horas (Via Encaminhamento)",
 		"cost": 0,
 		"requiresDocument": true,

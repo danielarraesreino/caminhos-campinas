@@ -5,13 +5,13 @@ import {
 	Battery,
 	Brain,
 	Clock,
+	Mic,
 	Package,
 	ShieldAlert,
 	User,
 	Wallet,
 	Wifi,
 	WifiOff,
-	Mic,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -102,16 +102,37 @@ export function GameHUD({
 						)}
 
 						<div className="flex items-center gap-2">
-							<StatCard icon={Activity} value={health} label="SAÚDE" color="emerald" type="desc" />
-							<StatCard icon={Brain} value={sanity} label="MENTE" color="violet" type="desc" />
-							<StatCard icon={ShieldAlert} value={socialStigma} label="ESTIGMA" color="amber" type="asc" alertThreshold={70} />
+							<StatCard
+								icon={Activity}
+								value={health}
+								label="SAÚDE"
+								color="emerald"
+								type="desc"
+							/>
+							<StatCard
+								icon={Brain}
+								value={sanity}
+								label="MENTE"
+								color="violet"
+								type="desc"
+							/>
+							<StatCard
+								icon={ShieldAlert}
+								value={socialStigma}
+								label="ESTIGMA"
+								color="amber"
+								type="asc"
+								alertThreshold={70}
+							/>
 						</div>
 					</div>
 
 					<div className="hidden xl:flex flex-col items-center justify-center opacity-80">
 						<div className="bg-slate-900/50 px-6 py-2 rounded-xl border border-slate-800 flex items-center gap-6">
 							<div className="flex flex-col items-center">
-								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">DIA {day}</span>
+								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
+									DIA {day}
+								</span>
 								<div className="flex items-center gap-2 text-white font-mono text-xl font-bold">
 									<Clock className="w-5 h-5 text-blue-400" />
 									{time.toString().padStart(2, "0")}:00
@@ -119,7 +140,9 @@ export function GameHUD({
 							</div>
 							<div className="w-[1px] h-8 bg-slate-700" />
 							<div className="flex flex-col items-center">
-								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">CAIXA</span>
+								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
+									CAIXA
+								</span>
 								<div className="flex items-center gap-2 text-green-400 font-mono text-xl font-bold">
 									<Wallet className="w-5 h-5" />
 									R$ {money.toFixed(2)}
@@ -127,15 +150,25 @@ export function GameHUD({
 							</div>
 							<div className="w-[1px] h-8 bg-slate-700" />
 							<div className="flex flex-col items-center">
-								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">CONEXÃO</span>
+								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
+									CONEXÃO
+								</span>
 								<div className="flex items-center gap-2 font-mono text-xl font-bold">
-									{isOnline ? <Wifi className="w-5 h-5 text-emerald-400" /> : <WifiOff className="w-5 h-5 text-red-500 animate-pulse" />}
+									{isOnline ? (
+										<Wifi className="w-5 h-5 text-emerald-400" />
+									) : (
+										<WifiOff className="w-5 h-5 text-red-500 animate-pulse" />
+									)}
 								</div>
 							</div>
 							<div className="w-[1px] h-8 bg-slate-700" />
 							<div className="flex flex-col items-center">
-								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">BATERIA</span>
-								<div className={`flex items-center gap-2 font-mono text-xl font-bold ${phoneBattery < 20 ? "text-red-500 animate-pulse" : "text-emerald-400"}`}>
+								<span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
+									BATERIA
+								</span>
+								<div
+									className={`flex items-center gap-2 font-mono text-xl font-bold ${phoneBattery < 20 ? "text-red-500 animate-pulse" : "text-emerald-400"}`}
+								>
 									<Battery className="w-5 h-5" />
 									{phoneBattery}%
 								</div>
@@ -189,23 +222,57 @@ function StatCard({
 	max?: number;
 }) {
 	const colorMap = {
-		emerald: { bg: "bg-emerald-950/40", border: "border-emerald-500/30", icon: "text-emerald-500", text: "text-white", bar: "bg-emerald-500" },
-		violet: { bg: "bg-violet-950/40", border: "border-violet-500/30", icon: "text-violet-500", text: "text-white", bar: "bg-violet-500" },
-		amber: { bg: "bg-amber-950/40", border: "border-amber-500/30", icon: "text-amber-500", text: "text-white", bar: "bg-amber-500" },
+		emerald: {
+			bg: "bg-emerald-950/40",
+			border: "border-emerald-500/30",
+			icon: "text-emerald-500",
+			text: "text-white",
+			bar: "bg-emerald-500",
+		},
+		violet: {
+			bg: "bg-violet-950/40",
+			border: "border-violet-500/30",
+			icon: "text-violet-500",
+			text: "text-white",
+			bar: "bg-violet-500",
+		},
+		amber: {
+			bg: "bg-amber-950/40",
+			border: "border-amber-500/30",
+			icon: "text-amber-500",
+			text: "text-white",
+			bar: "bg-amber-500",
+		},
 	};
 	const theme = colorMap[color];
-	const isCritical = type === "desc" ? value < 30 : alertThreshold && value > alertThreshold;
-	const containerClasses = isCritical ? "border-red-500 bg-red-950/50 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]" : `${theme.bg} ${theme.border}`;
+	const isCritical =
+		type === "desc" ? value < 30 : alertThreshold && value > alertThreshold;
+	const containerClasses = isCritical
+		? "border-red-500 bg-red-950/50 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+		: `${theme.bg} ${theme.border}`;
 
 	return (
-		<div className={`flex flex-col justify-center items-center w-20 h-20 rounded-xl border-2 backdrop-blur-sm transition-all ${containerClasses}`}>
+		<div
+			className={`flex flex-col justify-center items-center w-20 h-20 rounded-xl border-2 backdrop-blur-sm transition-all ${containerClasses}`}
+		>
 			<div className="flex items-center gap-1.5 mb-1">
-				<Icon className={`w-4 h-4 ${isCritical ? "text-red-500" : theme.icon}`} />
-				<span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{label}</span>
+				<Icon
+					className={`w-4 h-4 ${isCritical ? "text-red-500" : theme.icon}`}
+				/>
+				<span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+					{label}
+				</span>
 			</div>
-			<span className={`text-2xl font-black ${theme.text} leading-none mb-2`}>{Math.round(value)}</span>
+			<span className={`text-2xl font-black ${theme.text} leading-none mb-2`}>
+				{Math.round(value)}
+			</span>
 			<div className="w-12 h-1.5 bg-slate-900/80 rounded-full overflow-hidden">
-				<div className={`h-full rounded-full transition-all duration-700 ${isCritical ? "bg-red-500" : theme.bar}`} style={{ width: `${Math.max(0, Math.min(100, (value / max) * 100))}%` }} />
+				<div
+					className={`h-full rounded-full transition-all duration-700 ${isCritical ? "bg-red-500" : theme.bar}`}
+					style={{
+						width: `${Math.max(0, Math.min(100, (value / max) * 100))}%`,
+					}}
+				/>
 			</div>
 		</div>
 	);

@@ -1,27 +1,28 @@
+import React from "react";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import glossaryData from "@/data/glossary.json";
-import React from "react";
+import GLOSSARY_DATA from "@/data/glossary.json";
 
-<<<<<<< HEAD
-import glossaryData from "@/data/glossary.json";
+interface GlossaryItem {
+	term: string;
+	definition: string;
+}
 
 // Transform JSON array to Record<string, string> for compatibility
-const GLOSSARY: Record<string, string> = glossaryData.reduce(
+const GLOSSARY: Record<string, string> = GLOSSARY_DATA.reduce(
 	(acc, item) => {
 		acc[item.term] = item.definition;
 		return acc;
 	},
 	{} as Record<string, string>,
 );
-=======
+
 // Normaliza as chaves do glossário para busca case-insensitive
-const TERMS = Object.keys(glossaryData).sort((a, b) => b.length - a.length); // Ordena por tamanho para casar termos compostos primeiro
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
+const TERMS = Object.keys(GLOSSARY).sort((a, b) => b.length - a.length); // Ordena por tamanho para casar termos compostos primeiro
 
 interface InteractiveTextProps {
 	text: string;
@@ -31,8 +32,7 @@ export function InteractiveText({ text }: InteractiveTextProps) {
 	if (!text) return null;
 
 	// Cria uma regex que busca todos os termos
-	// Escape special characters in terms if necessary
-	const regex = new RegExp(`(${TERMS.join("|")})`, "gi");
+	const regex = new RegExp(`(${TERMS.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|")})`, "gi");
 
 	const parts = text.split(regex);
 
@@ -46,8 +46,7 @@ export function InteractiveText({ text }: InteractiveTextProps) {
 					);
 
 					if (termKey) {
-						const definition =
-							glossaryData[termKey as keyof typeof glossaryData];
+						const definition = GLOSSARY[termKey];
 						return (
 							<Tooltip key={`${i}-${part}`}>
 								<TooltipTrigger asChild>

@@ -12,24 +12,24 @@ export interface SimAgent {
 		sanitationAccess: "PUBLICO" | "COMERCIO" | "RUA";
 		menstrualDignity: boolean;
 		benefitsAccess:
-		| "DEFERIDO"
-		| "INDEFERIDO_DOCS"
-		| "INDEFERIDO_ENDERECO"
-		| "NAO_SOLICITOU";
+			| "DEFERIDO"
+			| "INDEFERIDO_DOCS"
+			| "INDEFERIDO_ENDERECO"
+			| "NAO_SOLICITOU";
 	};
 	background: {
 		reason:
-		| "CONFLITO_FAMILIAR"
-		| "DESEMPREGO"
-		| "SAUDE_MENTAL_ALCOOL"
-		| "OUTROS";
+			| "CONFLITO_FAMILIAR"
+			| "DESEMPREGO"
+			| "SAUDE_MENTAL_ALCOOL"
+			| "OUTROS";
 	};
 	outcome:
-	| "SUCESSO"
-	| "VIOLACAO_ODS_1"
-	| "VIOLACAO_ODS_2"
-	| "VIOLACAO_ODS_11"
-	| "VIOLACAO_ODS_6";
+		| "SUCESSO"
+		| "VIOLACAO_ODS_1"
+		| "VIOLACAO_ODS_2"
+		| "VIOLACAO_ODS_11"
+		| "VIOLACAO_ODS_6";
 }
 
 export function runCensusSimulation(): SimAgent[] {
@@ -60,7 +60,7 @@ export function runCensusSimulation(): SimAgent[] {
 
 		// 3. Simular Fome (ODS 2.1)
 		let isHungry = false;
-		const hasMoney = Math.random() > (1 - STATUS.MONEY_PROBABILITY);
+		const hasMoney = Math.random() > 1 - STATUS.MONEY_PROBABILITY;
 
 		if (!hasMoney && freeMealSlots > 0) {
 			freeMealSlots--;

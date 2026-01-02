@@ -1,18 +1,15 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { AlertTriangle, Droplets, Home, Users, Utensils } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	runCensusSimulation,
-	SimAgent,
+	type SimAgent,
 } from "@/features/dashboard/SimulationEngine";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, Home, Utensils, Users, Droplets } from "lucide-react";
 
-export default function ImpactDashboardPage() {
+export default function ImpactPage() {
 	const [data, setData] = useState<SimAgent[]>([]);
 
-<<<<<<< HEAD
-export default function ImpactPage() {
-=======
 	useEffect(() => {
 		setData(runCensusSimulation());
 	}, []);
@@ -51,7 +48,6 @@ export default function ImpactPage() {
 		};
 	}, [data]);
 
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 	return (
 		<div className="min-h-screen bg-slate-950 text-white p-8">
 			<header className="mb-12">

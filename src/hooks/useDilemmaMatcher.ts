@@ -1,34 +1,15 @@
 import { useCallback, useState } from "react";
 import { useServices } from "@/contexts/ServicesContext";
-// Dilemmas data import - assuming it's available or we maintain a subset here?
-// Ideally we should import from a central dilemma registry.
-// For now, I will use a placeholder or assume imports are possible.
-// Wait, the prompt implies "create system". I will import dilemmas from existing file if possible.
-import { ALL_DILEMMAS as dilemmas } from "@/features/game-loop/all-dilemmas";
+import { ALL_DILEMMAS as dilemmas } from "@/features/game-loop/dilemmas"; // Corrected import
 import type { Dilemma } from "@/features/game-loop/dilemma-types";
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 
 export function useDilemmaMatcher() {
 	const { services } = useServices();
-	// Assuming game context might keep track of precise user location or we pass it in.
-	// The prompt says "Recalculate distance of player". Usually player pos is in SurvivalMap.
-	// We will accept location as argument to be flexible.
-
 	const [lastMatch, setLastMatch] = useState<Dilemma | null>(null);
 
 	const findMatch = useCallback(
 		(userInput: string, userCoords: [number, number] | null) => {
-<<<<<<< HEAD
-			// Map services to the format expected by DilemmaMatcher
-			const serviceLocations = services
-				.filter((s) => s.coords)
-				.map((s) => ({
-					id: s.id,
-					coords: s.coords as [number, number],
-				}));
-
-=======
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 			const locationObj = userCoords
 				? { lat: userCoords[0], lng: userCoords[1] }
 				: null;
@@ -40,15 +21,7 @@ export function useDilemmaMatcher() {
 					.replace(/[\u0300-\u036f]/g, "");
 			const input = normalize(userInput);
 
-<<<<<<< HEAD
-			// Explicit Dynamic Checks
-			if (input.includes("fome") && locationObj) {
-				const bomPrato = services.find(
-					(s) => s.name.toLowerCase().includes("bom prato") && s.coords,
-				);
-				if (bomPrato && bomPrato.coords) {
-=======
-			// 2. Crie a lista de alvos APENAS com quem tem coordenadas válidas
+			// 1. Filter services with valid coordinates
 			const targetServices = services.filter(
 				(s): s is typeof s & { coords: [number, number] } => {
 					return !!s.coords && Array.isArray(s.coords) && s.coords.length === 2;
@@ -62,19 +35,14 @@ export function useDilemmaMatcher() {
 				(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
 			);
 
-			// Explicit Dynamic Checks as requested
+			// Explicit Dynamic Checks
 			if (input.includes("fome") && locationObj) {
-				const bpCoords =
-					bomPrato && bomPrato.coords && Array.isArray(bomPrato.coords)
-						? bomPrato.coords
-						: null;
-				if (bomPrato && bpCoords && bpCoords.length === 2) {
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
+				if (bomPrato && bomPrato.coords) {
 					const dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
-						bpCoords[0],
-						bpCoords[1],
+						bomPrato.coords[0],
+						bomPrato.coords[1],
 					);
 					if (dist <= 500) {
 						return {
@@ -100,61 +68,37 @@ export function useDilemmaMatcher() {
 				(input.includes("dor") || input.includes("machucado")) &&
 				locationObj
 			) {
-<<<<<<< HEAD
-				const consultorio = services.find(
-					(s) =>
-						(s.type === "SAUDE" || s.name.includes("Consultório")) && s.coords,
-				);
 				if (consultorio && consultorio.coords) {
-=======
-				const cr = targetServices.find(
-					(s) => s.type === "SAUDE" || s.name.includes("Consultório"),
-				);
-				const crCoords =
-					cr && cr.coords && Array.isArray(cr.coords) ? cr.coords : null;
-				if (cr && crCoords && crCoords.length === 2) {
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
-					const _dist = calculateDist(
+					const dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
-						crCoords[0],
-						crCoords[1],
+						consultorio.coords[0],
+						consultorio.coords[1],
 					);
-					return {
-						id: "dynamic_health_cr",
-						title: "Atendimento de Saúde",
-						text: "Você mencionou dor. O 'Consultório na Rua' oferece atendimento gratuito e sem burocracia.",
-						options: [
-							{
-								label: "Buscar atendimento",
-								action: (state: any) => ({
-									...state,
-									health: Math.min(100, state.health + 20),
-								}),
-							},
-						],
-					} as unknown as Dilemma;
+					if (dist <= 1000) {
+						return {
+							id: "dynamic_health_cr",
+							title: "Atendimento de Saúde",
+							text: "Você mencionou dor. O 'Consultório na Rua' oferece atendimento gratuito e sem burocracia.",
+							options: [
+								{
+									label: "Buscar atendimento",
+									action: (state: any) => ({
+										...state,
+										health: Math.min(100, state.health + 20),
+									}),
+								},
+							],
+						} as unknown as Dilemma;
+					}
 				}
 			}
 
 			// Fallback to generic matcher
-			const serviceLocations = services
-				.filter(
-					(s): s is typeof s & { coords: [number, number] } =>
-						!!s.coords &&
-						Array.isArray(s.coords) &&
-						s.coords.length === 2 &&
-						s.coords[0] != null &&
-						s.coords[1] != null,
-				)
-				.map((s) => {
-					// Explicitly capture and check again (though predicate guarantees it)
-					const coordsToUse = s.coords;
-					return {
-						id: s.id,
-						coords: coordsToUse,
-					};
-				});
+			const serviceLocations = targetServices.map((s) => ({
+				id: s.id,
+				coords: s.coords,
+			}));
 
 			const match = DilemmaMatcher.findBestDilemma(
 				userInput,
@@ -171,7 +115,6 @@ export function useDilemmaMatcher() {
 	return { findMatch, lastMatch };
 }
 
-// Helper duplication (should be shared utility but inlining for hook simplicity as requested)
 function calculateDist(
 	lat1: number,
 	lon1: number,

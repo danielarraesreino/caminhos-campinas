@@ -45,7 +45,8 @@ safeArray(EDUCATION_DATA).forEach((s) => {
 			...s,
 			type: "EDUCATION" as ServiceType,
 			category: "Educação Online",
-			coords: s.coords || existing?.coords || ([-22.905, -47.06] as [number, number]),
+			coords:
+				s.coords || existing?.coords || ([-22.905, -47.06] as [number, number]),
 			opening_hours: s.opening_hours || "24h",
 			effects: s.effects || existing?.effects || {},
 		});
@@ -169,7 +170,7 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
 				loading,
 				error,
 				filterServices,
-				refreshServices: async () => { },
+				refreshServices: async () => {},
 			}}
 		>
 			{children}

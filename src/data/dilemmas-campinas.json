@@ -72,11 +72,7 @@
 			"type": "HUNGER_LOW",
 			"value": 30
 		},
-		"tags": [
-			"fome",
-			"comida",
-			"almoço"
-		],
+		"tags": ["fome", "comida", "almoço"],
 		"location_trigger": {
 			"lat": -22.9075,
 			"lng": -47.0595,
@@ -188,12 +184,7 @@
 			"type": "RANDOM",
 			"value": 10
 		},
-		"tags": [
-			"cras",
-			"auxílio",
-			"documento",
-			"cadastro"
-		],
+		"tags": ["cras", "auxílio", "documento", "cadastro"],
 		"options": [
 			{
 				"label": "Ficar na fila e arriscar",
@@ -257,12 +248,7 @@
 			"type": "RANDOM",
 			"value": 15
 		},
-		"tags": [
-			"trabalho",
-			"dinheiro",
-			"reciclagem",
-			"cooperativa"
-		],
+		"tags": ["trabalho", "dinheiro", "reciclagem", "cooperativa"],
 		"options": [
 			{
 				"label": "Trabalhar o dia todo",
@@ -329,12 +315,7 @@
 			"type": "RANDOM",
 			"value": 20
 		},
-		"tags": [
-			"saúde",
-			"médico",
-			"doente",
-			"dor"
-		],
+		"tags": ["saúde", "médico", "doente", "dor"],
 		"options": [
 			{
 				"label": "Pedir Kit de Higiene",

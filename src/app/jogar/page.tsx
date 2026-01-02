@@ -10,17 +10,13 @@ import { useGameLoop } from "@/features/game-loop/useGameLoop";
 import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
 import { AvatarCreation } from "@/features/ui/AvatarCreation";
 import { DilemmaModal } from "@/features/ui/DilemmaModal";
-<<<<<<< HEAD
-import { GameChat } from "@/features/ui/GameChat";
-import { GameHUD } from "@/features/ui/GameHUD";
-import { GameOverModal } from "@/features/ui/GameOverModal";
-=======
+
 import { EffectsOverlay } from "@/features/ui/EffectsOverlay";
 import { GameChat } from "@/features/ui/GameChat";
 import { GameHUD } from "@/features/ui/GameHUD";
 import { GameOverModal } from "@/features/ui/GameOverModal";
 import { OnboardingTutorial } from "@/features/ui/OnboardingTutorial";
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
+
 import { useEventEngine } from "@/hooks/useEventEngine";
 
 export default function GamePage() {

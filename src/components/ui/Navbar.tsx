@@ -12,11 +12,9 @@ import {
 	X,
 } from "lucide-react";
 import Link from "next/link";
-<<<<<<< HEAD
-import { useState } from "react";
-=======
+
 import { useEffect, useState } from "react";
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
+
 import { BatteryIndicator } from "@/components/ui/BatteryIndicator";
 import { Button } from "@/components/ui/button";
 

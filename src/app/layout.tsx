@@ -5,13 +5,13 @@ import Clarity from "@/components/analytics/Clarity";
 import "leaflet/dist/leaflet.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { GameProvider } from "@/contexts/GameContext";
-import { ServicesProvider } from "@/contexts/ServicesContext";
-import { SurvivalModeProvider } from "@/features/ui/SurvivalModeContext";
 import { ClientLayoutWrapper } from "@/app/ClientLayoutWrapper";
 import { Providers } from "@/components/Providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
+import { GameProvider } from "@/contexts/GameContext";
+import { ServicesProvider } from "@/contexts/ServicesContext";
+import { SurvivalModeProvider } from "@/features/ui/SurvivalModeContext";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -25,7 +25,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
 	title: "Caminhos Campinas",
-	description: "Serious Game sobre a realidade da população de rua em Campinas.",
+	description:
+		"Serious Game sobre a realidade da população de rua em Campinas.",
 	manifest: "/manifest.json",
 };
 

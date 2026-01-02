@@ -3,18 +3,12 @@
 import { useChat } from "@ai-sdk/react";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
-import {
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-	useTransition,
-} from "react";
-import { useGameContext } from "@/contexts/GameContext";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import {
 	GLOSSARY_TERMS,
 	GlossaryTooltip,
 } from "@/components/ui/GlossaryTooltip";
+import { useGameContext } from "@/contexts/GameContext";
 import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 import { ActionInput } from "./ActionInput";
@@ -152,7 +146,9 @@ export function GameChat({
 		const parts = (content || "").split(regex);
 
 		return parts.map((part, i) => {
-			const matchedTerm = terms.find((t) => t.toLowerCase() === part.toLowerCase());
+			const matchedTerm = terms.find(
+				(t) => t.toLowerCase() === part.toLowerCase(),
+			);
 			if (matchedTerm) {
 				return (
 					<GlossaryTooltip key={`${i}-${matchedTerm}`} term={matchedTerm}>
@@ -194,14 +190,38 @@ export function GameChat({
 						<div className="flex-shrink-0 mt-1">
 							{m.role === "user" ? (
 								<div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center shadow-sm">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										className="text-white"
+									>
+										<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+										<circle cx="12" cy="7" r="4" />
+									</svg>
 								</div>
 							) : (
-								<Image src="/avatars/avatar_1.png" alt="Mestre" width={32} height={32} className="rounded-full bg-purple-100 shadow-sm border border-purple-200" />
+								<Image
+									src="/avatars/avatar_1.png"
+									alt="Mestre"
+									width={32}
+									height={32}
+									className="rounded-full bg-purple-100 shadow-sm border border-purple-200"
+								/>
 							)}
 						</div>
-						<div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user" ? "bg-blue-600 text-white rounded-tr-none" : "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"}`}>
-							{m.role === "assistant" ? renderMessageContent(m.content) : m.content}
+						<div
+							className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user" ? "bg-blue-600 text-white rounded-tr-none" : "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"}`}
+						>
+							{m.role === "assistant"
+								? renderMessageContent(m.content)
+								: m.content}
 						</div>
 					</div>
 				))}
@@ -209,7 +229,13 @@ export function GameChat({
 				{(isLoading || isPending || isThinking) && (
 					<div className="flex gap-3 w-full px-2">
 						<div className="flex-shrink-0 mt-1">
-							<Image src="/avatars/avatar_1.png" alt="Mestre" width={32} height={32} className="rounded-full bg-purple-100 shadow-sm border border-purple-200 opacity-70" />
+							<Image
+								src="/avatars/avatar_1.png"
+								alt="Mestre"
+								width={32}
+								height={32}
+								className="rounded-full bg-purple-100 shadow-sm border border-purple-200 opacity-70"
+							/>
 						</div>
 						<div className="bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm flex items-center gap-1">
 							<span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
@@ -219,12 +245,20 @@ export function GameChat({
 					</div>
 				)}
 
-				{error && <div className="text-xs text-red-500 ml-4">Erro ao processar mensagem. Tente novamente.</div>}
+				{error && (
+					<div className="text-xs text-red-500 ml-4">
+						Erro ao processar mensagem. Tente novamente.
+					</div>
+				)}
 				<div ref={messagesEndRef} />
 			</div>
 
 			<div className="p-3 bg-white dark:bg-gray-950 border-t">
-				<ActionInput onAction={handleAction} isProcessing={isLoading || isPending || isThinking} placeholder="Fale ou digite..." />
+				<ActionInput
+					onAction={handleAction}
+					isProcessing={isLoading || isPending || isThinking}
+					placeholder="Fale ou digite..."
+				/>
 			</div>
 		</div>
 	);

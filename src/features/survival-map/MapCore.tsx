@@ -1,7 +1,7 @@
 "use client";
 
 import L from "leaflet";
-import { useEffect, memo } from "react";
+import { memo, useEffect } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
 // Fix for default marker icon
@@ -78,16 +78,10 @@ interface MapCoreProps {
 	onResourceInteract?: (res: any) => void;
 }
 
-<<<<<<< HEAD
-export default function MapCore({
-	userPosition,
-	resources,
-=======
 const MapCore = memo(function MapCore({
 	userPosition,
 	resources,
 	onTravel,
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 	onResourceInteract,
 }: MapCoreProps) {
 	// Default to Campinas center if no user position
@@ -126,13 +120,6 @@ const MapCore = memo(function MapCore({
 				>
 					<Popup>
 						<div className="flex flex-col gap-2 min-w-[150px]">
-<<<<<<< HEAD
-							<strong className="text-sm font-bold">{res.name}</strong>
-							<span className="text-xs uppercase tracking-wide text-slate-500 font-bold">
-								{res.type}
-							</span>
-							<hr className="border-slate-200" />
-=======
 							<div>
 								<strong className="text-sm text-slate-900">{res.name}</strong>
 								<br />
@@ -140,7 +127,6 @@ const MapCore = memo(function MapCore({
 									{res.type}
 								</span>
 							</div>
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 							<button
 								type="button"
 								onClick={() => {

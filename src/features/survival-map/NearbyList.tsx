@@ -1,12 +1,10 @@
 "use client";
 
 import { Lock, MapPin, Navigation, Wallet } from "lucide-react";
-<<<<<<< HEAD
-import { useCallback, useEffect, useState } from "react";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-=======
-import { useEffect, useState, useCallback, useMemo } from "react";
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
+
 import { useServices } from "@/contexts/ServicesContext";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
 

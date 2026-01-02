@@ -4,7 +4,6 @@ export default function HubPage() {
 	return (
 		<div className="min-h-screen bg-slate-950 text-white p-8">
 			<h1 className="text-4xl font-bold mb-4">Hub de Parceiros & Mapa</h1>
-<<<<<<< HEAD
 			<p className="mb-8 text-lg text-slate-300">
 				Conheça a rede de apoio que sustenta a população em situação de rua em
 				Campinas.
@@ -69,12 +68,6 @@ export default function HubPage() {
 					Cadastrar Instituição (Em Breve)
 				</button>
 			</div>
-=======
-			<p>
-				Mapa das ONGs e formulário de cadastro para novos parceiros da rede.
-			</p>
-			<p className="mt-4 text-slate-400">Em construção...</p>
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 		</div>
 	);
 }

@@ -200,17 +200,12 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						const localCoords = service.coords;
 						if (service.action_type === "link" && service.url) {
 							window.open(service.url, "_blank");
-<<<<<<< HEAD
-						} else if (service.coords) {
-							const url = `https://www.google.com/maps/dir/?api=1&destination=${service.coords[0]},${service.coords[1]}`;
-=======
 						} else if (
 							localCoords &&
 							Array.isArray(localCoords) &&
 							localCoords.length === 2
 						) {
 							const url = `https://www.google.com/maps/dir/?api=1&destination=${localCoords[0]},${localCoords[1]}`;
->>>>>>> 9ff5c3fb2de03e1743bce4b51ec2858e1a242085
 							window.open(url, "_blank");
 						}
 					}}
@@ -276,9 +271,17 @@ export default function ResourcesPage() {
 	// Maslow Categories for Quick Access
 	const categories = [
 		{
+			id: "food",
+			label: "Alimentação",
+			icon: <Utensils className="w-6 h-6" />,
+			color: "bg-orange-500",
 			type: "ALIMENTACAO",
 		},
 		{
+			id: "health",
+			label: "Saúde",
+			icon: <Phone className="w-6 h-6" />,
+			color: "bg-red-500",
 			type: "SAUDE",
 		},
 		{
@@ -286,9 +289,13 @@ export default function ResourcesPage() {
 			label: "Higiene",
 			icon: <ShowerHead className="w-6 h-6" />,
 			color: "bg-cyan-500",
-			type: "ASSISTENCIA", // Hygiene is now under Assistencia (Centro Pop)
+			type: "ASSISTENCIA",
 		},
 		{
+			id: "shelter",
+			label: "Abrigo",
+			icon: <BedDouble className="w-6 h-6" />,
+			color: "bg-indigo-500",
 			type: "ABRIGO",
 		},
 		{
@@ -299,6 +306,10 @@ export default function ResourcesPage() {
 			type: "DOCUMENTS",
 		},
 		{
+			id: "education",
+			label: "Trabalho",
+			icon: <BookOpen className="w-6 h-6" />,
+			color: "bg-blue-500",
 			type: "EDUCACAO",
 		},
 	];

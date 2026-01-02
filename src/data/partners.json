@@ -1,101 +1,80 @@
 [
-    {
-        "id": "caritas_campinas",
-        "name": "Cáritas Arquidiocesana de Campinas",
-        "address": "Rua José Paulino, 603 - Centro",
-        "contact": "(19) 3232-2267",
-        "description": "Oferece acolhimento, serviço de banho solidário e encaminhamento para rede de serviços.",
-        "services": [
-            "Banho",
-            "Acolhimento",
-            "Orientação"
-        ],
-        "type": "ONG",
-        "coordinates": {
-            "lat": -22.9056,
-            "lng": -47.0608
-        }
-    },
-    {
-        "id": "toca_de_assis_campinas",
-        "name": "Toca de Assis",
-        "address": "Rua Dr. Ricardo, 137 - Vila Industrial",
-        "contact": "(19) 3231-3140",
-        "description": "Irmandade católica que oferece alimentação noturna e acolhimento espiritual nas ruas.",
-        "services": [
-            "Alimentação",
-            "Acolhimento Espiritual"
-        ],
-        "type": "RELIGIOSO",
-        "coordinates": {
-            "lat": -22.9152,
-            "lng": -47.0702
-        }
-    },
-    {
-        "id": "mao_amiga_campinas",
-        "name": "Programa Mão Amiga (Cáritas)",
-        "address": "Av. Campos Sales, 427 - Centro",
-        "contact": "(19) 3231-3030",
-        "description": "Programa municipal de bolsa-trabalho para qualificação profissional e reinserção social.",
-        "services": [
-            "Bolsa-Trabalho",
-            "Qualificação"
-        ],
-        "type": "PUBLICO",
-        "coordinates": {
-            "lat": -22.9038,
-            "lng": -47.0625
-        }
-    },
-    {
-        "id": "anjos_da_madrugada",
-        "name": "Anjos da Madrugada",
-        "type": "COLETIVO",
-        "services": [
-            "ALIMENTACAO",
-            "COBERTOR"
-        ],
-        "address": "Centro / Praça da Catedral",
-        "contact": "facebook.com/anjosdamadrugada",
-        "description": "Grupo voluntário que distribui marmitas e cobertores durante a noite.",
-        "coordinates": {
-            "lat": -22.9050,
-            "lng": -47.0610
-        }
-    },
-    {
-        "id": "associacao_abba",
-        "name": "ABBA - Promoção Social",
-        "type": "ONG",
-        "services": [
-            "EDUCACAO",
-            "ESPORTE",
-            "FAMILIA"
-        ],
-        "address": "Jardim São Marcos",
-        "contact": "Tel: (19) 3000-0000",
-        "description": "Foco em prevenção e fortalecimento de vínculos familiares e comunitários.",
-        "coordinates": {
-            "lat": -22.8250,
-            "lng": -47.0850
-        }
-    },
-    {
-        "id": "instituto_padre_haroldo",
-        "name": "Instituto Padre Haroldo",
-        "type": "ONG",
-        "services": [
-            "REABILITACAO",
-            "ACOLHIMENTO",
-            "TRABALHO"
-        ],
-        "address": "Rua Dr. João Quirino do Nascimento, 1601",
-        "contact": "padreharoldo.org.br",
-        "description": "Referência em reabilitação de dependência química, reinserção social e cursos profissionalizantes.",
-        "coordinates": {
-            "lat": -22.8850,
-            "lng": -47.0350
-        }
-    }
+	{
+		"id": "caritas_campinas",
+		"name": "Cáritas Arquidiocesana de Campinas",
+		"address": "Rua José Paulino, 603 - Centro",
+		"contact": "(19) 3232-2267",
+		"description": "Oferece acolhimento, serviço de banho solidário e encaminhamento para rede de serviços.",
+		"services": ["Banho", "Acolhimento", "Orientação"],
+		"type": "ONG",
+		"coordinates": {
+			"lat": -22.9056,
+			"lng": -47.0608
+		}
+	},
+	{
+		"id": "toca_de_assis_campinas",
+		"name": "Toca de Assis",
+		"address": "Rua Dr. Ricardo, 137 - Vila Industrial",
+		"contact": "(19) 3231-3140",
+		"description": "Irmandade católica que oferece alimentação noturna e acolhimento espiritual nas ruas.",
+		"services": ["Alimentação", "Acolhimento Espiritual"],
+		"type": "RELIGIOSO",
+		"coordinates": {
+			"lat": -22.9152,
+			"lng": -47.0702
+		}
+	},
+	{
+		"id": "mao_amiga_campinas",
+		"name": "Programa Mão Amiga (Cáritas)",
+		"address": "Av. Campos Sales, 427 - Centro",
+		"contact": "(19) 3231-3030",
+		"description": "Programa municipal de bolsa-trabalho para qualificação profissional e reinserção social.",
+		"services": ["Bolsa-Trabalho", "Qualificação"],
+		"type": "PUBLICO",
+		"coordinates": {
+			"lat": -22.9038,
+			"lng": -47.0625
+		}
+	},
+	{
+		"id": "anjos_da_madrugada",
+		"name": "Anjos da Madrugada",
+		"type": "COLETIVO",
+		"services": ["ALIMENTACAO", "COBERTOR"],
+		"address": "Centro / Praça da Catedral",
+		"contact": "facebook.com/anjosdamadrugada",
+		"description": "Grupo voluntário que distribui marmitas e cobertores durante a noite.",
+		"coordinates": {
+			"lat": -22.905,
+			"lng": -47.061
+		}
+	},
+	{
+		"id": "associacao_abba",
+		"name": "ABBA - Promoção Social",
+		"type": "ONG",
+		"services": ["EDUCACAO", "ESPORTE", "FAMILIA"],
+		"address": "Jardim São Marcos",
+		"contact": "Tel: (19) 3000-0000",
+		"description": "Foco em prevenção e fortalecimento de vínculos familiares e comunitários.",
+		"coordinates": {
+			"lat": -22.825,
+			"lng": -47.085
+		}
+	},
+	{
+		"id": "instituto_padre_haroldo",
+		"name": "Instituto Padre Haroldo",
+		"type": "ONG",
+		"services": ["REABILITACAO", "ACOLHIMENTO", "TRABALHO"],
+		"address": "Rua Dr. João Quirino do Nascimento, 1601",
+		"contact": "padreharoldo.org.br",
+		"description": "Referência em reabilitação de dependência química, reinserção social e cursos profissionalizantes.",
+		"coordinates": {
+			"lat": -22.885,
+			"lng": -47.035
+		}
+	}
 ]
