@@ -1,7 +1,16 @@
 "use client";
-import { AlertTriangle, Droplets, Home, Users, Utensils } from "lucide-react";
+import {
+	AlertTriangle,
+	Droplets,
+	Heart,
+	Home,
+	Shield,
+	Users,
+	Utensils,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CENSUS_REALITY } from "@/data/census-reality";
 import {
 	runCensusSimulation,
 	type SimAgent,
@@ -163,6 +172,173 @@ export default function ImpactPage() {
 							mas opera com apenas 3 equipes para 1.557 pessoas.
 						</li>
 					</ul>
+				</div>
+			</div>
+
+			{/* SEÇÃO NOVA: Auditoria Sociotécnica (Solicitada pelo Censo 2024) */}
+			<div className="mt-12 border-t border-slate-800 pt-12">
+				<h2 className="text-3xl font-bold mb-2 flex items-center gap-3">
+					<span className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />A
+					Realidade Invisível
+				</h2>
+				<p className="text-slate-400 mb-8 max-w-3xl">
+					Auditoria cruzada: Dados oficiais do Censo Pop Rua 2024 vs. Mitos
+					Sociais. A tecnologia e a violência institucional operam como
+					barreiras invisíveis.
+				</p>
+
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+					{/* CARD 1: Exclusão Digital */}
+					<div className="bg-slate-900/50 p-6 rounded-2xl border border-red-900/30 ring-1 ring-red-900/10">
+						<h3 className="text-lg font-bold text-red-200 mb-6 flex items-center gap-2">
+							<div className="p-2 bg-red-950 rounded-lg">
+								<AlertTriangle className="w-4 h-4 text-red-500" />
+							</div>
+							Barreira Digital (Acesso Negado)
+						</h3>
+
+						<div className="space-y-6">
+							<div className="relative pt-2">
+								<div className="flex justify-between text-xs uppercase tracking-widest font-bold mb-2">
+									<span className="text-slate-400">Sem Celular</span>
+									<span className="text-white">
+										{CENSUS_REALITY.digitalExclusion.noPhone}%
+									</span>
+								</div>
+								<div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+									<div
+										className="h-full bg-red-600 rounded-full"
+										style={{
+											width: `${CENSUS_REALITY.digitalExclusion.noPhone}%`,
+										}}
+									/>
+								</div>
+							</div>
+
+							<div className="relative pt-2">
+								<div className="flex justify-between text-xs uppercase tracking-widest font-bold mb-2">
+									<span className="text-slate-400">Tem Celular, Sem Dados</span>
+									<span className="text-white">
+										{CENSUS_REALITY.digitalExclusion.noData}%
+									</span>
+								</div>
+								<div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+									<div
+										className="h-full bg-orange-500 rounded-full"
+										style={{
+											width: `${CENSUS_REALITY.digitalExclusion.noData}%`,
+										}}
+									/>
+								</div>
+								<p className="text-[10px] text-orange-400/80 mt-2 leading-relaxed">
+									A exigência de agendamento online (Poupatempo/CRAS) bloqueia
+									45% (Sem dados) + 20% (Sem aparelho) ={" "}
+									<strong>65% da população</strong>.
+								</p>
+							</div>
+						</div>
+					</div>
+
+					{/* CARD 2: Violência Institucional */}
+					<div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+						<h3 className="text-lg font-bold text-slate-200 mb-6 flex items-center gap-2">
+							<div className="p-2 bg-slate-800 rounded-lg">
+								<Shield className="w-4 h-4 text-blue-400" />
+							</div>
+							Quem agride na rua?
+						</h3>
+
+						<div className="flex items-end justify-center gap-4 h-[140px] mb-4">
+							<div className="w-full flex flex-col items-center gap-2 group">
+								<span className="text-2xl font-black text-red-500">
+									{CENSUS_REALITY.violenceSource.publicAgents}%
+								</span>
+								<div
+									className="w-full bg-red-900/50 border border-red-500 rounded-t-lg transition-all group-hover:bg-red-900/80"
+									style={{
+										height: `${CENSUS_REALITY.violenceSource.publicAgents}%`,
+									}}
+								/>
+								<span className="text-[10px] uppercase font-bold text-center text-slate-400">
+									Agentes do Estado
+									<br />
+									(PM, GM)
+								</span>
+							</div>
+
+							<div className="w-full flex flex-col items-center gap-2 group">
+								<span className="text-2xl font-black text-slate-500">
+									{CENSUS_REALITY.violenceSource.civilians}%
+								</span>
+								<div
+									className="w-full bg-slate-800 border border-slate-600 rounded-t-lg transition-all group-hover:bg-slate-700"
+									style={{
+										height: `${CENSUS_REALITY.violenceSource.civilians}%`,
+									}}
+								/>
+								<span className="text-[10px] uppercase font-bold text-center text-slate-400">
+									Sociedade Civil
+								</span>
+							</div>
+						</div>
+						<p className="text-xs text-slate-500 mt-4 text-center">
+							ODS 16 Violado: A instituição que deveria proteger é a principal
+							autora da violência.
+						</p>
+					</div>
+
+					{/* CARD 3: Causa Raiz (Mito vs Realidade) */}
+					<div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+						<h3 className="text-lg font-bold text-slate-200 mb-6 flex items-center gap-2">
+							<div className="p-2 bg-slate-800 rounded-lg">
+								<Heart className="w-4 h-4 text-purple-400" />
+							</div>
+							Por que estão na rua?
+						</h3>
+
+						<div className="space-y-4">
+							<div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+								<div className="flex justify-between items-center mb-2">
+									<span className="text-sm font-bold text-purple-300">
+										Conflitos Familiares
+									</span>
+									<span className="text-xl font-black text-white">
+										{CENSUS_REALITY.causes.familyConflict}%
+									</span>
+								</div>
+								<div className="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+									<div
+										style={{
+											width: `${CENSUS_REALITY.causes.familyConflict}%`,
+										}}
+										className="h-full bg-purple-500"
+									/>
+								</div>
+							</div>
+
+							<div className="bg-slate-800/30 p-4 rounded-xl border border-slate-800 opacity-70">
+								<div className="flex justify-between items-center mb-2">
+									<span className="text-sm font-bold text-slate-400">
+										Álcool/Drogas
+									</span>
+									<span className="text-xl font-black text-slate-400">
+										~30%
+									</span>
+								</div>
+								<div className="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+									<div
+										style={{ width: "30%" }}
+										className="h-full bg-slate-600"
+									/>
+								</div>
+							</div>
+
+							<div className="text-xs text-slate-400 italic bg-purple-900/20 p-3 rounded-lg border border-purple-500/20">
+								"Aporofobia se baseia no mito do vício. A realidade é o
+								rompimento de vínculos."
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
