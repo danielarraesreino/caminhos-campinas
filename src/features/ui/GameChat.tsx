@@ -17,11 +17,13 @@ export function GameChat({
 	initialMessages,
 	onDilemmaTriggered,
 }: {
+	// biome-ignore lint/suspicious/noExplicitAny: generic types
 	initialMessages?: any[];
 	onDilemmaTriggered?: (id: string) => void;
 }) {
 	const gameState = useGameContext();
-	const [isPending, startTransition] = useTransition();
+	// biome-ignore lint/correctness/noUnusedVariables: Pending state used for UI feedback logic
+	const [isPending] = useTransition();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const [isThinking, setIsThinking] = useState(false);
 
@@ -47,15 +49,16 @@ export function GameChat({
 
 	const {
 		messages,
-		input,
-		handleInputChange,
-		handleSubmit,
+		// input,
+		// handleInputChange,
+		// handleSubmit,
 		isLoading,
 		error,
 		append,
 	} = useChat({
 		api: "/api/chat",
 		initialMessages: initialMessages || [],
+		// biome-ignore lint/suspicious/noExplicitAny: error handling
 		onError: (err: any) => {
 			console.error("Chat error details:", err);
 			setIsThinking(false);
@@ -63,6 +66,7 @@ export function GameChat({
 		onFinish: () => {
 			setIsThinking(false);
 		},
+		// biome-ignore lint/suspicious/noExplicitAny: casting for ai-sdk
 	} as any) as any;
 
 	useEffect(() => {
@@ -181,7 +185,7 @@ export function GameChat({
 						</p>
 					</div>
 				)}
-
+				{/* biome-ignore lint/suspicious/noExplicitAny: message mapping */}
 				{messages.map((m: any) => (
 					<div
 						key={m.id}
@@ -201,7 +205,10 @@ export function GameChat({
 										strokeLinecap="round"
 										strokeLinejoin="round"
 										className="text-white"
+										role="img"
+										aria-label="User Avatar"
 									>
+										<title>User Avatar</title>
 										<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
 										<circle cx="12" cy="7" r="4" />
 									</svg>
@@ -225,7 +232,6 @@ export function GameChat({
 						</div>
 					</div>
 				))}
-
 				{(isLoading || isPending || isThinking) && (
 					<div className="flex gap-3 w-full px-2">
 						<div className="flex-shrink-0 mt-1">
@@ -244,16 +250,17 @@ export function GameChat({
 						</div>
 					</div>
 				)}
-
 				{error && (
 					<div className="text-xs text-red-500 ml-4">
 						Erro ao processar mensagem. Tente novamente.
 					</div>
 				)}
 				<div ref={messagesEndRef} />
+				<div className="h-2" />{" "}
+				{/* Spacer to prevent content hugging the input */}
 			</div>
 
-			<div className="p-3 bg-white dark:bg-gray-950 border-t">
+			<div className="w-full">
 				<ActionInput
 					onAction={handleAction}
 					isProcessing={isLoading || isPending || isThinking}
