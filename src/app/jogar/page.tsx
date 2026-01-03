@@ -36,8 +36,18 @@ export default function GamePage() {
 		const tutorialSeen = localStorage.getItem("pop_rua_tutorial_seen");
 		if (!tutorialSeen) {
 			setShowTutorial(true);
+			gameState.setPaused(true);
 		}
-	}, []);
+	}, [gameState.setPaused]);
+
+	// Unpause when tutorial closes (only if no dilemma is active)
+	useEffect(() => {
+		if (!showTutorial && !activeDilemma) {
+			gameState.setPaused(false);
+		} else if (showTutorial) {
+			gameState.setPaused(true);
+		}
+	}, [showTutorial, activeDilemma, gameState.setPaused]);
 
 	useEffect(() => {
 		const result = checkGameOver(gameState);
