@@ -116,28 +116,28 @@ export function UnifiedDashboard() {
 				</div>
 
 				{/* Footer Info */}
-				<div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-slate-800 pt-8 text-slate-500 text-sm">
+				<div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-slate-800 pt-8 text-slate-400 text-sm">
 					<div>
-						<h4 className="font-bold text-slate-300 mb-2 flex items-center gap-2">
+						<h3 className="font-bold text-slate-300 mb-2 flex items-center gap-2">
 							<Shield size={14} /> Dados Seguros
-						</h4>
+						</h3>
 						<p>
 							Plataforma em conformidade com LGPD. Seus dados são anônimos e
 							focados em impacto social.
 						</p>
 					</div>
 					<div>
-						<h4 className="font-bold text-slate-300 mb-2 flex items-center gap-2">
+						<h3 className="font-bold text-slate-300 mb-2 flex items-center gap-2">
 							<MapPin size={14} /> Campinas / SP
-						</h4>
+						</h3>
 						<p>
 							Focado na realidade do DDD 019. Dados baseados no Censo Pop Rua
 							2024.
 						</p>
 					</div>
 					<div>
-						<p className="opacity-50">Versão 0.19.0 (Beta)</p>
-						<p className="opacity-50">&copy; 2024 Coletivo A Rua Tem Voz</p>
+						<p className="text-slate-600">Versão 0.19.0 (Beta)</p>
+						<p className="text-slate-600">&copy; 2024 Coletivo A Rua Tem Voz</p>
 					</div>
 				</div>
 			</main>
