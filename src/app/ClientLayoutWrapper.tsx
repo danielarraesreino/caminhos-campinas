@@ -20,7 +20,7 @@ export function ClientLayoutWrapper({
 	return (
 		<>
 			{shouldShowUI && <Navbar />}
-			{children}
+			<main className="flex-grow flex flex-col min-h-screen">{children}</main>
 			{shouldShowUI && <Footer />}
 		</>
 	);

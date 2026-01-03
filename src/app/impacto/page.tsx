@@ -154,7 +154,7 @@ export default function ImpactPage() {
 					<h2 className="text-xl font-bold mb-4">Análise de Inteligência</h2>
 					<ul className="space-y-4 text-sm text-slate-300">
 						<li className="flex gap-3">
-							<span className="text-purple-500 font-bold">
+							<span className="text-purple-400 font-bold">
 								ALERTA SANITÁRIO:
 							</span>
 							{stats.sanitationCrisis}% da população simulada foi forçada a usar
@@ -200,7 +200,7 @@ export default function ImpactPage() {
 						<div className="space-y-6">
 							<div className="relative pt-2">
 								<div className="flex justify-between text-xs uppercase tracking-widest font-bold mb-2">
-									<span className="text-slate-400">Sem Celular</span>
+									<span className="text-slate-300">Sem Celular</span>
 									<span className="text-white">
 										{CENSUS_REALITY.digitalExclusion.noPhone}%
 									</span>
@@ -217,7 +217,7 @@ export default function ImpactPage() {
 
 							<div className="relative pt-2">
 								<div className="flex justify-between text-xs uppercase tracking-widest font-bold mb-2">
-									<span className="text-slate-400">Tem Celular, Sem Dados</span>
+									<span className="text-slate-300">Tem Celular, Sem Dados</span>
 									<span className="text-white">
 										{CENSUS_REALITY.digitalExclusion.noData}%
 									</span>
@@ -250,7 +250,7 @@ export default function ImpactPage() {
 
 						<div className="flex items-end justify-center gap-4 h-[140px] mb-4">
 							<div className="w-full flex flex-col items-center gap-2 group">
-								<span className="text-2xl font-black text-red-500">
+								<span className="text-2xl font-black text-red-400">
 									{CENSUS_REALITY.violenceSource.publicAgents}%
 								</span>
 								<div
@@ -267,7 +267,7 @@ export default function ImpactPage() {
 							</div>
 
 							<div className="w-full flex flex-col items-center gap-2 group">
-								<span className="text-2xl font-black text-slate-500">
+								<span className="text-2xl font-black text-slate-400">
 									{CENSUS_REALITY.violenceSource.civilians}%
 								</span>
 								<div
@@ -352,12 +352,12 @@ function KpiCard({ title, value, icon, desc, alert = false }: any) {
 		>
 			<div className="flex justify-between items-start mb-4">
 				<div>
-					<p className="text-slate-300 text-sm font-medium">{title}</p>
-					<h3 className="text-3xl font-black mt-1">{value}</h3>
+					<h3 className="text-slate-200 text-sm font-bold">{title}</h3>
+					<p className="text-3xl font-black mt-1 text-white">{value}</p>
 				</div>
 				<div className="p-3 bg-slate-800 rounded-lg">{icon}</div>
 			</div>
-			<p className="text-xs text-slate-400">{desc}</p>
+			<p className="text-xs text-slate-300">{desc}</p>
 		</div>
 	);
 }
