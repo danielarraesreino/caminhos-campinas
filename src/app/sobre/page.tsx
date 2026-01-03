@@ -3,6 +3,8 @@
 import { ArrowLeft, BookOpen, FileText, Target, Users } from "lucide-react";
 import Link from "next/link";
 import { EcoButton } from "@/components/ui/EcoButton";
+import FINANCIAL_DATA from "@/data/financial-goals.json";
+import SOURCES_DATA from "@/data/sources.json";
 
 export default function SobrePage() {
 	return (
@@ -108,6 +110,96 @@ export default function SobrePage() {
 							<FileText className="w-5 h-5" />
 							Baixar Projeto Pedagógico Original (.DOCX)
 						</EcoButton>
+					</div>
+				</section>
+
+				{/* Fontes e Canais Section */}
+				<section className="space-y-6 pt-8 border-t border-slate-800">
+					<h2 className="text-2xl font-bold text-white flex items-center gap-2">
+						<BookOpen className="w-6 h-6 text-blue-400" />
+						Fontes & Referências
+					</h2>
+					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+						<div className="bg-slate-900/40 p-6 rounded-xl border border-slate-800">
+							<h3 className="text-emerald-400 font-bold mb-4 flex items-center gap-2">
+								<FileText size={18} /> Manuais Técnicos
+							</h3>
+							<ul className="space-y-3">
+								{SOURCES_DATA.manuals.map(
+									(
+										item: { url: string; title: string; source: string },
+										_idx: number,
+									) => (
+										<li key={item.url}>
+											<Link
+												href={item.url}
+												target="_blank"
+												className="block text-sm text-slate-300 hover:text-emerald-300 hover:underline"
+											>
+												{item.title}
+											</Link>
+											<span className="text-xs text-slate-500 block mt-1">
+												{item.source}
+											</span>
+										</li>
+									),
+								)}
+							</ul>
+						</div>
+
+						<div className="bg-slate-900/40 p-6 rounded-xl border border-slate-800">
+							<h3 className="text-blue-400 font-bold mb-4 flex items-center gap-2">
+								<Target size={18} /> Reportagens
+							</h3>
+							<ul className="space-y-3">
+								{SOURCES_DATA.news_reports.map(
+									(
+										item: { url: string; title: string; source: string },
+										_idx: number,
+									) => (
+										<li key={item.url}>
+											<Link
+												href={item.url}
+												target="_blank"
+												className="block text-sm text-slate-300 hover:text-blue-300 hover:underline"
+											>
+												{item.title}
+											</Link>
+											<span className="text-xs text-slate-500 block mt-1">
+												{item.source}
+											</span>
+										</li>
+									),
+								)}
+							</ul>
+						</div>
+
+						<div className="bg-slate-900/40 p-6 rounded-xl border border-slate-800">
+							<h3 className="text-purple-400 font-bold mb-4 flex items-center gap-2">
+								<Users size={18} /> Multimídia & Podcasts
+							</h3>
+							<ul className="space-y-3">
+								{SOURCES_DATA.multimedia.map(
+									(
+										item: { url: string; title: string; type: string },
+										_idx: number,
+									) => (
+										<li key={item.url}>
+											<Link
+												href={item.url}
+												target="_blank"
+												className="block text-sm text-slate-300 hover:text-purple-300 hover:underline"
+											>
+												{item.title}
+											</Link>
+											<span className="text-xs text-slate-500 block mt-1">
+												{item.type}
+											</span>
+										</li>
+									),
+								)}
+							</ul>
+						</div>
 					</div>
 				</section>
 			</div>

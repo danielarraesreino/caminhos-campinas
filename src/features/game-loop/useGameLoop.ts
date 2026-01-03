@@ -1,25 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { DilemmaManager } from "./DilemmaManager";
 import { GAME_DILEMMAS } from "./dilemmas"; // Unified import source
 
-function calculateDistance(
-	lat1: number,
-	lon1: number,
-	lat2: number,
-	lon2: number,
-) {
-	const R = 6371; // Earth radius in km
-	const dLat = ((lat2 - lat1) * Math.PI) / 180;
-	const dLon = ((lon2 - lon1) * Math.PI) / 180;
-	const a =
-		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-		Math.cos((lat1 * Math.PI) / 180) *
-			Math.cos((lat2 * Math.PI) / 180) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2);
-	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	return R * c;
-}
+const dilemmaManager = new DilemmaManager(GAME_DILEMMAS);
+
+// Coordenadas do Centro de Campinas (Largo do Rosário/13 de Maio)
+const CENTER_COORDS = { lat: -22.9055, lng: -47.0608 };
+const IDLE_THRESHOLD = 3;
+
+const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
+
+const processRandomEvents = (state: { dignity: number; workTool: any }) => {
+	if (Math.random() < 0.02) {
+		return {
+			workTool: { ...state.workTool, isConfiscated: true },
+			dignity: state.dignity - 15,
+		};
+	}
+	return null;
+};
 
 export function useGameLoop() {
 	const {
@@ -42,7 +42,6 @@ export function useGameLoop() {
 		avatar,
 		inventory,
 		workTool,
-		removeFromInventory,
 		setWorkTool,
 		isAtShelter,
 		userPosition,
@@ -55,15 +54,12 @@ export function useGameLoop() {
 	// Refs to prevent effects running on every render
 	const lastHourRef = useRef<number | null>(null);
 
-	// Coordenadas do Centro de Campinas (Largo do Rosário/13 de Maio)
-	const CENTER_COORDS = { lat: -22.9055, lng: -47.0608 };
-	const IDLE_THRESHOLD = 3;
-
 	const [timeInLocation, setTimeInLocation] = useState(0);
 	const [lastPosition, setLastPosition] = useState<[number, number] | null>(
 		null,
 	);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: Game loop logic depends on specific ticks
 	useEffect(() => {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
@@ -92,19 +88,11 @@ export function useGameLoop() {
 				setTimeInLocation(0);
 			}
 		}
-	}, [timeInLocation, userPosition]);
+	}, [timeInLocation, userPosition, setActiveDilemma]);
 
-	const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
-
-	const processRandomEvents = (state: { dignity: number; workTool: any }) => {
-		if (Math.random() < 0.02) {
-			return {
-				workTool: { ...state.workTool, isConfiscated: true },
-				dignity: state.dignity - 15,
-			};
-		}
-		return null;
-	};
+	useEffect(() => {
+		dilemmaManager.updateResolved(resolvedDilemmas);
+	}, [resolvedDilemmas]);
 
 	const checkBattery = useCallback(() => {
 		if (phoneBattery <= 0) {
@@ -133,7 +121,7 @@ export function useGameLoop() {
 			}
 
 			const totalWeight = inventory.reduce(
-				(acc: number, i: any) => acc + i.weight,
+				(acc: number, i: { weight: number }) => acc + i.weight,
 				0,
 			);
 			if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM")
@@ -162,11 +150,6 @@ export function useGameLoop() {
 		}, 10000);
 		return () => clearInterval(interval);
 	}, [
-		health,
-		hunger,
-		hygiene,
-		sanity,
-		energy,
 		socialStigma,
 		isPaused,
 		modifyStat,
@@ -177,7 +160,6 @@ export function useGameLoop() {
 		isRaining,
 		isAtShelter,
 		dignity,
-		phoneBattery,
 		checkBattery,
 		setWorkTool,
 	]);
@@ -194,118 +176,47 @@ export function useGameLoop() {
 		function checkSystemicEvents(currentHour: number) {
 			if (activeDilemmaId) return;
 
-			// 0. Forced Initial Dilemma (intro_acordar_praca)
-			if (
-				day === 1 &&
-				currentHour === 8 &&
-				!resolvedDilemmas.includes("intro_acordar_praca")
-			) {
-				setActiveDilemma("intro_acordar_praca");
+			const triggered = dilemmaManager.findTriggeredDilemma({
+				day,
+				time: currentHour,
+				health,
+				hunger,
+				hygiene,
+				sanity,
+				energy,
+				socialStigma,
+				userPosition,
+				timeInLocation,
+				activeDilemmaId,
+				phoneBattery,
+			});
+
+			if (triggered) {
+				setActiveDilemma(triggered.id);
 				return;
 			}
 
-			// 1. "O Rapa" / "Protocolo de Natal": 2% chance per tick if in central area
-			if (userPosition) {
-				const distToCenter = calculateDistance(
-					userPosition[0],
-					userPosition[1],
-					CENTER_COORDS.lat,
-					CENTER_COORDS.lng,
-				);
-				if (distToCenter < 0.5 && Math.random() < 0.02) {
-					setActiveDilemma("enquadro_13_maio");
-					return;
-				}
-			}
-
-			// 2. Cold Night (Without Shelter)
 			if (currentHour >= 22 || currentHour < 5) {
 				if (!isAtShelter) {
-					const hasCardboard = inventory.some((i: any) => i.name === "Papelão");
+					const hasCardboard = inventory.some(
+						(i: { name: string }) => i.name === "Papelão",
+					);
 					modifyStat("health", hasCardboard ? -1 : -3);
 					modifyStat("sanity", hasCardboard ? -1 : -3);
 				}
 			}
-			for (const dilemma of GAME_DILEMMAS) {
-				if (resolvedDilemmas.includes(dilemma.id) && !dilemma.repeatable)
-					continue;
-				if (
-					dilemma.prerequisite &&
-					!resolvedDilemmas.includes(dilemma.prerequisite)
-				)
-					continue;
 
-				let triggered = false;
-				const { type, value } = dilemma.trigger;
-				switch (type) {
-					case "RANDOM":
-						if (Math.random() < value) triggered = true;
-						break;
-					case "HUNGER_LOW":
-						if (hunger < value) triggered = true;
-						break;
-					case "HYGIENE_LOW":
-						if (hygiene < value) triggered = true;
-						break;
-					case "SOCIAL_STIGMA_HIGH":
-						if (socialStigma > value) triggered = true;
-						break;
-					case "LOCATION":
-						if (dilemma.location_trigger && userPosition) {
-							const dist = calculateDistance(
-								userPosition[0],
-								userPosition[1],
-								dilemma.location_trigger.lat,
-								dilemma.location_trigger.lng,
-							);
-							if (dist * 1000 <= (dilemma.location_trigger.radius || 50))
-								triggered = true;
-						}
-						break;
-					case "LOCATION_IDLE":
-						if (timeInLocation >= value) {
-							if (dilemma.location_trigger && userPosition) {
-								const dist = calculateDistance(
-									userPosition[0],
-									userPosition[1],
-									dilemma.location_trigger.lat,
-									dilemma.location_trigger.lng,
-								);
-								if (dist * 1000 <= (dilemma.location_trigger.radius || 50))
-									triggered = true;
-							} else if (dilemma.id === "enquadro_13_maio" && userPosition) {
-								const dist = calculateDistance(
-									userPosition[0],
-									userPosition[1],
-									CENTER_COORDS.lat,
-									CENTER_COORDS.lng,
-								);
-								if (dist < 0.005) triggered = true;
-							} else triggered = true;
-						}
-						break;
-					case "STATUS":
-						if (
-							dilemma.trigger.statusCondition?.battery !== undefined &&
-							phoneBattery <= dilemma.trigger.statusCondition.battery
-						)
-							triggered = true;
-						break;
-				}
-				if (triggered) {
-					setActiveDilemma(dilemma.id);
-					return;
-				}
-			}
 			if (activeBuffs.includes("SEDADO_CAPS")) modifyStat("energy", -5);
 		}
 	}, [
 		day,
 		time,
 		activeDilemmaId,
-		resolvedDilemmas,
+		health,
 		hunger,
 		hygiene,
+		sanity,
+		energy,
 		activeBuffs,
 		isAtShelter,
 		inventory,

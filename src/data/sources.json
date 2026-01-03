@@ -1,0 +1,63 @@
+{
+	"manuals": [
+		{
+			"title": "Manual sobre o cuidado à saúde junto a população em situação de rua",
+			"source": "Portal Gov.br",
+			"url": "https://www.gov.br/saude/pt-br/composicao/saps/equidade/publicacoes/populacao-em-situacao-de-rua/manual_cuidado_populalcao_rua.pdf"
+		},
+		{
+			"title": "Guia Estratégico para o Cuidado de Pessoas com Necessidades Relacionadas ao Consumo de Álcool e Outras Drogas",
+			"source": "MPCE",
+			"url": "https://mpce.mp.br/wp-content/uploads/2016/03/Guia-Estrat%C3%A9gico-para-o-Cuidado-de-Pessoas-com-Necessidades-Relacionadas-ao-Consumo-de-%C3%81lcool-e-Outras-Drogas-Guia.pdf"
+		},
+		{
+			"title": "Primeiros Cuidados Psicológicos: guia para trabalhadores de campo",
+			"source": "COSEMS/SP",
+			"url": "https://www.cosemssp.org.br/wp-content/uploads/2020/03/GUIA_PCP_portugues_WEB.pdf"
+		},
+		{
+			"title": "Cartilha Campinas Acessível",
+			"source": "Prefeitura de Campinas",
+			"url": "https://portal-api.campinas.sp.gov.br/sites/default/files/secretarias/arquivos-avulsos/14%20cartilha_campinas_acessivel.pdf"
+		}
+	],
+	"news_reports": [
+		{
+			"title": "Abrigos públicos recebem 170 pessoas em situação de extrema pobreza na noite mais gelada do ano",
+			"source": "G1 Campinas",
+			"url": "https://g1.globo.com/sp/campinas-regiao/noticia/2022/05/18/abrigos-publicos-recebem-170-pessoas-em-situacao-de-extrema-pobreza-na-noite-mais-gelada-do-ano-em-campinas.ghtml"
+		},
+		{
+			"title": "Segunda semana da Operação Inverno resultou em 375 abordagens",
+			"source": "Prefeitura de Campinas",
+			"url": "https://campinas.sp.gov.br/noticias/105367/segunda-semana-da-operacao-inverno-resultou-em-375-abordagens"
+		},
+		{
+			"title": "Separadas por 20 anos, mulheres em situação de rua criam amizade sem saberem que são mãe e filha",
+			"source": "G1 Globo",
+			"url": "https://g1.globo.com/sp/campinas-regiao/noticia/2025/06/12/separadas-por-20-anos-mulheres-em-situacao-de-rua-criam-amizade-sem-saberem-que-sao-mae-e-filha.ghtml"
+		}
+	],
+	"multimedia": [
+		{
+			"title": "A rua existe e resiste: documentário do Movimento Nacional da PopRua",
+			"type": "Video",
+			"url": "https://www.youtube.com/watch?v=Wle7uW6pToQ"
+		},
+		{
+			"title": "A rua tem cor - Documentário",
+			"type": "Video",
+			"url": "https://www.youtube.com/watch?v=0oUFazXOvb4"
+		},
+		{
+			"title": "Fala CAPS AD (Podcast)",
+			"type": "Podcast",
+			"url": "https://brasilia.fiocruz.br/nosnarede/mostra-de-experiencias/fala-caps-ad-podcast-informativo-de-saude-mental/"
+		},
+		{
+			"title": "Conexão RD (Redução de Danos)",
+			"type": "Podcast",
+			"url": "https://podcasts.apple.com/us/podcast/conex%C3%A3o-rd/id1516828850"
+		}
+	]
+}

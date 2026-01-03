@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Footer } from "@/components/ui/Footer";
 import { Navbar } from "@/components/ui/Navbar";
+import { useGameContext } from "@/contexts/GameContext";
 
 export function ClientLayoutWrapper({
 	children,
@@ -10,13 +11,17 @@ export function ClientLayoutWrapper({
 	children: React.ReactNode;
 }) {
 	const pathname = usePathname();
+	const { avatar } = useGameContext();
 	const isGamePage = pathname?.startsWith("/jogar");
+
+	// Show Navbar/Footer if NOT game page OR if it IS game page but game hasn't started yet (!avatar)
+	const shouldShowUI = !isGamePage || (isGamePage && !avatar);
 
 	return (
 		<>
-			{!isGamePage && <Navbar />}
+			{shouldShowUI && <Navbar />}
 			{children}
-			{!isGamePage && <Footer />}
+			{shouldShowUI && <Footer />}
 		</>
 	);
 }

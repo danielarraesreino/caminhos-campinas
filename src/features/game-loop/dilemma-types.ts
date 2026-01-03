@@ -73,6 +73,8 @@ export interface Dilemma {
 		locationId?: string;
 		statusCondition?: Record<string, number>;
 	};
+	source_fact?: string;
+	ods?: string[];
 	tags?: string[];
 	glossaryTerms?: string[];
 	location_trigger?: {

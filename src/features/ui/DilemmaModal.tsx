@@ -12,7 +12,10 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { InteractiveText } from "@/components/ui/InteractiveText";
-import type { Dilemma } from "@/features/game-loop/dilemma-types";
+import type {
+	Dilemma,
+	DilemmaOption,
+} from "@/features/game-loop/dilemma-types";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
 import { useODSTracker } from "@/hooks/useODSTracker";
 
@@ -48,27 +51,35 @@ export function DilemmaModal({
 	if (!dilemma) return null;
 
 	const handleOptionSelect = (index: number) => {
-		const option = dilemma.options[index];
+		try {
+			const option = dilemma.options[index];
 
-		// Logic for Risk/Dice Roll
-		let result: "success" | "failure" = "success";
-		if (option.risk && option.risk > 0) {
-			const roll = Math.random() * 100;
-			if (roll < option.risk) {
-				result = "failure";
+			// Logic for Risk/Dice Roll
+			let result: "success" | "failure" = "success";
+			if (option.risk && option.risk > 0) {
+				const roll = Math.random() * 100;
+				if (roll < option.risk) {
+					result = "failure";
+				}
 			}
+
+			// Force failure if risk is 100
+			if (option.risk === 100) result = "failure";
+
+			setSelectedOption(index);
+			setOutcome(result);
+
+			// Telemetria Ética (Step 4)
+			// Use ODS Tracker
+			const odsTag = option.telemetryTag?.ods;
+			trackDilemmaDecision(dilemma.id, option.label, odsTag).catch(
+				console.error,
+			);
+		} catch (error) {
+			console.error("Error in dilemma option select:", error);
+			// Fallback: Just close if everything fails? Or show error?
+			// For now, assume state set failed or option lookup failed.
 		}
-
-		// Force failure if risk is 100
-		if (option.risk === 100) result = "failure";
-
-		setSelectedOption(index);
-		setOutcome(result);
-
-		// Telemetria Ética (Step 4)
-		// Use ODS Tracker
-		const odsTag = option.telemetryTag?.ods;
-		trackDilemmaDecision(dilemma.id, option.label, odsTag);
 	};
 
 	const handleContinue = () => {
@@ -106,7 +117,7 @@ export function DilemmaModal({
 		>
 			<DialogContent
 				showCloseButton={false}
-				className="sm:max-w-[500px] max-h-[85vh] flex flex-col border border-slate-800 bg-black text-slate-300 rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)] z-[70]"
+				className="sm:max-w-[500px] max-h-[85vh] flex flex-col border border-slate-800 bg-black text-slate-300 rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)] z-[100]"
 			>
 				{/* Header decorativo técnico */}
 				<div className="h-1 w-full bg-slate-900 shrink-0" />
@@ -140,19 +151,63 @@ export function DilemmaModal({
 										}
 									>
 										{outcome === "failure" && (
-											<span className="block mb-2 font-bold uppercase">
+											<span className="block mb-2 font-bold uppercase text-xs tracking-tighter">
 												[FALHA NO RISCO]
 											</span>
 										)}
 										{outcome === "success" && currentOption.risk ? (
-											<span className="block mb-2 font-bold uppercase text-green-400">
+											<span className="block mb-2 font-bold uppercase text-green-400 text-xs tracking-tighter">
 												[SUCESSO]
 											</span>
 										) : null}
 										<InteractiveText text={feedbackText} />
 									</div>
 								) : (
-									<InteractiveText text={dilemma.description} />
+									<div className="space-y-6">
+										<InteractiveText text={dilemma.description} />
+
+										{/* Reality Fact Integration - Auditoria Sociotécnica */}
+										{(dilemma.source_fact || dilemma.ods) && (
+											<div className="not-italic bg-slate-900/80 border-l-2 border-blue-600 p-5 font-mono text-[11px] space-y-3 mt-6 shadow-inner">
+												<div className="flex justify-between items-center">
+													<div className="text-blue-500 font-bold tracking-[0.2em] uppercase flex items-center gap-2">
+														<span className="w-2 h-2 bg-blue-500 animate-pulse rounded-full" />
+														AUDITORIA_SOCIO_TECNICA.LOG
+													</div>
+													<div className="text-slate-600 text-[9px]">
+														REF: CENSO_2024_CAMPINAS
+													</div>
+												</div>
+
+												{dilemma.source_fact && (
+													<div className="text-slate-200 leading-relaxed border-b border-slate-800 pb-3">
+														<span className="text-blue-500/50 mr-2">
+															[FATO]:
+														</span>
+														{dilemma.source_fact}
+													</div>
+												)}
+
+												{dilemma.ods && (
+													<div className="space-y-2">
+														<div className="text-slate-500 uppercase text-[9px] tracking-widest">
+															Compromisso Global (ONU):
+														</div>
+														<div className="flex gap-2 flex-wrap">
+															{dilemma.ods.map((ods) => (
+																<span
+																	key={ods}
+																	className="bg-blue-600/20 text-blue-400 px-2 py-0.5 border border-blue-500/30 font-bold"
+																>
+																	{ods}
+																</span>
+															))}
+														</div>
+													</div>
+												)}
+											</div>
+										)}
+									</div>
 								)}
 							</div>
 						</DialogDescription>
@@ -161,7 +216,7 @@ export function DilemmaModal({
 					<div className="mt-8">
 						{!currentOption && (
 							<div className="flex flex-col gap-2">
-								{dilemma.options.map((option: any, index: number) => (
+								{dilemma.options.map((option: DilemmaOption, index: number) => (
 									<Button
 										key={option.label}
 										type="button"

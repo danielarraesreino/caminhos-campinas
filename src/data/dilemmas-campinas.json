@@ -17,27 +17,29 @@
 				}
 			},
 			{
-				"label": "Circular para evitar a Guarda",
+				"label": "Circule para evitar a Guarda",
 				"consequence": "Melhor não ficar parado aqui por muito tempo. A GM costuma 'limpar' a praça cedo.",
 				"effect": {
 					"dignity": 5,
 					"energy": -5
 				}
 			}
-		]
+		],
+		"source_fact": "Bom Prato Campinas serve mais de 2 mil refeições diárias a R$ 1,00.",
+		"ods": ["ODS 2"]
 	},
 	{
 		"id": "enquadro_13_maio",
 		"title": "Operação Natal Seguro",
-		"description": "Você está parado há 3 horas na Rua 13 de Maio. O fluxo de consumidores de fim de ano é intenso. Uma viatura da GM para. O comerciante da loja de sapatos apontou para você.",
+		"description": "Você está parado há 3 horas na Rua 13 de Maio. Uma viatura da GM para. O comerciante local apontou para você. 'Atrapalha a vitrine', diz o rádio.",
 		"trigger": {
 			"type": "LOCATION_IDLE",
 			"value": 2
 		},
 		"options": [
 			{
-				"label": "Sair imediatamente (Circular)",
-				"consequence": "Você pega suas coisas e sai andando rápido. Evitou o confronto, mas perdeu o ponto onde talvez ganhasse algum trocado. A dignidade cai por se sentir enxotado.",
+				"label": "Sair imediatamente",
+				"consequence": "Você se retira. Evitou o confronto, mas a humilhação de ser enxotado dói.",
 				"effect": {
 					"dignity": -5,
 					"energy": -10,
@@ -45,8 +47,8 @@
 				}
 			},
 			{
-				"label": "Argumentar que é via pública",
-				"consequence": "O GM não quer conversa: 'Aqui não pode ficar, atrapalha o comércio'. Eles revistam suas coisas no meio da multidão.",
+				"label": "Argumentar direito de ir e vir",
+				"consequence": "O GM não aceita. 'Aqui é área comercial'. Eles revistam tudo na frente de todos.",
 				"effect": {
 					"dignity": -20,
 					"sanity": -10,
@@ -54,283 +56,580 @@
 				},
 				"risk": 50,
 				"riskOutcome": {
-					"consequence": "Eles alegam 'obstrução' e apreendem seus cobertores/papelão. Você fica sem nada para a noite.",
+					"consequence": "Alegam 'obstrução' e apreendem seu carrinho de recicláveis.",
 					"effect": {
-						"inventory": [],
+						"workToolUpdate": {
+							"isConfiscated": true
+						},
 						"health": -10
 					}
 				}
 			}
 		],
-		"source": "Censo Pop Rua 2024: 51,1% das violências partem da Guarda Municipal."
+		"source_fact": "Censo Pop Rua 2024: 51,1% das violências partem da Guarda Municipal.",
+		"ods": ["ODS 10", "ODS 16"]
 	},
 	{
-		"id": "fome_centro_01",
-		"title": "A Escolha do Alimento",
-		"description": "Sua barriga dói. Você tem pouco dinheiro. O Bom Prato tem fila mas é garantido por R$1. O Refeitório Metodista é de graça, mas exige cadastro e tem horário rígido.",
+		"id": "pobreza_menstrual_rua",
+		"title": "Dilema do Ciclo",
+		"description": "Sua menstruação desceu e você não tem absorventes. O papelão machuca e o risco de infecção é alto. Ir ao banheiro de um shopping ou pedir no Consultório na Rua?",
 		"trigger": {
-			"type": "HUNGER_LOW",
-			"value": 30
+			"type": "RANDOM",
+			"value": 0.05
 		},
-		"tags": ["fome", "comida", "almoço"],
-		"location_trigger": {
-			"lat": -22.9075,
-			"lng": -47.0595,
-			"radius": 2000
-		},
+		"tags": ["saúde", "feminino", "segurança_noturna"],
 		"options": [
 			{
-				"label": "Ir ao Bom Prato (R$ 1,00)",
-				"consequence": "Você comeu bem. O purê estava quente. Gastou seu dinheiro, mas garantiu a energia do dia.",
-				"risk": 10,
+				"label": "Entrar no Shopping (Arriscado)",
+				"consequence": "Você tenta entrar despercebida. O segurança te segue com o olhar, mas você consegue usar o banheiro e papel higiênico.",
+				"risk": 40,
 				"effect": {
-					"hunger": 100,
-					"money": -1,
-					"energy": 20
-				}
-			},
-			{
-				"label": "Tentar o Refeitório Metodista (Grátis)",
-				"consequence": "Eles te acolheram bem. Comer sentado à mesa recuperou sua dignidade.",
-				"risk": 30,
-				"effect": {
-					"hunger": 100,
-					"dignity": 15,
-					"money": 0
-				}
-			}
-		]
-	},
-	{
-		"id": "barreira_samim_time",
-		"title": "A Barreira do SAMIM (Horário)",
-		"description": "Você chega ao portão do SAMIM. O relógio da rua marca 19:15. O portão fecha às 19h. O segurança te olha com pena, mas aponta para o relógio.",
-		"trigger": {
-			"type": "LOCATION",
-			"value": 1,
-			"locationId": "abrigos_municipais"
-		},
-		"location_trigger": {
-			"lat": -22.9025,
-			"lng": -47.066,
-			"radius": 50
-		},
-		"prerequisite": "TIME_AFTER_19",
-		"options": [
-			{
-				"label": "Implorar para entrar",
-				"consequence": "O segurança reluta, mas a assistente social autoriza a exceção. 'Só hoje', ela diz.",
-				"risk": 80,
-				"effect": {
-					"energy": 50,
-					"hygiene": 50,
+					"hygiene": 10,
 					"dignity": -5
 				},
 				"effect_failure": {
 					"dignity": -20,
-					"sanity": -10,
-					"energy": -10
+					"socialStigma": 15
 				},
-				"consequence_failure": "Ele nega. 'Regra é regra'. Você vai ter que dormir na rua hoje."
+				"consequence_failure": "O segurança te barra na porta. 'Banheiro só para clientes'."
 			},
 			{
-				"label": "Dormir na porta",
-				"consequence": "Você se aninha no papelão perto do muro. É frio e inseguro.",
-				"risk": 20,
+				"label": "Buscar Consultório na Rua",
+				"consequence": "Eles te entregam um kit dignidade. Você se sente respeitada.",
 				"effect": {
-					"energy": 20,
-					"health": -10,
+					"hygiene": 30,
+					"dignity": 15,
+					"addBuff": "CUIDADA"
+				}
+			}
+		],
+		"source_fact": "A pobreza menstrual afeta 1 em cada 4 jovens no Brasil (ONU Brasil). Isso viola o ODS 3.",
+		"ods": ["ODS 3", "ODS 5"]
+	},
+	{
+		"id": "cachorro_abrigo",
+		"title": "O Fiel Companheiro",
+		"description": "Está começando a esfriar muito. O SAMIM tem vaga, mas não aceita seu cachorro. Deixar ele na rua sozinho ou enfrentar o frio lá fora com ele?",
+		"trigger": {
+			"type": "STATUS",
+			"value": 1,
+			"statusCondition": {
+				"temperature": 15
+			}
+		},
+		"tags": ["institucional", "sobrevivência"],
+		"options": [
+			{
+				"label": "Entrar e deixar o cão fora",
+				"consequence": "Você dorme quente, mas a culpa e a preocupação não te deixam descansar.",
+				"effect": {
+					"health": 20,
+					"sanity": -30,
+					"dignity": -10
+				}
+			},
+			{
+				"label": "Ficar na rua com ele",
+				"consequence": "Vocês se aquecem como podem. O laço entre vocês é sua única força.",
+				"effect": {
+					"health": -15,
+					"sanity": 20,
+					"dignity": 10
+				}
+			}
+		],
+		"source_fact": "Muitos abrigos em Campinas ainda não possuem canis, forçando a escolha entre teto e pet.",
+		"ods": ["ODS 11"]
+	},
+	{
+		"id": "chuva_papelao_doenca",
+		"title": "A Tempestade de Verão",
+		"description": "A chuva em Campinas veio forte. Se você correr para a marquise, perde seu papelão seco. Se ficar protegendo o papelão, vai se molhar inteiro.",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.1
+		},
+		"options": [
+			{
+				"label": "Proteger o Papelão",
+				"consequence": "O papelão sobreviveu, mas você está tremendo de frio. A febre é quase certa.",
+				"effect": {
+					"health": -25,
+					"sanity": -5,
+					"inventoryAdd": "papelão_seco"
+				}
+			},
+			{
+				"label": "Correr para Marquise",
+				"consequence": "Você está seco, mas vai dormir no chão duro de pedra hoje.",
+				"effect": {
+					"health": -5,
+					"sanity": -15,
+					"energy": -10
+				}
+			}
+		],
+		"source_fact": "Doenças respiratórias são a maior causa de internação da PopRua no inverno paulista.",
+		"ods": ["ODS 3"]
+	},
+	{
+		"id": "aporofobia_campinas_nobre",
+		"title": "O Muro Invisível",
+		"description": "Você está caminhando pelo Cambuí carregando recicláveis. Um morador reclama alto do 'cheiro' e liga para a polícia. A tensão sobe.",
+		"trigger": {
+			"type": "LOCATION",
+			"value": 1,
+			"location_trigger": {
+				"lat": -22.898,
+				"lng": -47.052,
+				"radius": 500
+			}
+		},
+		"tags": ["segurança_noturna", "institucional"],
+		"options": [
+			{
+				"label": "Ignorar e seguir rápido",
+				"consequence": "Você apressa o passo. O coração bate forte. Sobreviveu a mais um dia no 'território deles'.",
+				"effect": {
+					"energy": -20,
+					"sanity": -10,
+					"socialStigma": 10
+				}
+			},
+			{
+				"label": "Pedir desculpas (Submissão)",
+				"consequence": "Você baixa a cabeça. Ele para de gritar, mas sua dignidade em pedaços pesa mais que o carrinho.",
+				"effect": {
+					"dignity": -30,
 					"sanity": -5
 				}
 			}
-		]
+		],
+		"source_fact": "Aporofobia: O termo descreve a aversão a pobres, crime comum em áreas de alta renda.",
+		"ods": ["ODS 10"]
 	},
 	{
-		"id": "bateria_critica",
-		"title": "Desconexão Iminente",
-		"description": "Seu celular vibra: 4% de bateria. Sem ele, você perde o mapa, o chat e sua conexão com a rede de apoio.",
-		"trigger": {
-			"type": "STATUS",
-			"value": 5,
-			"statusCondition": {
-				"battery": 5
-			}
-		},
-		"options": [
-			{
-				"label": "Correr para Rodoviária (Tomada)",
-				"consequence": "Você caminha rápido. Acha uma tomada livre. Carrega até 30% antes de um segurança pedir para sair.",
-				"effect": {
-					"energy": -10,
-					"timeAdvance": 1,
-					"addBuff": "CONECTADO"
-				}
-			},
-			{
-				"label": "Desligar para emergência",
-				"consequence": "Você desliga o aparelho. Economiza bateria, mas fica incomunicável por horas.",
-				"effect": {
-					"sanity": -5,
-					"addBuff": "OFFLINE"
-				}
-			}
-		]
-	},
-	{
-		"id": "cras_cadastro_inicial",
-		"title": "A Fila do CRAS",
-		"description": "Você chega ao CRAS para tentar o Cadastro Único. A fila dobra o quarteirão. Um funcionário avisa que só tem mais 5 senhas.",
+		"id": "trabalho_escravizado_bico",
+		"title": "A Oferta Suspeita",
+		"description": "Um homem numa caminhonete oferece R$ 100 por um dia de limpeza num terreno afastado. Ele não diz onde é.",
 		"trigger": {
 			"type": "RANDOM",
-			"value": 10
+			"value": 0.05
 		},
-		"tags": ["cras", "auxílio", "documento", "cadastro"],
+		"tags": ["segurança_noturna"],
 		"options": [
 			{
-				"label": "Ficar na fila e arriscar",
-				"consequence": "Você esperou 4 horas sob o sol. Conseguiu a última senha! Mas o atendimento é só para agendar.",
-				"risk": 50,
+				"label": "Aceitar pelo dinheiro",
+				"consequence": "O trabalho era exaustivo e ele não te levou de volta. Você está longe de tudo, mas tem a nota de 100.",
+				"risk": 30,
 				"effect": {
-					"energy": -20,
-					"sanity": -5,
-					"timeAdvance": 4
-				},
-				"nextDilemmaId": "cras_agendamento",
-				"consequence_failure": "As senhas acabaram justo na sua vez. Você perdeu a manhã inteira.",
-				"effect_failure": {
-					"energy": -30,
-					"sanity": -15,
-					"timeAdvance": 4
-				}
-			},
-			{
-				"label": "Desistir e tentar outra coisa",
-				"consequence": "Você sai da fila. Melhor buscar comida ou reciclagem do que perder tempo hoje.",
-				"effect": {
-					"sanity": 5
-				}
-			}
-		]
-	},
-	{
-		"id": "cras_agendamento",
-		"title": "O Agendamento",
-		"description": "A assistente social te atende. Ela pede RG, CPF e comprovante de endereço (mesmo você morando na rua).",
-		"trigger": {
-			"type": "STATUS",
-			"value": 0
-		},
-		"tags": [],
-		"options": [
-			{
-				"label": "Mostrar declaração de situação de rua",
-				"consequence": "Ela aceita o papel amassado. 'Seu Bolsa Família pode sair em 45 dias', diz ela.",
-				"effect": {
-					"dignity": 10,
-					"addBuff": "CADASTRO_ATIVO"
-				}
-			},
-			{
-				"label": "Não tenho comprovante",
-				"consequence": "Ela te olha com cansaço. 'Sem comprovante ou declaração do Centro Pop, não posso fazer nada'.",
-				"effect": {
-					"sanity": -10,
-					"dignity": -10
-				}
-			}
-		]
-	},
-	{
-		"id": "reciclagem_cooperativa",
-		"title": "Dia de Cooperativa",
-		"description": "A Cooperativa de Reciclagem está aceitando diaristas para separar PET. É trabalho pesado, mas paga no fim do dia.",
-		"trigger": {
-			"type": "RANDOM",
-			"value": 15
-		},
-		"tags": ["trabalho", "dinheiro", "reciclagem", "cooperativa"],
-		"options": [
-			{
-				"label": "Trabalhar o dia todo",
-				"consequence": "Suas mãos estão cortadas e as costas doem, mas você saiu com R$ 30,00 no bolso.",
-				"risk": 10,
-				"effect": {
-					"money": 30,
-					"energy": -40,
-					"hygiene": -20,
-					"timeAdvance": 8
-				},
-				"nextDilemmaId": "ferimento_trabalho"
-			},
-			{
-				"label": "Trabalhar meio período",
-				"consequence": "Você trabalhou pouco. Ganhou R$ 10,00 e guardou energia para a noite.",
-				"effect": {
-					"money": 10,
-					"energy": -15,
-					"hygiene": -10,
-					"timeAdvance": 4
-				}
-			}
-		]
-	},
-	{
-		"id": "ferimento_trabalho",
-		"title": "O Corte",
-		"description": "Ao separar uma garrafa, um vidro quebrado escondido cortou fundo sua mão. Sangra bastante.",
-		"trigger": {
-			"type": "STATUS",
-			"value": 0
-		},
-		"tags": [],
-		"options": [
-			{
-				"label": "Ir ao Consultório na Rua (Saúde)",
-				"consequence": "A van do Consultório na Rua estava perto. Fizeram o curativo e te deram analgésico.",
-				"effect": {
-					"health": 10,
-					"sanity": 5
-				}
-			},
-			{
-				"label": "Lavar na bica e enrolar pano",
-				"consequence": "A água estava suja. O corte lateja e parece inflamar.",
-				"risk": 60,
-				"effect": {
+					"money": 100,
+					"energy": -60,
 					"health": -10
 				},
 				"effect_failure": {
+					"energy": -80,
 					"health": -30,
-					"addBuff": "INFECÇÃO"
+					"money": 0
 				},
-				"consequence_failure": "Infeccionou feio. Você está com febre agora."
+				"consequence_failure": "Ele te deixou trabalhando o dia todo e fugiu sem pagar. Você está exausto e perdido."
+			},
+			{
+				"label": "Recusar por segurança",
+				"consequence": "Melhor não arriscar. A rua ensina que o que vem fácil, vai difícil.",
+				"effect": {
+					"sanity": 10
+				}
+			}
+		],
+		"source_fact": "O trabalho análogo à escravidão urbana atinge frequentemente pessoas em extrema vulnerabilidade.",
+		"ods": ["ODS 8"]
+	},
+	{
+		"id": "fianca_amigo_preso",
+		"title": "Solidariedade de Rua",
+		"description": "Um companheiro de trecho foi levado pela polícia por engano. Você tem R$ 50 que guardou para botas novas. Ele precisa de ajuda.",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.03
+		},
+		"tags": ["institucional"],
+		"options": [
+			{
+				"label": "Ajudar o amigo",
+				"consequence": "Você ficou sem o dinheiro das botas, mas ganhou um aliado fiel para a vida.",
+				"effect": {
+					"money": -50,
+					"dignity": 20,
+					"sanity": 15,
+					"addBuff": "REDE_APOIO"
+				}
+			},
+			{
+				"label": "Focar na própria bota",
+				"consequence": "Suas pernas agradecem as botas novas, mas o olhar dele ao ser levado não sai da sua mente.",
+				"effect": {
+					"health": 15,
+					"sanity": -20,
+					"money": -50
+				}
+			}
+		],
+		"source_fact": "Redes de apoio informal entre pessoas de rua são a principal barreira contra a depressão severa.",
+		"ods": ["ODS 16"]
+	},
+	{
+		"id": "arquitetura_hostil_denuncia",
+		"title": "Pedras sob a Ponte",
+		"description": "Instalaram pedras pontiagudas onde você dormia. É a Lei Padre Júlio Lancellotti sendo ignorada. O que fazer?",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.1
+		},
+		"options": [
+			{
+				"label": "Denunciar via celular",
+				"consequence": "Você tira fotos e envia. Sente que exerceu sua cidadania, mesmo que as pedras continuem lá.",
+				"effect": {
+					"dignity": 15,
+					"phoneBattery": -10,
+					"socialStigma": -5
+				}
+			},
+			{
+				"label": "Cobrir com papelão e lixo",
+				"consequence": "Você tenta nivelar o chão. É desconfortável, mas é o que tem pra hoje.",
+				"effect": {
+					"energy": -20,
+					"health": -10
+				}
+			}
+		],
+		"source_fact": "Lei Federal 14.489/22 proíbe o uso de técnicas construtivas hostis em espaços públicos.",
+		"ods": ["ODS 11"]
+	},
+	{
+		"id": "documento_perdido_chuva",
+		"title": "O Fim da Identidade",
+		"description": "Sua mochila molhou e seu RG se desfez no barro. Sem ele, você não existe para o Estado. O desespero bate.",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.02
+		},
+		"options": [
+			{
+				"label": "Tentar tirar novo no Poupatempo",
+				"consequence": "Fila, burocracia e custos. Você passou o dia em pé, mas conseguiu o protocolo.",
+				"effect": {
+					"energy": -40,
+					"money": -20,
+					"dignity": 10,
+					"timeAdvance": 6
+				}
+			},
+			{
+				"label": "Desistir (Viver invisível)",
+				"consequence": "Aapatia toma conta. Ser invisível dói menos que ser rejeitado em filas.",
+				"effect": {
+					"sanity": -30,
+					"dignity": -40,
+					"addBuff": "INVISIVEL"
+				}
+			}
+		],
+		"source_fact": "A falta de documentação básica impede o acesso a 90% dos programas sociais no Brasil.",
+		"ods": ["ODS 16", "ODS 1"]
+	},
+	{
+		"id": "burocracia_fome_cras",
+		"title": "A Burocracia da Fome",
+		"description": "Sua barriga dói de um jeito que você nunca sentiu. O Cadastro Único está desatualizado. Se você for ao CRAS agora, perde o bico de limpeza que arrumou.",
+		"trigger": {
+			"type": "HUNGER_LOW",
+			"value": 20
+		},
+		"tags": ["institucional", "fome"],
+		"options": [
+			{
+				"label": "Ir ao CRAS (Atualizar Cadastro)",
+				"consequence": "Você passou o dia na fila. O bico foi ocupado por outro. Mas seu cadastro está OK.",
+				"effect": {
+					"hunger": -10,
+					"energy": -30,
+					"dignity": 10,
+					"timeAdvance": 8,
+					"addBuff": "CADASTRO_OK"
+				},
+				"risk": 40,
+				"effect_failure": {
+					"energy": -40,
+					"sanity": -20,
+					"timeAdvance": 8
+				},
+				"consequence_failure": "O sistema caiu. Você perdeu o dia e o bico por nada. A fome continua."
+			},
+			{
+				"label": "Fazer o bico de limpeza",
+				"consequence": "Você trabalhou duro, ganhou R$ 30 e comeu um salgado frio. O cadastro continua vencido.",
+				"effect": {
+					"money": 30,
+					"hunger": 20,
+					"energy": -40,
+					"removeBuff": "CADASTRO_OK"
+				}
+			}
+		],
+		"source_fact": "A exigência de endereço fixo para o CadÚnico é uma barreira invisível que viola o ODS 2.",
+		"ods": ["ODS 1", "ODS 2"]
+	},
+	{
+		"id": "saude_mental_vinculo",
+		"title": "A Recaída ou o Vínculo",
+		"description": "O silêncio da noite traz lembranças da família que você deixou. A solidão é um peso físico. Você tem R$ 5: ligar para eles ou comprar algo para entorpecer a dor?",
+		"trigger": {
+			"type": "STATUS",
+			"value": 30,
+			"statusCondition": {
+				"sanity": 30
+			}
+		},
+		"tags": ["saúde_mental", "comunicação"],
+		"options": [
+			{
+				"label": "Tentar ligar para a família",
+				"consequence": "A voz da sua mãe treme. 'Volta pra casa'. Você chora, mas sente que ainda existe alguém que te vê.",
+				"risk": 60,
+				"effect": {
+					"sanity": 40,
+					"money": -5,
+					"dignity": 20
+				},
+				"effect_failure": {
+					"sanity": -40,
+					"money": -5,
+					"dignity": -20
+				},
+				"consequence_failure": "O número mudou. Ou desligaram na sua cara. O silêncio agora é absoluto."
+			},
+			{
+				"label": "Usar para esquecer",
+				"consequence": "A dor some por umas horas. O mundo fica nublado e suportável.",
+				"effect": {
+					"sanity": 20,
+					"money": -5,
+					"health": -15,
+					"addBuff": "DESORIENTADO"
+				}
+			}
+		],
+		"source_fact": "71,5% das pessoas em situação de rua citam rompimento de vínculos como causa principal (IPEA).",
+		"ods": ["ODS 3"]
+	},
+	{
+		"id": "tentativa_abrigo_samim",
+		"title": "A Roleta do Acolhimento",
+		"description": "São 18:45. Você está na frente do SAMIM. A fila é grande e os seguranças já avisaram: poucas vagas hoje.",
+		"trigger": {
+			"type": "LOCATION",
+			"value": 1,
+			"location_trigger": {
+				"lat": -22.9025,
+				"lng": -47.066,
+				"radius": 50
+			}
+		},
+		"tags": ["institucional", "abrigo"],
+		"options": [
+			{
+				"label": "Tentar a vaga",
+				"consequence": "Você conseguiu! Cama, banho e um teto por uma noite.",
+				"risk": 83.5,
+				"effect": {
+					"energy": 50,
+					"hygiene": 50,
+					"health": 10,
+					"isAtShelter": true
+				},
+				"effect_failure": {
+					"sanity": -20,
+					"energy": -20,
+					"health": -5
+				},
+				"consequence_failure": "Não teve vaga. Você vai ter que procurar uma marquise segura no escuro."
+			}
+		],
+		"source_fact": "Apenas 16,5% da PopRua de Campinas consegue acolhimento institucional (Censo 2024).",
+		"ods": ["ODS 11"]
+	},
+	{
+		"id": "chain_bagageiro_01_start",
+		"title": "A Corrida Contra o Relógio",
+		"description": "São 16:30. Você está no Centro com seu carrinho cheio de papelão (R$ 20,00). O Bagageiro Municipal (Vila Industrial) fecha às 17h. Se você não guardar o carrinho, não consegue entrar no SAMIM para dormir.",
+		"trigger": {
+			"type": "TIME_SPECIFIC",
+			"value": 16.5
+		},
+		"options": [
+			{
+				"label": "Correr para o Bagageiro",
+				"consequence": "Você dispara pela Av. Campos Sales. O esforço é brutal.",
+				"effect": {
+					"energy": -20,
+					"hygiene": -10
+				},
+				"nextDilemmaId": "chain_bagageiro_02_checkin"
+			},
+			{
+				"label": "Vender a carga agora",
+				"consequence": "Você para no ferro-velho. Consegue o dinheiro, mas perde o horário do bagageiro.",
+				"effect": {
+					"money": 20,
+					"energy": -5
+				},
+				"nextDilemmaId": "chain_bagageiro_02_fail"
 			}
 		]
 	},
 	{
-		"id": "consultorio_rua_rotina",
-		"title": "A Van da Saúde",
-		"description": "Você vê a van do Consultório na Rua estacionada na praça. Eles estão distribuindo kits de higiene e fazendo testes rápidos.",
+		"id": "chain_bagageiro_02_checkin",
+		"title": "A Fila do Bagageiro",
+		"description": "Você chega suando às 16:55. Há uma fila. O funcionário pede seu cadastro.",
 		"trigger": {
-			"type": "RANDOM",
-			"value": 20
+			"type": "CHAIN",
+			"value": 0
 		},
-		"tags": ["saúde", "médico", "doente", "dor"],
 		"options": [
 			{
-				"label": "Pedir Kit de Higiene",
-				"consequence": "Você ganhou sabonete, escova e preservativos. Parece pouco, mas faz diferença.",
-				"effect": {
-					"hygiene": 20,
-					"inventoryAdd": "kit_higiene"
-				}
-			},
-			{
-				"label": "Fazer teste rápido",
-				"consequence": "Tudo negativo. A enfermeira te elogia por se cuidar. Você se sente gente.",
+				"label": "Apresentar Documento",
+				"consequence": "Seu RG está em dia. Você guarda o carrinho e recebe a ficha. Sua ferramenta está salva.",
 				"effect": {
 					"sanity": 10,
-					"dignity": 10
+					"addBuff": "CARRINHO_SEGURO"
+				},
+				"nextDilemmaId": null
+			},
+			{
+				"label": "Esqueci o papel",
+				"consequence": "Sem o papel do cadastro, ele não aceita. 'Regras são regras'. Você está com o carrinho na rua à noite.",
+				"effect": {
+					"sanity": -15
+				},
+				"nextDilemmaId": "chain_bagageiro_03_rua"
+			}
+		]
+	},
+	{
+		"id": "chain_bagageiro_03_rua",
+		"title": "A Noite com a Carroça",
+		"description": "Você não conseguiu guardar o carrinho. O SAMIM proíbe entrada com volumes grandes [12]. Você terá que dormir na rua para vigiar sua ferramenta.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Dormir vigiando (Sono leve)",
+				"consequence": "Você cochila abraçado à roda. Recupera pouca energia, mas protege seu ganha-pão.",
+				"effect": {
+					"energy": 30,
+					"health": -5
+				},
+				"nextDilemmaId": null
+			},
+			{
+				"label": "Esconder e ir pro Abrigo",
+				"consequence": "Você esconde o carrinho num beco e vai pro SAMIM. Dorme no quente, mas...",
+				"effect": {
+					"health": 20,
+					"energy": 80
+				},
+				"nextDilemmaId": "chain_bagageiro_04_theft"
+			}
+		]
+	},
+	{
+		"id": "chain_bagageiro_04_theft",
+		"title": "O Despertar",
+		"description": "Você volta ao beco pela manhã. O carrinho sumiu. A prefeitura passou fazendo limpeza ou alguém levou.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Desespero",
+				"consequence": "Sua ferramenta de trabalho se foi. Você voltou à estaca zero.",
+				"effect": {
+					"sanity": -30,
+					"money": 0,
+					"workTool": null
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_health_01_symptom",
+		"title": "Tontura Repentina",
+		"description": "Sua visão escurece. Você tem histórico de pressão alta e está sem remédio há dias. (Censo 2024: 62% não relatam problemas, mas crônicos sofrem).",
+		"trigger": {
+			"type": "HEALTH_LOW",
+			"value": 40
+		},
+		"options": [
+			{
+				"label": "Ir ao Consultório na Rua (Van)",
+				"consequence": "Você procura a van no Largo do Rosário. Eles não exigem agendamento.",
+				"effect": {
+					"timeAdvance": 1
+				},
+				"nextDilemmaId": "chain_health_02_consultorio"
+			},
+			{
+				"label": "Ignorar e sentar",
+				"consequence": "Você melhora um pouco, mas o problema persiste. Risco de AVC aumenta.",
+				"effect": {
+					"health": -5,
+					"risk": 10,
+					"addBuff": "DOENTE"
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_health_02_consultorio",
+		"title": "Atendimento Humanizado",
+		"description": "A equipe do Consultório na Rua te atende. Eles te dão o remédio do dia, mas avisam: 'Você precisa tomar isso todo dia após comer'.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Pegar receita para Farmácia Popular",
+				"consequence": "Você pega a receita. Agora precisa achar uma farmácia e ter CPF regular.",
+				"effect": {
+					"sanity": 10,
+					"addItem": "RECEITA_MEDICA"
+				},
+				"nextDilemmaId": "chain_health_03_pharmacy"
+			}
+		]
+	},
+	{
+		"id": "chain_health_03_pharmacy",
+		"title": "A Burocracia do Remédio",
+		"description": "Na farmácia, pedem CPF e endereço. Você dá o endereço do Centro Pop.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Mostrar carteirinha do SUS",
+				"consequence": "O sistema aceita. Você consegue o remédio para 30 dias. Mas onde guardar para não estragar no sol?",
+				"effect": {
+					"health": 20,
+					"addBuff": "MEDICADO"
 				}
 			}
 		]
