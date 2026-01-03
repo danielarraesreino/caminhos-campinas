@@ -116,9 +116,9 @@ export function UnifiedDashboard() {
 				</div>
 
 				{/* Footer Info */}
-				<div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-slate-800 pt-8 text-slate-400 text-sm">
+				<div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-slate-800 pt-8 text-slate-300 text-sm">
 					<div>
-						<h3 className="font-bold text-slate-300 mb-2 flex items-center gap-2">
+						<h3 className="font-bold text-slate-100 mb-2 flex items-center gap-2">
 							<Shield size={14} /> Dados Seguros
 						</h3>
 						<p>
@@ -127,7 +127,7 @@ export function UnifiedDashboard() {
 						</p>
 					</div>
 					<div>
-						<h3 className="font-bold text-slate-300 mb-2 flex items-center gap-2">
+						<h3 className="font-bold text-slate-100 mb-2 flex items-center gap-2">
 							<MapPin size={14} /> Campinas / SP
 						</h3>
 						<p>
@@ -136,8 +136,8 @@ export function UnifiedDashboard() {
 						</p>
 					</div>
 					<div>
-						<p className="text-slate-600">Versão 0.19.0 (Beta)</p>
-						<p className="text-slate-600">&copy; 2024 Coletivo A Rua Tem Voz</p>
+						<p className="text-slate-400">Versão 0.19.0 (Beta)</p>
+						<p className="text-slate-400">&copy; 2024 Coletivo A Rua Tem Voz</p>
 					</div>
 				</div>
 			</main>
