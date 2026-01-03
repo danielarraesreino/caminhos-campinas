@@ -3,7 +3,6 @@
 import {
 	Tooltip,
 	TooltipContent,
-	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
@@ -35,18 +34,16 @@ export function GlossaryTooltip({ term, children }: GlossaryTooltipProps) {
 	if (!definition) return <>{children}</>;
 
 	return (
-		<TooltipProvider>
-			<Tooltip delayDuration={300}>
-				<TooltipTrigger asChild>
-					<span className="cursor-help border-b border-dotted border-blue-400 decoration-blue-400/50 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
-						{children}
-					</span>
-				</TooltipTrigger>
-				<TooltipContent className="max-w-xs bg-slate-900 text-white border-slate-700">
-					<p className="font-bold text-xs mb-1 text-emerald-400">{term}</p>
-					<p className="text-xs text-slate-300">{definition}</p>
-				</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
+		<Tooltip delayDuration={300}>
+			<TooltipTrigger asChild>
+				<span className="cursor-help border-b border-dotted border-blue-400 decoration-blue-400/50 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
+					{children}
+				</span>
+			</TooltipTrigger>
+			<TooltipContent className="max-w-xs bg-slate-900 text-white border-slate-700">
+				<p className="font-bold text-xs mb-1 text-emerald-400">{term}</p>
+				<p className="text-xs text-slate-300">{definition}</p>
+			</TooltipContent>
+		</Tooltip>
 	);
 }

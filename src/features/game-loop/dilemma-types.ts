@@ -61,6 +61,10 @@ export interface DilemmaOption {
 		action: string;
 		outcome: string;
 	};
+	pduAction?: {
+		type: "INIT" | "NEXT_STAGE" | "COMPLETE_STAGE";
+		value: string; // Objective (e.g., "TRABALHO") or Stage ID
+	};
 }
 
 export interface Dilemma {
@@ -87,5 +91,6 @@ export interface Dilemma {
 	soundEffect?: string;
 	prerequisite?: string;
 	repeatable?: boolean;
+	requiredGender?: string[]; // "masculino" | "feminino" | "nao-binario" | "trans"
 	options: DilemmaOption[];
 }

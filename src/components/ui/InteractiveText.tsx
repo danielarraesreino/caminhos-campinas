@@ -1,20 +1,18 @@
-import React from "react";
 import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import GLOSSARY_DATA from "@/data/glossary.json";
 
-interface GlossaryItem {
-	term: string;
-	definition: string;
-}
+// biome-ignore lint/suspicious/noExplicitAny: Data structure
+const glossData: any = GLOSSARY_DATA;
 
 // Transform JSON array to Record<string, string> for compatibility
-const GLOSSARY: Record<string, string> = GLOSSARY_DATA.reduce(
-	(acc, item) => {
+const GLOSSARY: Record<string, string> = glossData.reduce(
+	(acc: Record<string, string>, item: { term: string; definition: string }) => {
 		acc[item.term] = item.definition;
 		return acc;
 	},
@@ -24,6 +22,12 @@ const GLOSSARY: Record<string, string> = GLOSSARY_DATA.reduce(
 // Normaliza as chaves do glossário para busca case-insensitive
 const TERMS = Object.keys(GLOSSARY).sort((a, b) => b.length - a.length); // Ordena por tamanho para casar termos compostos primeiro
 
+// Pre-compile regex outside the component
+const GLOSSARY_REGEX = new RegExp(
+	`(${TERMS.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
+	"gi",
+);
+
 interface InteractiveTextProps {
 	text: string;
 }
@@ -31,44 +35,40 @@ interface InteractiveTextProps {
 export function InteractiveText({ text }: InteractiveTextProps) {
 	if (!text) return null;
 
-	// Cria uma regex que busca todos os termos
-	const regex = new RegExp(`(${TERMS.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|")})`, "gi");
-
-	const parts = text.split(regex);
+	const parts = text.split(GLOSSARY_REGEX);
 
 	return (
-		<TooltipProvider delayDuration={0}>
-			<span className="leading-relaxed">
-				{parts.map((part, i) => {
-					// Verifica se a parte é um termo (case insensitive)
-					const termKey = TERMS.find(
-						(t) => t.toLowerCase() === part.toLowerCase(),
+		<span className="leading-relaxed">
+			{parts.map((part, i) => {
+				// Verifica se a parte é um termo (case insensitive)
+				const termKey = TERMS.find(
+					(t) => t.toLowerCase() === part.toLowerCase(),
+				);
+
+				if (termKey) {
+					const definition = GLOSSARY[termKey];
+					return (
+						<Dialog key={`${i}-${part}`}>
+							<DialogTrigger asChild>
+								<span className="text-blue-400 font-bold border-b border-dashed border-blue-500/50 cursor-help hover:text-blue-300 hover:border-blue-300 transition-colors">
+									{part}
+								</span>
+							</DialogTrigger>
+							{/* Z-Index 200 to overlay DilemmaModal (100) and Chat (150) */}
+							<DialogContent className="z-[200] max-w-xs bg-slate-900 border-slate-700 text-slate-200">
+								<DialogHeader>
+									<DialogTitle className="text-yellow-500 uppercase tracking-wider text-sm">
+										{termKey}
+									</DialogTitle>
+								</DialogHeader>
+								<div className="text-sm leading-relaxed mt-2">{definition}</div>
+							</DialogContent>
+						</Dialog>
 					);
+				}
 
-					if (termKey) {
-						const definition = GLOSSARY[termKey];
-						return (
-							<Tooltip key={`${i}-${part}`}>
-								<TooltipTrigger asChild>
-									<span className="text-blue-400 font-bold border-b border-dashed border-blue-500/50 cursor-help hover:text-blue-300 hover:border-blue-300 transition-colors">
-										{part}
-									</span>
-								</TooltipTrigger>
-								<TooltipContent className="bg-slate-900 border-slate-700 text-slate-200 max-w-xs p-3 text-xs leading-5 shadow-xl z-[60]">
-									<p>
-										<strong className="block text-yellow-500 mb-1 uppercase tracking-wider text-[10px]">
-											{termKey}
-										</strong>
-										{definition}
-									</p>
-								</TooltipContent>
-							</Tooltip>
-						);
-					}
-
-					return <span key={`${i}-${part}`}>{part}</span>;
-				})}
-			</span>
-		</TooltipProvider>
+				return <span key={`${i}-${part}`}>{part}</span>;
+			})}
+		</span>
 	);
 }

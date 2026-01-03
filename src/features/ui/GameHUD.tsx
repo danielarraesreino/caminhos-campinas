@@ -49,9 +49,10 @@ export function GameHUD({
 		time,
 		day,
 		socialStigma,
-		workTool,
+		workTool: _workTool,
 		avatar,
 		phoneBattery,
+		pdu: _pdu, // [NEW] PDU State
 		addBuff,
 		removeBuff,
 	} = useGameContext();
@@ -178,6 +179,9 @@ export function GameHUD({
 				</div>
 			</header>
 
+			{/* [NEW] PDU Mission Widget */}
+			<PDUWidget />
+
 			<div className="flex-1" />
 
 			<div className="pointer-events-auto flex flex-col items-end gap-3 pb-safe-offset w-fit ml-auto">
@@ -213,6 +217,7 @@ function StatCard({
 	alertThreshold,
 	max = 100,
 }: {
+	// biome-ignore lint/suspicious/noExplicitAny: Icon component type
 	icon: any;
 	value: number;
 	label: string;
@@ -273,6 +278,53 @@ function StatCard({
 						width: `${Math.max(0, Math.min(100, (value / max) * 100))}%`,
 					}}
 				/>
+			</div>
+		</div>
+	);
+}
+
+function PDUWidget() {
+	const { pdu } = useGameContext();
+
+	if (!pdu.isActive || !pdu.objective) return null;
+
+	// Simple Progress Calculation
+	const totalStages = 5; // Average length
+	const currentProgress = (pdu.completedStages.length / totalStages) * 100;
+
+	return (
+		<div className="mx-2 mt-2 pointer-events-auto animate-in slide-in-from-top fade-in duration-500">
+			<div className="bg-blue-950/80 border border-blue-500/50 rounded-xl p-4 shadow-lg flex items-center justify-between backdrop-blur-md">
+				<div className="flex items-center gap-3">
+					<div className="bg-blue-600 p-2 rounded-lg shadow-inner">
+						<Package className="text-white w-5 h-5" />
+					</div>
+					<div>
+						<div className="flex items-center gap-2">
+							<span className="text-[10px] text-blue-300 font-bold uppercase tracking-widest">
+								MEU PLANO (PDU)
+							</span>
+							<span className="bg-blue-900 text-blue-200 text-[9px] px-1.5 py-0.5 rounded border border-blue-700 font-mono">
+								{pdu.objective}
+							</span>
+						</div>
+						<div className="text-white font-bold text-sm leading-tight mt-0.5">
+							{pdu.currentStageId.replace(/_/g, " ").toUpperCase()}
+						</div>
+					</div>
+				</div>
+
+				<div className="flex flex-col items-end gap-1">
+					<span className="text-[10px] text-blue-300 font-mono">
+						{Math.round(currentProgress)}%
+					</span>
+					<div className="w-16 h-1.5 bg-blue-900 rounded-full overflow-hidden">
+						<div
+							className="h-full bg-blue-400 rounded-full transition-all duration-1000"
+							style={{ width: `${Math.max(5, currentProgress)}%` }}
+						/>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

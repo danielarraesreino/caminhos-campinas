@@ -152,6 +152,8 @@ function DocCard({ icon, title, desc, count }: any) {
 function ActivityIcon(props: any) {
 	return (
 		<svg
+			role="img"
+			aria-label="Ícone de Atividade"
 			{...props}
 			xmlns="http://www.w3.org/2000/svg"
 			width="24"

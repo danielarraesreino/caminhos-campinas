@@ -672,7 +672,7 @@ export default function FundraisingPage() {
 									].map((mod, idx) => (
 										// biome-ignore lint/suspicious/noArrayIndexKey: Static content order
 										<div
-											key={idx}
+											key={mod.title}
 											className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:border-blue-300 transition-colors"
 										>
 											<div className="flex items-start gap-3">

@@ -48,4 +48,5 @@ caminhoscampinas*.json
 !package-lock.json
 !tsconfig.json
 !src/data/*.json
+!biome.json
 .env*.local

@@ -29,45 +29,88 @@
 		"ods": ["ODS 2"]
 	},
 	{
-		"id": "enquadro_13_maio",
-		"title": "Operação Natal Seguro",
-		"description": "Você está parado há 3 horas na Rua 13 de Maio. Uma viatura da GM para. O comerciante local apontou para você. 'Atrapalha a vitrine', diz o rádio.",
+		"id": "enquadro_gcm_centro",
+		"title": "A Geografia do Medo",
+		"description": "Você parou para descansar no Centro. Uma viatura da GM se aproxima em baixa velocidade. O Censo diz que 51% da violência vem deles.",
 		"trigger": {
 			"type": "LOCATION_IDLE",
 			"value": 2
 		},
+		"tags": ["violência_institucional", "segurança"],
 		"options": [
 			{
-				"label": "Sair imediatamente",
-				"consequence": "Você se retira. Evitou o confronto, mas a humilhação de ser enxotado dói.",
+				"label": "Sair andando (Risco de Abordagem)",
+				"consequence": "Você sai rápido. Eles te seguem com o olhar, mas não param. Você se sente um fugitivo na própria cidade.",
+				"risk": 30,
 				"effect": {
-					"dignity": -5,
-					"energy": -10,
-					"socialStigma": 5
+					"dignity": -10,
+					"sanity": -5,
+					"energy": -10
+				},
+				"effect_failure": {
+					"dignity": -40,
+					"health": -10,
+					"energy": -20,
+					"addBuff": "ESTIGMA"
+				},
+				"consequence_failure": "Enquadro Geral. Mãos na parede, revista humilhante na frente de todos. 'Se te ver aqui de novo, perde tudo'."
+			},
+			{
+				"label": "Ficar parado (Enfreitar)",
+				"consequence": "Eles descem. 'Tá fazendo o que aí, cidadão?'. O tom é de ameaça.",
+				"risk": 80,
+				"effect": {
+					"dignity": -20,
+					"sanity": -20
+				},
+				"effect_failure": {
+					"health": -30,
+					"workToolUpdate": {
+						"isConfiscated": true
+					},
+					"inventoryRemove": ["cobertor"],
+					"sanity": -40
+				},
+				"consequence_failure": "Violência Gratuita. Eles chutam suas coisas, tomam seu cobertor e ameaçam te levar. 'Anotado seu nome'."
+			}
+		],
+		"source_fact": "Violência Institucional: 51,1% das agressões relatadas partem de agentes de segurança pública (GM/PM).",
+		"ods": ["ODS 16", "ODS 10"]
+	},
+	{
+		"id": "tuberculose_risco_latente",
+		"title": "A Tosse Que Não Passa",
+		"description": "Você acorda com o peito chiando. Dormiu em local úmido por 3 dias seguidos. O risco de Tuberculose na rua é 56x maior que a média.",
+		"trigger": {
+			"type": "STATUS",
+			"value": 1,
+			"statusCondition": {
+				"health": 40
+			}
+		},
+		"tags": ["saúde", "risco_biológico"],
+		"options": [
+			{
+				"label": "Buscar Consultório na Rua",
+				"consequence": "A equipe faz a coleta de escarro ali mesmo. 'Se der positivo, a gente te acha'. O cuidado deles emociona.",
+				"effect": {
+					"sanity": 10,
+					"health": 5,
+					"timeAdvance": 2
 				}
 			},
 			{
-				"label": "Argumentar direito de ir e vir",
-				"consequence": "O GM não aceita. 'Aqui é área comercial'. Eles revistam tudo na frente de todos.",
+				"label": "Ignorar (É só gripe)",
+				"consequence": "Você segue o dia. A tosse piora à noite. Você está perdendo peso rápido.",
 				"effect": {
-					"dignity": -20,
-					"sanity": -10,
-					"socialStigma": 20
-				},
-				"risk": 50,
-				"riskOutcome": {
-					"consequence": "Alegam 'obstrução' e apreendem seu carrinho de recicláveis.",
-					"effect": {
-						"workToolUpdate": {
-							"isConfiscated": true
-						},
-						"health": -10
-					}
+					"health": -20,
+					"energy": -10,
+					"addBuff": "TOSSE_SEVERA"
 				}
 			}
 		],
-		"source_fact": "Censo Pop Rua 2024: 51,1% das violências partem da Guarda Municipal.",
-		"ods": ["ODS 10", "ODS 16"]
+		"source_fact": "Risco Biológico: A chance de Tuberculose na PopRua é 56 vezes maior do que na população geral.",
+		"ods": ["ODS 3"]
 	},
 	{
 		"id": "pobreza_menstrual_rua",
@@ -78,6 +121,7 @@
 			"value": 0.05
 		},
 		"tags": ["saúde", "feminino", "segurança_noturna"],
+		"requiredGender": ["feminino", "nao-binario", "trans"],
 		"options": [
 			{
 				"label": "Entrar no Shopping (Arriscado)",
@@ -464,7 +508,7 @@
 	{
 		"id": "chain_bagageiro_01_start",
 		"title": "A Corrida Contra o Relógio",
-		"description": "São 16:30. Você está no Centro com seu carrinho cheio de papelão (R$ 20,00). O Bagageiro Municipal (Vila Industrial) fecha às 17h. Se você não guardar o carrinho, não consegue entrar no SAMIM para dormir.",
+		"description": "São 16:30. Você está no Centro com seu carrinho cheio de papelão (R$ 35,00). O Bagageiro Municipal (Vila Industrial) fecha às 17h. Se você não guardar o carrinho, não consegue entrar no SAMIM para dormir.",
 		"trigger": {
 			"type": "TIME_SPECIFIC",
 			"value": 16.5
@@ -483,135 +527,10 @@
 				"label": "Vender a carga agora",
 				"consequence": "Você para no ferro-velho. Consegue o dinheiro, mas perde o horário do bagageiro.",
 				"effect": {
-					"money": 20,
+					"money": 35,
 					"energy": -5
 				},
 				"nextDilemmaId": "chain_bagageiro_02_fail"
-			}
-		]
-	},
-	{
-		"id": "chain_bagageiro_02_checkin",
-		"title": "A Fila do Bagageiro",
-		"description": "Você chega suando às 16:55. Há uma fila. O funcionário pede seu cadastro.",
-		"trigger": {
-			"type": "CHAIN",
-			"value": 0
-		},
-		"options": [
-			{
-				"label": "Apresentar Documento",
-				"consequence": "Seu RG está em dia. Você guarda o carrinho e recebe a ficha. Sua ferramenta está salva.",
-				"effect": {
-					"sanity": 10,
-					"addBuff": "CARRINHO_SEGURO"
-				},
-				"nextDilemmaId": null
-			},
-			{
-				"label": "Esqueci o papel",
-				"consequence": "Sem o papel do cadastro, ele não aceita. 'Regras são regras'. Você está com o carrinho na rua à noite.",
-				"effect": {
-					"sanity": -15
-				},
-				"nextDilemmaId": "chain_bagageiro_03_rua"
-			}
-		]
-	},
-	{
-		"id": "chain_bagageiro_03_rua",
-		"title": "A Noite com a Carroça",
-		"description": "Você não conseguiu guardar o carrinho. O SAMIM proíbe entrada com volumes grandes [12]. Você terá que dormir na rua para vigiar sua ferramenta.",
-		"trigger": {
-			"type": "CHAIN",
-			"value": 0
-		},
-		"options": [
-			{
-				"label": "Dormir vigiando (Sono leve)",
-				"consequence": "Você cochila abraçado à roda. Recupera pouca energia, mas protege seu ganha-pão.",
-				"effect": {
-					"energy": 30,
-					"health": -5
-				},
-				"nextDilemmaId": null
-			},
-			{
-				"label": "Esconder e ir pro Abrigo",
-				"consequence": "Você esconde o carrinho num beco e vai pro SAMIM. Dorme no quente, mas...",
-				"effect": {
-					"health": 20,
-					"energy": 80
-				},
-				"nextDilemmaId": "chain_bagageiro_04_theft"
-			}
-		]
-	},
-	{
-		"id": "chain_bagageiro_04_theft",
-		"title": "O Despertar",
-		"description": "Você volta ao beco pela manhã. O carrinho sumiu. A prefeitura passou fazendo limpeza ou alguém levou.",
-		"trigger": {
-			"type": "CHAIN",
-			"value": 0
-		},
-		"options": [
-			{
-				"label": "Desespero",
-				"consequence": "Sua ferramenta de trabalho se foi. Você voltou à estaca zero.",
-				"effect": {
-					"sanity": -30,
-					"money": 0,
-					"workTool": null
-				}
-			}
-		]
-	},
-	{
-		"id": "chain_health_01_symptom",
-		"title": "Tontura Repentina",
-		"description": "Sua visão escurece. Você tem histórico de pressão alta e está sem remédio há dias. (Censo 2024: 62% não relatam problemas, mas crônicos sofrem).",
-		"trigger": {
-			"type": "HEALTH_LOW",
-			"value": 40
-		},
-		"options": [
-			{
-				"label": "Ir ao Consultório na Rua (Van)",
-				"consequence": "Você procura a van no Largo do Rosário. Eles não exigem agendamento.",
-				"effect": {
-					"timeAdvance": 1
-				},
-				"nextDilemmaId": "chain_health_02_consultorio"
-			},
-			{
-				"label": "Ignorar e sentar",
-				"consequence": "Você melhora um pouco, mas o problema persiste. Risco de AVC aumenta.",
-				"effect": {
-					"health": -5,
-					"risk": 10,
-					"addBuff": "DOENTE"
-				}
-			}
-		]
-	},
-	{
-		"id": "chain_health_02_consultorio",
-		"title": "Atendimento Humanizado",
-		"description": "A equipe do Consultório na Rua te atende. Eles te dão o remédio do dia, mas avisam: 'Você precisa tomar isso todo dia após comer'.",
-		"trigger": {
-			"type": "CHAIN",
-			"value": 0
-		},
-		"options": [
-			{
-				"label": "Pegar receita para Farmácia Popular",
-				"consequence": "Você pega a receita. Agora precisa achar uma farmácia e ter CPF regular.",
-				"effect": {
-					"sanity": 10,
-					"addItem": "RECEITA_MEDICA"
-				},
-				"nextDilemmaId": "chain_health_03_pharmacy"
 			}
 		]
 	},
@@ -630,6 +549,458 @@
 				"effect": {
 					"health": 20,
 					"addBuff": "MEDICADO"
+				}
+			}
+		]
+	},
+	{
+		"id": "egresso_prisao_inicio",
+		"title": "O Portão de Ferro",
+		"description": "Você acabou de sair do CDP de Campinas. 4 anos lá dentro. No bolso, apenas o alvará de soltura e R$ 0,00. O estigma de 'ex-presidiário' fecha todas as portas de emprego.",
+		"trigger": {
+			"type": "START_SCENARIO",
+			"value": 0.05
+		},
+		"tags": ["institucional", "prisioneiro"],
+		"options": [
+			{
+				"label": "Ir para a casa da mãe",
+				"consequence": "Ela abre a fresta da porta. 'Não quero problemas com a polícia'. Ela te dá R$ 10 e fecha.",
+				"effect": {
+					"sanity": -20,
+					"money": 10,
+					"dignity": -10
+				},
+				"risk": 100,
+				"effect_failure": {
+					"sanity": -40,
+					"money": 0
+				},
+				"consequence_failure": "Ela nem abre. Grita de dentro: 'Aqui você não entra mais'."
+			},
+			{
+				"label": "Direto para o Centro Pop",
+				"consequence": "Você caminha até lá. É o único lugar que te aceita sem perguntas.",
+				"effect": {
+					"energy": -20,
+					"socialStigma": 30,
+					"addBuff": "EGRESSO"
+				}
+			}
+		],
+		"source_fact": "Ciclo Prisional: 41% da população de rua já esteve presa. A rua é muitas vezes o único destino pós-cárcere.",
+		"ods": ["ODS 16", "ODS 10"]
+	},
+	{
+		"id": "mendicancia_vs_trabalho",
+		"title": "A Esquina da Decisão",
+		"description": "Sinal fechado na Av. Moraes Salles. Um motorista oferece uma moeda. Do outro lado, tem papelão acumulado na caçamba.",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.08
+		},
+		"options": [
+			{
+				"label": "Pedir moeda (Mendicância)",
+				"consequence": "Ele te dá, mas fecha o vidro rápido com cara de nojo. R$ 2,00.",
+				"effect": {
+					"money": 2,
+					"dignity": -10,
+					"socialStigma": 5
+				}
+			},
+			{
+				"label": "Pegar o papelão (Trabalho)",
+				"consequence": "É pesado e sujo, mas é honesto. Você junta 5kg. Isso vale R$ 15,00 no ferro-velho.",
+				"effect": {
+					"money": 15,
+					"energy": -20,
+					"dignity": 5
+				}
+			}
+		],
+		"source_fact": "Economia Real: 70,9% da PopRua exerce atividade remunerada. A mendicância é fonte de renda para apenas 15,7%.",
+		"ods": ["ODS 8"]
+	},
+	{
+		"id": "pdu_intro_trigger",
+		"title": "A Oferta do Plano",
+		"description": "Um assistente social do Centro Pop te chama para uma conversa. 'Percebi que você está vindo sempre aqui. Quer tentar traçar um plano de saída?' (PDU/PIA)",
+		"trigger": {
+			"type": "LOCATION",
+			"value": 1,
+			"locationId": "centro_pop_i"
+		},
+		"tags": ["institucional", "pdu"],
+		"options": [
+			{
+				"label": "Aceitar: Quero trabalhar",
+				"consequence": "Ele abre uma pasta. 'Ótimo. O caminho para a autonomia começa com seus documentos.'",
+				"effect": {},
+				"pduAction": {
+					"type": "INIT",
+					"value": "TRABALHO"
+				},
+				"nextDilemmaId": "pdu_intro_trabalho"
+			},
+			{
+				"label": "Aceitar: Quero minha família",
+				"consequence": "Ele anota. 'Vamos tentar localizar seus parentes. Você lembra onde moram?'",
+				"effect": {},
+				"pduAction": {
+					"type": "INIT",
+					"value": "FAMILIA"
+				},
+				"nextDilemmaId": "pdu_intro_familia"
+			},
+			{
+				"label": "Não quero nada agora",
+				"consequence": "Ele respeita. 'Tudo bem. Quando estiver pronto, me procure.'",
+				"effect": {
+					"socialStigma": 5
+				}
+			}
+		],
+		"source_fact": "Adesão Voluntária: O PDU exige a vontade do usuário. 91,7% querem sair da rua, mas a desconfiança institucional é barreira."
+	},
+	{
+		"id": "pdu_intro_trabalho",
+		"title": "PDU: Trilha do Trabalho",
+		"description": "Para conseguir emprego, você precisa de RG, CPF e Comprovante de Residência. O Centro Pop te dará o endereço institucional.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Entendido. Próximo passo",
+				"consequence": "Sua primeira meta: Regularizar documentos no Poupatempo.",
+				"effect": {},
+				"pduAction": {
+					"type": "NEXT_STAGE",
+					"value": "documentacao_rg"
+				}
+			}
+		]
+	},
+	{
+		"id": "pdu_intro_familia",
+		"title": "PDU: Trilha Familiar",
+		"description": "A equipe técnica iniciará a Busca Ativa. Precisamos de nomes e cidades.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Fornecer dados",
+				"consequence": "Você passa os nomes. Agora é aguardar a investigação social.",
+				"effect": {
+					"sanity": 10
+				},
+				"pduAction": {
+					"type": "NEXT_STAGE",
+					"value": "busca_ativa_parentes"
+				}
+			}
+		]
+	},
+	{
+		"id": "pdu_dilemma_rg_fee",
+		"title": "Burocracia no Poupatempo",
+		"description": "No balcão do Poupatempo, o atendente pede R$ 55,00 pela 2ª via do RG. Você não tem esse dinheiro. A 'Declaração de Pobreza' exige assinatura de um assistente social.",
+		"trigger": {
+			"type": "LOCATION",
+			"value": 1,
+			"locationId": "poupatempo_centro"
+		},
+		"options": [
+			{
+				"label": "Apresentar Encaminhamento do Centro Pop",
+				"consequence": "O papel do Centro Pop funciona. 'Ok, isento de taxa. Fica pronto em 10 dias úteis'.",
+				"effect": {
+					"dignity": 5
+				},
+				"pduAction": {
+					"type": "COMPLETE_STAGE",
+					"value": "documentacao_rg"
+				}
+			},
+			{
+				"label": "Tentar argumentar sem papel",
+				"consequence": "O atendente nega. 'Sem o papel do Sares ou BO, tem que pagar'. Você perde a viagem.",
+				"effect": {
+					"sanity": -10,
+					"energy": -10
+				}
+			}
+		],
+		"source_fact": "Barreira Documental: A falta de documentos impede acesso a 80% dos programas sociais. A gratuidade depende de burocracia extra."
+	},
+	{
+		"id": "pdu_dilemma_comprovante",
+		"title": "O Dilema do Endereço",
+		"description": "Para o emprego, exigem comprovante de residência. Você dorme na rua. O Centro Pop pode fornecer uma declaração de 'Vínculo Institucional'.",
+		"trigger": {
+			"type": "LOCATION",
+			"value": 1,
+			"locationId": "centro_pop_i"
+		},
+		"options": [
+			{
+				"label": "Solicitar Declaração",
+				"consequence": "A assistente emite o documento. 'Use com sabedoria, vale por 90 dias'. Você agora tem endereço.",
+				"effect": {
+					"dignity": 5
+				},
+				"pduAction": {
+					"type": "COMPLETE_STAGE",
+					"value": "comprovante_residencia"
+				}
+			}
+		]
+	},
+	{
+		"id": "pdu_dilemma_job_interview",
+		"title": "A Entrevista de Emprego",
+		"description": "O CPAT conseguiu uma vaga de Auxiliar de Limpeza. O entrevistador te olha de cima a baixo.",
+		"trigger": {
+			"type": "LOCATION",
+			"value": 1,
+			"locationId": "cpat_centro"
+		},
+		"options": [
+			{
+				"label": "Mostrar Documentos e PDU",
+				"consequence": "Ele vê sua organização. 'Ok, vamos te dar uma chance. Começa segunda'.",
+				"effect": {
+					"money": 0,
+					"dignity": 50,
+					"socialStigma": -20
+				},
+				"pduAction": {
+					"type": "COMPLETE_STAGE",
+					"value": "cadastro_cpat"
+				},
+				"risk": 20,
+				"consequence_failure": "Ele nota seu cheiro ou roupas gastas. 'Já preenchemos a vaga'. (Estigma venceu)",
+				"effect_failure": {
+					"sanity": -20,
+					"dignity": -10
+				}
+			}
+		],
+		"source_fact": "Estigma Profissional: Mesmo com documentos, a aparência e o preconceito barram 65% das contratações de ex-moradores de rua."
+	},
+	{
+		"id": "pdu_dilemma_search_phone",
+		"title": "A Busca Ativa",
+		"description": "A equipe técnica localizou um telefone de uma tia sua em Hortolândia. Você tem coragem de ligar?",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Ligar (Requer Sanidade > 60)",
+				"consequence": "O telefone chama... chama...",
+				"effect": {
+					"sanity": -5
+				},
+				"pduAction": {
+					"type": "NEXT_STAGE",
+					"value": "contato_telefonico"
+				}
+			}
+		]
+	},
+	{
+		"id": "pdu_victory_trabalho",
+		"title": "A Jornada da Autonomia",
+		"description": "Você segura seu primeiro holerite. O caminho foi árduo, mas você venceu a burocracia, o estigma e a rua.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Celebrar a Vitória (Fim de Jogo)",
+				"consequence": "Você alugou um quarto. Hoje você dorme sob um teto seu. A rua ficou no passado.",
+				"effect": {
+					"sanity": 100,
+					"dignity": 100,
+					"money": 1000,
+					"addBuff": "CIDADANIA_RESGATADA"
+				},
+				"telemetryTag": {
+					"ods": "ODS 8",
+					"action": "VICTORY_WORK",
+					"outcome": "WIN"
+				}
+			},
+			{
+				"label": "Continuar Jogando (Modo Livre)",
+				"consequence": "Você venceu, mas quer continuar ajudando outros na rua com sua experiência.",
+				"effect": {
+					"dignity": 50,
+					"addBuff": "MENTOR_DA_RUA"
+				}
+			}
+		],
+		"source_fact": "Apenas 15% das pessoas em situação de rua conseguem sair dessa condição sem suporte contínuo (IPEA)."
+	},
+	{
+		"id": "pdu_victory_familia",
+		"title": "O Reencontro",
+		"description": "O abraço é apertado. Lágrimas, perdão e saudade. Você voltou para casa.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Voltar para Casa (Fim de Jogo)",
+				"consequence": "A chave gira na porta. O cheiro de café. Você não está mais sozinho.",
+				"effect": {
+					"sanity": 100,
+					"dignity": 100,
+					"addBuff": "VINCULO_RESTAURADO"
+				},
+				"telemetryTag": {
+					"ods": "ODS 1",
+					"action": "VICTORY_FAMILY",
+					"outcome": "WIN"
+				}
+			},
+			{
+				"label": "Visitar mas Continuar na Rua (Modo Livre)",
+				"consequence": "Você reconectou, mas a rua ainda é seu lugar por enquanto. Agora você tem para onde ir.",
+				"effect": {
+					"sanity": 50,
+					"addBuff": "REDE_APOIO"
+				}
+			}
+		],
+		"source_fact": "32% da população de rua aponta conflitos familiares como causa principal. O reestabelecimento de vínculos é crucial (Censo PopRua 2024)."
+	},
+	{
+		"id": "pdu_dilemma_contact_result",
+		"title": "A Voz do Outro Lado",
+		"description": "Alguém atende. 'Alô? Quem é?'.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Sou eu, sobrinho...",
+				"consequence": "Silêncio. 'Meu Deus... achamos que você tinha morrido. Venha pra cá'. (VÍNCULO RESTABELECIDO)",
+				"effect": {
+					"sanity": 50,
+					"dignity": 30
+				},
+				"risk": 70,
+				"consequence_failure": "Ela responde ríspida: 'Não temos mais sobrinho. Não ligue mais aqui'. (O vínculo rompeu de vez)",
+				"effect_failure": {
+					"sanity": -50,
+					"health": -10
+				},
+				"pduAction": {
+					"type": "COMPLETE_STAGE",
+					"value": "contato_telefonico"
+				}
+			}
+		],
+		"source_fact": "Vínculos Fragilizados: 71,5% saem por conflitos. A rejeição familiar é a principal causa de recaída nas drogas/rua."
+	},
+	{
+		"id": "venda-casada-origem",
+		"title": "A Oferta do Mercado",
+		"description": "Na biqueira, o fornecedor diz que o pó acabou, mas tem a 'pedra' que chegou mais barata (dinâmica de mercado dos anos 90). Ele oferece uma amostra grátis junto com sua compra.",
+		"source_fact": "Iconografia da História - A epidemia fabricada: O crack não surgiu do nada; foi introduzido como alternativa barata em momentos de escassez de cocaína.",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.05
+		},
+		"tags": ["historico", "drogas"],
+		"options": [
+			{
+				"label": "Aceitar a 'Amostra'",
+				"consequence": "O efeito é rápido e brutal (5 segundos). A dor da rua some, mas a fissura que vem depois é dez vezes pior.",
+				"effect": {
+					"sanity": 20,
+					"health": -10,
+					"energy": 30,
+					"addBuff": "FISSURA_INTENSA"
+				}
+			},
+			{
+				"label": "Recusar e sair",
+				"consequence": "Você recusa. O corpo dói pela abstinência do que você foi buscar, mas você manteve o controle hoje.",
+				"effect": {
+					"sanity": -10,
+					"dignity": 5
+				}
+			}
+		]
+	},
+	{
+		"id": "exilio-periferia",
+		"title": "O Ultimato da Quebrada",
+		"description": "Você furtou um botijão de gás na sua própria comunidade para sustentar o uso. A 'Disciplina' (crime local) mandou o recado: ou você some, ou vai para o 'microondas'.",
+		"source_fact": "Iconografia da História - Expulsão para o Centro: Muitos moradores de rua no centro são 'exilados' de suas comunidades de origem por dívidas ou conflitos.",
+		"trigger": {
+			"type": "SOCIAL_STIGMA_HIGH",
+			"value": 80
+		},
+		"tags": ["historico", "violencia"],
+		"options": [
+			{
+				"label": "Fugir para o Centro",
+				"consequence": "Você migra para o Centro. Lá, o anonimato te protege do crime do bairro, mas te expõe à violência da polícia e ao fluxo.",
+				"effect": {
+					"sanity": -20,
+					"health": 10,
+					"socialStigma": 100,
+					"addBuff": "ANONIMATO_CENTRAL"
+				}
+			},
+			{
+				"label": "Tentar explicar",
+				"consequence": "Não há conversa. Você é agredido severamente e expulso à força, perdendo todos os itens.",
+				"effect": {
+					"health": -50,
+					"inventory": []
+				}
+			}
+		]
+	},
+	{
+		"id": "palhaco-falcone",
+		"title": "A Arte no Fluxo",
+		"description": "Um grupo de artistas e um médico vestido de palhaço entram no fluxo com música, não com armas. Eles te chamam para uma batalha de rima/dança.",
+		"source_fact": "Redução de Danos via Vínculo: Projetos como o do Dr. Flávio Falcone usam a arte para criar conexões humanas antes de intervenções médicas.",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.08
+		},
+		"tags": ["vinculo", "arte"],
+		"options": [
+			{
+				"label": "Participar da Rima",
+				"consequence": "Por 10 minutos, você não é um 'noia', é um artista. A dopamina vem da arte, não da pedra. Você sente uma conexão humana real.",
+				"effect": {
+					"sanity": 40,
+					"dignity": 30,
+					"energy": -10
+				}
+			},
+			{
+				"label": "Ignorar e fumar",
+				"consequence": "Você acha aquilo ridículo e se afasta para usar em paz. O isolamento aumenta.",
+				"effect": {
+					"sanity": 5,
+					"socialStigma": 10
 				}
 			}
 		]

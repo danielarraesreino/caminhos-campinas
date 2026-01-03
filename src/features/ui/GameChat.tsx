@@ -4,14 +4,13 @@ import { useChat } from "@ai-sdk/react";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import {
-	GLOSSARY_TERMS,
-	GlossaryTooltip,
-} from "@/components/ui/GlossaryTooltip";
+// GLOSSARY_TERMS removed
+// GlossaryTooltip removed
 import { useGameContext } from "@/contexts/GameContext";
 import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 import { ActionInput } from "./ActionInput";
+import { ChatMessage } from "./ChatMessage";
 
 export function GameChat({
 	initialMessages,
@@ -22,7 +21,6 @@ export function GameChat({
 	onDilemmaTriggered?: (id: string) => void;
 }) {
 	const gameState = useGameContext();
-	// biome-ignore lint/correctness/noUnusedVariables: Pending state used for UI feedback logic
 	const [isPending] = useTransition();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const [isThinking, setIsThinking] = useState(false);
@@ -49,6 +47,7 @@ export function GameChat({
 
 	const {
 		messages,
+		setMessages, // [FIX] Destructure setMessages
 		// input,
 		// handleInputChange,
 		// handleSubmit,
@@ -94,6 +93,23 @@ export function GameChat({
 
 				if (matchedDilemma) {
 					console.log(`[HybridEngine] Interceptado: ${matchedDilemma.id}`);
+
+					// [FIX] Visual feedback before closing/switching
+					const userMsg = {
+						id: Date.now().toString(),
+						role: "user",
+						content: text,
+					};
+					const sysMsg = {
+						id: (Date.now() + 1).toString(),
+						role: "assistant",
+						content: `⚠️ **Evento Identificado**: ${matchedDilemma.title}\n\n(Abrindo interface de decisão...)`,
+					};
+
+					// Optimistic update
+					// biome-ignore lint/suspicious/noExplicitAny: Message type
+					setMessages((prev: any[]) => [...prev, userMsg, sysMsg]);
+
 					if (typeof onDilemmaTriggered === "function") {
 						onDilemmaTriggered(matchedDilemma.id);
 						return;
@@ -141,28 +157,8 @@ export function GameChat({
 				setIsThinking(false);
 			}
 		},
-		[append, userLocation, onDilemmaTriggered, gameState],
+		[append, userLocation, onDilemmaTriggered, gameState, setMessages],
 	);
-
-	const renderMessageContent = (content: string) => {
-		const terms = Object.keys(GLOSSARY_TERMS);
-		const regex = new RegExp(`(${terms.join("|")})`, "gi");
-		const parts = (content || "").split(regex);
-
-		return parts.map((part, i) => {
-			const matchedTerm = terms.find(
-				(t) => t.toLowerCase() === part.toLowerCase(),
-			);
-			if (matchedTerm) {
-				return (
-					<GlossaryTooltip key={`${i}-${matchedTerm}`} term={matchedTerm}>
-						{part}
-					</GlossaryTooltip>
-				);
-			}
-			return part;
-		});
-	};
 
 	return (
 		<div className="flex flex-col h-full border rounded-lg bg-gray-50 dark:bg-gray-900 overflow-hidden">
@@ -187,50 +183,7 @@ export function GameChat({
 				)}
 				{/* biome-ignore lint/suspicious/noExplicitAny: message mapping */}
 				{messages.map((m: any) => (
-					<div
-						key={m.id}
-						className={`flex gap-3 w-full px-2 ${m.role === "user" ? "flex-row-reverse" : "flex-row"}`}
-					>
-						<div className="flex-shrink-0 mt-1">
-							{m.role === "user" ? (
-								<div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center shadow-sm">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										className="text-white"
-										role="img"
-										aria-label="User Avatar"
-									>
-										<title>User Avatar</title>
-										<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-										<circle cx="12" cy="7" r="4" />
-									</svg>
-								</div>
-							) : (
-								<Image
-									src="/avatars/avatar_1.png"
-									alt="Mestre"
-									width={32}
-									height={32}
-									className="rounded-full bg-purple-100 shadow-sm border border-purple-200"
-								/>
-							)}
-						</div>
-						<div
-							className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${m.role === "user" ? "bg-blue-600 text-white rounded-tr-none" : "bg-white dark:bg-gray-800 border border-slate-100 dark:border-slate-700 rounded-tl-none"}`}
-						>
-							{m.role === "assistant"
-								? renderMessageContent(m.content)
-								: m.content}
-						</div>
-					</div>
+					<ChatMessage key={m.id} m={m} />
 				))}
 				{(isLoading || isPending || isThinking) && (
 					<div className="flex gap-3 w-full px-2">

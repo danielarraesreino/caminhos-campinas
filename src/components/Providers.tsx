@@ -3,6 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 import { useEffect } from "react";
 
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { ToastProvider } from "@/contexts/ToastContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -17,7 +18,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 	return (
 		<SessionProvider>
-			<ToastProvider>{children}</ToastProvider>
+			<TooltipProvider delayDuration={300}>
+				<ToastProvider>{children}</ToastProvider>
+			</TooltipProvider>
 		</SessionProvider>
 	);
 }

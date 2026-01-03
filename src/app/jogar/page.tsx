@@ -49,6 +49,13 @@ export default function GamePage() {
 		}
 	}, [showTutorial, activeDilemma, gameState.setPaused]);
 
+	// [FIX] Ensure Chat closes when a Dilemma starts (so the Modal isn't hidden behind the Chat)
+	useEffect(() => {
+		if (activeDilemma) {
+			setIsChatOpen(false);
+		}
+	}, [activeDilemma]);
+
 	useEffect(() => {
 		const result = checkGameOver(gameState);
 		if (result.isGameOver && !gameOverResult) {

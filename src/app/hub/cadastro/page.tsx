@@ -83,6 +83,7 @@ export default function HubCadastroPage() {
 				</p>
 				<div className="flex gap-4">
 					<button
+						type="button"
 						onClick={() => {
 							setSuccess(false);
 							setFormData({ type: "ONG", services: [] });
@@ -108,7 +109,10 @@ export default function HubCadastroPage() {
 			<header className="bg-slate-900/50 border-b border-slate-800 p-4 sticky top-0 z-10 backdrop-blur-md">
 				<div className="max-w-2xl mx-auto flex items-center gap-4">
 					<Link href="/">
-						<button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
+						<button
+							type="button"
+							className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+						>
 							<ArrowLeft className="w-6 h-6 text-slate-400" />
 						</button>
 					</Link>
@@ -130,75 +134,92 @@ export default function HubCadastroPage() {
 
 				<form onSubmit={handleSubmit} className="space-y-6">
 					<div className="space-y-2">
-						<label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+						<label
+							htmlFor="org-name"
+							className="text-xs font-bold uppercase tracking-wider text-slate-500"
+						>
 							Nome da Organização
 						</label>
 						<input
+							id="org-name"
 							required
-							className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
-							placeholder="Ex: Coletivo A Rua Tem Voz"
 							value={formData.name || ""}
 							onChange={(e) =>
 								setFormData({ ...formData, name: e.target.value })
 							}
+							className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder:text-slate-600"
+							placeholder="Ex: Associação Esperança"
 						/>
 					</div>
 
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
-							<label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+							<label
+								htmlFor="org-type"
+								className="text-xs font-bold uppercase tracking-wider text-slate-500"
+							>
 								Tipo
 							</label>
 							<select
-								className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+								id="org-type"
 								value={formData.type}
 								onChange={(e) =>
 									setFormData({ ...formData, type: e.target.value as any })
 								}
+								className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
 							>
 								<option value="ONG">ONG / OSC</option>
 								<option value="COLETIVO">Coletivo</option>
 								<option value="RELIGIOSO">Instituição Religiosa</option>
+								<option value="PUBLICO">Serviço Público</option>
 							</select>
 						</div>
 						<div className="space-y-2">
-							<label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+							<label
+								htmlFor="org-whatsapp"
+								className="text-xs font-bold uppercase tracking-wider text-slate-500"
+							>
 								WhatsApp
 							</label>
 							<input
+								id="org-whatsapp"
 								required
-								className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
-								placeholder="(19) 99999-9999"
 								value={formData.whatsapp || ""}
 								onChange={(e) =>
 									setFormData({ ...formData, whatsapp: e.target.value })
 								}
+								className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder:text-slate-600"
+								placeholder="(19) 99999-9999"
 							/>
 						</div>
 					</div>
 
 					<div className="space-y-2">
-						<label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+						<label
+							htmlFor="org-address"
+							className="text-xs font-bold uppercase tracking-wider text-slate-500"
+						>
 							Endereço / Ponto de Referência
 						</label>
 						<div className="relative">
 							<MapPin className="absolute left-3 top-3.5 w-5 h-5 text-slate-500" />
 							<input
+								id="org-address"
 								required
-								className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 pl-10 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
-								placeholder="Rua, Número, Bairro (Campinas-SP)"
 								value={formData.address || ""}
 								onChange={(e) =>
 									setFormData({ ...formData, address: e.target.value })
 								}
+								className="w-full pl-10 bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder:text-slate-600"
+								placeholder="Rua ou local de atuação"
 							/>
 						</div>
 					</div>
 
 					<div className="space-y-3">
-						<label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+						<p className="text-xs font-bold uppercase tracking-wider text-slate-500">
 							Serviços Oferecidos
-						</label>
+						</p>
 						<div className="grid grid-cols-2 md:grid-cols-3 gap-3">
 							{[
 								"ALIMENTACAO",
@@ -224,10 +245,14 @@ export default function HubCadastroPage() {
 					</div>
 
 					<div className="space-y-2">
-						<label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+						<label
+							htmlFor="org-desc"
+							className="text-xs font-bold uppercase tracking-wider text-slate-500"
+						>
 							Descrição Curta
 						</label>
 						<textarea
+							id="org-desc"
 							className="w-full h-32 bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
 							placeholder="Descreva brevemente como a organização atua e horários..."
 							value={formData.description || ""}

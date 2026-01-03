@@ -15,6 +15,9 @@ export function useEventEngine() {
 		removeBuff,
 		setWorkTool,
 		addToInventory,
+		initPDU,
+		updatePduStage,
+		completePduStage,
 	} = useGameContext();
 
 	const activeDilemma = GAME_DILEMMAS.find((d) => d.id === activeDilemmaId);
@@ -51,6 +54,7 @@ export function useEventEngine() {
 			// Determine which effect to apply
 			let effectToApply = option.effect || {};
 			if (outcome === "failure" && option.effect_failure) {
+				// biome-ignore lint/suspicious/noExplicitAny: Dynamic effect structure
 				effectToApply = (option.effect_failure as any) || {};
 			}
 
@@ -59,8 +63,14 @@ export function useEventEngine() {
 				if (
 					typeof value === "number" &&
 					key !== "timeAdvance" &&
-					key !== "money"
+					key !== "money" &&
+					key !== "addBuff" &&
+					key !== "removeBuff" &&
+					key !== "inventoryAdd" &&
+					key !== "inventoryRemove" &&
+					key !== "workToolUpdate"
 				) {
+					// biome-ignore lint/suspicious/noExplicitAny: key indexing
 					modifyStat(key as any, value);
 				}
 			});
@@ -86,7 +96,21 @@ export function useEventEngine() {
 				setWorkTool({
 					...workTool,
 					...effectToApply.workToolUpdate,
+					// biome-ignore lint/suspicious/noExplicitAny: dynamic spread
 				} as any);
+			}
+
+			// 4. [NEW] PDU Logic
+			if (option.pduAction) {
+				const { type, value } = option.pduAction;
+				if (type === "INIT") {
+					// biome-ignore lint/suspicious/noExplicitAny: PDU value type
+					initPDU(value as any);
+				} else if (type === "NEXT_STAGE") {
+					updatePduStage(value);
+				} else if (type === "COMPLETE_STAGE") {
+					completePduStage(value);
+				}
 			}
 
 			// Finalizar evento
@@ -111,6 +135,9 @@ export function useEventEngine() {
 			workTool,
 			markDilemmaResolved,
 			setActiveDilemma,
+			initPDU,
+			updatePduStage,
+			completePduStage,
 		],
 	);
 

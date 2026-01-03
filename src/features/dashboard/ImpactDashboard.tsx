@@ -23,13 +23,12 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-
+import { CENSUS_REALITY } from "@/data/census-reality";
 import { type TelemetryEvent, telemetryService } from "@/services/telemetry";
 import { InequalityChart } from "./InequalityChart";
 import { MaslowComparison } from "./MaslowComparison";
-import { ODSExplainer } from "./ODSExplainer";
 
-// --- MOCK DATA FOR VISUALIZATION (To be replaced by real telemetry agg) ---
+// --- MOCK DATA vs REALITY (Freakonomics) ---
 
 const HUNGER_TIME_DATA = [
 	{ hour: "06h", requests: 12, serviceOpen: false },
@@ -43,11 +42,40 @@ const HUNGER_TIME_DATA = [
 	{ hour: "22h", requests: 60, serviceOpen: false },
 ];
 
-const BARRIERS_DATA = [
-	{ name: "Não Aceita Cachorro", value: 40, color: "#ef4444" }, // Red
-	{ name: "Não Aceita Carrinho", value: 30, color: "#f97316" }, // Orange
-	{ name: "Exige Documento", value: 20, color: "#eab308" }, // Yellow
-	{ name: "Lotação / Fila", value: 10, color: "#3b82f6" }, // Blue
+const VIOLENCE_DATA = [
+	{
+		name: "Agentes do Estado (GM/PM)",
+		value: CENSUS_REALITY.violenceSource.publicAgents,
+		color: "#ef4444",
+	}, // Red
+	{
+		name: "Civis / Comércio",
+		value: CENSUS_REALITY.violenceSource.civilians,
+		color: "#f97316",
+	}, // Orange
+	{
+		name: "Outros",
+		value: CENSUS_REALITY.violenceSource.other,
+		color: "#94a3b8",
+	}, // Slate
+];
+
+const FUNNEL_DATA = [
+	{
+		name: "Conflito Familiar",
+		value: CENSUS_REALITY.funnel.familyBreakdown,
+		fill: "#3b82f6",
+	}, // Blue
+	{
+		name: "Saída Prisão Direta",
+		value: CENSUS_REALITY.funnel.prisonPipeline,
+		fill: "#8b5cf6",
+	}, // Purple
+	{
+		name: "Perda Documental",
+		value: CENSUS_REALITY.funnel.documentLoss,
+		fill: "#eab308",
+	}, // Yellow
 ];
 
 export function ImpactDashboard() {
@@ -266,23 +294,25 @@ export function ImpactDashboard() {
 					</div>
 				</section>
 
-				{/* Graph 2: Barreiras de Acesso */}
+				{/* Graph 2: Geografia da Violência (Estatal) */}
 				<section className="bg-[#0c0c0f] border border-slate-800 p-8 rounded-3xl shadow-xl flex flex-col">
 					<div className="mb-6">
 						<h3 className="text-2xl font-black text-white flex items-center gap-3 uppercase italic tracking-tight">
-							<Shield className="text-orange-500" /> Barreiras de Acesso (ODS
-							1.4)
+							<Shield className="text-orange-500" /> Violência (ODS 16)
 						</h3>
 						<p className="text-slate-400 text-sm mt-2">
-							Motivos de desistência ao tentar acessar um serviço público
-							(Abrigo/Restaurante).
+							Quem viola os direitos na rua? Dados chocantes do Censo 2024:
+							<span className="text-red-400 font-bold ml-1">
+								51% vêm de Agentes do Estado
+							</span>
+							.
 						</p>
 					</div>
 					<div className="h-[300px] min-h-[300px] w-full flex items-center justify-center">
 						<ResponsiveContainer width="100%" height="100%">
 							<PieChart>
 								<Pie
-									data={BARRIERS_DATA}
+									data={VIOLENCE_DATA}
 									cx="50%"
 									cy="50%"
 									innerRadius={60}
@@ -290,7 +320,7 @@ export function ImpactDashboard() {
 									paddingAngle={5}
 									dataKey="value"
 								>
-									{BARRIERS_DATA.map((entry, index) => (
+									{VIOLENCE_DATA.map((entry, index) => (
 										<Cell
 											// biome-ignore lint/suspicious/noArrayIndexKey: Static data
 											key={`cell-${index}`}
@@ -324,12 +354,108 @@ export function ImpactDashboard() {
 				</section>
 			</div>
 
-			{/* Área Maslow e ODS (Espaçamento Ajustado) */}
+			{/* Area: O Funil da Exclusão + ODS Scorecard */}
 			<div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 pt-8">
-				{/* Coluna da Esquerda: Análise de Desigualdade (Novo) */}
-				<div className="space-y-8">
+				{/* Coluna Esquerda: O Funil da Exclusão */}
+				<section className="bg-[#0c0c0f] border border-slate-800 p-8 rounded-3xl shadow-xl space-y-6">
+					<div className="mb-4">
+						<h3 className="text-2xl font-black text-white flex items-center gap-3 uppercase italic tracking-tight">
+							<TrendingUp className="text-blue-500" /> Funil da Exclusão
+						</h3>
+						<p className="text-slate-400 text-sm mt-2">
+							Trajetória estatística verificada:
+						</p>
+					</div>
+
+					<div className="h-[300px] w-full">
+						<ResponsiveContainer width="100%" height="100%">
+							<BarChart
+								data={FUNNEL_DATA}
+								layout="vertical"
+								margin={{ left: 20 }}
+							>
+								<CartesianGrid
+									strokeDasharray="3 3"
+									stroke="#1e293b"
+									horizontal={false}
+								/>
+								<XAxis
+									type="number"
+									stroke="#64748b"
+									fontSize={12}
+									tickFormatter={(val) => `${val}%`}
+								/>
+								<YAxis
+									dataKey="name"
+									type="category"
+									stroke="#94a3b8"
+									fontSize={11}
+									width={100}
+									tick={{ fontWeight: "bold" }}
+								/>
+								<RechartsTooltip
+									cursor={{ fill: "#1e293b", opacity: 0.4 }}
+									contentStyle={{
+										backgroundColor: "#0f172a",
+										borderColor: "#1e293b",
+										color: "#fff",
+									}}
+								/>
+								<Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={40}>
+									{FUNNEL_DATA.map((entry, index) => (
+										// biome-ignore lint/suspicious/noArrayIndexKey: Chart cells are static
+										<Cell key={`cell-${index}`} fill={entry.fill} />
+									))}
+								</Bar>
+							</BarChart>
+						</ResponsiveContainer>
+					</div>
+					<div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+						<p className="text-xs text-slate-400 leading-relaxed font-mono">
+							<strong className="text-white">INSIGHT:</strong> 71.5% das pessoas
+							vão para a rua por
+							<span className="text-blue-400"> ruptura familiar</span>. A saída
+							da prisão (41%) retroalimenta o ciclo.
+						</p>
+					</div>
+				</section>
+
+				{/* Coluna Direita: ODS Scorecard (Placar da ONU) */}
+				<div className="space-y-6">
+					<h3 className="text-2xl font-black text-white flex items-center gap-3 uppercase italic tracking-tight mb-4">
+						<Info className="text-emerald-500" /> Scorecard Agenda 2030
+					</h3>
+					<div className="grid grid-cols-1 gap-4">
+						{Object.entries(CENSUS_REALITY.odsScorecard).map(([key, data]) => (
+							<div
+								key={key}
+								className="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between group hover:border-slate-600 transition-colors"
+							>
+								<div>
+									<div className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">
+										{key.toUpperCase()}
+									</div>
+									<div className="text-white font-bold text-sm uppercase">
+										{data.label}
+									</div>
+								</div>
+								<div className="text-right">
+									<div
+										className={`text-xs font-black px-2 py-1 rounded uppercase tracking-wider ${
+											data.status === "CRITICAL"
+												? "bg-red-900/30 text-red-400 border border-red-900"
+												: data.status === "WARNING"
+													? "bg-yellow-900/30 text-yellow-400 border border-yellow-900"
+													: "bg-emerald-900/30 text-emerald-400 border border-emerald-900"
+										}`}
+									>
+										{data.value}
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
 					<InequalityChart data={realData} />
-					<ODSExplainer />
 				</div>
 
 				<div className="space-y-12">

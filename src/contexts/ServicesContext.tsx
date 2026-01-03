@@ -1,13 +1,7 @@
 "use client";
 
 import type React from "react";
-import {
-	createContext,
-	useCallback,
-	useContext,
-	useEffect,
-	useState,
-} from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 import SERVICES_DATA from "@/data/services-campinas.json";
 import EDUCATION_DATA from "@/data/services-education.json";
@@ -105,6 +99,8 @@ export interface ServiceLocation {
 		addBuff?: string;
 		security?: number;
 	};
+	interactionType?: "BONDING" | "STANDARD"; // New: Bonding mechanic
+	// biome-ignore lint/suspicious/noExplicitAny: flexible interaction structure
 	interactions?: any[]; // Keep interactions flexible
 	action_type?: "map" | "link"; // New: Link vs Map intent
 	url?: string; // New: URL for online actions
@@ -123,12 +119,12 @@ const ServicesContext = createContext<ServicesContextProps | undefined>(
 	undefined,
 );
 
-const STORAGE_KEY = "services_data";
+const _STORAGE_KEY = "services_data";
 
 export function ServicesProvider({ children }: { children: React.ReactNode }) {
-	const [services, setServices] = useState<ServiceLocation[]>(ALL_SERVICES);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const [services, _setServices] = useState<ServiceLocation[]>(ALL_SERVICES);
+	const [loading, _setLoading] = useState(false);
+	const [error, _setError] = useState<string | null>(null);
 
 	// Optional: Still allow local storage override if we plan to support dynamic updates
 	/* const loadFromStorage = useCallback(() => { ... */

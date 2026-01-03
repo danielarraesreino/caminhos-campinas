@@ -59,6 +59,7 @@
 		"coords": [-22.8765, -47.052],
 		"operatingHours": "08:00 - 17:00 (Itinerante)",
 		"cost": 0,
+		"interactionType": "BONDING",
 		"requiresDocument": false,
 		"rules": [
 			"Atendimento no local onde a pessoa está",
@@ -66,6 +67,50 @@
 			"Foco em redução de danos"
 		],
 		"source": "Cândido Ferreira [5]"
+	},
+	{
+		"id": "toca_assis",
+		"name": "Toca de Assis (Pastoral)",
+		"type": "ALIMENTACAO",
+		"description": "Local de acolhimento franciscano. Mais que comida, oferece abraço e escuta sem julgamento.",
+		"address": "Região Central (Itinerante/Referenciado)",
+		"coords": [-22.907, -47.062],
+		"operatingHours": "Noite (Distribuição)",
+		"cost": 0,
+		"interactionType": "BONDING",
+		"requiresDocument": false,
+		"rules": ["Acolhimento incondicional", "Foco em dignidade humana"],
+		"source": "Pastoral de Rua"
+	},
+	{
+		"id": "barbeiro_solidario",
+		"name": "Barbeiro Solidário",
+		"type": "ASSISTENCIA",
+		"description": "Projeto voluntário de corte de cabelo e barba. Resgate da autoimagem.",
+		"address": "Largo do Rosário (Ação Pontual)",
+		"coords": [-22.9055, -47.0608],
+		"operatingHours": "Sábados (Quinzenal)",
+		"cost": 0,
+		"interactionType": "BONDING",
+		"requiresDocument": false,
+		"rules": ["Chegar cedo para senha", "Serviço completo (corte + barba)"],
+		"source": "Ações Voluntárias Campinas"
+	},
+	{
+		"id": "casa_antonio_fernando",
+		"name": "Casa Antônio Fernando (Cáritas)",
+		"type": "ABRIGO",
+		"description": "Acolhimento masculino de longa permanência. Foco em autonomia.",
+		"address": "Rua (Localização Referenciada na Região Leste)",
+		"coords": [-22.91, -47.05],
+		"operatingHours": "24 Horas (Via Encaminhamento)",
+		"cost": 0,
+		"requiresDocument": true,
+		"rules": [
+			"Apenas via encaminhamento técnico",
+			"Foco em reinserção (não é albergue de pernoite)"
+		],
+		"source": "Cáritas Campinas [6]"
 	},
 	{
 		"id": "casa_santa_clara",

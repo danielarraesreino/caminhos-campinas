@@ -32,6 +32,16 @@ export interface Item {
 	type: "valioso" | "sobrevivencia";
 }
 
+export type PDUObjective = "TRABALHO" | "FAMILIA" | "SAUDE" | "MORADIA";
+
+export interface PDUState {
+	isActive: boolean;
+	objective: PDUObjective | null;
+	currentStageId: string; // ex: "tirar_rg"
+	completedStages: string[]; // ex: ["entrevista_inicial"]
+	stressLevel: number; // "Fadiga Burocrática"
+}
+
 export interface GameState {
 	health: number;
 	hunger: number;
@@ -42,6 +52,7 @@ export interface GameState {
 	socialStigma: number;
 	stabilityGap: number;
 	money: number;
+	pdu: PDUState; // [NEW] PDU State
 	workTool: {
 		type: "CARRINHO_RECICLAGEM" | "SACO_PRETO" | null;
 		condition: number;
@@ -84,6 +95,10 @@ export type GameAction =
 	| { type: "SET_AVATAR"; payload: Avatar }
 	| { type: "SET_PAUSED"; payload: boolean }
 	| { type: "SET_USER_POSITION"; payload: [number, number] | null }
+	// [NEW] PDU Actions
+	| { type: "INIT_PDU"; payload: { objective: PDUObjective } }
+	| { type: "UPDATE_PDU_STAGE"; payload: { stageId: string } }
+	| { type: "COMPLETE_PDU_STAGE"; payload: { stageId: string } }
 	| { type: "RESET_GAME" }
 	| { type: "SLEEP" }; // Added SLEEP for atomic action
 
@@ -97,6 +112,13 @@ const INITIAL_STATE: GameState = {
 	socialStigma: 10,
 	stabilityGap: 20,
 	money: 10,
+	pdu: {
+		isActive: false,
+		objective: null,
+		currentStageId: "",
+		completedStages: [],
+		stressLevel: 0,
+	},
 	workTool: {
 		type: null,
 		condition: 100,
@@ -127,11 +149,52 @@ const INITIAL_STATE: GameState = {
 
 function gameReducer(state: GameState, action: GameAction): GameState {
 	switch (action.type) {
-		case "SET_STATE":
+		case "SET_STATE": {
+			// Ensure PDU structure exists if loading legacy state
+			const loadedState = action.payload;
+			if (!loadedState.pdu) {
+				loadedState.pdu = INITIAL_STATE.pdu;
+			}
 			return {
 				...state,
-				...action.payload,
+				...loadedState,
 				isPaused: action.payload.activeDilemmaId !== null,
+			};
+		}
+
+		case "INIT_PDU":
+			return {
+				...state,
+				pdu: {
+					isActive: true,
+					objective: action.payload.objective,
+					currentStageId: "entrevista_inicial",
+					completedStages: [],
+					stressLevel: 0,
+				},
+			};
+
+		case "UPDATE_PDU_STAGE":
+			return {
+				...state,
+				pdu: {
+					...state.pdu,
+					currentStageId: action.payload.stageId,
+				},
+			};
+
+		case "COMPLETE_PDU_STAGE":
+			if (state.pdu.completedStages.includes(action.payload.stageId))
+				return state;
+			return {
+				...state,
+				pdu: {
+					...state.pdu,
+					completedStages: [
+						...state.pdu.completedStages,
+						action.payload.stageId,
+					],
+				},
 			};
 
 		case "MODIFY_STAT": {
@@ -251,6 +314,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
 // --- Context & Provider ---
 
+// biome-ignore lint/suspicious/noExplicitAny: Legacy context structure
 const GameContext = createContext<any>(undefined);
 const DOC_ID = "game_state_v1";
 
@@ -299,6 +363,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				}
 
 				dispatch({ type: "SET_STATE", payload: savedState });
+				// biome-ignore lint/suspicious/noExplicitAny: error typing
 			} catch (err: any) {
 				if (err.status === 404) {
 					console.log("ℹ️ New Game (No saved state found)");
@@ -349,6 +414,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 	useEffect(() => {
 		// Expose state mutator for Playwright
 		if (typeof window !== "undefined") {
+			// biome-ignore lint/suspicious/noExplicitAny: debug global
 			(window as any).debugSetBattery = (amount: number) => {
 				dispatch({
 					type: "MODIFY_STAT",
@@ -462,7 +528,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			try {
 				const doc = await db.get(DOC_ID);
 				await db.remove(doc);
-			} catch (e) {
+			} catch (_e) {
 				/* ignore */
 			}
 		}
@@ -480,6 +546,18 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			}
 		}
 	}, [db]);
+
+	const initPDU = useCallback((objective: PDUObjective) => {
+		dispatch({ type: "INIT_PDU", payload: { objective } });
+	}, []);
+
+	const updatePduStage = useCallback((stageId: string) => {
+		dispatch({ type: "UPDATE_PDU_STAGE", payload: { stageId } });
+	}, []);
+
+	const completePduStage = useCallback((stageId: string) => {
+		dispatch({ type: "COMPLETE_PDU_STAGE", payload: { stageId } });
+	}, []);
 
 	const value = useMemo(
 		() => ({
@@ -505,6 +583,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			consumeBattery: (amount: number) => modifyStat("phoneBattery", -amount),
 			resetGame,
 			clearPersistence,
+			// [NEW] PDU Helpers
+			initPDU,
+			updatePduStage,
+			completePduStage,
 		}),
 		[
 			state,
@@ -527,6 +609,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			work,
 			resetGame,
 			clearPersistence,
+			initPDU,
+			updatePduStage,
+			completePduStage,
 		],
 	);
 

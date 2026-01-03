@@ -102,6 +102,15 @@ export class DilemmaManager {
 				continue;
 			}
 
+			// Gender Check
+			if (dilemma.requiredGender && avatar?.gender) {
+				// Normalize avatar gender to match potential JSON values if needed,
+				// assuming avatar.gender matches the keys/values in requiredGender
+				if (!dilemma.requiredGender.includes(avatar.gender)) {
+					continue;
+				}
+			}
+
 			if (this.isTriggered(dilemma, state)) {
 				return this.applyDynamicModifiers(dilemma, avatar);
 			}
@@ -110,6 +119,7 @@ export class DilemmaManager {
 		return null;
 	}
 
+	// biome-ignore lint/suspicious/noExplicitAny: avatar type legacy
 	private applyDynamicModifiers(dilemma: Dilemma, avatar: any): Dilemma {
 		// Clone to avoid mutating the original dilemma data
 		const modified = JSON.parse(JSON.stringify(dilemma));
@@ -144,6 +154,7 @@ export class DilemmaManager {
 		return modified;
 	}
 
+	// biome-ignore lint/suspicious/noExplicitAny: state type legacy
 	private isTriggered(dilemma: Dilemma, state: any): boolean {
 		if (!dilemma.trigger) return false;
 		const { type, value, statusCondition } = dilemma.trigger;

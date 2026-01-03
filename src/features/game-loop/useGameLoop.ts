@@ -11,6 +11,7 @@ const IDLE_THRESHOLD = 3;
 
 const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
 
+// biome-ignore lint/suspicious/noExplicitAny: legacy workTool type
 const processRandomEvents = (state: { dignity: number; workTool: any }) => {
 	if (Math.random() < 0.02) {
 		return {
@@ -45,9 +46,10 @@ export function useGameLoop() {
 		setWorkTool,
 		isAtShelter,
 		userPosition,
-		addBuff,
+		addBuff, // Single declaration
 		removeBuff,
 		phoneBattery,
+		pdu,
 	} = useGameContext();
 
 	const [isRaining, setIsRaining] = useState(false);
@@ -207,6 +209,41 @@ export function useGameLoop() {
 			}
 
 			if (activeBuffs.includes("SEDADO_CAPS")) modifyStat("energy", -5);
+
+			// [NEW] PDU Victory Check
+			// Check if current objective's final stage is completed
+			// TRABALHO -> Final: "cadastro_cpat"
+			// FAMILIA -> Final: "contato_telefonico" (Assume success for now, or check specific dilemma resolution)
+
+			// Hardcoded Victory Triggers based on completion
+			// Ideally we traverse PDU_QUESTS to find if last step is in completedStages
+			// But for simplicity/performance in loop:
+
+			if (pdu.isActive && pdu.objective) {
+				const isVictoryTrabalho =
+					pdu.objective === "TRABALHO" &&
+					pdu.completedStages.includes("cadastro_cpat");
+				const isVictoryFamilia =
+					pdu.objective === "FAMILIA" &&
+					pdu.completedStages.includes("contato_telefonico"); // Logic gap: This stage doesn't "complete" via dilemma yet properly in JSON?
+				// Actually, let's trigger it if the "result" dilemma is resolved.
+				// "pdu_dilemma_contact_result" ?? No, that's intermediate.
+				// Let's rely on `pdu.completedStages` having the final ID.
+				// Update dilemmas to ensure "contato_telefonico" marks itself complete.
+
+				if (
+					isVictoryTrabalho &&
+					!resolvedDilemmas.includes("pdu_victory_trabalho")
+				) {
+					setActiveDilemma("pdu_victory_trabalho");
+				}
+				if (
+					isVictoryFamilia &&
+					!resolvedDilemmas.includes("pdu_victory_familia")
+				) {
+					setActiveDilemma("pdu_victory_familia");
+				}
+			}
 		}
 	}, [
 		day,
@@ -226,6 +263,8 @@ export function useGameLoop() {
 		userPosition,
 		phoneBattery,
 		timeInLocation,
+		pdu,
+		resolvedDilemmas,
 	]);
 
 	return { isRaining, batteryLevel: phoneBattery / 100 };
