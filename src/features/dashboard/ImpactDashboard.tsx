@@ -356,7 +356,7 @@ export function ImpactDashboard() {
 							</span>
 						</div>
 						<p className="text-lg text-emerald-100/80 font-medium leading-relaxed font-sans border-t border-emerald-500/20 pt-4">
-							"Cada pessoa que encontra o Consultório na Rua via app evita, em
+							"Cada atendimento do Consultório na Rua (Busca Ativa) evita, em
 							média, uma internação de emergência de alta complexidade."
 						</p>
 					</div>
