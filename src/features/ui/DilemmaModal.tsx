@@ -36,6 +36,33 @@ export function DilemmaModal({
 	const { playAmbience, stopAmbience } = useAudioSystem();
 	const { trackDilemmaDecision } = useODSTracker();
 
+	// A11y States
+	const [zoomLevel, setZoomLevel] = useState(1); // 1 = 100%, 1.2 = 120%
+	const [isSpeaking, setIsSpeaking] = useState(false);
+
+	const toggleSpeech = () => {
+		if (isSpeaking) {
+			window.speechSynthesis.cancel();
+			setIsSpeaking(false);
+		} else {
+			const textToRead = currentOption
+				? outcome === "failure" && currentOption.consequence_failure
+					? currentOption.consequence_failure
+					: currentOption.consequence
+				: `${dilemma.description}. ${dilemma.source_fact ? `Fato: ${dilemma.source_fact}` : ""}`;
+
+			const utterance = new SpeechSynthesisUtterance(textToRead);
+			utterance.lang = "pt-BR";
+			utterance.onend = () => setIsSpeaking(false);
+			window.speechSynthesis.speak(utterance);
+			setIsSpeaking(true);
+		}
+	};
+
+	const toggleZoom = () => {
+		setZoomLevel((prev) => (prev >= 1.4 ? 1 : prev + 0.2));
+	};
+
 	// Effect to manage audio
 	useEffect(() => {
 		if (dilemma?.audioId) {
@@ -46,8 +73,9 @@ export function DilemmaModal({
 			if (dilemma?.audioId) {
 				stopAmbience();
 			}
+			window.speechSynthesis.cancel();
 		};
-	}, [dilemma, playAmbience, stopAmbience]);
+	}, [dilemma?.audioId, playAmbience, stopAmbience]);
 
 	if (!dilemma) return null;
 
@@ -123,39 +151,73 @@ export function DilemmaModal({
 				{/* Header decorativo técnico */}
 				<div className="h-1 w-full bg-slate-900 shrink-0" />
 
-				{/* Chat Button */}
-				{onOpenChat && (
+				{/* A11y Controls - Top Right */}
+				<div className="absolute top-4 right-12 flex gap-2 z-20">
+					{/* Zoom Button */}
 					<button
 						type="button"
-						onClick={onOpenChat}
-						className="absolute top-4 right-12 text-slate-500 hover:text-blue-400 transition-colors p-1 z-10"
-						aria-label="Abrir Chat"
-						title="Consultar Mestre"
+						onClick={toggleZoom}
+						className="bg-slate-900/80 hover:bg-slate-800 text-slate-300 p-1.5 rounded transition-colors border border-slate-700"
+						aria-label="Aumentar texto"
+						title="Aumentar texto"
 					>
-						<MessageSquare size={18} />
+						<span className="text-xs font-bold">A+</span>
 					</button>
-				)}
+
+					{/* TTS Button */}
+					<button
+						type="button"
+						onClick={toggleSpeech}
+						className={`p-1.5 rounded transition-colors border ${
+							isSpeaking
+								? "bg-blue-900/50 border-blue-500 text-blue-400"
+								: "bg-slate-900/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+						}`}
+						aria-label="Ler texto em voz alta"
+						title="Ouvir Dilema"
+					>
+						{isSpeaking ? (
+							<span className="animate-pulse">🔊</span>
+						) : (
+							<span>🔈</span>
+						)}
+					</button>
+
+					{/* Chat Button */}
+					{onOpenChat && (
+						<button
+							type="button"
+							onClick={onOpenChat}
+							className="bg-slate-900/80 hover:bg-slate-800 text-slate-300 p-1.5 rounded transition-colors border border-slate-700"
+							aria-label="Abrir Chat"
+							title="Consultar Mestre"
+						>
+							<MessageSquare size={14} />
+						</button>
+					)}
+				</div>
 
 				{/* Close Button - Fixed */}
 				<button
 					type="button"
 					onClick={handleContinue}
-					className="absolute top-4 right-4 text-slate-700 hover:text-white transition-colors p-1 z-10"
+					className="absolute top-4 right-3 text-slate-500 hover:text-white transition-colors p-1.5 z-20"
 					aria-label="Fechar modal"
 				>
-					<X size={16} />
+					<X size={18} />
 				</button>
 
 				<div className="p-8 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
 					<DialogHeader className="space-y-4">
-						<DialogTitle className="text-xl font-mono uppercase tracking-[0.3em] text-slate-100 pr-10 border-b border-slate-900 pb-4">
+						<DialogTitle className="text-xl font-mono uppercase tracking-[0.3em] text-slate-100 pr-32 border-b border-slate-900 pb-4">
 							{currentOption
 								? "Impacto_Sistêmico"
 								: dilemma.title.replace(" ", "_")}
 						</DialogTitle>
 						<DialogDescription
-							className="text-slate-400 text-base leading-relaxed font-serif italic pt-2"
+							className="text-slate-300 text-base leading-relaxed font-serif italic pt-2"
 							asChild
+							style={{ fontSize: `${zoomLevel}rem`, lineHeight: 1.6 }}
 						>
 							<div>
 								{currentOption ? (
@@ -182,36 +244,36 @@ export function DilemmaModal({
 
 										{/* Reality Fact Integration - Auditoria Sociotécnica */}
 										{(dilemma.source_fact || dilemma.ods) && (
-											<div className="not-italic bg-slate-900/80 border-l-2 border-blue-600 p-5 font-mono text-[11px] space-y-3 mt-6 shadow-inner">
-												<div className="flex justify-between items-center">
-													<div className="text-blue-500 font-bold tracking-[0.2em] uppercase flex items-center gap-2">
+											<div className="not-italic bg-slate-900/80 border-l-4 border-blue-600 p-6 space-y-4 mt-8 shadow-inner rounded-r-lg">
+												<div className="flex justify-between items-center border-b border-slate-800 pb-2">
+													<div className="text-blue-400 font-bold tracking-widest uppercase flex items-center gap-2 text-xs">
 														<span className="w-2 h-2 bg-blue-500 animate-pulse rounded-full" />
-														AUDITORIA_SOCIO_TECNICA.LOG
+														AUDITORIA_REAL
 													</div>
-													<div className="text-slate-600 text-[9px]">
+													<div className="text-slate-400 text-[10px] font-mono">
 														REF: CENSO_2024_CAMPINAS
 													</div>
 												</div>
 
 												{dilemma.source_fact && (
-													<div className="text-slate-200 leading-relaxed border-b border-slate-800 pb-3">
-														<span className="text-blue-500/50 mr-2">
-															[FATO]:
+													<div className="text-slate-100 leading-relaxed text-sm font-medium">
+														<span className="text-blue-400 font-bold mr-2 uppercase text-xs">
+															[FATO VERIFICADO]:
 														</span>
 														{dilemma.source_fact}
 													</div>
 												)}
 
 												{dilemma.ods && (
-													<div className="space-y-2">
-														<div className="text-slate-500 uppercase text-[9px] tracking-widest">
+													<div className="space-y-2 pt-2">
+														<div className="text-slate-400 uppercase text-[10px] tracking-widest font-bold">
 															Compromisso Global (ONU):
 														</div>
 														<div className="flex gap-2 flex-wrap">
 															{dilemma.ods.map((ods) => (
 																<span
 																	key={ods}
-																	className="bg-blue-600/20 text-blue-400 px-2 py-0.5 border border-blue-500/30 font-bold"
+																	className="bg-blue-900/30 text-blue-300 px-3 py-1 border border-blue-500/30 font-bold text-xs rounded"
 																>
 																	{ods}
 																</span>
@@ -229,23 +291,26 @@ export function DilemmaModal({
 
 					<div className="mt-8">
 						{!currentOption && (
-							<div className="flex flex-col gap-2">
+							<div className="flex flex-col gap-3">
 								{dilemma.options.map((option: DilemmaOption, index: number) => (
 									<Button
 										key={option.label}
 										type="button"
 										variant="outline"
-										className="justify-between h-auto py-3 px-4 text-left whitespace-normal border-slate-900 bg-black text-slate-500 hover:bg-slate-900 hover:text-white transition-all font-mono text-xs uppercase tracking-widest rounded-none group"
+										className="justify-between h-auto py-4 px-5 text-left whitespace-normal border-slate-800 bg-slate-950/50 text-slate-300 hover:bg-slate-900 hover:text-white transition-all font-mono text-sm uppercase tracking-widest rounded group"
+										style={{
+											fontSize: `${Math.max(0.875, zoomLevel * 0.8)}rem`,
+										}} // Scale button text slightly less aggresive
 										onClick={() => handleOptionSelect(index)}
 									>
 										<div className="flex items-center">
-											<span className="mr-3 opacity-0 group-hover:opacity-100 text-blue-900 transition-opacity">
+											<span className="mr-3 opacity-0 group-hover:opacity-100 text-blue-400 transition-opacity font-bold">
 												{">> "}
 											</span>
 											{option.label}
 										</div>
 										{option.risk && option.risk > 0 && (
-											<span className="text-[10px] text-red-500 font-bold ml-2">
+											<span className="text-xs text-red-400 font-bold ml-2 bg-red-950/50 px-2 py-1 rounded border border-red-900/50">
 												⚠️ {option.risk}% RISCO
 											</span>
 										)}
@@ -266,7 +331,7 @@ export function DilemmaModal({
 						{currentOption && (
 							<Button
 								type="button"
-								className="w-full bg-slate-100 hover:bg-white text-black font-mono font-bold py-4 text-xs uppercase tracking-[0.4em] rounded-none"
+								className="w-full bg-white hover:bg-slate-200 text-black font-mono font-bold py-4 text-sm uppercase tracking-[0.2em]"
 								onClick={handleContinue}
 							>
 								RETOMAR_JORNADA.EXE
