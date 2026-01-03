@@ -115,11 +115,12 @@ export default function GamePage() {
 					dilemma={activeDilemma}
 					onResolve={resolveDilemma}
 					onClose={clearActiveDilemma}
+					onOpenChat={() => setIsChatOpen(true)}
 				/>
 			)}
 
 			{isChatOpen && (
-				<div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">
+				<div className="fixed inset-0 z-[150] flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">
 					<div className="w-full h-[60vh] md:w-[400px] md:h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 relative">
 						<button
 							type="button"

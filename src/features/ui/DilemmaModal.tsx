@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { MessageSquare, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,7 +29,8 @@ export function DilemmaModal({
 	dilemma,
 	onResolve,
 	onClose,
-}: DilemmaModalProps) {
+	onOpenChat,
+}: DilemmaModalProps & { onOpenChat?: () => void }) {
 	const [selectedOption, setSelectedOption] = useState<number | null>(null);
 	const [outcome, setOutcome] = useState<"success" | "failure" | null>(null);
 	const { playAmbience, stopAmbience } = useAudioSystem();
@@ -121,6 +122,19 @@ export function DilemmaModal({
 			>
 				{/* Header decorativo técnico */}
 				<div className="h-1 w-full bg-slate-900 shrink-0" />
+
+				{/* Chat Button */}
+				{onOpenChat && (
+					<button
+						type="button"
+						onClick={onOpenChat}
+						className="absolute top-4 right-12 text-slate-500 hover:text-blue-400 transition-colors p-1 z-10"
+						aria-label="Abrir Chat"
+						title="Consultar Mestre"
+					>
+						<MessageSquare size={18} />
+					</button>
+				)}
 
 				{/* Close Button - Fixed */}
 				<button
