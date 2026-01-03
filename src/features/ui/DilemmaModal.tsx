@@ -49,7 +49,7 @@ export function DilemmaModal({
 				? outcome === "failure" && currentOption.consequence_failure
 					? currentOption.consequence_failure
 					: currentOption.consequence
-				: `${dilemma.description}. ${dilemma.source_fact ? `Fato: ${dilemma.source_fact}` : ""}`;
+				: `${dilemma?.description}. ${dilemma?.source_fact ? `Fato: ${dilemma.source_fact}` : ""}`;
 
 			const utterance = new SpeechSynthesisUtterance(textToRead);
 			utterance.lang = "pt-BR";
