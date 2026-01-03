@@ -109,6 +109,20 @@ export function SurvivalMap() {
 		[phoneBattery, consumeBattery, setUserPosition],
 	);
 
+	// Interaction Feedback State
+	const [interactionMessage, setInteractionMessage] = useState<{
+		text: string;
+		type: "success" | "info" | "warning";
+	} | null>(null);
+
+	// Auto-hide interaction message
+	useEffect(() => {
+		if (interactionMessage) {
+			const timer = setTimeout(() => setInteractionMessage(null), 4000);
+			return () => clearTimeout(timer);
+		}
+	}, [interactionMessage]);
+
 	return (
 		<div
 			className="flex flex-col h-full w-full bg-slate-100 relative"
@@ -117,6 +131,38 @@ export function SurvivalMap() {
 				transition: "filter 1s ease",
 			}}
 		>
+			{/* Interaction Overlay */}
+			{interactionMessage && (
+				<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[2500] w-[90%] max-w-sm animate-in zoom-in-95 fade-in duration-300">
+					<div
+						className={`
+						p-6 rounded-lg shadow-2xl border-l-4 backdrop-blur-md
+						${interactionMessage.type === "success" ? "bg-emerald-950/90 border-emerald-500 text-emerald-100" : ""}
+						${interactionMessage.type === "info" ? "bg-blue-950/90 border-blue-500 text-blue-100" : ""}
+						${interactionMessage.type === "warning" ? "bg-amber-950/90 border-amber-500 text-amber-100" : ""}
+					`}
+					>
+						<div className="flex items-start gap-4">
+							<div className="text-2xl">
+								{interactionMessage.type === "success" && "✨"}
+								{interactionMessage.type === "info" && "📍"}
+								{interactionMessage.type === "warning" && "⚠️"}
+							</div>
+							<div>
+								<h3 className="font-bold uppercase tracking-wider text-sm mb-1">
+									{interactionMessage.type === "success" && "Recurso Obtido"}
+									{interactionMessage.type === "info" && "Local Visitado"}
+									{interactionMessage.type === "warning" && "Aviso"}
+								</h3>
+								<p className="text-sm leading-relaxed opacity-90">
+									{interactionMessage.text}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
+
 			{/* Walking Overlay */}
 			{isWalking && (
 				<div className="absolute inset-0 z-[2000] bg-black/80 flex flex-col items-center justify-center p-8 backdrop-blur-sm animate-in fade-in">
@@ -171,20 +217,33 @@ export function SurvivalMap() {
 						// Interaction logic mapping - Portuguese Only
 						if (type === "ALIMENTACAO") {
 							eat(20);
-							alert(
-								`Você visitou ${res.name} e conseguiu se alimentar! (+20 Fome)`,
-							);
+							setInteractionMessage({
+								type: "success",
+								text: `Você visitou ${res.name} e conseguiu se alimentar! (+20 Fome)`,
+							});
 						} else if (type === "SAUDE") {
 							modifyStat("health", 15);
-							alert(`Você recebeu atendimento em ${res.name}. (+15 Saúde)`);
+							setInteractionMessage({
+								type: "success",
+								text: `Você recebeu atendimento em ${res.name}. (+15 Saúde)`,
+							});
 						} else if (type === "ABRIGO") {
 							modifyStat("energy", 30);
-							alert(`Você conseguiu descansar em ${res.name}. (+30 Energia)`);
+							setInteractionMessage({
+								type: "success",
+								text: `Você conseguiu descansar em ${res.name}. (+30 Energia)`,
+							});
 						} else if (type === "ASSISTENCIA") {
 							modifyStat("dignity", 10);
-							alert(`Você recebeu apoio em ${res.name}. (+10 Dignidade)`);
+							setInteractionMessage({
+								type: "success",
+								text: `Você recebeu apoio em ${res.name}. (+10 Dignidade)`,
+							});
 						} else {
-							alert(`Você visitou ${res.name}.`);
+							setInteractionMessage({
+								type: "info",
+								text: `Você visitou ${res.name}.`,
+							});
 						}
 					}}
 				/>
