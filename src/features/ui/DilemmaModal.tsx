@@ -39,6 +39,26 @@ export function DilemmaModal({
 	// A11y States
 	const [zoomLevel, setZoomLevel] = useState(1); // 1 = 100%, 1.2 = 120%
 	const [isSpeaking, setIsSpeaking] = useState(false);
+	const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
+
+	// Load Voices
+	useEffect(() => {
+		const loadVoices = () => {
+			const availableVoices = window.speechSynthesis.getVoices();
+			// Prioritize Google or Neural voices for better quality
+			const ptVoice = availableVoices.find(
+				(v) =>
+					v.lang.includes("pt-BR") &&
+					(v.name.includes("Google") || v.name.includes("Neural")),
+			);
+			// Fallback to any pt-BR
+			const genericPt = availableVoices.find((v) => v.lang.includes("pt-BR"));
+			setVoice(ptVoice || genericPt || null);
+		};
+
+		loadVoices();
+		window.speechSynthesis.onvoiceschanged = loadVoices;
+	}, []);
 
 	const toggleSpeech = () => {
 		if (isSpeaking) {
@@ -53,6 +73,12 @@ export function DilemmaModal({
 
 			const utterance = new SpeechSynthesisUtterance(textToRead);
 			utterance.lang = "pt-BR";
+			if (voice) utterance.voice = voice;
+
+			// Tweak rate/pitch for better naturalness
+			utterance.rate = 1.1;
+			utterance.pitch = 1.0;
+
 			utterance.onend = () => setIsSpeaking(false);
 			window.speechSynthesis.speak(utterance);
 			setIsSpeaking(true);
