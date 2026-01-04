@@ -6,8 +6,9 @@ import { useAudioSystem } from "@/hooks/useAudioSystem";
 
 export function useAudioDirector() {
 	const { state } = useGameContext();
-	const { playAmbience, playSfx, setVolume } = useAudioSystem();
-	const lastHourRef = useRef(state.time);
+	const { playAmbience, setVolume } = useAudioSystem();
+
+	const lastHourRef = useRef(state?.time || 8);
 
 	useEffect(() => {
 		// Initialize Audio System
@@ -23,7 +24,8 @@ export function useAudioDirector() {
 
 	// 1. Cycle Day/Night & Traffic
 	useEffect(() => {
-		const hour = state.time % 24;
+		if (!state) return;
+		const hour = (state.time || 0) % 24;
 		const isNight = hour >= 19 || hour < 6;
 
 		// Base Ambience
@@ -49,15 +51,24 @@ export function useAudioDirector() {
 		} catch (err) {
 			console.warn("[AudioDirector] Autoplay prevented or audio error:", err);
 		}
-	}, [state.time, state.health, state.sanity, playAmbience, setVolume]);
+	}, [
+		state,
+		state?.time,
+		state?.health,
+		state?.sanity,
+		playAmbience,
+		setVolume,
+	]);
 
 	// 2. Event Triggers (One-shot SFX)
 	useEffect(() => {
+		if (!state) return;
+
 		if (state.time !== lastHourRef.current) {
 			// Time changed
 			lastHourRef.current = state.time;
 		}
-	}, [state.time]);
+	}, [state, state?.time]);
 
 	return null; // Logic-only hook
 }
