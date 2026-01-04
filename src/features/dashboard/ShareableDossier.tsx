@@ -13,7 +13,7 @@ interface ShareableDossierProps {
 		daysSurvived: number;
 	};
 	history: Array<{
-		id?: string;
+		id: string;
 		tags: string[];
 		type: string;
 		description: string;
