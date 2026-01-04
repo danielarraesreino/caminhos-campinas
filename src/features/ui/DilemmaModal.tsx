@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageSquare, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -34,6 +34,7 @@ export function DilemmaModal({
 }: DilemmaModalProps & { onOpenChat?: () => void }) {
 	const [selectedOption, setSelectedOption] = useState<number | null>(null);
 	const [outcome, setOutcome] = useState<"success" | "failure" | null>(null);
+	const [isPending, startTransition] = useTransition();
 	const { playAmbience, stopAmbience } = useAudioSystem();
 	const { trackDilemmaDecision } = useODSTracker();
 	const { auditResolution } = useImpactLogger();
@@ -108,38 +109,40 @@ export function DilemmaModal({
 	if (!dilemma) return null;
 
 	const handleOptionSelect = (index: number) => {
-		try {
-			const option = dilemma.options[index];
+		startTransition(() => {
+			try {
+				const option = dilemma.options[index];
 
-			// Logic for Risk/Dice Roll
-			let result: "success" | "failure" = "success";
-			if (option.risk && option.risk > 0) {
-				const roll = Math.random() * 100;
-				if (roll < option.risk) {
-					result = "failure";
+				// Logic for Risk/Dice Roll
+				let result: "success" | "failure" = "success";
+				if (option.risk && option.risk > 0) {
+					const roll = Math.random() * 100;
+					if (roll < option.risk) {
+						result = "failure";
+					}
 				}
+
+				// Force failure if risk is 100
+				if (option.risk === 100) result = "failure";
+
+				setSelectedOption(index);
+				setOutcome(result);
+
+				// Telemetria Ética (Step 4)
+				// Use ODS Tracker
+				const odsTag = option.telemetryTag?.ods;
+				trackDilemmaDecision(dilemma.id, option.label, odsTag).catch(
+					console.error,
+				);
+
+				// [NEW] Sociological Audit (Middleware)
+				auditResolution(dilemma.id, option);
+			} catch (error) {
+				console.error("Error in dilemma option select:", error);
+				// Fallback: Just close if everything fails? Or show error?
+				// For now, assume state set failed or option lookup failed.
 			}
-
-			// Force failure if risk is 100
-			if (option.risk === 100) result = "failure";
-
-			setSelectedOption(index);
-			setOutcome(result);
-
-			// Telemetria Ética (Step 4)
-			// Use ODS Tracker
-			const odsTag = option.telemetryTag?.ods;
-			trackDilemmaDecision(dilemma.id, option.label, odsTag).catch(
-				console.error,
-			);
-
-			// [NEW] Sociological Audit (Middleware)
-			auditResolution(dilemma.id, option);
-		} catch (error) {
-			console.error("Error in dilemma option select:", error);
-			// Fallback: Just close if everything fails? Or show error?
-			// For now, assume state set failed or option lookup failed.
-		}
+		});
 	};
 
 	const handleContinue = () => {
@@ -332,9 +335,12 @@ export function DilemmaModal({
 										style={{
 											fontSize: `${Math.max(0.875, zoomLevel * 0.8)}rem`,
 										}} // Scale button text slightly less aggresive
+										disabled={isPending}
 										onClick={() => handleOptionSelect(index)}
 									>
-										<div className="flex items-center">
+										<div
+											className={`flex items-center ${isPending ? "opacity-50" : ""}`}
+										>
 											<span className="mr-3 opacity-0 group-hover:opacity-100 text-blue-400 transition-opacity font-bold">
 												{">> "}
 											</span>
