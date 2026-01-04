@@ -191,7 +191,7 @@ export function SurvivalMap() {
 				</div>
 			)}
 
-			<div className="relative w-full h-[55%] flex-none border-b-2 border-slate-200 shadow-inner overflow-hidden">
+			<div className="relative w-full h-full flex-1 border-b-2 border-slate-200 shadow-inner overflow-hidden">
 				{loadingLocation && (
 					<div className="absolute top-2 right-2 z-[1000] bg-white/90 px-3 py-1 rounded-full shadow text-xs font-bold text-blue-600 animate-pulse">
 						Buscando sua localização...
@@ -203,7 +203,7 @@ export function SurvivalMap() {
 					href={`https://wa.me/?text=SOS! Estou em situação de emergência. Minha localização aproximada: ${userPosition ? `${userPosition[0]},${userPosition[1]}` : "Desconhecida"}`}
 					target="_blank"
 					rel="noopener noreferrer"
-					className="absolute top-4 left-4 z-[1000] bg-red-600 text-white font-bold px-4 py-2 rounded-full shadow-lg hover:bg-red-700 transition-transform hover:scale-105 flex items-center gap-2"
+					className="absolute top-24 left-4 z-[1000] bg-red-600 text-white font-bold px-4 py-2 rounded-full shadow-lg hover:bg-red-700 transition-transform hover:scale-105 flex items-center gap-2"
 				>
 					🚨 SOS EMERGÊNCIA
 				</a>
@@ -249,10 +249,8 @@ export function SurvivalMap() {
 				/>
 			</div>
 
-			{/* Nearby List Area - Scrollable */}
-			<div className="flex-1 overflow-y-auto p-4 bg-slate-900 border-t border-slate-800">
-				<NearbyList />
-			</div>
+			{/* Nearby List Area - Now Overlay */}
+			<NearbyList />
 		</div>
 	);
 }
