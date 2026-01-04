@@ -132,10 +132,14 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 						</div>
 						<div className="grid grid-cols-2 gap-6">
 							<div className="space-y-4">
-								<label className="block text-sm font-black text-slate-400 uppercase tracking-widest">
+								<label
+									htmlFor="avatar-gender"
+									className="block text-sm font-black text-slate-400 uppercase tracking-widest"
+								>
 									Gênero
 								</label>
 								<select
+									id="avatar-gender"
 									title="Selecione o gênero"
 									className="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-4 text-white font-bold focus:ring-blue-500"
 									value={formData.gender}
@@ -148,10 +152,14 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								</select>
 							</div>
 							<div className="space-y-4">
-								<label className="block text-sm font-black text-slate-400 uppercase tracking-widest">
+								<label
+									htmlFor="avatar-age"
+									className="block text-sm font-black text-slate-400 uppercase tracking-widest"
+								>
 									Faixa Etária
 								</label>
 								<select
+									id="avatar-age"
 									title="Selecione a faixa etária"
 									className="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-4 text-white font-bold focus:ring-blue-500"
 									value={formData.ageRange}
@@ -170,9 +178,9 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 					<div className="space-y-8 animate-slide-up">
 						<div className="flex items-center gap-3 mb-2">
 							<Camera size={20} className="text-blue-500" />
-							<label className="block text-sm font-black text-slate-400 uppercase tracking-widest">
+							<span className="block text-sm font-black text-slate-400 uppercase tracking-widest">
 								Selecione uma Imagem de Identidade
-							</label>
+							</span>
 						</div>
 						<div className="grid grid-cols-2 gap-8">
 							{AVATAR_OPTIONS.map((opt) => (
@@ -214,9 +222,9 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 
 				{step === 3 && (
 					<div className="space-y-6 animate-slide-up">
-						<label className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-6">
+						<span className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-6">
 							Etnia (Fator de Estigma Social Inicial)
-						</label>
+						</span>
 						<div className="grid grid-cols-2 gap-4">
 							{["branco", "preto", "pardo", "indigena"].map((eth) => (
 								<button

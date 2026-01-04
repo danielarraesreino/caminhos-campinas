@@ -1,6 +1,7 @@
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -61,7 +62,9 @@ export function InteractiveText({ text }: InteractiveTextProps) {
 										{termKey}
 									</DialogTitle>
 								</DialogHeader>
-								<div className="text-sm leading-relaxed mt-2">{definition}</div>
+								<DialogDescription className="text-sm leading-relaxed mt-2 text-slate-300">
+									{definition}
+								</DialogDescription>
 							</DialogContent>
 						</Dialog>
 					);
