@@ -8,6 +8,10 @@ export type TriggerType =
 	| "LOCATION"
 	| "STATUS"
 	| "CHAIN"
+	| "CHAIN_STEP"
+	| "STORYLINE_START"
+	| "START_SCENARIO"
+	| "TIME_SPECIFIC"
 	| "LOCATION_IDLE";
 
 export interface DilemmaOption {
@@ -30,11 +34,17 @@ export interface DilemmaOption {
 		>
 	> & {
 		inventoryAdd?: string;
+		inventoryRemove?: string | string[];
 		addBuff?: string;
 		removeBuff?: string;
 		workToolUpdate?: Partial<GameState["workTool"]>;
+		documentsUpdate?: Partial<GameState["documents"]>;
 		timeAdvance?: number;
 		clearInventory?: boolean;
+		addiction_risk?: number;
+		trust_state?: number;
+		cycle_repeat?: boolean;
+		employed_formal?: boolean;
 	};
 	effect_failure?: Partial<
 		Omit<
@@ -50,11 +60,17 @@ export interface DilemmaOption {
 		>
 	> & {
 		inventoryAdd?: string;
+		inventoryRemove?: string | string[];
 		addBuff?: string;
 		removeBuff?: string;
 		workToolUpdate?: Partial<GameState["workTool"]>;
+		documentsUpdate?: Partial<GameState["documents"]>;
 		timeAdvance?: number;
 		clearInventory?: boolean;
+		addiction_risk?: number;
+		trust_state?: number;
+		cycle_repeat?: boolean;
+		employed_formal?: boolean;
 	};
 	telemetryTag?: {
 		ods: string;
@@ -73,9 +89,11 @@ export interface Dilemma {
 	description: string;
 	trigger: {
 		type: TriggerType;
-		value: number;
+		value: number | string; // Updated to allow string values (e.g. "PERFIL_NEGRO")
 		locationId?: string;
 		statusCondition?: Record<string, number>;
+		prev_id?: string;
+		condition?: "slept_outside" | "no_docs" | "accepted_help";
 	};
 	source_fact?: string;
 	ods?: string[];

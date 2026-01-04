@@ -74,9 +74,21 @@ export interface GameState {
 	activeDilemmaId: string | null;
 	criticalHealth: boolean;
 	avatar: Avatar | null;
-	phoneBattery: number;
+	phoneBattery: number; // 0-100
 	userPosition: [number, number] | null;
 	isPaused: boolean;
+	addiction: number;
+	trust: number;
+	employed_formal: boolean;
+	history: GameEvent[]; // [NEW] Telemetry Log
+}
+
+export interface GameEvent {
+	id: string; // e.g., 'chain_exclusao_03_rapa' or UUID
+	type: "VIOLATION" | "ACHIEVEMENT" | "STATISTIC" | "BARRIER";
+	timestamp: number; // game time in hours
+	tags: string[]; // e.g., ['ODS_1', 'VIOLENCIA_INSTITUCIONAL']
+	description: string;
 }
 
 export type GameAction =
@@ -100,7 +112,10 @@ export type GameAction =
 	| { type: "UPDATE_PDU_STAGE"; payload: { stageId: string } }
 	| { type: "COMPLETE_PDU_STAGE"; payload: { stageId: string } }
 	| { type: "RESET_GAME" }
-	| { type: "SLEEP" }; // Added SLEEP for atomic action
+	| { type: "SLEEP" } // Added SLEEP for atomic action
+	| { type: "UPDATE_DOCUMENTS"; payload: Partial<GameState["documents"]> }
+	| { type: "SET_EMPLOYED_FORMAL"; payload: boolean }
+	| { type: "LOG_EVENT"; payload: GameEvent };
 
 const INITIAL_STATE: GameState = {
 	health: 100,
@@ -143,6 +158,10 @@ const INITIAL_STATE: GameState = {
 	phoneBattery: 100,
 	userPosition: null,
 	isPaused: false,
+	addiction: 0,
+	trust: 50, // 0-100, starts neutral
+	employed_formal: false,
+	history: [], // [NEW] Telemetry Log
 };
 
 // --- Reducer ---
@@ -297,15 +316,23 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				health: Math.min(100, state.health + 20),
 				energy: 100, // Fully restored
 				hunger: Math.max(0, state.hunger - 10),
-				time: (state.time + 8) % 24, // Sleep passes 8 hours? Or handled by caller? Logic below handled manual.
-				// Let's assume action only handles stats, caller handles time.
-				// Wait, previous helper did NOT advance time?
-				// "sleep" helper in previous code did NOT call advanceTime.
-				// But logic usually implies time passes.
-				// I will strictly follow previous helper logic instructions:
-				// "modifyStat health 20, hunger -10". Energy wasn't working.
-				// I will set energy 100 here.
+				time: (state.time + 8) % 24,
 			};
+
+		case "UPDATE_DOCUMENTS":
+			return {
+				...state,
+				documents: {
+					...state.documents,
+					...action.payload,
+				},
+			};
+
+		case "SET_EMPLOYED_FORMAL":
+			return { ...state, employed_formal: action.payload };
+
+		case "LOG_EVENT":
+			return { ...state, history: [...state.history, action.payload] };
 
 		default:
 			return state;
@@ -582,11 +609,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			work,
 			consumeBattery: (amount: number) => modifyStat("phoneBattery", -amount),
 			resetGame,
-			clearPersistence,
-			// [NEW] PDU Helpers
 			initPDU,
 			updatePduStage,
 			completePduStage,
+			updateDocuments: (updates: Partial<GameState["documents"]>) =>
+				dispatch({ type: "UPDATE_DOCUMENTS", payload: updates }),
+			setEmployedFormal: (isEmployed: boolean) =>
+				dispatch({ type: "SET_EMPLOYED_FORMAL", payload: isEmployed }),
+			logEvent: (event: GameEvent) =>
+				dispatch({ type: "LOG_EVENT", payload: event }),
 		}),
 		[
 			state,
@@ -608,7 +639,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			sleep,
 			work,
 			resetGame,
-			clearPersistence,
 			initPDU,
 			updatePduStage,
 			completePduStage,

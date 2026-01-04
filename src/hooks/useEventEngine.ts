@@ -15,9 +15,13 @@ export function useEventEngine() {
 		removeBuff,
 		setWorkTool,
 		addToInventory,
+		removeFromInventory,
+		inventory,
 		initPDU,
 		updatePduStage,
 		completePduStage,
+		updateDocuments,
+		setEmployedFormal,
 	} = useGameContext();
 
 	const activeDilemma = GAME_DILEMMAS.find((d) => d.id === activeDilemmaId);
@@ -80,13 +84,22 @@ export function useEventEngine() {
 			if (effectToApply.timeAdvance) advanceTime(effectToApply.timeAdvance);
 			if (effectToApply.inventoryAdd)
 				addToInventory(effectToApply.inventoryAdd);
+
 			if (effectToApply.clearInventory) {
-				// Esvaziar inventário (Logic needed in context or just iterating IDs?)
-				// Simplified: Context doesn't have clearInventory, so we rely on manual removal or updated hook
-				// For now, let's assume valid intent but maybe limited implementation
-				console.log(
-					"Inventory clearing requested but not fully implemented in context yet.",
-				);
+				// Esvaziar inventário
+				inventory.forEach((item: { id: string }) => {
+					removeFromInventory(item.id);
+				});
+			}
+
+			if (effectToApply.inventoryRemove) {
+				if (Array.isArray(effectToApply.inventoryRemove)) {
+					effectToApply.inventoryRemove.forEach((id: string) => {
+						removeFromInventory(id);
+					});
+				} else if (typeof effectToApply.inventoryRemove === "string") {
+					removeFromInventory(effectToApply.inventoryRemove);
+				}
 			}
 
 			// 3. Efeitos Sociais Campinas
@@ -98,6 +111,36 @@ export function useEventEngine() {
 					...effectToApply.workToolUpdate,
 					// biome-ignore lint/suspicious/noExplicitAny: dynamic spread
 				} as any);
+			}
+
+			if (effectToApply.documentsUpdate) {
+				updateDocuments(effectToApply.documentsUpdate);
+			}
+
+			if (effectToApply.addiction_risk) {
+				modifyStat("addiction" as any, effectToApply.addiction_risk);
+			}
+
+			if (effectToApply.trust_state) {
+				modifyStat("trust" as any, effectToApply.trust_state);
+			}
+
+			if (effectToApply.cycle_repeat) {
+				// Simula o ciclo de retorno: Avança 3 meses (90 dias), perde inventário e dinheiro
+				// 90 dias * 24 horas = 2160 horas
+				advanceTime(2160);
+				modifyStat("money", -10000); // Zera dinheiro (supondo max < 10000 ou lógica de zerar)
+				// Actually easier to just modifyStat negative max or check context.
+				// Context doesn't have setMoney. But addMoney handles negatives?
+				// addMoney implementation: Math.max(0, state.money + payload). So removing enormous amount sets to 0. Correct.
+
+				inventory.forEach((item: { id: string }) => {
+					removeFromInventory(item.id);
+				});
+			}
+
+			if (effectToApply.employed_formal !== undefined) {
+				setEmployedFormal(effectToApply.employed_formal);
 			}
 
 			// 4. [NEW] PDU Logic
@@ -138,6 +181,10 @@ export function useEventEngine() {
 			initPDU,
 			updatePduStage,
 			completePduStage,
+			updateDocuments,
+			inventory,
+			removeFromInventory,
+			setEmployedFormal,
 		],
 	);
 

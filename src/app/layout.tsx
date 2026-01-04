@@ -11,6 +11,7 @@ import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
 import { GameProvider } from "@/contexts/GameContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
+import { StartupLogger } from "@/features/debug/StartupLogger";
 import { SurvivalModeProvider } from "@/features/ui/SurvivalModeContext";
 
 const geistSans = Geist({
@@ -57,6 +58,7 @@ export default function RootLayout({
 								<Analytics />
 								<ServiceWorkerRegister />
 								<RealitySwitcher />
+								<StartupLogger />
 							</ServicesProvider>
 						</GameProvider>
 					</SurvivalModeProvider>

@@ -17,6 +17,7 @@ import type {
 	DilemmaOption,
 } from "@/features/game-loop/dilemma-types";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
+import { useImpactLogger } from "@/hooks/useImpactLogger";
 import { useODSTracker } from "@/hooks/useODSTracker";
 
 interface DilemmaModalProps {
@@ -35,6 +36,7 @@ export function DilemmaModal({
 	const [outcome, setOutcome] = useState<"success" | "failure" | null>(null);
 	const { playAmbience, stopAmbience } = useAudioSystem();
 	const { trackDilemmaDecision } = useODSTracker();
+	const { auditResolution } = useImpactLogger();
 
 	// A11y States
 	const [zoomLevel, setZoomLevel] = useState(1); // 1 = 100%, 1.2 = 120%
@@ -130,6 +132,9 @@ export function DilemmaModal({
 			trackDilemmaDecision(dilemma.id, option.label, odsTag).catch(
 				console.error,
 			);
+
+			// [NEW] Sociological Audit (Middleware)
+			auditResolution(dilemma.id, option);
 		} catch (error) {
 			console.error("Error in dilemma option select:", error);
 			// Fallback: Just close if everything fails? Or show error?

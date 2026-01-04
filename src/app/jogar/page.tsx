@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { ImpactReport } from "@/features/dashboard/ImpactReport";
 import {
 	checkGameOver,
 	type GameOverResult,
@@ -10,17 +11,17 @@ import { useGameLoop } from "@/features/game-loop/useGameLoop";
 import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
 import { AvatarCreation } from "@/features/ui/AvatarCreation";
 import { DilemmaModal } from "@/features/ui/DilemmaModal";
-
 import { EffectsOverlay } from "@/features/ui/EffectsOverlay";
 import { GameChat } from "@/features/ui/GameChat";
 import { GameHUD } from "@/features/ui/GameHUD";
 import { GameOverModal } from "@/features/ui/GameOverModal";
 import { OnboardingTutorial } from "@/features/ui/OnboardingTutorial";
-
+import { useAudioDirector } from "@/hooks/useAudioDirector";
 import { useEventEngine } from "@/hooks/useEventEngine";
 
 export default function GamePage() {
 	useGameLoop();
+	useAudioDirector(); // [NEW] Immersive Audio System
 	const { activeDilemma, resolveDilemma, clearActiveDilemma, triggerDilemma } =
 		useEventEngine();
 	const gameState = useGameContext();
@@ -153,10 +154,12 @@ export default function GamePage() {
 
 			{/* CAMADA 60: Game Over (Prioridade Máxima) */}
 			{gameOverResult?.isGameOver && (
-				<GameOverModal
-					gameOverResult={gameOverResult}
-					onRestart={handleRestart}
-				/>
+				<div className="absolute inset-0 z-[160] bg-slate-950">
+					<ImpactReport
+						onRestart={handleRestart}
+						gameOverResult={gameOverResult}
+					/>
+				</div>
 			)}
 		</main>
 	);

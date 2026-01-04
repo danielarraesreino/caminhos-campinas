@@ -169,13 +169,47 @@ export class DilemmaManager {
 
 		switch (type) {
 			case "RANDOM":
-				return Math.random() < value;
+				return Math.random() < (value as number);
 			case "HUNGER_LOW":
-				return (hunger || 0) < value;
+				return (hunger || 0) < (value as number);
 			case "HYGIENE_LOW":
-				return (hygiene || 0) < value;
+				return (hygiene || 0) < (value as number);
 			case "SOCIAL_STIGMA_HIGH":
-				return (socialStigma || 0) > value;
+				return (socialStigma || 0) > (value as number);
+			case "STORYLINE_START":
+				// Checks if avatar ethnicity matches target value (e.g., "PERFIL_NEGRO")
+				if (value === "PERFIL_NEGRO" && state.avatar) {
+					return (
+						state.avatar.ethnicity === "preto" ||
+						state.avatar.ethnicity === "pardo"
+					);
+				}
+				return false;
+			case "CHAIN_STEP":
+				if (dilemma.trigger?.prev_id) {
+					// Check if previous dilemma was resolved
+					const prevResolved = state.resolvedDilemmas?.includes(
+						dilemma.trigger.prev_id,
+					);
+					if (!prevResolved) return false;
+
+					// Check specific conditions
+					if (dilemma.trigger.condition === "slept_outside") {
+						return !state.isAtShelter;
+					}
+					if (dilemma.trigger.condition === "no_docs") {
+						return (
+							!state.documents?.hasRG &&
+							state.resolvedDilemmas?.includes(dilemma.trigger.prev_id)
+						);
+					}
+					if (dilemma.trigger.condition === "accepted_help") {
+						// Check if "ACCEPTED_HELP" buff is active (added in previous step)
+						return state.activeBuffs?.includes("ACCEPTED_HELP");
+					}
+					return true;
+				}
+				return false;
 			case "LOCATION":
 				if (dilemma.location_trigger && userPosition) {
 					const dist = this.calculateDistance(
@@ -188,8 +222,11 @@ export class DilemmaManager {
 				}
 				break;
 			case "LOCATION_IDLE":
-				if (timeInLocation >= value) {
+				// ... existing logic ...
+				if (timeInLocation >= (value as number)) {
+					// Logic copied from view...
 					if (dilemma.location_trigger && userPosition) {
+						// re-using calc
 						const dist = this.calculateDistance(
 							userPosition[0],
 							userPosition[1],
@@ -198,7 +235,6 @@ export class DilemmaManager {
 						);
 						return dist * 1000 <= (dilemma.location_trigger.radius || 50);
 					}
-					// Special case for Centro (enquadro) if no specific location_trigger but IDLE
 					if (dilemma.id === "enquadro_13_maio" && userPosition) {
 						const dist = this.calculateDistance(
 							userPosition[0],
@@ -214,6 +250,9 @@ export class DilemmaManager {
 			case "STATUS":
 				if (statusCondition?.battery !== undefined) {
 					return (phoneBattery || 0) <= statusCondition.battery;
+				}
+				if (statusCondition?.health !== undefined) {
+					return (state.health || 0) <= statusCondition.health;
 				}
 				break;
 		}

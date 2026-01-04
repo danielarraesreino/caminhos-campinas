@@ -1004,5 +1004,369 @@
 				}
 			}
 		]
+	},
+	{
+		"id": "chain_exclusao_01_ruptura",
+		"title": "A Casa Caiu",
+		"description": "A discussão com seu padrasto escalou. Não há espaço na casa de dois cômodos na periferia. Ele jogou suas roupas na calçada. Você é jovem, preto e está sem dinheiro. O vizinho chama a polícia por causa do barulho. Você sabe que quando a viatura chegar, o alvo será você.",
+		"source_fact": "71,5% da população de rua de Campinas cita conflitos familiares como motivo principal. 67,8% são pretos ou pardos (Censo FEAC 2024).",
+		"trigger": {
+			"type": "STORYLINE_START",
+			"value": "PERFIL_NEGRO"
+		},
+		"options": [
+			{
+				"label": "Esperar a polícia e tentar explicar",
+				"consequence": "A polícia não quis ouvir. Você foi enquadrado, humilhado e 'convidado' a sair do bairro. Chega ao centro com trauma e revolta.",
+				"effect": {
+					"health": -10,
+					"dignity": -20,
+					"sanity": -15
+				}
+			},
+			{
+				"label": "Pegar a mochila e fugir para o Centro",
+				"consequence": "Você evita o confronto, mas sai sem documentos e sem despedidas. A noite no Centro é fria e você é um estranho no território.",
+				"effect": {
+					"sanity": -5,
+					"inventoryAdd": "NO_DOCS",
+					"socialStigma": 10,
+					"documentsUpdate": {
+						"hasRG": false
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_exclusao_02_samim",
+		"title": "A Carroça ou a Cama",
+		"description": "Você conseguiu uma carroça e passou o dia coletando papelão. Tem R$ 40,00 em material nela. Começa a chover torrencialmente. Você chega ao SAMIM (Albergue Municipal) às 18h50. O segurança barra sua entrada: 'A regra é clara: não entra carroça, nem cachorro. Só gente'.",
+		"source_fact": "Regras do SAMIM proíbem veículos de tração humana e animais. O dilema entre proteger a ferramenta de trabalho e o abrigo é constante.",
+		"trigger": {
+			"type": "CHAIN_STEP",
+			"value": 0,
+			"prev_id": "chain_exclusao_01_ruptura"
+		},
+		"options": [
+			{
+				"label": "Abandonar a carroça e entrar",
+				"consequence": "Você dorme no seco e come. Mas ao sair de manhã, sua carroça (seu sustento) foi roubada ou recolhida pelo caminhão de lixo. Você voltou à estaca zero.",
+				"effect": {
+					"health": 20,
+					"money": -40,
+					"dignity": -30,
+					"workToolUpdate": {
+						"isConfiscated": true
+					},
+					"inventoryRemove": ["carroca"]
+				}
+			},
+			{
+				"label": "Dormir na marquise para vigiar a carroça",
+				"consequence": "Você protege seu patrimônio com um plástico. O frio dói nos ossos e a chuva molha o papelão, desvalorizando-o. Mas você manteve sua autonomia.",
+				"effect": {
+					"health": -25,
+					"money": 20,
+					"dignity": 15,
+					"addBuff": "EXPOSED"
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_exclusao_03_rapa",
+		"title": "Zeladoria ou Limpeza Étnica?",
+		"description": "Madrugada sob o Viaduto Cury. Luzes fortes e sirenes. É o 'Rapa' (GCM e Serviços Públicos). Eles não pedem licença. Um agente chuta seu papelão: 'Levanta, vagabundo'. Ele olha para você (homem negro) com desprezo diferente do que olha para o senhor branco ao lado. É o racismo institucional em ação.",
+		"source_fact": "51,1% da violência sofrida pela população de rua provém da Guarda Municipal ou Polícia. O perfil majoritário é de homens negros.",
+		"trigger": {
+			"type": "CHAIN_STEP",
+			"value": 0,
+			"prev_id": "chain_exclusao_02_samim",
+			"condition": "slept_outside"
+		},
+		"options": [
+			{
+				"label": "Reagir e segurar seus pertences",
+				"consequence": "Você tenta puxar a coberta. O agente reage com uso progressivo de força. Você é agredido fisicamente e detido para averiguação. Seus bens vão para o caminhão de lixo.",
+				"effect": {
+					"health": -40,
+					"dignity": -30,
+					"clearInventory": true,
+					"sanity": -20,
+					"documentsUpdate": {
+						"hasRG": false
+					}
+				}
+			},
+			{
+				"label": "Sair de cabeça baixa e perder tudo",
+				"consequence": "Você se afasta para não apanhar. Vê o caminhão triturar sua coberta e documentos. A humilhação queima mais que o frio.",
+				"effect": {
+					"health": -5,
+					"dignity": -25,
+					"sanity": -10,
+					"inventoryAdd": "NO_DOCS",
+					"documentsUpdate": {
+						"hasRG": false
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_exclusao_04_fome_doc",
+		"title": "A Fome tem Burocracia",
+		"description": "Você está faminto. O Bom Prato serve almoço a R$ 1,00. Você tem a moeda, mas perdeu o RG no 'Rapa'. O funcionário na porta é irredutível: 'Sem documento ou cadastro biométrico, não entra'. A burocracia estatal te nega o direito biológico de comer.",
+		"source_fact": "Acesso ao Bom Prato exige identificação. A perda de documentos durante ações de zeladoria bloqueia acesso a direitos básicos (ODS 2).",
+		"trigger": {
+			"type": "CHAIN_STEP",
+			"value": 0,
+			"prev_id": "chain_exclusao_03_rapa",
+			"condition": "no_docs"
+		},
+		"options": [
+			{
+				"label": "Pedir para alguém comprar para você",
+				"consequence": "Você pede na fila. A maioria ignora (aporofobia). Uma senhora compra sua ficha, mas o segurança te observa como se fosse um criminoso.",
+				"effect": {
+					"hunger": -80,
+					"dignity": -15,
+					"socialStigma": 10
+				}
+			},
+			{
+				"label": "Ir ao Centro Pop tentar 2ª via",
+				"consequence": "Você caminha 3km até o Centro Pop com fome. Lá, descobre que precisa da Certidão de Nascimento (que está em outra cidade). O prazo é de 30 dias. Você continua com fome.",
+				"effect": {
+					"hunger": 10,
+					"dignity": 5,
+					"sanity": -10
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_exclusao_05_retorno",
+		"title": "O Bilhete de Ida",
+		"description": "Abordagem da Assistência Social. Eles não oferecem emprego ou moradia em Campinas. Oferecem uma passagem de ônibus só de ida para sua cidade natal. 'Lá você tem família', dizem. Eles ignoram que sua família foi quem te expulsou (Dilema 1). É uma política de higienização, não de cuidado.",
+		"source_fact": "Prefeitura intensifica envio de pessoas para cidades de origem. MP considera prática ilegal se forçada ou sem consentimento qualificado.",
+		"trigger": {
+			"type": "CHAIN_STEP",
+			"value": 0,
+			"prev_id": "chain_exclusao_04_fome_doc"
+		},
+		"options": [
+			{
+				"label": "Aceitar a passagem (Fim do Jogo)",
+				"consequence": "Você aceita pelo cansaço. Chega na cidade natal, a família não te aceita. Você volta para a rua, mas agora em uma cidade com menos recursos que Campinas. O ciclo reinicia.",
+				"effect": {
+					"health": 0
+				}
+			},
+			{
+				"label": "Recusar e resistir em Campinas",
+				"consequence": "Você diz não. O agente anota que você 'recusou assistência'. Você continua em Campinas, marcado como 'não cooperativo', mas dono do seu destino no território.",
+				"effect": {
+					"dignity": 20,
+					"socialStigma": -10,
+					"sanity": 10
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_saude_01_dor",
+		"title": "O Peso do Corpo",
+		"description": "Você acordou com uma dor de dente lancinante e as costas travadas pelo frio da calçada. A dor te impede de puxar a carroça hoje. Você tem R$ 10,00. O posto de saúde exige agendamento e o remédio só sai com receita.",
+		"source_fact": "Problemas de saúde bucal e dores crônicas são queixas frequentes, mas a burocracia do agendamento em UBSs colide com a urgência da dor (Censo 2024).",
+		"trigger": {
+			"type": "STATUS",
+			"value": "LOW_HEALTH",
+			"statusCondition": {
+				"health": 30
+			}
+		},
+		"options": [
+			{
+				"label": "Tentar a UBS (Burocracia)",
+				"consequence": "Você perde 4 horas na fila. Conseguem te encaixar para daqui a 2 dias. Você sai com dor e sem ter trabalhado.",
+				"effect": {
+					"health": -5,
+					"money": 0,
+					"sanity": -10,
+					"timeAdvance": 4
+				}
+			},
+			{
+				"label": "Comprar 'alívio' na esquina (Automedicação)",
+				"consequence": "Você gasta seu dinheiro em álcool ou outra substância. A dor passa imediatamente. Você consegue puxar a carroça por mais algumas horas, mas sua saúde mental degrada.",
+				"effect": {
+					"health": -10,
+					"money": -10,
+					"sanity": 15,
+					"addiction_risk": 20
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_saude_02_consultorio",
+		"title": "O Colete Azul",
+		"description": "Uma van do 'Consultório na Rua' estaciona perto de onde você está. Eles não pedem RG, não julgam seu estado e oferecem curativos e escuta. É a primeira vez na semana que alguém te chama pelo nome.",
+		"source_fact": "O Consultório na Rua atua 'in loco', ofertando cuidados básicos sem as exigências burocráticas das unidades fixas, sendo crucial para a criação de vínculos (Cândido Ferreira/Prefeitura).",
+		"trigger": {
+			"type": "CHAIN_STEP",
+			"value": 0,
+			"prev_id": "chain_saude_01_dor"
+		},
+		"options": [
+			{
+				"label": "Aceitar atendimento (Vínculo)",
+				"consequence": "Eles cuidam da sua ferida e te dão um analgésico simples. Você sente que recuperou um pouco da dignidade. Eles te falam do CAPS, mas não te obrigam a ir.",
+				"effect": {
+					"health": 20,
+					"sanity": 20,
+					"trust_state": 10,
+					"addBuff": "ACCEPTED_HELP"
+				}
+			},
+			{
+				"label": "Fugir por desconfiança (Medo)",
+				"consequence": "Você tem medo que eles chamem a internação compulsória ou a polícia. Você se esconde. A dor continua.",
+				"effect": {
+					"sanity": -10,
+					"socialStigma": 10
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_saude_03_caps",
+		"title": "A Porta Giratória",
+		"description": "Após o contato com a equipe, surge uma vaga em uma Comunidade Terapêutica. A regra: 9 meses isolado, rezando e trabalhando, sem contato externo. Se você for, perde seu ponto na rua e sua carroça.",
+		"source_fact": "30,1% das pessoas já saíram da rua e voltaram. A falta de moradia e emprego pós-internação gera um ciclo de retorno (Censo FEAC 2024).",
+		"trigger": {
+			"type": "CHAIN_STEP",
+			"value": 0,
+			"prev_id": "chain_saude_02_consultorio",
+			"condition": "accepted_help"
+		},
+		"options": [
+			{
+				"label": "Aceitar internação (Reset)",
+				"consequence": "Você fica limpo por 3 meses, ganha peso. Mas sai sem emprego, sem casa e sem sua carroça. A família ainda não te aceita. Você volta para a rua do zero.",
+				"effect": {
+					"health": 50,
+					"cycle_repeat": true
+				}
+			},
+			{
+				"label": "Recusar e tentar CAPS (Redução de Danos)",
+				"consequence": "Você escolhe o tratamento ambulatorial. É mais difícil, exige disciplina diária enquanto dorme na rua, mas você mantém sua autonomia e seus bens.",
+				"effect": {
+					"dignity": 10,
+					"sanity": -5,
+					"trust_state": 5
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_trab_01_mao_amiga",
+		"title": "A Bolsa ou a Vida",
+		"description": "Você vê um cartaz do programa 'Mão Amiga'. Eles oferecem curso de jardinagem e uma bolsa de R$ 1.240,00. O problema: o curso é das 8h às 17h. Se você for, não pode catar latinha nem cuidar do seu ponto. A bolsa só cai no final do mês.",
+		"source_fact": "O Programa Mão Amiga oferece qualificação e bolsa, mas exige dedicação integral, competindo com a necessidade de renda diária imediata para comer (Prefeitura de Campinas/FEAC).",
+		"trigger": {
+			"type": "LOCATION",
+			"value": "CENTRO_POP"
+		},
+		"location_trigger": {
+			"lat": -22.9056,
+			"lng": -47.0592,
+			"radius": 100
+		},
+		"options": [
+			{
+				"label": "Aceitar o curso (Investimento)",
+				"consequence": "Você começa o curso. Aprende, mas passa o dia com fome pois não tem dinheiro vivo para o jantar. A burocracia demora 30 dias para pagar a primeira bolsa.",
+				"effect": {
+					"dignity": 20,
+					"money": -50,
+					"hunger": 30,
+					"sanity": 10
+				}
+			},
+			{
+				"label": "Ignorar e catar latinha (Sobrevivência)",
+				"consequence": "Você garante os R$ 40,00 do dia. Come bem e compra um corote. Mas continua exatamente no mesmo lugar.",
+				"effect": {
+					"money": 40,
+					"hunger": -20,
+					"sanity": -5
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_trab_02_entrevista",
+		"title": "O Muro Invisível",
+		"description": "Surgiu uma vaga de ajudante de pedreiro. Você tem a força e a vontade. Mas suas roupas estão sujas e você não toma banho há 3 dias. O Bagageiro Municipal (onde estaria sua roupa limpa) está fechado ou longe.",
+		"source_fact": "A falta de acesso a banho e roupas limpas (lavanderias sociais) impede a participação em entrevistas de emprego, gerando a barreira da 'boa aparência' (Relatório LabCidade/Censo).",
+		"trigger": {
+			"type": "HYGIENE_LOW",
+			"value": 30
+		},
+		"options": [
+			{
+				"label": "Ir assim mesmo (Coragem)",
+				"consequence": "O mestre de obras te olha de cima a baixo. Ele sente o cheiro. Diz que a vaga 'já foi preenchida', embora a placa continue lá. Você se sente um lixo.",
+				"effect": {
+					"dignity": -30,
+					"sanity": -10,
+					"addBuff": "SOCIAL_REJECTION"
+				}
+			},
+			{
+				"label": "Desistir e gastar com banho pago (Custo)",
+				"consequence": "Você gasta seus últimos R$ 10,00 num banho na rodoviária. Chega limpo, mas atrasado. A vaga foi preenchida.",
+				"effect": {
+					"money": -10,
+					"hygiene": 50,
+					"sanity": -5
+				}
+			}
+		]
+	},
+	{
+		"id": "chain_trab_03_endereco",
+		"title": "Sem CEP, Sem Vaga",
+		"description": "Você passou na entrevista! O RH pede comprovante de residência. Você oferece a declaração do Centro Pop. A funcionária do RH franze a testa: 'O sistema não aceita endereço comercial ou de abrigo. Precisa de uma conta de luz'.",
+		"source_fact": "A exigência de comprovante de residência convencional exclui a população de rua do mercado formal, mesmo com a legalidade do uso do Centro Pop como referência (Decreto 7.053).",
+		"trigger": {
+			"type": "CHAIN_STEP",
+			"value": 0,
+			"prev_id": "chain_trab_02_entrevista"
+		},
+		"options": [
+			{
+				"label": "Insistir na lei (Direito)",
+				"consequence": "Você argumenta que é seu direito. Ela diz que 'são normas da empresa' e chama o próximo. Você perdeu a vaga pela burocracia.",
+				"effect": {
+					"sanity": -10,
+					"addBuff": "JOB_DENIED",
+					"trust_state": -10
+				}
+			},
+			{
+				"label": "Mentir/Usar endereço falso (Jeitinho)",
+				"consequence": "Você pede um comprovante emprestado de um conhecido. Consegue a vaga, mas vive com medo de descobrirem que você dorme na praça.",
+				"effect": {
+					"sanity": -10,
+					"employed_formal": true,
+					"money": 0
+				}
+			}
+		]
 	}
 ]
