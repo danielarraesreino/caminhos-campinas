@@ -1,8 +1,8 @@
 "use client";
 
-import { Lock, MapPin, Navigation, Wallet } from "lucide-react";
+import { Lock, MapPin, Navigation } from "lucide-react";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 
 import { useServices } from "@/contexts/ServicesContext";
@@ -52,9 +52,9 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-		Math.cos((lat2 * Math.PI) / 180) *
-		Math.sin(dLon / 2) *
-		Math.sin(dLon / 2);
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c; // in km
 }
@@ -74,11 +74,11 @@ export function NearbyList() {
 					s.coords && Array.isArray(s.coords) && s.coords.length === 2;
 				const dist = hasCoords
 					? calculateDistance(
-						userPosition[0],
-						userPosition[1],
-						s.coords[0],
-						s.coords[1],
-					)
+							userPosition[0],
+							userPosition[1],
+							s.coords[0],
+							s.coords[1],
+						)
 					: Number.POSITIVE_INFINITY;
 				return { ...s, distance: dist };
 			})
@@ -144,16 +144,23 @@ export function NearbyList() {
 
 			trackServiceAccess(actionType, service.name);
 		},
-		[modifyStat, addBuff, addMoney, trackServiceAccess, money],
+		[modifyStat, addBuff, addMoney, trackServiceAccess],
 	);
 
-	if (!userPosition) return <div>Aguardando GPS...</div>;
+	if (!userPosition) return null;
 
 	return (
-		<div className="space-y-4 p-4 pb-20">
-			<h2 className="text-xl font-bold font-heading">Serviços Próximos</h2>
+		<div className="fixed bottom-0 left-0 w-full z-40 pb-6 pointer-events-none">
+			<div className="px-4 mb-2 pointer-events-auto flex items-center justify-between">
+				<h2 className="text-sm font-bold font-heading text-white drop-shadow-md uppercase tracking-wider bg-black/50 px-2 rounded">
+					Serviços Próximos
+				</h2>
+				<div className="text-[10px] text-slate-300 bg-black/50 px-2 rounded">
+					Deslize para ver →
+				</div>
+			</div>
 
-			<div className="flex flex-col gap-3">
+			<div className="flex overflow-x-auto gap-3 px-4 pb-4 snap-x snap-mandatory pointer-events-auto no-scrollbar mask-gradient-right">
 				{services.map((service) => {
 					let allowed = true;
 					let reasons: string[] = [];
@@ -162,11 +169,7 @@ export function NearbyList() {
 						allowed = check.allowed;
 						reasons = check.reasons;
 					} catch (err) {
-						console.error(
-							"Critical error checking service availability:",
-							service?.id,
-							err,
-						);
+						console.error("availability check error", err);
 						return null;
 					}
 					const distanceDisplay =
@@ -177,78 +180,93 @@ export function NearbyList() {
 					return (
 						<div
 							key={service.id}
-							className={`relative overflow-hidden rounded-lg border p-3 ${allowed ? "bg-card" : "bg-muted/50 opacity-80"}`}
+							className={`relative flex-none w-[85vw] max-w-[320px] snap-center overflow-hidden rounded-xl border p-4 shadow-xl transition-all
+                                ${
+																	allowed
+																		? "bg-slate-900/95 border-slate-700 text-slate-100 backdrop-blur-md"
+																		: "bg-slate-950/90 border-slate-800 text-slate-500 grayscale opacity-80"
+																}`}
 						>
-							<div className="flex justify-between items-start">
+							<div className="flex justify-between items-start mb-2">
 								<div>
-									<h3 className="font-bold">{service.name}</h3>
-									<p className="text-xs text-muted-foreground">
+									<h3
+										className={`font-bold text-lg leading-tight ${allowed ? "text-white" : "text-slate-400"}`}
+									>
+										{service.name}
+									</h3>
+									<p className="text-xs text-blue-400 font-mono mt-0.5 flex items-center gap-1">
+										<MapPin size={10} />
 										{service.type} • {distanceDisplay}
 									</p>
 								</div>
-								<span className="text-xs font-mono bg-secondary px-2 py-1 rounded">
+								<span className="text-[10px] font-mono bg-slate-800 text-slate-300 px-2 py-1 rounded border border-slate-700 whitespace-nowrap">
 									{service.opening_hours}
 								</span>
 							</div>
 
-							<p className="text-sm mt-2 line-clamp-2">{service.description}</p>
+							<p className="text-sm text-slate-300 mb-4 line-clamp-2 h-10 leading-relaxed">
+								{service.description}
+							</p>
 
 							{!allowed && (
-								<div className="mt-2 rounded bg-red-900/20 p-2 text-xs text-red-600 dark:text-red-400 flex items-center gap-2">
-									<Lock size={12} />
-									{reasons.join(" ")}
+								<div className="mb-3 rounded bg-red-950/30 border border-red-900/50 p-2 text-xs text-red-400 flex items-center gap-2">
+									<Lock size={12} className="flex-none" />
+									<span className="line-clamp-1">{reasons[0]}</span>
 								</div>
 							)}
 
-							<div className="mt-3 flex gap-2">
-								<button
-									onClick={() => handleUseService(service)}
-									disabled={!allowed}
-									className="flex-1 bg-primary text-primary-foreground h-9 px-4 py-2 rounded text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
-								>
-									{allowed ? "Utilizar Serviço" : "Indisponível"}
-								</button>
-
-								{service.relatedLink && (
-									<button
-										type="button"
-										onClick={() => window.open(service.relatedLink, "_blank")}
-										className="flex-1 text-[10px] uppercase font-bold h-9 bg-blue-600 border-blue-500 hover:bg-blue-700 text-white rounded flex items-center justify-center gap-1"
-									>
-										📅 Agendar
-									</button>
-								)}
-
+							<div className="flex gap-2 mt-auto">
 								<button
 									type="button"
-									onClick={() => {
-										if (service.action_type === "link" && service.url) {
-											window.open(service.url, "_blank");
-										} else if (service.coords && service.coords.length >= 2) {
-											const [lat, lng] = service.coords;
-											window.open(
-												`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
-												"_blank",
-											);
-										}
-									}}
-									className={`flex items-center justify-center min-w-[36px] px-2 h-9 border rounded hover:opacity-90 transition-colors ${service.action_type === "link" ? "bg-blue-100 text-blue-700 border-blue-200" : "hover:bg-muted text-blue-500 hover:text-blue-600 hover:border-blue-200"}`}
-									title={
-										service.action_type === "link"
-											? "Acessar Site do Curso"
-											: "Ver no Google Maps"
-									}
+									onClick={() => handleUseService(service)}
+									disabled={!allowed}
+									className={`flex-1 h-10 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wide transition-all active:scale-95
+                                        ${
+																					allowed
+																						? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20"
+																						: "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
+																				}`}
 								>
-									{service.action_type === "link" ? (
-										<span className="text-xs font-bold mr-1">Link</span>
-									) : (
-										<Navigation size={16} />
-									)}
+									{allowed ? "Utilizar" : "Bloqueado"}
 								</button>
+
+								{/* ACTION BUTTONS */}
+								<div className="flex gap-2">
+									{service.relatedLink && (
+										<button
+											type="button"
+											onClick={() => window.open(service.relatedLink, "_blank")}
+											className="h-10 w-10 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-blue-400 rounded-lg flex items-center justify-center"
+											title="Agendar"
+										>
+											📅
+										</button>
+									)}
+
+									<button
+										type="button"
+										onClick={() => {
+											if (service.action_type === "link" && service.url) {
+												window.open(service.url, "_blank");
+											} else if (service.coords && service.coords.length >= 2) {
+												const [lat, lng] = service.coords;
+												window.open(
+													`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+													"_blank",
+												);
+											}
+										}}
+										className="h-10 w-10 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-emerald-400 rounded-lg flex items-center justify-center"
+									>
+										<Navigation size={18} />
+									</button>
+								</div>
 							</div>
 						</div>
 					);
 				})}
+				{/* Spacer to allow last item to be fully visible if needed */}
+				<div className="w-2 flex-none" />
 			</div>
 		</div>
 	);
