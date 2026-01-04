@@ -12,7 +12,12 @@ interface ShareableDossierProps {
 		workStatus: string;
 		daysSurvived: number;
 	};
-	history: Array<{ tags: string[]; type: string; description: string }>;
+	history: Array<{
+		id?: string;
+		tags: string[];
+		type: string;
+		description: string;
+	}>;
 	avatarName?: string;
 	deathReason?: string;
 }
