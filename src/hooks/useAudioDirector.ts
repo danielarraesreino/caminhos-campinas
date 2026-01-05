@@ -12,6 +12,7 @@ export function useAudioDirector() {
 	const health = gameContext?.health ?? 100;
 	const sanity = gameContext?.sanity ?? 80;
 	const activeDilemmaId = gameContext?.activeDilemmaId;
+	const hasHydrated = gameContext?.hasHydrated;
 
 	const { playAmbience, setVolume } = useAudioSystem();
 
@@ -28,6 +29,9 @@ export function useAudioDirector() {
 
 	// 1. Cycle Day/Night & Traffic & Director Intensity
 	useEffect(() => {
+		// 🛡️ Guard: Wait for data
+		if (!hasHydrated) return;
+
 		const hour = (time || 0) % 24;
 		const isNight = hour >= 19 || hour < 6;
 
@@ -55,8 +59,8 @@ export function useAudioDirector() {
 			targetVolume = 0.9; // Loud
 
 			if (
-				activeDilemma.aspect === "HEALTH" ||
-				activeDilemma.aspect === "SECURITY"
+				activeDilemma?.aspect === "HEALTH" || // 🛡️ Optional Chaining
+				activeDilemma?.aspect === "SECURITY"
 			) {
 				// Danger / Sirens / Heartbeat (simulated by volume/track if we had multiple)
 				// For now, boost volume to max to create urgency
@@ -78,7 +82,15 @@ export function useAudioDirector() {
 		} catch (err) {
 			console.warn("[AudioDirector] Autoplay prevented or audio error:", err);
 		}
-	}, [time, health, sanity, activeDilemmaId, playAmbience, setVolume]);
+	}, [
+		time,
+		health,
+		sanity,
+		activeDilemmaId,
+		playAmbience,
+		setVolume,
+		hasHydrated,
+	]);
 
 	// 2. Event Triggers (One-shot SFX)
 	useEffect(() => {

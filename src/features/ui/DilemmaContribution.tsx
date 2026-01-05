@@ -70,7 +70,7 @@ export function DilemmaContribution() {
 		// But our function requires Blob. If no audio, let's send an empty one or handle logic.
 		// For now, let's assume text-only is fine if we pass an empty blob or change service.
 		// Our service expects Blob. Let's send an empty text blob if no audio.
-		const finalAudio =
+		const _finalAudio =
 			audioBlob || new Blob(["no-audio"], { type: "text/plain" });
 
 		// const result = await uploadUserDilemma(finalAudio, text, contact);

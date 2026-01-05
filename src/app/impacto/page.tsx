@@ -65,7 +65,6 @@ export default function ImpactPage() {
 				<h1 className="text-4xl font-bold mb-2">
 					Painel de Inteligência Social
 				</h1>
-
 			</header>
 
 			{/* KPIs de Impacto */}
@@ -112,7 +111,8 @@ export default function ImpactPage() {
 
 			{/* Visualização da Lacuna (Supply vs Demand) */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-				<div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+				{/* Removido transparência e escurecido fundo para auto-contraste */}
+				<div className="bg-slate-900 p-6 rounded-2xl border border-slate-700">
 					<h2 className="text-xl font-bold mb-6 flex items-center gap-2">
 						<Home className="w-5 h-5 text-blue-500" />
 						Capacidade de Acolhimento (Campinas)
@@ -122,7 +122,8 @@ export default function ImpactPage() {
 					<div className="space-y-6">
 						<div>
 							<div className="flex justify-between text-sm mb-2">
-								<span className="text-slate-400">Demanda Real (Censo)</span>
+								{/* Texto clareado de slate-400 para slate-200 */}
+								<span className="text-slate-200">Demanda Real (Censo)</span>
 								<span className="font-bold">1.557 Pessoas</span>
 							</div>
 							<div className="h-4 bg-slate-700 rounded-full overflow-hidden">
@@ -132,7 +133,8 @@ export default function ImpactPage() {
 
 						<div>
 							<div className="flex justify-between text-sm mb-2">
-								<span className="text-slate-400">
+								{/* Texto clareado */}
+								<span className="text-slate-200">
 									Vagas Disponíveis (SAMIM + OSCs)
 								</span>
 								<span className="font-bold text-green-400">~300 Vagas</span>
@@ -149,9 +151,10 @@ export default function ImpactPage() {
 				</div>
 
 				{/* Insight Qualitativo */}
-				<div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+				<div className="bg-slate-900 p-6 rounded-2xl border border-slate-700">
 					<h2 className="text-xl font-bold mb-4">Análise de Inteligência</h2>
-					<ul className="space-y-4 text-sm text-slate-300">
+					{/* Texto clareado de slate-300 para slate-200 */}
+					<ul className="space-y-4 text-sm text-slate-200">
 						<li className="flex gap-3">
 							<span className="text-purple-400 font-bold">
 								ALERTA SANITÁRIO:
@@ -205,7 +208,8 @@ export default function ImpactPage() {
 					<span className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />A
 					Realidade Invisível
 				</h2>
-				<p className="text-slate-400 mb-8 max-w-3xl">
+				{/* Texto clareado */}
+				<p className="text-slate-200 mb-8 max-w-3xl">
 					Auditoria cruzada: Dados oficiais do Censo Pop Rua 2024 vs. Mitos
 					Sociais. A tecnologia e a violência institucional operam como
 					barreiras invisíveis.
@@ -213,7 +217,8 @@ export default function ImpactPage() {
 
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 					{/* CARD 1: Exclusão Digital */}
-					<div className="bg-slate-900/50 p-6 rounded-2xl border border-red-900/30 ring-1 ring-red-900/10">
+					{/* Removido transparência bg-slate-900/50 -> bg-slate-900 */}
+					<div className="bg-slate-900 p-6 rounded-2xl border border-red-900/50 ring-1 ring-red-900/20">
 						<h3 className="text-lg font-bold text-red-200 mb-6 flex items-center gap-2">
 							<div className="p-2 bg-red-950 rounded-lg">
 								<AlertTriangle className="w-4 h-4 text-red-500" />
@@ -224,7 +229,8 @@ export default function ImpactPage() {
 						<div className="space-y-6">
 							<div className="relative pt-2">
 								<div className="flex justify-between text-xs uppercase tracking-widest font-bold mb-2">
-									<span className="text-slate-300">Sem Celular</span>
+									{/* slate-300 -> slate-200 */}
+									<span className="text-slate-200">Sem Celular</span>
 									<span className="text-white">
 										{CENSUS_REALITY.digitalExclusion.noPhone}%
 									</span>
@@ -241,7 +247,8 @@ export default function ImpactPage() {
 
 							<div className="relative pt-2">
 								<div className="flex justify-between text-xs uppercase tracking-widest font-bold mb-2">
-									<span className="text-slate-300">Tem Celular, Sem Dados</span>
+									{/* slate-300 -> slate-200 */}
+									<span className="text-slate-200">Tem Celular, Sem Dados</span>
 									<span className="text-white">
 										{CENSUS_REALITY.digitalExclusion.noData}%
 									</span>
@@ -264,7 +271,7 @@ export default function ImpactPage() {
 					</div>
 
 					{/* CARD 2: Violência Institucional */}
-					<div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+					<div className="bg-slate-900 p-6 rounded-2xl border border-slate-700">
 						<h3 className="text-lg font-bold text-slate-200 mb-6 flex items-center gap-2">
 							<div className="p-2 bg-slate-800 rounded-lg">
 								<Shield className="w-4 h-4 text-blue-400" />
@@ -283,7 +290,7 @@ export default function ImpactPage() {
 										height: `${CENSUS_REALITY.violenceSource.publicAgents}%`,
 									}}
 								/>
-								<span className="text-[10px] uppercase font-bold text-center text-slate-400">
+								<span className="text-[10px] uppercase font-bold text-center text-slate-300">
 									Agentes do Estado
 									<br />
 									(PM, GM)
@@ -300,19 +307,20 @@ export default function ImpactPage() {
 										height: `${CENSUS_REALITY.violenceSource.civilians}%`,
 									}}
 								/>
-								<span className="text-[10px] uppercase font-bold text-center text-slate-400">
+								<span className="text-[10px] uppercase font-bold text-center text-slate-300">
 									Sociedade Civil
 								</span>
 							</div>
 						</div>
-						<p className="text-xs text-slate-500 mt-4 text-center">
+						{/* slate-500 -> slate-300 */}
+						<p className="text-xs text-slate-300 mt-4 text-center">
 							ODS 16 Violado: A instituição que deveria proteger é a principal
 							autora da violência.
 						</p>
 					</div>
 
 					{/* CARD 3: Causa Raiz (Mito vs Realidade) */}
-					<div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+					<div className="bg-slate-900 p-6 rounded-2xl border border-slate-700">
 						<h3 className="text-lg font-bold text-slate-200 mb-6 flex items-center gap-2">
 							<div className="p-2 bg-slate-800 rounded-lg">
 								<Heart className="w-4 h-4 text-purple-400" />
@@ -342,10 +350,11 @@ export default function ImpactPage() {
 
 							<div className="bg-slate-800/30 p-4 rounded-xl border border-slate-800 opacity-70">
 								<div className="flex justify-between items-center mb-2">
-									<span className="text-sm font-bold text-slate-400">
+									{/* slate-400 -> slate-300 */}
+									<span className="text-sm font-bold text-slate-300">
 										Álcool/Drogas
 									</span>
-									<span className="text-xl font-black text-slate-400">
+									<span className="text-xl font-black text-slate-300">
 										~30%
 									</span>
 								</div>
@@ -357,7 +366,7 @@ export default function ImpactPage() {
 								</div>
 							</div>
 
-							<div className="text-xs text-slate-400 italic bg-purple-900/20 p-3 rounded-lg border border-purple-500/20">
+							<div className="text-xs text-slate-300 italic bg-purple-900/20 p-3 rounded-lg border border-purple-500/20">
 								"Aporofobia se baseia no mito do vício. A realidade é o
 								rompimento de vínculos."
 							</div>
@@ -374,6 +383,8 @@ export default function ImpactPage() {
 	);
 }
 
+// ATUALIZAÇÃO 1: Cores de texto mais claras (slate-200) e bg sólido (bg-slate-900)
+// ATUALIZAÇÃO 2: Bordas mais visíveis (border-slate-700)
 function KpiCard({
 	title,
 	value,
@@ -389,16 +400,26 @@ function KpiCard({
 }) {
 	return (
 		<div
-			className={`p-6 rounded-xl border ${alert ? "bg-red-950/40 border-red-500/50" : "bg-slate-900 border-slate-800"}`}
+			className={`p-6 rounded-xl border ${alert ? "bg-red-950/40 border-red-500/50" : "bg-slate-900 border-slate-700"}`}
 		>
-			<div className="flex justify-between items-start mb-4">
+			<div className="flex items-center justify-between mb-4">
 				<div>
-					<h3 className="text-slate-200 text-sm font-bold">{title}</h3>
-					<p className="text-3xl font-black mt-1 text-white">{value}</p>
+					{/* slate-200 e uppercasetracking-wider */}
+					<h3 className="text-slate-200 text-sm font-semibold uppercase tracking-wider">
+						{title}
+					</h3>
+					<p className="text-4xl font-bold mt-2 text-white drop-shadow-md">
+						{value}
+					</p>
 				</div>
-				<div className="p-3 bg-slate-800 rounded-lg">{icon}</div>
+				<div className="p-3 bg-slate-800 border border-slate-600 rounded-full">
+					{icon}
+				</div>
 			</div>
-			<p className="text-xs text-slate-300">{desc}</p>
+			<div className="mt-4">
+				{/* slate-300 */}
+				<p className="text-slate-300 text-sm font-medium">{desc}</p>
+			</div>
 		</div>
 	);
 }
@@ -413,10 +434,13 @@ function ThermometerCard({
 	trend: "up" | "stable";
 }) {
 	return (
-		<div className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between hover:border-red-500/30 transition-colors">
+		// bg-slate-900 border-slate-700
+		<div className="bg-slate-900 border border-slate-700 p-4 rounded-xl flex items-center justify-between hover:border-red-500/30 transition-colors">
 			<div>
-				<h4 className="text-slate-300 font-bold text-sm">{label}</h4>
-				<span className="text-xs text-slate-500">Relatos confirmados</span>
+				{/* slate-300 */}
+				<h4 className="text-slate-200 font-bold text-sm">{label}</h4>
+				{/* slate-500 -> slate-300 */}
+				<span className="text-xs text-slate-300">Relatos confirmados</span>
 			</div>
 			<div className="text-right">
 				<span className="text-2xl font-black text-white block">{count}</span>

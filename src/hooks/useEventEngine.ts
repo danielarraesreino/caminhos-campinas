@@ -203,6 +203,7 @@ export function useEventEngine() {
 			inventory,
 			removeFromInventory,
 			setEmployedFormal,
+			setFlag,
 		],
 	);
 

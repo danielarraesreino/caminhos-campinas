@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { ECO_COLORS } from "@/components/ui/design-tokens";
 
 export function ProjectRegistrationForm() {
 	const [formData, setFormData] = useState({

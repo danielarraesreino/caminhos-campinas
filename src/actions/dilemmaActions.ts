@@ -3,7 +3,7 @@
 import { supabase } from "@/lib/supabaseClient";
 
 export async function submitDilemmaSuggestion(
-	prevState: any,
+	_prevState: any,
 	formData: FormData,
 ) {
 	const narrative_text = formData.get("narrative_text") as string;

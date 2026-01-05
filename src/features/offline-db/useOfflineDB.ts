@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getDB } from "./db";
 
-export const useOfflineDB = (collection?: string) => {
+export const useOfflineDB = (_collection?: string) => {
 	const [db, setDb] = useState<PouchDB.Database | null>(null);
 
 	useEffect(() => {

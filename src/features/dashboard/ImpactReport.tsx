@@ -3,7 +3,6 @@
 import { Briefcase, FileText, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
-import { REALITY_ATLAS } from "@/data/RealityAtlas";
 import { ShareableDossier } from "./ShareableDossier";
 
 interface ImpactReportProps {

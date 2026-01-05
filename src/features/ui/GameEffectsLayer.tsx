@@ -34,7 +34,7 @@ export function GameEffectsLayer() {
 
 	// Thresholds & Triggers
 	const isLowHealth = health < 30;
-	const isLowSanity = sanity < 30;
+	const isLowSanity = sanity < 20; // Lowered from 30 to prevent readability issues on Dashboard
 
 	// Director Overrides (Visuals happen even if stats aren't low yet, to signal danger)
 	const isHealthCrisis =

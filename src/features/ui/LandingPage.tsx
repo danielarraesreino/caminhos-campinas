@@ -6,7 +6,6 @@ import {
 	Copy,
 	Cpu,
 	Heart,
-	Instagram,
 	Loader2,
 	MapPin,
 	Shield,

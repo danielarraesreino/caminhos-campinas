@@ -7,7 +7,7 @@ export const useHaptics = () => {
 		if (typeof navigator !== "undefined" && navigator.vibrate) {
 			try {
 				navigator.vibrate(pattern);
-			} catch (e) {
+			} catch (_e) {
 				// Ignore vibration errors (feature policy, etc)
 			}
 		}

@@ -53,6 +53,7 @@ export function useGameLoop() {
 		pdu,
 		documents,
 		flags,
+		hasHydrated,
 	} = useGameContext();
 
 	const [isRaining, setIsRaining] = useState(false);
@@ -67,6 +68,9 @@ export function useGameLoop() {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: Game loop logic depends on specific ticks
 	useEffect(() => {
+		// 🛡️ Guard: Wait for ecosystem
+		if (!hasHydrated || isPaused) return;
+
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
 				(userPosition[0] - lastPosition[0]) ** 2 +
@@ -109,7 +113,7 @@ export function useGameLoop() {
 	}, [phoneBattery, activeBuffs, addBuff, removeBuff]);
 
 	useEffect(() => {
-		if (isPaused) return;
+		if (!hasHydrated || isPaused) return;
 		const interval = setInterval(() => {
 			let hngDecay = 2;
 			const hygDecay = 1;
@@ -178,6 +182,10 @@ export function useGameLoop() {
 		dignity,
 		checkBattery,
 		setWorkTool,
+		activeBuffs.includes,
+		hasHydrated,
+		triggerImpact,
+		triggerWarning,
 	]);
 
 	useEffect(() => {
@@ -190,79 +198,73 @@ export function useGameLoop() {
 		}
 
 		function checkSystemicEvents(currentHour: number) {
-			if (activeDilemmaId) return;
+			// 🛡️ Guard: No events until hydrated or if paused
+			if (!hasHydrated || activeDilemmaId) return;
 
-			const triggered = dilemmaManager.findTriggeredDilemma({
-				day,
-				time: currentHour,
-				health,
-				hunger,
-				hygiene,
-				sanity,
-				energy,
-				socialStigma,
-				userPosition,
-				timeInLocation,
-				activeDilemmaId,
-				phoneBattery,
-				avatar,
-				inventory,
-				workTool,
-				activeBuffs,
-				documents,
-				flags,
-			});
+			try {
+				const triggered = dilemmaManager.findTriggeredDilemma({
+					day,
+					time: currentHour,
+					health,
+					hunger,
+					hygiene,
+					sanity,
+					energy,
+					socialStigma,
+					userPosition,
+					timeInLocation,
+					activeDilemmaId,
+					phoneBattery,
+					avatar,
+					inventory,
+					workTool,
+					activeBuffs,
+					documents,
+					flags,
+				});
 
-			if (triggered) {
-				setActiveDilemma(triggered.id);
-				return;
-			}
-
-			if (currentHour >= 22 || currentHour < 5) {
-				if (!isAtShelter) {
-					const hasCardboard = inventory.some(
-						(i: { name: string }) => i.name === "Papelão",
-					);
-					modifyStat("health", hasCardboard ? -1 : -3);
-					modifyStat("sanity", hasCardboard ? -1 : -3);
+				if (triggered) {
+					setActiveDilemma(triggered.id);
+					return;
 				}
-			}
 
-			if (activeBuffs.includes("SEDADO_CAPS")) modifyStat("energy", -5);
-
-			// [NEW] PDU Victory Check
-			// Check if current objective's final stage is completed
-			// TRABALHO -> Final: "cadastro_cpat"
-			// FAMILIA -> Final: "contato_telefonico" (Assume success for now, or check specific dilemma resolution)
-
-			// Hardcoded Victory Triggers based on completion
-			// Ideally we traverse PDU_QUESTS to find if last step is in completedStages
-			// But for simplicity/performance in loop:
-
-			if (pdu.isActive && pdu.objective) {
-				const isVictoryTrabalho =
-					pdu.objective === "TRABALHO" &&
-					pdu.completedStages.includes("cadastro_cpat");
-				const isVictoryFamilia =
-					pdu.objective === "FAMILIA" &&
-					pdu.completedStages.includes("contato_telefonico"); // Logic gap: This stage doesn't "complete" via dilemma yet properly in JSON?
-				// Actually, let's trigger it if the "result" dilemma is resolved.
-				// "pdu_dilemma_contact_result" ?? No, that's intermediate.
-				// Let's rely on `pdu.completedStages` having the final ID.
-				// Update dilemmas to ensure "contato_telefonico" marks itself complete.
-
-				if (
-					isVictoryTrabalho &&
-					!resolvedDilemmas.includes("pdu_victory_trabalho")
-				) {
-					setActiveDilemma("pdu_victory_trabalho");
+				if (currentHour >= 22 || currentHour < 5) {
+					if (!isAtShelter) {
+						const hasCardboard = inventory.some(
+							(i: { name: string }) => i.name === "Papelão",
+						);
+						modifyStat("health", hasCardboard ? -1 : -3);
+						modifyStat("sanity", hasCardboard ? -1 : -3);
+					}
 				}
-				if (
-					isVictoryFamilia &&
-					!resolvedDilemmas.includes("pdu_victory_familia")
-				) {
-					setActiveDilemma("pdu_victory_familia");
+
+				if (activeBuffs.includes("SEDADO_CAPS")) modifyStat("energy", -5);
+
+				// [NEW] PDU Victory Check
+				if (pdu.isActive && pdu.objective) {
+					const isVictoryTrabalho =
+						pdu.objective === "TRABALHO" &&
+						pdu.completedStages.includes("cadastro_cpat");
+					const isVictoryFamilia =
+						pdu.objective === "FAMILIA" &&
+						pdu.completedStages.includes("contato_telefonico");
+
+					if (
+						isVictoryTrabalho &&
+						!resolvedDilemmas.includes("pdu_victory_trabalho")
+					) {
+						setActiveDilemma("pdu_victory_trabalho");
+					}
+					if (
+						isVictoryFamilia &&
+						!resolvedDilemmas.includes("pdu_victory_familia")
+					) {
+						setActiveDilemma("pdu_victory_familia");
+					}
 				}
+			} catch (error) {
+				// 🛡️ Safe Fail: Log but don't crash
+				console.warn("⚠️ Game Loop Warning: Failed to check events", error);
 			}
 		}
 	}, [
@@ -284,10 +286,12 @@ export function useGameLoop() {
 		phoneBattery,
 		timeInLocation,
 		pdu,
-		pdu,
 		resolvedDilemmas,
 		documents,
 		flags,
+		avatar,
+		hasHydrated,
+		workTool,
 	]);
 
 	return { isRaining, batteryLevel: phoneBattery / 100 };

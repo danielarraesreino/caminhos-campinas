@@ -198,7 +198,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 										fill
 										sizes="(max-width: 768px) 100vw, 33vw"
 										className={`object-cover ${formData.avatarImage === opt.id ? "opacity-100" : "opacity-40 hover:opacity-100"} transition-opacity`}
-										onError={(e) => {
+										onError={(_e) => {
 											// Fallback to purely visual if needed, but for now we just log
 											console.warn("Avatar load failed", opt.image);
 											// We could replace src with a placeholder here but Next/Image is tricky with onError.

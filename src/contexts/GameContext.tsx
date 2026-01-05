@@ -12,6 +12,7 @@ import {
 } from "react";
 import type { SavedGameState } from "@/features/offline-db/types";
 import { useOfflineDB } from "@/features/offline-db/useOfflineDB";
+import { SavedGameStateSchema } from "@/lib/schemas";
 import { TelemetryAction, telemetryService } from "@/services/telemetry";
 import type {
 	Avatar,
@@ -312,50 +313,55 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		const loadState = async () => {
 			try {
 				const doc = await db.get<SavedGameState>(DOC_ID);
-				// biome-ignore lint/suspicious/noExplicitAny: handling PouchDB return type quirks
-				const { _id, _rev, ...savedData } = doc as any;
-				const savedState = savedData as SavedGameState;
 
-				// VERSION CHECK (Reset if outdated)
-				if (savedState.version !== GAME_VERSION) {
+				// 🛡️ Runtime Validation with Zod
+				const parseResult = SavedGameStateSchema.safeParse(doc);
+
+				if (!parseResult.success) {
+					console.error("❌ Save data validation failed:", parseResult.error);
+					// If validation fails, we can either:
+					// 1. Reset completely (safest)
+					// 2. Try to use partial data (risky)
+					// Prompt says: "logue o erro silenciosamente, mas NÃO quebre a UI" and "use o valor default"
+					// We will treat it as a critical corruption if it doesn't match schema (except maybe version migration).
+
+					// But wait, if it's just a missing field that Zod defaults would handle, `safeParse` would SUCCEED if the input was clean enough to match the structure or if we used `.default()`.
+					// Since I used `.default()` extensivey, many missing fields are auto-filled.
+					// If it FAILS, it means there are invalid types (e.g. string vs number) that couldn't be coerced/accepted.
+					console.warn(
+						"⚠️ Corrupt state detected. using INITIAL_STATE fallback.",
+					);
+					dispatch({ type: "SET_STATE", payload: INITIAL_STATE });
+					return;
+				}
+
+				const validState = parseResult.data;
+				const { _id, _rev, ...savedData } = validState;
+
+				// VERSION CHECK
+				if (savedData.version !== GAME_VERSION) {
 					console.warn("♻️ Version mismatch. Resetting game data...");
-
-					// 1. Clear PouchDB
 					await db.remove(doc);
-
-					// 2. Clear LocalStorage (Services, etc)
-					if (typeof window !== "undefined") {
-						localStorage.clear();
-					}
-
-					// 3. Reset State
+					if (typeof window !== "undefined") localStorage.clear();
 					dispatch({ type: "RESET_GAME" });
 					return;
 				}
 
-				// GUARANTEE: Social Thermometer Persistence
-				if (!savedState.socialThermometer) {
-					console.log("🔧 Migrating legacy save: Injecting socialThermometer");
-					savedState.socialThermometer = INITIAL_STATE.socialThermometer;
+				// Additional Logic Checks (Game Over state prevention)
+				if (savedData.health <= 0 || savedData.dignity <= 0) {
+					console.warn("⚠️ Corrupt/Dead state detected. Aborting load.");
+					throw { status: 404 };
 				}
 
-				console.log("✅ Game State Hydrated:", savedState);
-
-				// BUGFIX: Prevent loading "Game Over" state
-				if (savedState.health <= 0 || savedState.dignity <= 0) {
-					console.warn(
-						"⚠️ Corrupt/Dead state detected. Aborting load to force Reset.",
-					);
-					throw { status: 404 }; // Force "New Game" flow
-				}
-
-				dispatch({ type: "SET_STATE", payload: savedState });
-				// biome-ignore lint/suspicious/noExplicitAny: error typing
+				console.log("✅ Game State Hydrated & Validated", savedData);
+				dispatch({ type: "SET_STATE", payload: savedData as GameState });
 			} catch (err: any) {
 				if (err.status === 404) {
 					console.log("ℹ️ New Game (No saved state found)");
 				} else {
 					console.error("❌ Error loading state:", err);
+					// Failsafe: Ensure we start with something valid even on DB error
+					// dispatch({ type: "SET_STATE", payload: INITIAL_STATE }); // Already initial
 				}
 			} finally {
 				setHasHydrated(true);
@@ -552,7 +558,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		dispatch({ type: "RESET_GAME" });
 	}, [db]);
 
-	const clearPersistence = useCallback(async () => {
+	const _clearPersistence = useCallback(async () => {
 		if (db) {
 			try {
 				const doc = await db.get(DOC_ID);

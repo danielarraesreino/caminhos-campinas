@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Avatar, GameState, Item } from "@/contexts/GameContext";
+import type { Avatar, Item } from "@/contexts/GameContext";
 import { DilemmaManager } from "@/features/game-loop/DilemmaManager";
 import type { Dilemma } from "@/features/game-loop/dilemma-types";
 

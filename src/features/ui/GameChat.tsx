@@ -80,13 +80,7 @@ export function GameChat({
 		async (text: string, audioBlob?: Blob | null) => {
 			if (!text.trim() && !audioBlob) return;
 
-			// [FIX] Guard clause to prevent crash if hook is not ready
-			if (!append) {
-				console.warn(
-					"[GameChat] 'append' function not available from useChat hook.",
-				);
-				return;
-			}
+			// [FIX] Guard clause removed (moved down to try/catch block with fallback)
 
 			// Hybrid Engine Interception
 			if (text) {
@@ -105,7 +99,10 @@ export function GameChat({
 				);
 
 				// [NEW] Visceral Inner Monologue Generator
-				const getInnerMonologue = (dilemmaTitle: string, triggerType: string) => {
+				const getInnerMonologue = (
+					dilemmaTitle: string,
+					triggerType: string,
+				) => {
 					// Mapeamento baseado nos textos literários (Mocotó, Malices, Desabafo)
 					const thoughts: Record<string, string> = {
 						// Fome/Mocotó [Source 289]
@@ -133,10 +130,13 @@ export function GameChat({
 							"O peito chiando... essa tosse seca tá me rasgando.",
 
 						// Padrão (Vazio/Solidão) [Source 2337]
-						DEFAULT: "Mais um dia. A cidade passa apressada e eu continuo invisível.",
+						DEFAULT:
+							"Mais um dia. A cidade passa apressada e eu continuo invisível.",
 					};
 
-					return thoughts[dilemmaTitle] || thoughts[triggerType] || thoughts.DEFAULT;
+					return (
+						thoughts[dilemmaTitle] || thoughts[triggerType] || thoughts.DEFAULT
+					);
 				};
 
 				// ... inside component ...
@@ -193,6 +193,31 @@ export function GameChat({
 			}
 
 			try {
+				// 🛡️ Guard: Check if AI SDK is ready
+				if (typeof append !== "function") {
+					console.error(
+						"[GameChat] AI SDK error: 'append' is not a function. Falling back to manual mode.",
+					);
+
+					// Manual Fallback: Add user message directly to UI so it doesn't freeze
+					const userMsg = {
+						id: Date.now().toString(),
+						role: "user",
+						content: text,
+					};
+					const fallbackSysMsg = {
+						id: (Date.now() + 1).toString(),
+						role: "system",
+						content:
+							"*O sistema de comunicação parece instável...* (Offline Mode: Mensagem registrada localmente)",
+					};
+
+					// biome-ignore lint/suspicious/noExplicitAny: Message type
+					setMessages((prev: any[]) => [...prev, userMsg, fallbackSysMsg]);
+					setIsThinking(false);
+					return;
+				}
+
 				await append({
 					role: "user",
 					content: text,
@@ -211,6 +236,18 @@ export function GameChat({
 			} catch (err) {
 				console.error("Error appending message:", err);
 				setIsThinking(false);
+				// Fallback on error too
+				const userMsg = {
+					id: Date.now().toString(),
+					role: "user",
+					content: text,
+				};
+				const errSysMsg = {
+					id: (Date.now() + 1).toString(),
+					role: "system",
+					content: "*Erro de conexão. Tente novamente.*",
+				};
+				setMessages((prev: any[]) => [...prev, userMsg, errSysMsg]);
 			}
 		},
 		[append, userLocation, onDilemmaTriggered, gameState, setMessages],

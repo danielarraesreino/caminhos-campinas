@@ -8,17 +8,13 @@ import {
 	Megaphone,
 	Mic,
 	Package,
-	ShieldAlert,
-	User,
 	Wallet,
 	Wifi,
 	WifiOff,
 } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
-import { CitizenshipTree } from "./CitizenshipTree";
 import { InteractiveStatus } from "./InteractiveStatus";
 
 export function GameHUD({

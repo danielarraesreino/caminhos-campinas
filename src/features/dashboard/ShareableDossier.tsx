@@ -1,7 +1,7 @@
 "use client";
 
 import { toPng } from "html-to-image";
-import { Download, Receipt, Share2 } from "lucide-react";
+import { Receipt, Share2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -51,7 +51,7 @@ export function ShareableDossier({
 			});
 
 			// Native Share
-			if (navigator.canShare && navigator.canShare({ files: [file] })) {
+			if (navigator.canShare?.({ files: [file] })) {
 				await navigator.share({
 					title: "Auditoria de Cidadania - Caminhos Campinas",
 					text: `Tentei sobreviver em Campinas como ${avatarName || "Cidadão"}. ${deathReason || ""}. Enfrentei ${stats.violations} violações de direitos em caminhos-campinas.vercel.app`,
@@ -165,7 +165,7 @@ export function ShareableDossier({
 									</div>
 									<p className="text-[11px] leading-tight opacity-90 text-slate-200">
 										{event.description.length > 60
-											? event.description.substring(0, 60) + "..."
+											? `${event.description.substring(0, 60)}...`
 											: event.description}
 									</p>
 								</div>

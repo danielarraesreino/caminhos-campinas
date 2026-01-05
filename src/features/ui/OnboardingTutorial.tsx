@@ -3,7 +3,6 @@
 import {
 	ArrowRight,
 	Heart,
-	MapPin,
 	MessageSquare,
 	Mic,
 	Shield,

@@ -3,7 +3,6 @@
 import {
 	AlertTriangle,
 	CheckCircle2,
-	Keyboard,
 	Loader2,
 	Mic,
 	Send,
@@ -110,7 +109,7 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 		}
 	};
 
-	const submitText = () => {
+	const _submitText = () => {
 		if (!textReport.trim()) return;
 		handleSaveReport(null, textReport);
 	};

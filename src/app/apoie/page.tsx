@@ -9,16 +9,13 @@ import {
 	Download,
 	Globe,
 	Heart,
-	Instagram,
 	MapPin,
-	Phone,
 	QrCode,
 	ShieldCheck,
 	Smartphone,
 	Users,
 	Wallet,
 } from "lucide-react";
-import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 import {

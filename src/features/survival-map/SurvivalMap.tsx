@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { type ServiceLocation, useServices } from "@/contexts/ServicesContext";
+import { useServices } from "@/contexts/ServicesContext";
 import { NearbyList } from "./NearbyList";
 
 const MapCore = dynamic(() => import("./MapCore"), {
@@ -40,19 +40,17 @@ export function SurvivalMap() {
 
 	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
 	const resources = useMemo(() => {
-		return (services || [])
-			.filter(hasValidCoords)
-			.map((s) => {
-				const c = s.coords; // TypeScript now knows this is [number, number]
-				return {
-					id: s.id,
-					name: s.name,
-					type: s.type as string,
-					lat: c[0],
-					lng: c[1],
-				};
-			});
-	}, [services]); // Stable resource mapping
+		return (services || []).filter(hasValidCoords).map((s) => {
+			const c = s.coords; // TypeScript now knows this is [number, number]
+			return {
+				id: s.id,
+				name: s.name,
+				type: s.type as string,
+				lat: c[0],
+				lng: c[1],
+			};
+		});
+	}, [services, hasValidCoords]); // Stable resource mapping
 
 	useEffect(() => {
 		// Only fetch if not already set (or we could force refresh? Let's respect existing if valid)
@@ -62,7 +60,10 @@ export function SurvivalMap() {
 		if ("geolocation" in navigator) {
 			navigator.geolocation.getCurrentPosition(
 				(position) => {
-					setUserPosition([position.coords.latitude, position.coords.longitude]);
+					setUserPosition([
+						position.coords.latitude,
+						position.coords.longitude,
+					]);
 					setLoadingLocation(false);
 				},
 				(error) => {
@@ -81,7 +82,7 @@ export function SurvivalMap() {
 	const { phoneBattery, consumeBattery } = useGameContext();
 
 	// FIX: Memoize handleTravel to prevent MapCore re-renders during animation
-	const handleTravel = useCallback(
+	const _handleTravel = useCallback(
 		(lat: number, lng: number) => {
 			if (phoneBattery <= 0) {
 				alert("Sem bateria! Você não consegue usar o GPS para navegar.");

@@ -9,7 +9,6 @@ import {
 	DialogDescription,
 	DialogFooter,
 	DialogHeader,
-	DialogTitle,
 } from "@/components/ui/dialog";
 import { InteractiveText } from "@/components/ui/InteractiveText";
 import type {

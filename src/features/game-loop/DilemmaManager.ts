@@ -492,7 +492,7 @@ export class DilemmaManager {
 
 			let target = expression.trim();
 			let operator = "";
-			const compareValue: any = null;
+			const _compareValue: any = null;
 
 			// 1. Identify Operator
 			if (target.includes(" === ")) operator = "===";
@@ -581,7 +581,7 @@ export class DilemmaManager {
 
 		const { gender } = state.avatar || {};
 		const inventory = state.inventory || [];
-		const resolvedIds = this.resolvedIds || new Set();
+		const _resolvedIds = this.resolvedIds || new Set();
 
 		// 1. Gender Check
 		if (dilemma.conditions.gender) {

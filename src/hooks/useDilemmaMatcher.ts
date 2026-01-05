@@ -37,7 +37,7 @@ export function useDilemmaMatcher() {
 
 			// Explicit Dynamic Checks
 			if (input.includes("fome") && locationObj) {
-				if (bomPrato && bomPrato.coords) {
+				if (bomPrato?.coords) {
 					const dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
@@ -68,7 +68,7 @@ export function useDilemmaMatcher() {
 				(input.includes("dor") || input.includes("machucado")) &&
 				locationObj
 			) {
-				if (consultorio && consultorio.coords) {
+				if (consultorio?.coords) {
 					const dist = calculateDist(
 						locationObj.lat,
 						locationObj.lng,
