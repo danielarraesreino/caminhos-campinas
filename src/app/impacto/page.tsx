@@ -65,10 +65,7 @@ export default function ImpactPage() {
 				<h1 className="text-4xl font-bold mb-2">
 					Painel de Inteligência Social
 				</h1>
-				<p className="text-slate-400">
-					Simulação baseada no Censo Pop. Rua Campinas 2024 (1.557 pessoas
-					mapeadas)
-				</p>
+
 			</header>
 
 			{/* KPIs de Impacto */}

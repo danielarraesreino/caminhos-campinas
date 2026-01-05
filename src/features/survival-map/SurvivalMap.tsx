@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { type ServiceLocation, useServices } from "@/contexts/ServicesContext";
 import { NearbyList } from "./NearbyList";
@@ -39,16 +39,20 @@ export function SurvivalMap() {
 	};
 
 	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
-	const resources = (services || []).filter(hasValidCoords).map((s) => {
-		const c = s.coords; // TypeScript now knows this is [number, number]
-		return {
-			id: s.id,
-			name: s.name,
-			type: s.type as string,
-			lat: c[0],
-			lng: c[1],
-		};
-	});
+	const resources = useMemo(() => {
+		return (services || [])
+			.filter(hasValidCoords)
+			.map((s) => {
+				const c = s.coords; // TypeScript now knows this is [number, number]
+				return {
+					id: s.id,
+					name: s.name,
+					type: s.type as string,
+					lat: c[0],
+					lng: c[1],
+				};
+			});
+	}, [services]); // Stable resource mapping
 
 	useEffect(() => {
 		// Only fetch if not already set (or we could force refresh? Let's respect existing if valid)
@@ -58,10 +62,7 @@ export function SurvivalMap() {
 		if ("geolocation" in navigator) {
 			navigator.geolocation.getCurrentPosition(
 				(position) => {
-					setUserPosition([
-						position.coords.latitude,
-						position.coords.longitude,
-					]);
+					setUserPosition([position.coords.latitude, position.coords.longitude]);
 					setLoadingLocation(false);
 				},
 				(error) => {
@@ -122,6 +123,45 @@ export function SurvivalMap() {
 			return () => clearTimeout(timer);
 		}
 	}, [interactionMessage]);
+
+	const handleInteraction = useCallback(
+		(res: any) => {
+			console.log("Interagindo com:", res.name);
+			const type = res.type.toUpperCase();
+			// Interaction logic mapping - Portuguese Only
+			if (type === "ALIMENTACAO") {
+				eat(20);
+				setInteractionMessage({
+					type: "success",
+					text: `Você visitou ${res.name} e conseguiu se alimentar! (+20 Fome)`,
+				});
+			} else if (type === "SAUDE") {
+				modifyStat("health", 15);
+				setInteractionMessage({
+					type: "success",
+					text: `Você recebeu atendimento em ${res.name}. (+15 Saúde)`,
+				});
+			} else if (type === "ABRIGO") {
+				modifyStat("energy", 30);
+				setInteractionMessage({
+					type: "success",
+					text: `Você conseguiu descansar em ${res.name}. (+30 Energia)`,
+				});
+			} else if (type === "ASSISTENCIA") {
+				modifyStat("dignity", 10);
+				setInteractionMessage({
+					type: "success",
+					text: `Você recebeu apoio em ${res.name}. (+10 Dignidade)`,
+				});
+			} else {
+				setInteractionMessage({
+					type: "info",
+					text: `Você visitou ${res.name}.`,
+				});
+			}
+		},
+		[eat, modifyStat],
+	);
 
 	return (
 		<div
@@ -211,41 +251,7 @@ export function SurvivalMap() {
 				<MapCore
 					userPosition={userPosition}
 					resources={resources}
-					onResourceInteract={(res: any) => {
-						console.log("Interagindo com:", res.name);
-						const type = res.type.toUpperCase();
-						// Interaction logic mapping - Portuguese Only
-						if (type === "ALIMENTACAO") {
-							eat(20);
-							setInteractionMessage({
-								type: "success",
-								text: `Você visitou ${res.name} e conseguiu se alimentar! (+20 Fome)`,
-							});
-						} else if (type === "SAUDE") {
-							modifyStat("health", 15);
-							setInteractionMessage({
-								type: "success",
-								text: `Você recebeu atendimento em ${res.name}. (+15 Saúde)`,
-							});
-						} else if (type === "ABRIGO") {
-							modifyStat("energy", 30);
-							setInteractionMessage({
-								type: "success",
-								text: `Você conseguiu descansar em ${res.name}. (+30 Energia)`,
-							});
-						} else if (type === "ASSISTENCIA") {
-							modifyStat("dignity", 10);
-							setInteractionMessage({
-								type: "success",
-								text: `Você recebeu apoio em ${res.name}. (+10 Dignidade)`,
-							});
-						} else {
-							setInteractionMessage({
-								type: "info",
-								text: `Você visitou ${res.name}.`,
-							});
-						}
-					}}
+					onResourceInteract={handleInteraction}
 				/>
 			</div>
 
