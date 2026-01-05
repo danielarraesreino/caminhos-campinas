@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
 		name: "Caminhos Campinas",
 		short_name: "Caminhos",
 		description:
-			"Serious Game sobre a realidade da população de rua em Campinas.",
+			"Simulador de sobrevivência e guia de direitos baseado em dados reais de Campinas/SP.",
 		start_url: "/",
 		display: "standalone",
 		orientation: "portrait",
@@ -13,14 +13,14 @@ export default function manifest(): MetadataRoute.Manifest {
 		theme_color: "#020617", // Slate 950
 		icons: [
 			{
-				src: "/globe.svg",
+				src: "/icon-192.png",
 				sizes: "192x192",
-				type: "image/svg+xml",
+				type: "image/png",
 			},
 			{
-				src: "/globe.svg",
+				src: "/icon-512.png",
 				sizes: "512x512",
-				type: "image/svg+xml",
+				type: "image/png",
 			},
 		],
 	};

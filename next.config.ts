@@ -1,43 +1,36 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-	/* config options here */
+	reactStrictMode: true,
+	experimental: {
+		// @ts-expect-error: Experimental feature
+		reactCompiler: true,
+	},
 	images: {
 		remotePatterns: [
 			{
 				protocol: "https",
 				hostname: "api.dicebear.com",
-				pathname: "/**",
+			},
+			{
+				protocol: "https",
+				hostname: "**.openstreetmap.org",
 			},
 			{
 				protocol: "https",
 				hostname: "lightseagreen-horse-933009.hostingersite.com",
-				pathname: "/**",
 			},
 			{
 				protocol: "https",
 				hostname: "imgur.com",
-				pathname: "/**",
 			},
 			{
 				protocol: "https",
 				hostname: "i.imgur.com",
-				pathname: "/**",
-			},
-			{
-				protocol: "https",
-				hostname: "raw.githubusercontent.com",
-				pathname: "/**",
 			},
 		],
-	},
-	// Optimization to avoid timeouts in Serverless Functions
-	experimental: {
-		// @ts-expect-error: Experimental feature not yet in types
-		reactCompiler: true,
-		serverActions: {
-			bodySizeLimit: "2mb",
-		},
+		deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+		imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
 	},
 };
 
