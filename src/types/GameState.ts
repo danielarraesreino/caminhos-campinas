@@ -71,6 +71,10 @@ export interface GameState {
 	addiction: number;
 	trust: number;
 	employed_formal: boolean;
+	citizenship: number; // 0-100 gauge of institutional access
+	knowledge: number; // 0-100 (Rualogia)
+	score: number; // Legacy score
+	security: number; // 0-100 (Moradia/Segurança)
 	history: GameEvent[];
 }
 

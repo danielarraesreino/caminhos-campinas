@@ -133,6 +133,10 @@ export function useGameLoop() {
 			if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM")
 				enrDecay += 0.3;
 
+			if (activeBuffs.includes("DESMOTIVADO")) {
+				enrDecay *= 2.0;
+			}
+
 			if (isRaining && !isAtShelter) {
 				snyDecay += 1;
 				hngDecay += 0.5;

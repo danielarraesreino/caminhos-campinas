@@ -22,13 +22,19 @@ export function useEventEngine() {
 		completePduStage,
 		updateDocuments,
 		setEmployedFormal,
+		setFlag,
 	} = useGameContext();
 
 	const activeDilemma = GAME_DILEMMAS.find((d) => d.id === activeDilemmaId);
 
 	// Limpeza de Dilemas obsoletos ou IDs que não existem na versão atual
 	useEffect(() => {
-		if (activeDilemmaId && !activeDilemma) {
+		if (
+			activeDilemmaId &&
+			!activeDilemma &&
+			activeDilemmaId !== "CREDITS_SCREEN" &&
+			activeDilemmaId !== "RESTART_GAME"
+		) {
 			console.warn(
 				`[EventEngine] Dilema obsoleto detectado (${activeDilemmaId}). Limpando estado...`,
 			);
@@ -145,8 +151,7 @@ export function useEventEngine() {
 
 			// 4. [NEW] Action Logic (Flags & Quests)
 			if (option.action === "SET_FLAG" && option.flag) {
-				// biome-ignore lint/suspicious/noExplicitAny: context expansion
-				(useGameContext() as any).setFlag(option.flag, true);
+				setFlag(option.flag, true);
 
 				// TRIGGER PDU UPDATE if flag is quest starter
 				if (option.flag === "quest_rg_started") {

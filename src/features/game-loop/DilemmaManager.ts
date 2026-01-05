@@ -333,12 +333,25 @@ export class DilemmaManager {
 					return true;
 				}
 				break;
+			case "CHAIN":
+				return false; // Chains are triggered manually via nextDilemmaId or events
 			case "STATUS":
 				if (statusCondition?.battery !== undefined) {
 					return (phoneBattery || 0) <= statusCondition.battery;
 				}
 				if (statusCondition?.health !== undefined) {
 					return (state.health || 0) <= statusCondition.health;
+				}
+				// [NEW] Support for generic attribute checking (e.g. citizenship)
+				if (dilemma.trigger.attribute) {
+					const attr = dilemma.trigger.attribute;
+					// biome-ignore lint/suspicious/noExplicitAny: dynamic access
+					const currentVal = (state as any)[attr];
+					if (currentVal !== undefined) {
+						// Default to >= for positive stats like citizenship, unless specified otherwise
+						// The JSON uses value: 40 for citizenship. Assuming >= check for "Unlock".
+						return currentVal >= (value as number);
+					}
 				}
 				break;
 			case "LOCATION":
@@ -402,6 +415,36 @@ export class DilemmaManager {
 							poupaLng,
 						);
 						return dist < 0.05;
+					}
+				}
+
+				// For Centro Pop (Rua José Paulino aprox)
+				if (typeof value === "string" && value === "Centro Pop") {
+					const cpLat = -22.9000; // Generic placeholder logic
+					const cpLng = -47.0600;
+					if (userPosition) {
+						const dist = this.calculateDistance(
+							userPosition[0],
+							userPosition[1],
+							cpLat,
+							cpLng,
+						);
+						return dist < 0.1; // 100m
+					}
+				}
+
+				// For CRAS (Generic - use Center as proxy or specific address if known)
+				if (typeof value === "string" && value === "CRAS") {
+					// Using a central logic for MVP
+					if (userPosition) {
+						// Trigger if near Center for now
+						const dist = this.calculateDistance(
+							userPosition[0],
+							userPosition[1],
+							REALITY_ATLAS.LOCATIONS.CENTRO.coords.lat,
+							REALITY_ATLAS.LOCATIONS.CENTRO.coords.lng,
+						);
+						return dist < 0.5; // 500m logic
 					}
 				}
 

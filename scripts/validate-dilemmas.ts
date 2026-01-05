@@ -146,12 +146,12 @@ async function validate() {
     // 3. Validate Dilemmas
     dilemmas.forEach((d: any) => {
         // Check Next Links
-        if (d.nextDilemmaId && !dilemmaIds.has(d.nextDilemmaId)) {
+        if (d.nextDilemmaId && !dilemmaIds.has(d.nextDilemmaId) && d.nextDilemmaId !== "CREDITS_SCREEN" && d.nextDilemmaId !== "RESTART_GAME") {
             console.error(`❌ ERROR: Dilemma '${d.id}' points to missing nextDilemmaId '${d.nextDilemmaId}'`);
             errors++;
         }
         d.options.forEach((opt: any, idx: number) => {
-            if (opt.nextDilemmaId && !dilemmaIds.has(opt.nextDilemmaId)) {
+            if (opt.nextDilemmaId && !dilemmaIds.has(opt.nextDilemmaId) && opt.nextDilemmaId !== "CREDITS_SCREEN" && opt.nextDilemmaId !== "RESTART_GAME") {
                 console.error(`❌ ERROR: Dilemma '${d.id}' option ${idx} points to missing nextDilemmaId '${opt.nextDilemmaId}'`);
                 errors++;
             }

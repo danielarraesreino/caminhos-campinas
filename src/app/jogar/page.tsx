@@ -65,6 +65,48 @@ export default function GamePage() {
 		if (result.isGameOver && !gameOverResult) {
 			setGameOverResult(result);
 		}
+
+		// [NEW] Handle Endings (Manual Triggers from Dilemma Action)
+		if (gameState.activeDilemmaId === "CREDITS_SCREEN" && !gameOverResult) {
+			setGameOverResult({
+				isGameOver: true,
+				reason: "VITÓRIA_SOCIAL",
+				narrative: `VOCÊ VENCEU O SILÊNCIO.
+
+Você não apenas sobreviveu, você resistiu e criou.
+A rua ainda é dura, mas você tem chaves, voz e aliados.
+
+"Quem tem boca, vai à Roma. Quem tem voz, muda o mundo."
+
+Obrigado por jogar Caminhos.`,
+				statistics: {
+					daysSurvived: gameState.day,
+					moneyEarned: gameState.money,
+					dignityFinal: gameState.dignity,
+					socialStigmaFinal: gameState.socialStigma,
+				},
+			});
+		} else if (
+			gameState.activeDilemmaId === "RESTART_GAME" &&
+			!gameOverResult
+		) {
+			setGameOverResult({
+				isGameOver: true,
+				reason: "FIM_CICLO",
+				narrative: `O CICLO RECOMEÇA.
+
+"A rua é um moinho... vai te moendo até queimar."
+Muitos saem, mas a gravidade da exclusão puxa de volta.
+
+Você volta mais experiente. Dessa vez, será diferente?`,
+				statistics: {
+					daysSurvived: gameState.day,
+					moneyEarned: gameState.money,
+					dignityFinal: gameState.dignity,
+					socialStigmaFinal: gameState.socialStigma,
+				},
+			});
+		}
 	}, [gameState, gameOverResult]);
 
 	// Dead state reset check from previous step

@@ -49,6 +49,10 @@ export interface DilemmaOption {
 		trust_state?: number;
 		cycle_repeat?: boolean;
 		employed_formal?: boolean;
+		citizenship?: number;
+		knowledge?: number;
+		score?: number;
+		security?: number;
 	};
 	effect_failure?: Partial<
 		Omit<
@@ -118,7 +122,8 @@ export interface Dilemma {
 		locationId?: string;
 		statusCondition?: Record<string, number>;
 		prev_id?: string;
-		condition?: string; // Updated to allow "state.documents.hasRG" expressions
+		attribute?: keyof GameState; // [NEW] For STATUS triggers checking specific stats
+		condition?: string; // Expression string (e.g. "state.avatar.gender === 'feminino'")
 	};
 	source_fact?: string;
 	ods?: string[];

@@ -85,6 +85,10 @@ const INITIAL_STATE: GameState = {
 	addiction: 0,
 	trust: 50, // 0-100, starts neutral
 	employed_formal: false,
+	citizenship: 0,
+	knowledge: 0,
+	score: 0,
+	security: 0,
 	history: [], // [NEW] Telemetry Log
 };
 
