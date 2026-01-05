@@ -11,8 +11,8 @@ import { useGameLoop } from "@/features/game-loop/useGameLoop";
 import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
 import { AvatarCreation } from "@/features/ui/AvatarCreation";
 import { DilemmaModal } from "@/features/ui/DilemmaModal";
-import { EffectsOverlay } from "@/features/ui/EffectsOverlay";
 import { EffectsLayer } from "@/features/ui/EffectsLayer";
+import { EffectsOverlay } from "@/features/ui/EffectsOverlay";
 import { GameChat } from "@/features/ui/GameChat";
 import { GameHUD } from "@/features/ui/GameHUD";
 

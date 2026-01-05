@@ -235,8 +235,13 @@ export class DilemmaManager {
 
 		switch (type) {
 			case "RANDOM":
-				if (dilemma.trigger.condition && typeof dilemma.trigger.condition === 'string') {
-					if (!this.checkConditionExpression(dilemma.trigger.condition, state)) {
+				if (
+					dilemma.trigger.condition &&
+					typeof dilemma.trigger.condition === "string"
+				) {
+					if (
+						!this.checkConditionExpression(dilemma.trigger.condition, state)
+					) {
 						return false;
 					}
 				}
@@ -293,8 +298,13 @@ export class DilemmaManager {
 			case "LOCATION_IDLE":
 				// ... existing logic ...
 				// NEW: Check dynamic conditions
-				if (dilemma.trigger.condition && typeof dilemma.trigger.condition === 'string') {
-					if (!this.checkConditionExpression(dilemma.trigger.condition, state)) {
+				if (
+					dilemma.trigger.condition &&
+					typeof dilemma.trigger.condition === "string"
+				) {
+					if (
+						!this.checkConditionExpression(dilemma.trigger.condition, state)
+					) {
 						return false;
 					}
 				}
@@ -333,8 +343,13 @@ export class DilemmaManager {
 				break;
 			case "LOCATION":
 				// [NEW] Evaluate string conditions for LOCATION type triggers (e.g. Arc 2)
-				if (dilemma.trigger.condition && typeof dilemma.trigger.condition === 'string') {
-					if (!this.checkConditionExpression(dilemma.trigger.condition, state)) {
+				if (
+					dilemma.trigger.condition &&
+					typeof dilemma.trigger.condition === "string"
+				) {
+					if (
+						!this.checkConditionExpression(dilemma.trigger.condition, state)
+					) {
 						return false;
 					}
 				}
@@ -343,7 +358,7 @@ export class DilemmaManager {
 				// For now, simple string matching logic or reusing the coordinate calculation if mapped
 				// The new JSON uses "value": "BOM_PRATO". We need to map this to coordinates or check distance if available.
 				// Assuming simplified check for now or basic distance check vs userPosition if we map IDs.
-				// Since we don't have a robust ID->Coord map inside Trigger yet, let's assume Director handles location via coordinates 
+				// Since we don't have a robust ID->Coord map inside Trigger yet, let's assume Director handles location via coordinates
 				// separately or we use the 'value' as a key in REALITY_ATLAS.
 
 				if (typeof value === "string" && value === "BOM_PRATO") {
@@ -352,7 +367,12 @@ export class DilemmaManager {
 					const bpLat = -22.9099; // Example
 					const bpLng = -47.0626;
 					if (userPosition) {
-						const dist = this.calculateDistance(userPosition[0], userPosition[1], bpLat, bpLng);
+						const dist = this.calculateDistance(
+							userPosition[0],
+							userPosition[1],
+							bpLat,
+							bpLng,
+						);
 						return dist < 0.05; // 50m
 					}
 				}
@@ -361,7 +381,12 @@ export class DilemmaManager {
 					const samimLat = -22.9035;
 					const samimLng = -47.0689;
 					if (userPosition) {
-						const dist = this.calculateDistance(userPosition[0], userPosition[1], samimLat, samimLng);
+						const dist = this.calculateDistance(
+							userPosition[0],
+							userPosition[1],
+							samimLat,
+							samimLng,
+						);
 						return dist < 0.05;
 					}
 				}
@@ -370,7 +395,12 @@ export class DilemmaManager {
 					const poupaLat = -22.9055;
 					const poupaLng = -47.0608;
 					if (userPosition) {
-						const dist = this.calculateDistance(userPosition[0], userPosition[1], poupaLat, poupaLng);
+						const dist = this.calculateDistance(
+							userPosition[0],
+							userPosition[1],
+							poupaLat,
+							poupaLng,
+						);
 						return dist < 0.05;
 					}
 				}
@@ -381,7 +411,12 @@ export class DilemmaManager {
 					const consLng = -47.052;
 					if (userPosition) {
 						// Larger radius for "Van" logic (simulating widespread presence or just loose check)
-						const dist = this.calculateDistance(userPosition[0], userPosition[1], consLat, consLng);
+						const dist = this.calculateDistance(
+							userPosition[0],
+							userPosition[1],
+							consLat,
+							consLng,
+						);
 						return dist < 0.1; // 100m radius
 					}
 				}
@@ -414,7 +449,7 @@ export class DilemmaManager {
 
 			let target = expression.trim();
 			let operator = "";
-			let compareValue: any = null;
+			const compareValue: any = null;
 
 			// 1. Identify Operator
 			if (target.includes(" === ")) operator = "===";
@@ -431,13 +466,20 @@ export class DilemmaManager {
 				const rightVal = this.resolveValue(rightSide.trim(), state);
 
 				switch (operator) {
-					case "===": return leftVal === rightVal;
-					case "!==": return leftVal !== rightVal;
-					case ">=": return Number(leftVal) >= Number(rightVal);
-					case "<=": return Number(leftVal) <= Number(rightVal);
-					case ">": return Number(leftVal) > Number(rightVal);
-					case "<": return Number(leftVal) < Number(rightVal);
-					default: return false;
+					case "===":
+						return leftVal === rightVal;
+					case "!==":
+						return leftVal !== rightVal;
+					case ">=":
+						return Number(leftVal) >= Number(rightVal);
+					case "<=":
+						return Number(leftVal) <= Number(rightVal);
+					case ">":
+						return Number(leftVal) > Number(rightVal);
+					case "<":
+						return Number(leftVal) < Number(rightVal);
+					default:
+						return false;
 				}
 			}
 
@@ -450,7 +492,6 @@ export class DilemmaManager {
 
 			const val = this.resolveValue(target, state);
 			return isNegated ? !val : !!val;
-
 		} catch (e) {
 			console.warn("Error evaluating condition:", expression, e);
 			return false;
@@ -461,8 +502,10 @@ export class DilemmaManager {
 	// biome-ignore lint/suspicious/noExplicitAny: value resolution
 	private resolveValue(pathOrValue: string, state: any): any {
 		// String literal
-		if ((pathOrValue.startsWith("'") && pathOrValue.endsWith("'")) ||
-			(pathOrValue.startsWith('"') && pathOrValue.endsWith('"'))) {
+		if (
+			(pathOrValue.startsWith("'") && pathOrValue.endsWith("'")) ||
+			(pathOrValue.startsWith('"') && pathOrValue.endsWith('"'))
+		) {
 			return pathOrValue.slice(1, -1);
 		}
 
@@ -544,9 +587,9 @@ export class DilemmaManager {
 		const a =
 			Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 			Math.cos((lat1 * Math.PI) / 180) *
-			Math.cos((lat2 * Math.PI) / 180) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2);
+				Math.cos((lat2 * Math.PI) / 180) *
+				Math.sin(dLon / 2) *
+				Math.sin(dLon / 2);
 		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		return R * c;
 	}

@@ -9,6 +9,7 @@ import {
 	Utensils,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useGameContext } from "@/contexts/GameContext";
 import { CENSUS_REALITY } from "@/data/census-reality";
 import { ODSExplainer } from "@/features/dashboard/ODSExplainer";
 import {
@@ -17,6 +18,7 @@ import {
 } from "@/features/dashboard/SimulationEngine";
 
 export default function ImpactPage() {
+	const { socialThermometer } = useGameContext();
 	const [data, setData] = useState<SimAgent[]>([]);
 
 	useEffect(() => {
@@ -175,8 +177,6 @@ export default function ImpactPage() {
 				</div>
 			</div>
 
-
-
 			{/* TERMÔMETRO SOCIAL: Alertas Críticos (Solicitado: Prompt 3) */}
 			<div className="mb-12">
 				<h2 className="text-xl font-bold mb-6 flex items-center gap-2">
@@ -184,23 +184,21 @@ export default function ImpactPage() {
 					Termômetro Social: O que a rua está dizendo hoje?
 				</h2>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-					{/* MOCK DATA: In production this comes from reportService aggregation */}
-					{[
-						{ label: "Falta de Banheiros", count: 1240, trend: "up" },
-						{ label: "Violência da GM", count: 856, trend: "up" },
-						{ label: "Fome (Centro)", count: 432, trend: "stable" }
-					].map((item, idx) => (
-						<div key={idx} className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between hover:border-red-500/30 transition-colors">
-							<div>
-								<h4 className="text-slate-300 font-bold text-sm">{item.label}</h4>
-								<span className="text-xs text-slate-500">Relatos confirmados</span>
-							</div>
-							<div className="text-right">
-								<span className="text-2xl font-black text-white block">{item.count}</span>
-								{item.trend === 'up' && <span className="text-[10px] text-red-400 font-bold uppercase">↑ Subindo</span>}
-							</div>
-						</div>
-					))}
+					<ThermometerCard
+						label="Fome / Segurança Alimentar"
+						count={socialThermometer.fome}
+						trend={socialThermometer.fome > 5 ? "up" : "stable"}
+					/>
+					<ThermometerCard
+						label="Crise Sanitária / Higiene"
+						count={socialThermometer.higiene}
+						trend={socialThermometer.higiene > 5 ? "up" : "stable"}
+					/>
+					<ThermometerCard
+						label="Violência Institucional"
+						count={socialThermometer.violencia}
+						trend={socialThermometer.violencia > 5 ? "up" : "stable"}
+					/>
 				</div>
 			</div>
 
@@ -375,7 +373,7 @@ export default function ImpactPage() {
 			<div className="mt-12">
 				<ODSExplainer />
 			</div>
-		</div >
+		</div>
 	);
 }
 
@@ -404,6 +402,33 @@ function KpiCard({
 				<div className="p-3 bg-slate-800 rounded-lg">{icon}</div>
 			</div>
 			<p className="text-xs text-slate-300">{desc}</p>
+		</div>
+	);
+}
+
+function ThermometerCard({
+	label,
+	count,
+	trend,
+}: {
+	label: string;
+	count: number;
+	trend: "up" | "stable";
+}) {
+	return (
+		<div className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between hover:border-red-500/30 transition-colors">
+			<div>
+				<h4 className="text-slate-300 font-bold text-sm">{label}</h4>
+				<span className="text-xs text-slate-500">Relatos confirmados</span>
+			</div>
+			<div className="text-right">
+				<span className="text-2xl font-black text-white block">{count}</span>
+				{trend === "up" && (
+					<span className="text-[10px] text-red-400 font-bold uppercase">
+						↑ Subindo
+					</span>
+				)}
+			</div>
 		</div>
 	);
 }

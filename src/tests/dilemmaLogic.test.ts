@@ -40,7 +40,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 		ethnicity: "pardo",
 		ageRange: "adulto",
 		timeOnStreet: "recente",
-		startingSkill: "nenhuma"
+		startingSkill: "nenhuma",
 	};
 
 	it("should filter dilemmas by gender", () => {
@@ -63,7 +63,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			gameSpeed: 1,
 			// runtime props
 			userPosition: null, // [number, number] | null
-			timeInLocation: 0
+			timeInLocation: 0,
 		};
 
 		const dilemma = manager.findTriggeredDilemma(stateMock as any);
@@ -78,14 +78,19 @@ describe("DilemmaManager Deterministic Logic", () => {
 			activeDilemmaId: null,
 			resolvedDilemmas: [],
 			userPosition: null,
-			timeInLocation: 0
+			timeInLocation: 0,
 		};
 
 		const dilemma1 = manager.findTriggeredDilemma(stateNoItem as any);
 		expect(dilemma1?.id).toBe("dilemma_male");
 
 		// Strict Item type: id, name, weight, type only. No effects, no cost, no available.
-		const mockItem: Item = { id: "key_item", name: "Key", weight: 0, type: "valioso" };
+		const mockItem: Item = {
+			id: "key_item",
+			name: "Key",
+			weight: 0,
+			type: "valioso",
+		};
 
 		const stateWithItem = {
 			avatar: { ...mockAvatar },
@@ -93,7 +98,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			activeDilemmaId: null,
 			resolvedDilemmas: [],
 			userPosition: null, // Explicit to satisfy intersection type
-			timeInLocation: 0
+			timeInLocation: 0,
 		};
 
 		// Resolve male so item one can pick
@@ -112,7 +117,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 				trigger: { type: "RANDOM", value: 1.0 },
 				aspect: "SOCIAL",
 				intensity: "LOW",
-				options: []
+				options: [],
 			},
 			{
 				id: "high_intensity_crisis",
@@ -121,8 +126,8 @@ describe("DilemmaManager Deterministic Logic", () => {
 				trigger: { type: "RANDOM", value: 1.0 },
 				aspect: "HEALTH",
 				intensity: "HIGH",
-				options: []
-			}
+				options: [],
+			},
 		];
 
 		const directorManager = new DilemmaManager(criticalHealthDilemmas);
@@ -134,7 +139,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			activeDilemmaId: null,
 			resolvedDilemmas: [],
 			userPosition: null,
-			timeInLocation: 0
+			timeInLocation: 0,
 		};
 
 		const picked = directorManager.findTriggeredDilemma(criticalState as any);
@@ -150,15 +155,15 @@ describe("DilemmaManager Deterministic Logic", () => {
 				trigger: { type: "RANDOM", value: 1.0 },
 				aspect: "HEALTH",
 				intensity: "HIGH",
-				options: []
+				options: [],
 			},
 			{
 				id: "chain_step",
 				title: "Story Step",
 				description: "Chain",
 				trigger: { type: "CHAIN_STEP", prev_id: "prev_step", value: 0 },
-				options: []
-			}
+				options: [],
+			},
 		];
 
 		const chainManager = new DilemmaManager(chainDilemmas, ["prev_step"]);
@@ -168,7 +173,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			activeDilemmaId: null,
 			resolvedDilemmas: [],
 			userPosition: null,
-			timeInLocation: 0
+			timeInLocation: 0,
 		};
 
 		const picked = chainManager.findTriggeredDilemma(criticalState as any);

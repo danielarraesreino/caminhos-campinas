@@ -47,7 +47,7 @@ export function useAudioDirector() {
 
 		// Base Ambience Logic
 		let targetVolume = isNight ? 0.4 : 0.6;
-		let targetTrack = "traffic"; // Default
+		const targetTrack = "traffic"; // Default
 
 		// Priority 1: Director High Intensity (Crisis)
 		if (activeDilemma?.intensity === "HIGH") {

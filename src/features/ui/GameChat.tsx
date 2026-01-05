@@ -11,6 +11,7 @@ import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 import { ActionInput } from "./ActionInput";
 import { ChatMessage } from "./ChatMessage";
+import { VoiceInput } from "./VoiceInput";
 
 export function GameChat({
 	initialMessages,
@@ -91,6 +92,10 @@ export function GameChat({
 			if (text) {
 				const dilemmasArray = GAME_DILEMMAS;
 				console.log(`[GameChat] Input: "${text}"`);
+
+				// [NEW] Social Thermometer Reporting
+				// We register every input as a potential occurrence
+				gameState.registerOccurrence(text);
 
 				const matchedDilemma = DilemmaMatcher.findBestDilemma(
 					text,
@@ -221,12 +226,15 @@ export function GameChat({
 				{/* Spacer to prevent content hugging the input */}
 			</div>
 
-			<div className="w-full">
+			<div className="w-full flex gap-2 items-end">
 				<ActionInput
 					onAction={handleAction}
 					isProcessing={isLoading || isPending || isThinking}
 					placeholder="Fale ou digite..."
 				/>
+				<div className="pb-3 pr-3">
+					<VoiceInput onTranscription={(text) => handleAction(text)} />
+				</div>
 			</div>
 		</div>
 	);

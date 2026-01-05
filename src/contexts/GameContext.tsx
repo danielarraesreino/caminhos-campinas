@@ -14,111 +14,26 @@ import { useOfflineDB } from "@/features/offline-db/useOfflineDB";
 import { TelemetryAction, telemetryService } from "@/services/telemetry";
 
 // --- Types ---
+import type { SavedGameState } from "@/features/offline-db/types";
+import {
+	type Avatar,
+	type GameAction,
+	type GameEvent,
+	type GameState,
+	type Item,
+	type PDUObjective,
+	type PDUState,
+} from "@/types/GameState";
 
-export interface Avatar {
-	name: string;
-	gender: "masculino" | "feminino" | "trans" | "nao-binario";
-	ethnicity: "branco" | "preto" | "pardo" | "indigena";
-	ageRange: "jovem" | "adulto" | "idoso";
-	timeOnStreet: "recente" | "veterano";
-	startingSkill: "reciclagem" | "artesao" | "vendedor" | "nenhuma";
-	avatarImage?: string;
-}
-
-export interface Item {
-	id: string;
-	name: string;
-	weight: number;
-	type: "valioso" | "sobrevivencia";
-}
-
-export type PDUObjective = "TRABALHO" | "FAMILIA" | "SAUDE" | "MORADIA";
-
-export interface PDUState {
-	isActive: boolean;
-	objective: PDUObjective | null;
-	currentStageId: string; // ex: "tirar_rg"
-	completedStages: string[]; // ex: ["entrevista_inicial"]
-	stressLevel: number; // "Fadiga Burocrática"
-}
-
-export interface GameState {
-	health: number;
-	hunger: number;
-	hygiene: number;
-	sanity: number;
-	energy: number;
-	dignity: number;
-	socialStigma: number;
-	stabilityGap: number;
-	money: number;
-	pdu: PDUState; // [NEW] PDU State
-	workTool: {
-		type: "CARRINHO_RECICLAGEM" | "SACO_PRETO" | null;
-		condition: number;
-		capacity: number;
-		riskFactor: number;
-		isConfiscated: boolean;
-	};
-	documents: {
-		hasRG: boolean;
-		hasCPF: boolean;
-		hasCarteiraTrabalho: boolean; // Updated for Arc 2
-		hasComprovanteResidencia: boolean;
-	};
-	flags: Record<string, boolean>; // [NEW] Narrative flags
-	activeBuffs: string[];
-	isAtShelter: boolean;
-	inventory: Item[];
-	day: number;
-	time: number;
-	resolvedDilemmas: string[];
-	activeDilemmaId: string | null;
-	criticalHealth: boolean;
-	avatar: Avatar | null;
-	phoneBattery: number; // 0-100
-	userPosition: [number, number] | null;
-	isPaused: boolean;
-	addiction: number;
-	trust: number;
-	employed_formal: boolean;
-	history: GameEvent[]; // [NEW] Telemetry Log
-}
-
-export interface GameEvent {
-	id: string; // e.g., 'chain_exclusao_03_rapa' or UUID
-	type: "VIOLATION" | "ACHIEVEMENT" | "STATISTIC" | "BARRIER";
-	timestamp: number; // game time in hours
-	tags: string[]; // e.g., ['ODS_1', 'VIOLENCIA_INSTITUCIONAL']
-	description: string;
-}
-
-export type GameAction =
-	| { type: "SET_STATE"; payload: GameState }
-	| { type: "MODIFY_STAT"; payload: { stat: keyof GameState; amount: number } }
-	| { type: "ADD_MONEY"; payload: number }
-	| { type: "ADVANCE_TIME"; payload: number }
-	| { type: "RESOLVE_DILEMMA"; payload: string }
-	| { type: "SET_ACTIVE_DILEMMA"; payload: string | null }
-	| { type: "SET_AT_SHELTER"; payload: boolean }
-	| { type: "SET_WORK_TOOL"; payload: GameState["workTool"] }
-	| { type: "ADD_BUFF"; payload: string }
-	| { type: "REMOVE_BUFF"; payload: string }
-	| { type: "ADD_INVENTORY"; payload: Item }
-	| { type: "REMOVE_INVENTORY"; payload: string }
-	| { type: "SET_AVATAR"; payload: Avatar }
-	| { type: "SET_PAUSED"; payload: boolean }
-	| { type: "SET_USER_POSITION"; payload: [number, number] | null }
-	// [NEW] PDU Actions
-	| { type: "INIT_PDU"; payload: { objective: PDUObjective } }
-	| { type: "UPDATE_PDU_STAGE"; payload: { stageId: string } }
-	| { type: "COMPLETE_PDU_STAGE"; payload: { stageId: string } }
-	| { type: "RESET_GAME" }
-	| { type: "SLEEP" } // Added SLEEP for atomic action
-	| { type: "UPDATE_DOCUMENTS"; payload: Partial<GameState["documents"]> }
-	| { type: "SET_EMPLOYED_FORMAL"; payload: boolean }
-	| { type: "LOG_EVENT"; payload: GameEvent }
-	| { type: "SET_FLAG"; payload: { key: string; value: boolean } }; // [NEW] Flag Action
+export type {
+	Avatar,
+	GameAction,
+	GameEvent,
+	GameState,
+	Item,
+	PDUObjective,
+	PDUState,
+};
 
 const INITIAL_STATE: GameState = {
 	health: 100,
@@ -149,6 +64,12 @@ const INITIAL_STATE: GameState = {
 		hasCPF: true,
 		hasCarteiraTrabalho: false,
 		hasComprovanteResidencia: false,
+	},
+	socialThermometer: {
+		fome: 0,
+		higiene: 0,
+		violencia: 0,
+		saude: 0,
 	},
 	flags: {}, // [NEW] Narrative flags
 	activeBuffs: [],
@@ -345,6 +266,31 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				flags: { ...state.flags, [action.payload.key]: action.payload.value },
 			};
 
+		case "SET_FLAG":
+			return {
+				...state,
+				flags: { ...state.flags, [action.payload.key]: action.payload.value },
+			};
+
+		case "REGISTER_OCCURRENCE": {
+			const text = action.payload.toLowerCase();
+			const newThermometer = { ...state.socialThermometer };
+
+			// Simple Regex Keyword Analysis
+			if (/(fome|comida|rango|barriga)/.test(text)) newThermometer.fome++;
+			if (/(banheiro|banho|higiene|sanit|sujo|menstru)/.test(text))
+				newThermometer.higiene++;
+			if (/(seguran|policia|roubo|medo|agress|viol)/.test(text))
+				newThermometer.violencia++;
+			if (/(doen|saude|dor|medic|hospital|upa)/.test(text))
+				newThermometer.saude++;
+
+			return {
+				...state,
+				socialThermometer: newThermometer,
+			};
+		}
+
 		default:
 			return state;
 	}
@@ -369,9 +315,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
 		const loadState = async () => {
 			try {
-				const doc = await db.get(DOC_ID);
-				// biome-ignore lint/suspicious/noExplicitAny: generic doc
-				const { _id, _rev, ...savedState } = doc as any;
+				const doc = await db.get<SavedGameState>(DOC_ID);
+				// biome-ignore lint/suspicious/noExplicitAny: handling PouchDB return type quirks
+				const { _id, _rev, ...savedData } = doc as any;
+				const savedState = savedData as SavedGameState;
 
 				// VERSION CHECK (Reset if outdated)
 				if (savedState.version !== GAME_VERSION) {
@@ -388,6 +335,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					// 3. Reset State
 					dispatch({ type: "RESET_GAME" });
 					return;
+				}
+
+				// GUARANTEE: Social Thermometer Persistence
+				if (!savedState.socialThermometer) {
+					console.log("🔧 Migrating legacy save: Injecting socialThermometer");
+					savedState.socialThermometer = INITIAL_STATE.socialThermometer;
 				}
 
 				console.log("✅ Game State Hydrated:", savedState);
@@ -661,6 +614,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				dispatch({ type: "LOG_EVENT", payload: event }),
 			setFlag: (key: string, value: boolean) =>
 				dispatch({ type: "SET_FLAG", payload: { key, value } }),
+			registerOccurrence: (text: string) =>
+				dispatch({ type: "REGISTER_OCCURRENCE", payload: text }),
 		}),
 		[
 			state,

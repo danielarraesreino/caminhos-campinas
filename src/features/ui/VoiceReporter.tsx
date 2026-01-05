@@ -64,7 +64,10 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 		}
 	};
 
-	const handleSaveReport = async (audioBlob: Blob | null, text: string | null) => {
+	const handleSaveReport = async (
+		audioBlob: Blob | null,
+		text: string | null,
+	) => {
 		setUploadStatus("uploading");
 		try {
 			// 1. Process Logic (Thermometer)
@@ -73,7 +76,9 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 			let matchType = "NEW";
 
 			if (text) {
-				const { processUserReport } = await import("@/features/game-loop/reportService");
+				const { processUserReport } = await import(
+					"@/features/game-loop/reportService"
+				);
 				const result = processUserReport(text);
 				if (result.status === "MATCH_FOUND") {
 					thermometerFeedback = result.message;
@@ -87,7 +92,7 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 				audioBlob: audioBlob,
 				textContent: text,
 				status: "pending_sync",
-				thermometerResult: matchType
+				thermometerResult: matchType,
 			};
 
 			await saveLocally(report);
@@ -113,13 +118,13 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 	const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
 
 	// ... inside handleSaveReport we need to set this state ...
-	// Wait, refactoring handleSaveReport above returned the string but didn't set state. 
+	// Wait, refactoring handleSaveReport above returned the string but didn't set state.
 	// I need to intercept the call.
 
 	// Let's update the caller instead or update handleSaveReport to set state directly.
 	// I already updated handleSaveReport to return it. So I need to update the callers.
 
-	// Actually, easier to inject the state setter inside handleSaveReport in previous step? 
+	// Actually, easier to inject the state setter inside handleSaveReport in previous step?
 	// Too late, previous step submitted. I will modify the callers or add local state handling here.
 
 	// Let's modify the component state usage.
@@ -136,27 +141,26 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 			)}
 
 			<h3 className="text-white font-bold mb-1 flex items-center gap-2 text-lg">
-				<Mic className="w-5 h-5 text-amber-500" />
-				A Rua Tem Voz
+				<Mic className="w-5 h-5 text-amber-500" />A Rua Tem Voz
 			</h3>
 			<p className="text-slate-400 text-xs mb-6 leading-relaxed">
-				Seu relato ajuda a identificar problemas reais (buracos, falta de luz, violência).
-				É anônimo e seguro.
+				Seu relato ajuda a identificar problemas reais (buracos, falta de luz,
+				violência). É anônimo e seguro.
 			</p>
 
 			<div className="flex flex-col items-center gap-4">
 				{/* MODE SWITCHER */}
-				{uploadStatus === 'idle' && !isRecording && (
+				{uploadStatus === "idle" && !isRecording && (
 					<div className="flex bg-slate-800/50 p-1 rounded-lg mb-2">
 						<button
-							onClick={() => setMode('audio')}
-							className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 'audio' ? 'bg-slate-700 text-amber-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+							onClick={() => setMode("audio")}
+							className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === "audio" ? "bg-slate-700 text-amber-400 shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
 						>
 							Áudio
 						</button>
 						<button
-							onClick={() => setMode('text')}
-							className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 'text' ? 'bg-slate-700 text-amber-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'}`}
+							onClick={() => setMode("text")}
+							className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === "text" ? "bg-slate-700 text-amber-400 shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
 						>
 							Texto
 						</button>
@@ -167,10 +171,11 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 				{mode === "audio" && uploadStatus === "idle" && (
 					<button
 						onClick={isRecording ? stopRecording : startRecording}
-						className={`w-20 h-20 rounded-full flex items-center justify-center transition-all shadow-xl ${isRecording
-							? "bg-red-500 hover:bg-red-600 animate-pulse ring-8 ring-red-500/20"
-							: "bg-amber-500 hover:bg-amber-400 shadow-amber-500/20"
-							}`}
+						className={`w-20 h-20 rounded-full flex items-center justify-center transition-all shadow-xl ${
+							isRecording
+								? "bg-red-500 hover:bg-red-600 animate-pulse ring-8 ring-red-500/20"
+								: "bg-amber-500 hover:bg-amber-400 shadow-amber-500/20"
+						}`}
 					>
 						{isRecording ? (
 							<Square className="w-8 h-8 text-white fill-current" />
@@ -208,19 +213,22 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 					</div>
 				)}
 
-
 				{/* STATUS STATES */}
 				{uploadStatus === "uploading" && (
 					<div className="flex flex-col items-center text-amber-400 p-8">
 						<Loader2 className="w-12 h-12 animate-spin mb-4" />
-						<span className="text-sm font-bold animate-pulse">Registrando no Blockchain...</span>
+						<span className="text-sm font-bold animate-pulse">
+							Registrando no Blockchain...
+						</span>
 					</div>
 				)}
 
 				{uploadStatus === "success" && (
 					<div className="flex flex-col items-center text-emerald-400 p-6 bg-emerald-950/20 rounded-xl border border-emerald-500/20 w-full animate-in fade-in zoom-in">
 						<CheckCircle2 className="w-12 h-12 mb-3 text-emerald-500" />
-						<span className="text-lg font-bold text-center text-white">Voz Registrada!</span>
+						<span className="text-lg font-bold text-center text-white">
+							Voz Registrada!
+						</span>
 
 						{feedbackMessage ? (
 							<div className="bg-emerald-900/40 p-3 rounded-lg mt-3 border border-emerald-500/30">
@@ -252,7 +260,9 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 					<div className="flex flex-col items-center text-red-400 p-4 bg-red-950/30 rounded-xl border border-red-900/50 w-full">
 						<AlertTriangle className="w-8 h-8 mb-2" />
 						<span className="text-sm font-bold">Erro ao salvar</span>
-						<p className="text-xs text-center opacity-70 mb-3">Verifique conexão e permissões.</p>
+						<p className="text-xs text-center opacity-70 mb-3">
+							Verifique conexão e permissões.
+						</p>
 						<button
 							onClick={() => setUploadStatus("idle")}
 							className="px-4 py-2 bg-red-900/50 rounded-lg text-xs hover:bg-red-800 transition-colors text-white"

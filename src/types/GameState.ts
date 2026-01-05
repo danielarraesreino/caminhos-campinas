@@ -1,0 +1,110 @@
+export interface Avatar {
+	name: string;
+	gender: "masculino" | "feminino" | "trans" | "nao-binario";
+	ethnicity: "branco" | "preto" | "pardo" | "indigena";
+	ageRange: "jovem" | "adulto" | "idoso";
+	timeOnStreet: "recente" | "veterano";
+	startingSkill: "reciclagem" | "artesao" | "vendedor" | "nenhuma";
+	avatarImage?: string;
+}
+
+export interface Item {
+	id: string;
+	name: string;
+	weight: number;
+	type: "valioso" | "sobrevivencia";
+}
+
+export type PDUObjective = "TRABALHO" | "FAMILIA" | "SAUDE" | "MORADIA";
+
+export interface PDUState {
+	isActive: boolean;
+	objective: PDUObjective | null;
+	currentStageId: string; // ex: "tirar_rg"
+	completedStages: string[]; // ex: ["entrevista_inicial"]
+	stressLevel: number; // "Fadiga Burocrática"
+}
+
+export interface GameState {
+	health: number;
+	hunger: number;
+	hygiene: number;
+	sanity: number;
+	energy: number;
+	dignity: number;
+	socialStigma: number;
+	stabilityGap: number;
+	money: number;
+	pdu: PDUState;
+	workTool: {
+		type: "CARRINHO_RECICLAGEM" | "SACO_PRETO" | null;
+		condition: number;
+		capacity: number;
+		riskFactor: number;
+		isConfiscated: boolean;
+	};
+	documents: {
+		hasRG: boolean;
+		hasCPF: boolean;
+		hasCarteiraTrabalho: boolean;
+		hasComprovanteResidencia: boolean;
+	};
+	socialThermometer: {
+		fome: number;
+		higiene: number;
+		violencia: number;
+		saude: number;
+	};
+	flags: Record<string, boolean>;
+	activeBuffs: string[];
+	isAtShelter: boolean;
+	inventory: Item[];
+	day: number;
+	time: number;
+	resolvedDilemmas: string[];
+	activeDilemmaId: string | null;
+	criticalHealth: boolean;
+	avatar: Avatar | null;
+	phoneBattery: number; // 0-100
+	userPosition: [number, number] | null;
+	isPaused: boolean;
+	addiction: number;
+	trust: number;
+	employed_formal: boolean;
+	history: GameEvent[];
+}
+
+export interface GameEvent {
+	id: string;
+	type: "VIOLATION" | "ACHIEVEMENT" | "STATISTIC" | "BARRIER";
+	timestamp: number;
+	tags: string[];
+	description: string;
+}
+
+export type GameAction =
+	| { type: "SET_STATE"; payload: GameState }
+	| { type: "MODIFY_STAT"; payload: { stat: keyof GameState; amount: number } }
+	| { type: "ADD_MONEY"; payload: number }
+	| { type: "ADVANCE_TIME"; payload: number }
+	| { type: "RESOLVE_DILEMMA"; payload: string }
+	| { type: "SET_ACTIVE_DILEMMA"; payload: string | null }
+	| { type: "SET_AT_SHELTER"; payload: boolean }
+	| { type: "SET_WORK_TOOL"; payload: GameState["workTool"] }
+	| { type: "ADD_BUFF"; payload: string }
+	| { type: "REMOVE_BUFF"; payload: string }
+	| { type: "ADD_INVENTORY"; payload: Item }
+	| { type: "REMOVE_INVENTORY"; payload: string }
+	| { type: "SET_AVATAR"; payload: Avatar }
+	| { type: "SET_PAUSED"; payload: boolean }
+	| { type: "SET_USER_POSITION"; payload: [number, number] | null }
+	| { type: "INIT_PDU"; payload: { objective: PDUObjective } }
+	| { type: "UPDATE_PDU_STAGE"; payload: { stageId: string } }
+	| { type: "COMPLETE_PDU_STAGE"; payload: { stageId: string } }
+	| { type: "RESET_GAME" }
+	| { type: "SLEEP" }
+	| { type: "UPDATE_DOCUMENTS"; payload: Partial<GameState["documents"]> }
+	| { type: "SET_EMPLOYED_FORMAL"; payload: boolean }
+	| { type: "LOG_EVENT"; payload: GameEvent }
+	| { type: "SET_FLAG"; payload: { key: string; value: boolean } }
+	| { type: "REGISTER_OCCURRENCE"; payload: string };

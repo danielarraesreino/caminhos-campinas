@@ -1,10 +1,6 @@
 "use client";
 
-import {
-	Briefcase,
-	FileText,
-	ShieldAlert,
-} from "lucide-react";
+import { Briefcase, FileText, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
 import { REALITY_ATLAS } from "@/data/RealityAtlas";
@@ -153,10 +149,11 @@ export function ImpactReport({ onRestart, gameOverResult }: ImpactReportProps) {
 											</span>
 										))}
 										<span
-											className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${event.type === "VIOLATION"
+											className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
+												event.type === "VIOLATION"
 													? "bg-red-950 text-red-400"
 													: "bg-orange-950 text-orange-400"
-												}`}
+											}`}
 										>
 											{event.type}
 										</span>
