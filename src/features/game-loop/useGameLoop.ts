@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { DilemmaManager } from "./DilemmaManager";
 import { GAME_DILEMMAS } from "./dilemmas"; // Unified import source
+import { useHaptics } from "@/hooks/useHaptics";
 
 const dilemmaManager = new DilemmaManager(GAME_DILEMMAS);
 
@@ -57,6 +58,7 @@ export function useGameLoop() {
 	const [isRaining, setIsRaining] = useState(false);
 	// Refs to prevent effects running on every render
 	const lastHourRef = useRef<number | null>(null);
+	const { triggerImpact, triggerWarning } = useHaptics();
 
 	const [timeInLocation, setTimeInLocation] = useState(0);
 	const [lastPosition, setLastPosition] = useState<[number, number] | null>(
@@ -143,10 +145,16 @@ export function useGameLoop() {
 			modifyStat("sanity", -snyDecay);
 			modifyStat("phoneBattery", -5);
 
+			// Haptic Feedback for critical decay
+			if (snyDecay > 1 || hngDecay > 3) triggerWarning();
+
 			const rand = processRandomEvents({ dignity, workTool });
 			if (rand) {
 				if (rand.workTool) setWorkTool(rand.workTool);
-				if (rand.dignity) modifyStat("dignity", rand.dignity - dignity);
+				if (rand.dignity) {
+					modifyStat("dignity", rand.dignity - dignity);
+					triggerImpact(); // Bad event
+				}
 			}
 
 			checkBattery();

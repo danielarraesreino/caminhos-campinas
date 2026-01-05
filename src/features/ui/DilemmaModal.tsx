@@ -17,6 +17,7 @@ import type {
 	DilemmaOption,
 } from "@/features/game-loop/dilemma-types";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
+import { useHaptics } from "@/hooks/useHaptics";
 import { useImpactLogger } from "@/hooks/useImpactLogger";
 import { useODSTracker } from "@/hooks/useODSTracker";
 
@@ -36,6 +37,7 @@ export function DilemmaModal({
 	const [outcome, setOutcome] = useState<"success" | "failure" | null>(null);
 	const [isPending, startTransition] = useTransition();
 	const { playAmbience, stopAmbience } = useAudioSystem();
+	const { triggerClick } = useHaptics();
 	const { trackDilemmaDecision } = useODSTracker();
 	const { auditResolution } = useImpactLogger();
 
@@ -127,6 +129,7 @@ export function DilemmaModal({
 
 				setSelectedOption(index);
 				setOutcome(result);
+				triggerClick(); // Call triggerClick when an option is selected
 
 				// Telemetria Ética (Step 4)
 				// Use ODS Tracker
@@ -203,11 +206,10 @@ export function DilemmaModal({
 					<button
 						type="button"
 						onClick={toggleSpeech}
-						className={`p-1.5 rounded transition-colors border ${
-							isSpeaking
+						className={`p-1.5 rounded transition-colors border ${isSpeaking
 								? "bg-blue-900/50 border-blue-500 text-blue-400"
 								: "bg-slate-900/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-						}`}
+							}`}
 						aria-label="Ler texto em voz alta"
 						title="Ouvir Dilema"
 					>

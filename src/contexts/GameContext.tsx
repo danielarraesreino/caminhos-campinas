@@ -10,11 +10,9 @@ import {
 	useReducer,
 	useState,
 } from "react";
+import type { SavedGameState } from "@/features/offline-db/types";
 import { useOfflineDB } from "@/features/offline-db/useOfflineDB";
 import { TelemetryAction, telemetryService } from "@/services/telemetry";
-
-// --- Types ---
-import type { SavedGameState } from "@/features/offline-db/types";
 import {
 	type Avatar,
 	type GameAction,
@@ -266,11 +264,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				flags: { ...state.flags, [action.payload.key]: action.payload.value },
 			};
 
-		case "SET_FLAG":
-			return {
-				...state,
-				flags: { ...state.flags, [action.payload.key]: action.payload.value },
-			};
+
 
 		case "REGISTER_OCCURRENCE": {
 			const text = action.payload.toLowerCase();
