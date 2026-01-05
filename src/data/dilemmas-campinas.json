@@ -1930,7 +1930,7 @@
 			"value": 1,
 			"location_trigger": {
 				"lat": -22.905,
-				"lng": -47.060,
+				"lng": -47.06,
 				"radius": 300
 			}
 		},
@@ -2475,5 +2475,130 @@
 			}
 		],
 		"source_fact": "Baseado em: Censo 2024 - 30,1% reincidem na situação de rua [Source 1476]."
+	},
+	{
+		"id": "arco2_malices_start",
+		"title": "Gosto de Chumbo",
+		"description": "Você acorda com gosto de chumbo na boca e sem ímpeto. Mas é dia de jogo do Guarani. Você tem uma bolsinha de 'traficante' cheia de xinglings: carteiras, termômetros de ovo e lupas de celular. É hora de buscar a 'seiva' (dinheiro).",
+		"trigger": {
+			"type": "STATUS",
+			"attribute": "money",
+			"value": 10
+		},
+		"options": [
+			{
+				"label": "Ir para o Estádio (Ímpeto!)",
+				"consequence": "Você gastou o resto da sua testosterona caminhando até o Brinco de Ouro. O lugar está cheio de guardadores de carro com coletes brilhantes. A concorrência é visual.",
+				"effect": {
+					"energy": -15,
+					"sanity": 5,
+					"money": -5
+				},
+				"nextDilemmaId": "arco2_malices_seguranca"
+			},
+			{
+				"label": "Desistir e Ficar na Maloca",
+				"consequence": "A falta de ímpeto venceu. Você ficou deitado, economizando calorias, mas o bolso continua vazio e a mente pesada.",
+				"effect": {
+					"energy": 10,
+					"money": -5,
+					"sanity": -10
+				}
+			}
+		],
+		"source_fact": "Baseado em: 'Malices' - A falta de ímpeto e a venda de xinglings [Source 870, 872]"
+	},
+	{
+		"id": "arco2_malices_seguranca",
+		"title": "O Segurança do Mercado",
+		"description": "Você tenta vender no estacionamento do mercado. Aborda três pessoas. O segurança chega. Ele não é truculento, mas é firme: 'Ambulante não pode'. É o discurso do 'fubá pouco, meu pirão primeiro'.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Sair pedindo desculpas",
+				"consequence": "Você sai no sapatinho. Deixa por lá um pouco da sua dignidade, mas evita o confronto. Não vendeu nada.",
+				"effect": {
+					"dignity": -10,
+					"sanity": -5,
+					"security": 5
+				},
+				"nextDilemmaId": "arco2_malices_padaria"
+			},
+			{
+				"label": "Argumentar que está trabalhando",
+				"consequence": "Você tenta explicar, mas regra é regra. O segurança endurece. Você é expulso e a tensão sobe.",
+				"effect": {
+					"stress": 20,
+					"dignity": -20,
+					"energy": -10
+				},
+				"nextDilemmaId": "arco2_malices_padaria"
+			}
+		],
+		"source_fact": "Baseado em: 'Malices' - A abordagem do segurança no Pão de Açúcar [Source 875, 876]"
+	},
+	{
+		"id": "arco2_malices_padaria",
+		"title": "Olhos de Peixe",
+		"description": "Na padaria, você oferece os produtos para uma senhora 'reformada no botox'. Ela nem ouve. Te interrompe e diz: 'Não tenho dinheiro, só PIX'. Ela acha que isso vai te afastar.",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Dizer: 'Eu aceito PIX!'",
+				"consequence": "Ela te olha com aqueles olhos de peixe morto. O desinteresse é imediato. 'Não me interessa', ela diz. Você percebe que o problema não era o meio de pagamento, era você.",
+				"effect": {
+					"sanity": -15,
+					"dignity": -15,
+					"money": 0
+				},
+				"nextDilemmaId": "arco2_malices_casal"
+			},
+			{
+				"label": "Desistir e sair",
+				"consequence": "Você engole a mentira dela e sai. O segurança da padaria relaxa ao ver que você desistiu. Menos um conflito.",
+				"effect": {
+					"sanity": -5,
+					"energy": -5
+				},
+				"nextDilemmaId": "arco2_malices_casal"
+			}
+		],
+		"source_fact": "Baseado em: 'Malices' - A senhora do botox e a desculpa do Pix [Source 877, 878]"
+	},
+	{
+		"id": "arco2_malices_casal",
+		"title": "O Casal Hippie",
+		"description": "Última tentativa. Um casal com bebê. Parecem gente boa, 'de alma'. Você descreve os produtos. A mulher te corta: 'Cansa isso, um eterno mimimi... por que você não arruma um trabalho decente e para de importunar?'",
+		"trigger": {
+			"type": "CHAIN",
+			"value": 0
+		},
+		"options": [
+			{
+				"label": "Dar razão e sair (Ironia)",
+				"consequence": "'Você tem razão', você diz, e sai andando. Na cabeça, o pensamento de que os dados estavam viciados hoje. São Paulo não é santo dos ambulantes.",
+				"effect": {
+					"sanity": -20,
+					"knowledge": 10,
+					"stress": 10
+				}
+			},
+			{
+				"label": "Responder à altura (Ódio)",
+				"consequence": "Você solta o verbo. A mulher se assusta, abraça o bebê. As pessoas em volta te olham como o agressor. Você sai queimado, mas aliviado.",
+				"effect": {
+					"socialStigma": 20,
+					"sanity": 10,
+					"security": -10
+				}
+			}
+		],
+		"source_fact": "Baseado em: 'Malices' - O casal hippie e o discurso do 'trabalho digno' [Source 880, 881]"
 	}
 ]

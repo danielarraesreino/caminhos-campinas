@@ -206,10 +206,11 @@ export function DilemmaModal({
 					<button
 						type="button"
 						onClick={toggleSpeech}
-						className={`p-1.5 rounded transition-colors border ${isSpeaking
+						className={`p-1.5 rounded transition-colors border ${
+							isSpeaking
 								? "bg-blue-900/50 border-blue-500 text-blue-400"
 								: "bg-slate-900/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-							}`}
+						}`}
 						aria-label="Ler texto em voz alta"
 						title="Ouvir Dilema"
 					>

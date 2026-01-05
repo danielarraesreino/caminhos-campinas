@@ -104,19 +104,62 @@ export function GameChat({
 					[],
 				);
 
+				// [NEW] Visceral Inner Monologue Generator
+				const getInnerMonologue = (dilemmaTitle: string, triggerType: string) => {
+					// Mapeamento baseado nos textos literários (Mocotó, Malices, Desabafo)
+					const thoughts: Record<string, string> = {
+						// Fome/Mocotó [Source 289]
+						HUNGER_LOW:
+							"O estômago embrulha. A fraqueza bate e a boca fica com gosto de chumbo...",
+						"Fome Apertando":
+							"A dor na barriga não é de hoje. Preciso comer qualquer coisa que pare em pé.",
+
+						// Higiene/Estigma [Source 881]
+						HYGIENE_LOW:
+							"As pessoas desviam o olhar. O cheiro da rua impregnou na roupa.",
+						"A Necessidade do Banho":
+							"Sinto a sujeira colada na pele. Um banho frio seria um luxo agora.",
+
+						// Violência/Polícia [Source 876, 1636]
+						"Violência Policial":
+							"A sirene corta o silêncio. Um calafrio sobe pela espinha. É o Rapa ou a GM?",
+						Baculejo:
+							"Mãos na cabeça. O coração dispara. 'Documento, vagabundo', eles gritam.",
+
+						// Saúde/Drogas [Source 1621]
+						"Crise de Abstinência":
+							"O corpo treme. A fissura é um bicho arranhando por dentro.",
+						"A Tosse Que Não Passa":
+							"O peito chiando... essa tosse seca tá me rasgando.",
+
+						// Padrão (Vazio/Solidão) [Source 2337]
+						DEFAULT: "Mais um dia. A cidade passa apressada e eu continuo invisível.",
+					};
+
+					return thoughts[dilemmaTitle] || thoughts[triggerType] || thoughts.DEFAULT;
+				};
+
+				// ... inside component ...
+
 				if (matchedDilemma) {
 					console.log(`[HybridEngine] Interceptado: ${matchedDilemma.id}`);
 
-					// [FIX] Visual feedback before closing/switching
+					// [FIX] Visual feedback with Inner Monologue
 					const userMsg = {
 						id: Date.now().toString(),
 						role: "user",
 						content: text,
 					};
+
+					const narrativeThought = getInnerMonologue(
+						matchedDilemma.title,
+						matchedDilemma.trigger.type,
+					);
+
 					const sysMsg = {
 						id: (Date.now() + 1).toString(),
-						role: "assistant",
-						content: `⚠️ **Evento Identificado**: ${matchedDilemma.title}\n\n(Abrindo interface de decisão...)`,
+						role: "system", // Handled as plain text/thought by ChatMessage
+						content: `*${narrativeThought}* \n\n${matchedDilemma.description}`,
 					};
 
 					// Optimistic update

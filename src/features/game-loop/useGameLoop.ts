@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { useHaptics } from "@/hooks/useHaptics";
 import { DilemmaManager } from "./DilemmaManager";
 import { GAME_DILEMMAS } from "./dilemmas"; // Unified import source
-import { useHaptics } from "@/hooks/useHaptics";
 
 const dilemmaManager = new DilemmaManager(GAME_DILEMMAS);
 
@@ -70,7 +70,7 @@ export function useGameLoop() {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
 				(userPosition[0] - lastPosition[0]) ** 2 +
-				(userPosition[1] - lastPosition[1]) ** 2,
+					(userPosition[1] - lastPosition[1]) ** 2,
 			);
 			if (dist < 0.001) {
 				setTimeInLocation((prev) => prev + 1);
@@ -87,7 +87,7 @@ export function useGameLoop() {
 		if (userPosition) {
 			const distToCenter = Math.sqrt(
 				(userPosition[0] - CENTER_COORDS.lat) ** 2 +
-				(userPosition[1] - CENTER_COORDS.lng) ** 2,
+					(userPosition[1] - CENTER_COORDS.lng) ** 2,
 			);
 			if (distToCenter < 0.005 && timeInLocation >= IDLE_THRESHOLD) {
 				setActiveDilemma("enquadro_13_maio");

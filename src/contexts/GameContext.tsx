@@ -13,14 +13,14 @@ import {
 import type { SavedGameState } from "@/features/offline-db/types";
 import { useOfflineDB } from "@/features/offline-db/useOfflineDB";
 import { TelemetryAction, telemetryService } from "@/services/telemetry";
-import {
-	type Avatar,
-	type GameAction,
-	type GameEvent,
-	type GameState,
-	type Item,
-	type PDUObjective,
-	type PDUState,
+import type {
+	Avatar,
+	GameAction,
+	GameEvent,
+	GameState,
+	Item,
+	PDUObjective,
+	PDUState,
 } from "@/types/GameState";
 
 export type {
@@ -267,8 +267,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				...state,
 				flags: { ...state.flags, [action.payload.key]: action.payload.value },
 			};
-
-
 
 		case "REGISTER_OCCURRENCE": {
 			const text = action.payload.toLowerCase();

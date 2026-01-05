@@ -102,8 +102,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<span
 					className={`
 					px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
-					${
-						service.type === "ALIMENTACAO"
+					${service.type === "ALIMENTACAO"
 							? "bg-orange-900 text-orange-400"
 							: service.type === "ABRIGO"
 								? "bg-indigo-900 text-indigo-400"
@@ -112,7 +111,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 									: service.type === "EDUCACAO"
 										? "bg-blue-900 text-blue-400"
 										: "bg-slate-800 text-slate-400"
-					}
+						}
 				`}
 				>
 					{service.type}
@@ -231,12 +230,11 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						disabled={!canEnroll || enrollmentStatus !== "idle"}
 						onClick={handleEnroll}
 						className={`flex-1 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors relative overflow-hidden
-							${
-								canEnroll
-									? enrollmentStatus === "enrolled"
-										? "bg-green-600"
-										: "bg-blue-600 hover:bg-blue-500"
-									: "bg-zinc-800 opacity-50 cursor-not-allowed"
+							${canEnroll
+								? enrollmentStatus === "enrolled"
+									? "bg-green-600"
+									: "bg-blue-600 hover:bg-blue-500"
+								: "bg-zinc-800 opacity-50 cursor-not-allowed"
 							}
 						`}
 					>
@@ -436,6 +434,54 @@ export default function ResourcesPage() {
 					{displayedServices.length} locais
 				</span>
 			</div>
+
+			{/* --- Início do Patch: Resgate da Educação --- */}
+			<div className="mb-8">
+				<div className="flex items-center gap-2 mb-4">
+					<h2 className="text-xl font-bold text-gray-100 flex items-center gap-2">
+						<span className="text-yellow-500">⚡</span> Formação & Autonomia
+					</h2>
+				</div>
+
+				<a href="/educacao" className="block group">
+					<div className="bg-gradient-to-r from-slate-900 to-slate-800 border border-slate-700 rounded-xl p-6 hover:border-yellow-500/50 transition-all shadow-lg">
+						<div className="flex justify-between items-start">
+							<div>
+								<h3 className="text-lg font-bold text-white group-hover:text-yellow-400 transition-colors">
+									De Sobrevivente a Educador
+								</h3>
+								<p className="text-slate-400 text-sm mt-2 leading-relaxed">
+									Conhecimento é a única coisa que não podem levar no 'rapa'.
+									Acesse cursos sobre Direitos Humanos, Redução de Danos e Acesso
+									à Renda.
+								</p>
+							</div>
+							<div className="bg-slate-950 p-3 rounded-full group-hover:bg-yellow-500/10 transition-colors">
+								{/* Ícone de Capelo/Graduação ou Livro */}
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									className="text-yellow-500"
+								>
+									<path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+									<path d="M6 12v5c3 3 9 3 12 0v-5" />
+								</svg>
+							</div>
+						</div>
+						<div className="mt-4 flex items-center text-xs font-medium text-yellow-500 uppercase tracking-wider">
+							Acessar Módulos Gratuitos <span className="ml-2">→</span>
+						</div>
+					</div>
+				</a>
+			</div>
+			{/* --- Fim do Patch --- */}
 
 			{/* List */}
 			<div className="space-y-3">
