@@ -11,8 +11,8 @@ interface GameState {
 	money: number;
 }
 
-const MAX_HEALTH = 100;
-const MAX_HUNGER = 100;
+const _MAX_HEALTH = 100;
+const _MAX_HUNGER = 100;
 
 // Logic function to be tested (Pure function extraction of what seemingly exists in Play/Context)
 const updateSurvivalState = (currentState: GameState): GameState => {

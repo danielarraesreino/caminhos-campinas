@@ -3,8 +3,8 @@
 import { Lock, MapPin, Navigation } from "lucide-react";
 
 import { useCallback, useMemo } from "react";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useGameContext } from "@/contexts/GameContext";
-
 import { useServices } from "@/contexts/ServicesContext";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
 
@@ -66,7 +66,14 @@ export function NearbyList() {
 	const { trackServiceAccess } = useODSMetrics();
 
 	const services = useMemo(() => {
-		if (!userPosition || !contextServices) return contextServices || [];
+		if (!contextServices) return [];
+
+		if (!userPosition) {
+			return contextServices.map((s: any) => ({
+				...s,
+				distance: Number.POSITIVE_INFINITY,
+			}));
+		}
 
 		return contextServices
 			.map((s: any) => {
@@ -147,127 +154,161 @@ export function NearbyList() {
 		[modifyStat, addBuff, addMoney, trackServiceAccess],
 	);
 
+	// Find nearest service for the "Pill" trigger
+	const nearestService = services[0];
+	const nearestDistanceDisplay = nearestService
+		? nearestService.distance < 1
+			? `${Math.round(nearestService.distance * 1000)}m`
+			: `${nearestService.distance.toFixed(1)}km`
+		: "";
+
 	if (!userPosition) return null;
 
 	return (
-		<div className="fixed bottom-0 left-0 w-full z-40 pb-6 pointer-events-none">
-			<div className="px-4 mb-2 pointer-events-auto flex items-center justify-between">
-				<h2 className="text-sm font-bold font-heading text-white drop-shadow-md uppercase tracking-wider bg-black/50 px-2 rounded">
-					Serviços Próximos
-				</h2>
-				<div className="text-[10px] text-slate-300 bg-black/50 px-2 rounded">
-					Deslize para ver →
-				</div>
-			</div>
+		<Drawer>
+			<DrawerTrigger asChild>
+				<button
+					type="button"
+					className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900/90 backdrop-blur-md border border-slate-700 text-slate-200 px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-10 hover:bg-slate-800 transition-all active:scale-95 group max-w-[90vw]"
+				>
+					<div className="bg-blue-600 p-1.5 rounded-full animate-pulse group-hover:animate-none">
+						<Navigation size={16} className="text-white" />
+					</div>
+					<div className="flex flex-col items-start">
+						<span className="text-[10px] uppercase font-bold text-slate-400 leading-none mb-0.5">
+							Serviço mais próximo
+						</span>
+						<span className="font-bold text-sm truncate max-w-[200px] text-white">
+							{nearestService
+								? `${nearestService.name} (${nearestDistanceDisplay})`
+								: "Nenhum serviço mapeado perto"}
+						</span>
+					</div>
+					<div className="ml-2 border-l border-slate-700 pl-3 text-slate-500">
+						Ver todos
+					</div>
+				</button>
+			</DrawerTrigger>
 
-			<div className="flex overflow-x-auto gap-3 px-4 pb-4 snap-x snap-mandatory pointer-events-auto no-scrollbar mask-gradient-right">
-				{services.map((service) => {
-					let allowed = true;
-					let reasons: string[] = [];
-					try {
-						const check = checkAvailability(service);
-						allowed = check.allowed;
-						reasons = check.reasons;
-					} catch (err) {
-						console.error("availability check error", err);
-						return null;
-					}
-					const distanceDisplay =
-						service.distance < 1
-							? `${Math.round(service.distance * 1000)}m`
-							: `${service.distance.toFixed(1)}km`;
+			<DrawerContent className="bg-slate-950 border-t border-slate-800 h-[85vh]">
+				<div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-slate-800 mb-6 mt-4" />
+				<div className="px-4 pb-4 overflow-y-auto h-full space-y-4">
+					<h2 className="text-xl font-bold text-white mb-4 px-2">
+						Recursos Disponíveis
+					</h2>
 
-					return (
-						<div
-							key={service.id}
-							className={`relative flex-none w-[85vw] max-w-[320px] snap-center overflow-hidden rounded-xl border p-4 shadow-xl transition-all
+					{services.map((service) => {
+						let allowed = true;
+						let reasons: string[] = [];
+						try {
+							const check = checkAvailability(service);
+							allowed = check.allowed;
+							reasons = check.reasons;
+						} catch (err) {
+							console.error("availability check error", err);
+							return null;
+						}
+						const distanceDisplay =
+							service.distance < 1
+								? `${Math.round(service.distance * 1000)}m`
+								: `${service.distance.toFixed(1)}km`;
+
+						return (
+							<div
+								key={service.id}
+								className={`w-full rounded-xl border p-4 shadow-sm transition-all
                                 ${
 																	allowed
-																		? "bg-slate-900/95 border-slate-700 text-slate-100 backdrop-blur-md"
-																		: "bg-slate-950/90 border-slate-800 text-slate-500 grayscale opacity-80"
+																		? "bg-slate-900/50 border-slate-800 text-slate-100"
+																		: "bg-slate-950/30 border-slate-800/50 text-slate-500 grayscale opacity-80"
 																}`}
-						>
-							<div className="flex justify-between items-start mb-2">
-								<div>
-									<h3
-										className={`font-bold text-lg leading-tight ${allowed ? "text-white" : "text-slate-400"}`}
-									>
-										{service.name}
-									</h3>
-									<p className="text-xs text-blue-400 font-mono mt-0.5 flex items-center gap-1">
-										<MapPin size={10} />
-										{service.type} • {distanceDisplay}
-									</p>
+							>
+								<div className="flex justify-between items-start mb-2">
+									<div>
+										<h3
+											className={`font-bold text-lg leading-tight ${allowed ? "text-white" : "text-slate-400"}`}
+										>
+											{service.name}
+										</h3>
+										<p className="text-xs text-blue-400 font-mono mt-1 flex items-center gap-1">
+											<MapPin size={10} />
+											{service.type} • {distanceDisplay}
+										</p>
+									</div>
+									<span className="text-[10px] font-mono bg-slate-900 text-slate-300 px-2 py-1 rounded border border-slate-800 whitespace-nowrap">
+										{service.opening_hours}
+									</span>
 								</div>
-								<span className="text-[10px] font-mono bg-slate-800 text-slate-300 px-2 py-1 rounded border border-slate-700 whitespace-nowrap">
-									{service.opening_hours}
-								</span>
-							</div>
 
-							<p className="text-sm text-slate-300 mb-4 line-clamp-2 h-10 leading-relaxed">
-								{service.description}
-							</p>
+								<p className="text-sm text-slate-300 mb-4 leading-relaxed">
+									{service.description}
+								</p>
 
-							{!allowed && (
-								<div className="mb-3 rounded bg-red-950/30 border border-red-900/50 p-2 text-xs text-red-400 flex items-center gap-2">
-									<Lock size={12} className="flex-none" />
-									<span className="line-clamp-1">{reasons[0]}</span>
-								</div>
-							)}
+								{!allowed && (
+									<div className="mb-3 rounded bg-red-950/20 border border-red-900/30 p-2 text-xs text-red-500 flex items-center gap-2">
+										<Lock size={12} className="flex-none" />
+										<span className="line-clamp-1">{reasons[0]}</span>
+									</div>
+								)}
 
-							<div className="flex gap-2 mt-auto">
-								<button
-									type="button"
-									onClick={() => handleUseService(service)}
-									disabled={!allowed}
-									className={`flex-1 h-10 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wide transition-all active:scale-95
+								<div className="flex gap-2 mt-2">
+									<button
+										type="button"
+										onClick={() => handleUseService(service)}
+										disabled={!allowed}
+										className={`flex-1 h-10 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wide transition-all active:scale-95
                                         ${
 																					allowed
 																						? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20"
 																						: "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
 																				}`}
-								>
-									{allowed ? "Utilizar" : "Bloqueado"}
-								</button>
+									>
+										{allowed ? "Utilizar" : "Bloqueado"}
+									</button>
 
-								{/* ACTION BUTTONS */}
-								<div className="flex gap-2">
-									{service.relatedLink && (
+									<div className="flex gap-2">
+										{service.relatedLink && (
+											<button
+												type="button"
+												onClick={() =>
+													window.open(service.relatedLink, "_blank")
+												}
+												className="h-10 w-10 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-blue-400 rounded-lg flex items-center justify-center"
+												title="Agendar"
+											>
+												📅
+											</button>
+										)}
+
 										<button
 											type="button"
-											onClick={() => window.open(service.relatedLink, "_blank")}
-											className="h-10 w-10 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-blue-400 rounded-lg flex items-center justify-center"
-											title="Agendar"
+											onClick={() => {
+												if (service.action_type === "link" && service.url) {
+													window.open(service.url, "_blank");
+												} else if (
+													service.coords &&
+													service.coords.length >= 2
+												) {
+													const [lat, lng] = service.coords;
+													window.open(
+														`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+														"_blank",
+													);
+												}
+											}}
+											className="h-10 w-10 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-emerald-400 rounded-lg flex items-center justify-center"
 										>
-											📅
+											<Navigation size={18} />
 										</button>
-									)}
-
-									<button
-										type="button"
-										onClick={() => {
-											if (service.action_type === "link" && service.url) {
-												window.open(service.url, "_blank");
-											} else if (service.coords && service.coords.length >= 2) {
-												const [lat, lng] = service.coords;
-												window.open(
-													`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
-													"_blank",
-												);
-											}
-										}}
-										className="h-10 w-10 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-emerald-400 rounded-lg flex items-center justify-center"
-									>
-										<Navigation size={18} />
-									</button>
+									</div>
 								</div>
 							</div>
-						</div>
-					);
-				})}
-				{/* Spacer to allow last item to be fully visible if needed */}
-				<div className="w-2 flex-none" />
-			</div>
-		</div>
+						);
+					})}
+					{/* Spacer for bottom safe area */}
+					<div className="h-10" />
+				</div>
+			</DrawerContent>
+		</Drawer>
 	);
 }

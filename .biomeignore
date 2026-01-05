@@ -1,2 +1,4 @@
 src/app/globals.css
+.next/
+node_modules/
 **/*.css

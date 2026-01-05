@@ -2,11 +2,12 @@
 
 import {
 	BarChart,
-	Building2,
-	FileText,
 	Gamepad,
+	HeartHandshake,
 	MapPin,
 	Menu,
+	Newspaper,
+	Shield,
 	Wifi,
 	WifiOff,
 	X,
@@ -15,7 +16,6 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 
-import { BatteryIndicator } from "@/components/ui/BatteryIndicator";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
@@ -40,28 +40,28 @@ export function Navbar() {
 	const primaryLinks = [
 		{
 			href: "/jogar",
-			label: "Simulador",
+			label: "Jogar",
 			icon: <Gamepad className="w-4 h-4" />,
 		},
 		{
+			href: "/hub",
+			label: "Rede de Apoio",
+			icon: <HeartHandshake className="w-4 h-4" />,
+		},
+		{
+			href: "/cofre",
+			label: "Meus Docs",
+			icon: <Shield className="w-4 h-4" />,
+		},
+		{
 			href: "/impacto",
-			label: "Dados Abertos",
+			label: "Impacto",
 			icon: <BarChart className="w-4 h-4" />,
 		},
 		{
-			href: "/transparencia",
-			label: "Transparência",
-			icon: <FileText className="w-4 h-4" />,
-		},
-		{
 			href: "/jornal",
-			label: "Jornal da Rua",
-			icon: <FileText className="w-4 h-4" />,
-		},
-		{
-			href: "/parceiros",
-			label: "Parceiros ESG",
-			icon: <Building2 className="w-4 h-4" />,
+			label: "Jornal",
+			icon: <Newspaper className="w-4 h-4" />,
 		},
 	];
 

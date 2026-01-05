@@ -63,8 +63,10 @@ export interface GameState {
 	documents: {
 		hasRG: boolean;
 		hasCPF: boolean;
+		hasCarteiraTrabalho: boolean; // Updated for Arc 2
 		hasComprovanteResidencia: boolean;
 	};
+	flags: Record<string, boolean>; // [NEW] Narrative flags
 	activeBuffs: string[];
 	isAtShelter: boolean;
 	inventory: Item[];
@@ -115,7 +117,8 @@ export type GameAction =
 	| { type: "SLEEP" } // Added SLEEP for atomic action
 	| { type: "UPDATE_DOCUMENTS"; payload: Partial<GameState["documents"]> }
 	| { type: "SET_EMPLOYED_FORMAL"; payload: boolean }
-	| { type: "LOG_EVENT"; payload: GameEvent };
+	| { type: "LOG_EVENT"; payload: GameEvent }
+	| { type: "SET_FLAG"; payload: { key: string; value: boolean } }; // [NEW] Flag Action
 
 const INITIAL_STATE: GameState = {
 	health: 100,
@@ -142,10 +145,12 @@ const INITIAL_STATE: GameState = {
 		isConfiscated: false,
 	},
 	documents: {
-		hasRG: false,
-		hasCPF: false,
+		hasRG: false, // [CRITICAL] Starts without RG for Arc 2
+		hasCPF: true,
+		hasCarteiraTrabalho: false,
 		hasComprovanteResidencia: false,
 	},
+	flags: {}, // [NEW] Narrative flags
 	activeBuffs: [],
 	isAtShelter: false,
 	inventory: [],
@@ -334,6 +339,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case "LOG_EVENT":
 			return { ...state, history: [...state.history, action.payload] };
 
+		case "SET_FLAG":
+			return {
+				...state,
+				flags: { ...state.flags, [action.payload.key]: action.payload.value },
+			};
+
 		default:
 			return state;
 	}
@@ -411,7 +422,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
 		const saveState = async () => {
 			try {
-				let doc: any = {};
+				let doc: Record<string, unknown> = {};
 				try {
 					doc = await db.get(DOC_ID);
 				} catch (_e) {
@@ -451,8 +462,38 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					},
 				});
 			};
+
+			// biome-ignore lint/suspicious/noExplicitAny: debug global
+			(window as any).debugSetState = async (newState: GameState) => {
+				console.log("🧪 Injecting Debug State:", newState);
+
+				// 1. Update React State
+				dispatch({ type: "SET_STATE", payload: newState });
+
+				// 2. Force Persistence immediately
+				if (db) {
+					try {
+						let doc: any = {};
+						try {
+							doc = await db.get(DOC_ID);
+						} catch (_e) {
+							doc = { _id: DOC_ID };
+						}
+
+						await db.put({
+							...doc,
+							...newState,
+							version: GAME_VERSION,
+							_id: DOC_ID,
+						});
+						console.log("🧪 Debug State Persisted to DB");
+					} catch (err) {
+						console.error("❌ Debug Persist failed:", err);
+					}
+				}
+			};
 		}
-	}, [state.phoneBattery]);
+	}, [state.phoneBattery, db]);
 
 	// --- Helpers ---
 
@@ -618,6 +659,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				dispatch({ type: "SET_EMPLOYED_FORMAL", payload: isEmployed }),
 			logEvent: (event: GameEvent) =>
 				dispatch({ type: "LOG_EVENT", payload: event }),
+			setFlag: (key: string, value: boolean) =>
+				dispatch({ type: "SET_FLAG", payload: { key, value } }),
 		}),
 		[
 			state,

@@ -180,6 +180,7 @@ export function DilemmaModal({
 		>
 			<DialogContent
 				showCloseButton={false}
+				accessibleTitle={dilemma.title || "Dilema de Sobrevivência"}
 				className="sm:max-w-[500px] max-h-[85vh] flex flex-col border border-slate-800 bg-black text-slate-300 rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)] z-[100]"
 			>
 				{/* Header decorativo técnico */}
@@ -243,11 +244,11 @@ export function DilemmaModal({
 
 				<div className="p-8 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
 					<DialogHeader className="space-y-4">
-						<DialogTitle className="text-xl font-mono uppercase tracking-[0.3em] text-slate-100 pr-32 border-b border-slate-900 pb-4">
+						<h2 className="text-xl font-mono uppercase tracking-[0.3em] text-slate-100 pr-32 border-b border-slate-900 pb-4">
 							{currentOption
 								? "Impacto_Sistêmico"
 								: dilemma.title.replace(" ", "_")}
-						</DialogTitle>
+						</h2>
 						<DialogDescription
 							className="text-slate-300 text-base leading-relaxed font-serif italic pt-2"
 							asChild

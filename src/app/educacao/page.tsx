@@ -85,7 +85,23 @@ export default function EducationPage() {
 	);
 }
 
-function ModuleCard({ icon, title, desc, status, color, disabled }: any) {
+interface ModuleCardProps {
+	icon: React.ReactNode;
+	title: string;
+	desc: string;
+	status: string;
+	color: string;
+	disabled?: boolean;
+}
+
+function ModuleCard({
+	icon,
+	title,
+	desc,
+	status,
+	color,
+	disabled,
+}: ModuleCardProps) {
 	const bgColors: Record<string, string> = {
 		amber: "bg-amber-50 group-hover:bg-amber-100 border-amber-100",
 		emerald: "bg-emerald-50 group-hover:bg-emerald-100 border-emerald-100",

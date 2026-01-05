@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useServices } from "@/contexts/ServicesContext";
-import { ALL_DILEMMAS as dilemmas } from "@/features/game-loop/dilemmas"; // Corrected import
 import type { Dilemma } from "@/features/game-loop/dilemma-types";
+import { ALL_DILEMMAS as dilemmas } from "@/features/game-loop/dilemmas"; // Corrected import
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 
 export function useDilemmaMatcher() {

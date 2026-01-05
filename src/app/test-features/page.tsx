@@ -116,19 +116,21 @@ export default function TestFeaturesPage() {
 					<h3 className="text-sm font-bold text-zinc-400 mb-2">
 						Inventário (Peso Total:{" "}
 						{inventory
-							.reduce((acc: number, i: any) => acc + i.weight, 0)
+							.reduce((acc: number, i: Item) => acc + i.weight, 0)
 							.toFixed(1)}
 						kg)
 					</h3>
 					<div className="flex flex-wrap gap-2">
-						{inventory.map((item: any) => (
-							<span
-								key={item.id}
-								className="text-xs px-2 py-1 bg-zinc-800 rounded"
-							>
-								{item.name} ({item.weight}kg)
-							</span>
-						))}
+						{inventory.map(
+							(item: { id: string; name: string; weight: number }) => (
+								<span
+									key={item.id}
+									className="text-xs px-2 py-1 bg-zinc-800 rounded"
+								>
+									{item.name} ({item.weight}kg)
+								</span>
+							),
+						)}
 					</div>
 				</div>
 

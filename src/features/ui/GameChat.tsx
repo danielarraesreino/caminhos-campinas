@@ -79,6 +79,14 @@ export function GameChat({
 		async (text: string, audioBlob?: Blob | null) => {
 			if (!text.trim() && !audioBlob) return;
 
+			// [FIX] Guard clause to prevent crash if hook is not ready
+			if (!append) {
+				console.warn(
+					"[GameChat] 'append' function not available from useChat hook.",
+				);
+				return;
+			}
+
 			// Hybrid Engine Interception
 			if (text) {
 				const dilemmasArray = GAME_DILEMMAS;
@@ -137,7 +145,7 @@ export function GameChat({
 			}
 
 			try {
-				append({
+				await append({
 					role: "user",
 					content: text,
 					data: {

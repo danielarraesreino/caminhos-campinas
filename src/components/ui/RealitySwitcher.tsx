@@ -3,7 +3,6 @@
 import { Gamepad2, HeartHandshake } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 
 export function RealitySwitcher() {
 	const pathname = usePathname();

@@ -5,6 +5,7 @@ import {
 	Battery,
 	Brain,
 	Clock,
+	Megaphone,
 	Mic,
 	Package,
 	ShieldAlert,
@@ -18,13 +19,16 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
 import { CitizenshipTree } from "./CitizenshipTree";
+import { InteractiveStatus } from "./InteractiveStatus";
 
 export function GameHUD({
 	onToggleChat,
 	onToggleMenu,
+	onToggleVoice,
 }: {
 	onToggleChat?: () => void;
 	onToggleMenu?: () => void;
+	onToggleVoice?: () => void;
 }) {
 	const [isOnline, setIsOnline] = useState(true);
 
@@ -77,26 +81,29 @@ export function GameHUD({
 			<header className="fixed top-0 left-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-3 py-2 flex items-center justify-between text-xs shadow-xl pointer-events-auto transition-all duration-300">
 				{/* LEFT: VITAL SIGNS */}
 				<div className="flex items-center gap-3">
-					<StatusIcon
+					<InteractiveStatus
 						icon={Activity}
 						value={health}
 						max={100}
-						color="text-emerald-500"
+						colorClass="text-emerald-500"
 						label="SAÚDE"
+						details="Sua vitalidade física. Mantenha acima de 30% para evitar desmaios e doenças."
 					/>
-					<StatusIcon
+					<InteractiveStatus
 						icon={Brain}
 						value={sanity}
 						max={100}
-						color="text-violet-500"
+						colorClass="text-violet-500"
 						label="MENTE"
+						details="Sua saúde mental. Níveis baixos podem causar alucinações e limitar opções de diálogo."
 					/>
-					<StatusIcon
+					<InteractiveStatus
 						icon={Wallet}
 						value={money}
 						isCurrency
-						color="text-amber-400"
+						colorClass="text-amber-400"
 						label="CAIXA"
+						details="Seus recursos financeiros disponíveis para alimentação, transporte e serviços."
 					/>
 				</div>
 
@@ -137,8 +144,19 @@ export function GameHUD({
 					className="h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/50 border border-blue-400 transition-transform active:scale-95"
 					onClick={onToggleChat}
 					disabled={phoneBattery <= 0}
+					aria-label="Abrir Chat de Ação"
 				>
 					<Mic className="h-5 w-5 text-white" />
+				</Button>
+
+				<Button
+					size="icon"
+					className="h-12 w-12 rounded-full bg-amber-600 hover:bg-amber-500 shadow-lg shadow-amber-900/50 border border-amber-400 transition-transform active:scale-95"
+					onClick={onToggleVoice}
+					disabled={phoneBattery <= 0}
+					aria-label="Reportar Ocorrência"
+				>
+					<Megaphone className="h-5 w-5 text-white" />
 				</Button>
 
 				<Button
@@ -154,39 +172,6 @@ export function GameHUD({
 		</div>
 	);
 }
-
-// Helper Component for Compact Stats
-function StatusIcon({
-	icon: Icon,
-	value,
-	max = 100,
-	color,
-	isCurrency = false,
-	label,
-}: any) {
-	return (
-		<div className="flex flex-col gap-0.5">
-			<div className="flex items-center gap-1.5">
-				<Icon className={`w-3.5 h-3.5 ${color}`} />
-				<span
-					className={`font-bold ${isCurrency ? "text-emerald-400" : "text-slate-200"}`}
-				>
-					{isCurrency ? `R$ ${value.toFixed(0)}` : `${Math.round(value)}%`}
-				</span>
-			</div>
-			{!isCurrency && (
-				<div className="w-full h-0.5 bg-slate-800 rounded-full overflow-hidden">
-					<div
-						className={`h-full ${color.replace("text-", "bg-")}`}
-						style={{ width: `${(value / max) * 100}%` }}
-					/>
-				</div>
-			)}
-		</div>
-	);
-}
-
-// StatCard component removed in favor of StatusIcon (compact mode)
 
 function PDUWidget({ pdu }: { pdu: any }) {
 	if (!pdu?.isActive || !pdu?.objective) return null;
@@ -230,3 +215,5 @@ function PDUWidget({ pdu }: { pdu: any }) {
 		</div>
 	);
 }
+
+// StatCard component removed in favor of StatusIcon (compact mode)

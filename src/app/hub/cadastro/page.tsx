@@ -164,7 +164,10 @@ export default function HubCadastroPage() {
 								id="org-type"
 								value={formData.type}
 								onChange={(e) =>
-									setFormData({ ...formData, type: e.target.value as any })
+									setFormData({
+										...formData,
+										type: e.target.value as "ONG" | "COLETIVO" | "RELIGIOSO",
+									})
 								}
 								className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
 							>

@@ -1,16 +1,7 @@
 "use client";
 
-import { ArrowLeft, Download, Heart, Users, Wallet } from "lucide-react";
+import { Download, Heart, Users, Wallet } from "lucide-react";
 import Link from "next/link";
-import {
-	Bar,
-	BarChart,
-	CartesianGrid,
-	ResponsiveContainer,
-	Tooltip,
-	XAxis,
-	YAxis,
-} from "recharts";
 
 import FINANCIAL_DATA from "@/data/financial-goals.json";
 
@@ -20,7 +11,7 @@ const ICON_MAP = {
 	Wallet,
 };
 
-const MOCK_FINANCIAL_DATA = FINANCIAL_DATA.breakdown;
+const _MOCK_FINANCIAL_DATA = FINANCIAL_DATA.breakdown;
 
 const MOCK_PILOT_TARGETS = FINANCIAL_DATA.pilot_targets.map((target) => ({
 	...target,

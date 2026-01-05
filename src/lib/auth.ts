@@ -26,6 +26,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			},
 		}),
 	],
+	trustHost: true,
+	secret: process.env.AUTH_SECRET,
 	callbacks: {
 		session({ session, token }) {
 			// Persist user ID to session

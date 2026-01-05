@@ -669,8 +669,7 @@ export default function FundraisingPage() {
 											title: "Módulos 5 a 8: Formação de Multiplicadores",
 											desc: "Preparação prática para alunos se tornarem educadores pares nos abrigos.",
 										},
-									].map((mod, idx) => (
-										// biome-ignore lint/suspicious/noArrayIndexKey: Static content order
+									].map((mod) => (
 										<div
 											key={mod.title}
 											className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:border-blue-300 transition-colors"

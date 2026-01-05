@@ -12,6 +12,7 @@ import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
 import { GameProvider } from "@/contexts/GameContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
 import { StartupLogger } from "@/features/debug/StartupLogger";
+import { GameEffectsLayer } from "@/features/ui/GameEffectsLayer";
 import { SurvivalModeProvider } from "@/features/ui/SurvivalModeContext";
 
 const geistSans = Geist({
@@ -52,6 +53,7 @@ export default function RootLayout({
 					<SurvivalModeProvider>
 						<GameProvider>
 							<ServicesProvider>
+								<GameEffectsLayer />
 								<ClientLayoutWrapper>{children}</ClientLayoutWrapper>
 								<SpeedInsights />
 								<Clarity />

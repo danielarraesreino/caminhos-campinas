@@ -3,7 +3,6 @@
 import { ArrowLeft, BookOpen, FileText, Target, Users } from "lucide-react";
 import Link from "next/link";
 import { EcoButton } from "@/components/ui/EcoButton";
-import FINANCIAL_DATA from "@/data/financial-goals.json";
 import SOURCES_DATA from "@/data/sources.json";
 
 export default function SobrePage() {

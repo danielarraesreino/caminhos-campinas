@@ -9,8 +9,8 @@ import {
 	Utensils,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CENSUS_REALITY } from "@/data/census-reality";
+import { ODSExplainer } from "@/features/dashboard/ODSExplainer";
 import {
 	runCensusSimulation,
 	type SimAgent,
@@ -73,7 +73,7 @@ export default function ImpactPage() {
 			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-12">
 				<KpiCard
 					title="População Mapeada"
-					value={stats.total}
+					value={stats.total.toString()}
 					icon={<Users className="text-blue-400" />}
 					desc="Vidas simuladas hoje"
 				/>
@@ -172,6 +172,35 @@ export default function ImpactPage() {
 							mas opera com apenas 3 equipes para 1.557 pessoas.
 						</li>
 					</ul>
+				</div>
+			</div>
+
+
+
+			{/* TERMÔMETRO SOCIAL: Alertas Críticos (Solicitado: Prompt 3) */}
+			<div className="mb-12">
+				<h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+					<AlertTriangle className="w-5 h-5 text-red-500 animate-pulse" />
+					Termômetro Social: O que a rua está dizendo hoje?
+				</h2>
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+					{/* MOCK DATA: In production this comes from reportService aggregation */}
+					{[
+						{ label: "Falta de Banheiros", count: 1240, trend: "up" },
+						{ label: "Violência da GM", count: 856, trend: "up" },
+						{ label: "Fome (Centro)", count: 432, trend: "stable" }
+					].map((item, idx) => (
+						<div key={idx} className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between hover:border-red-500/30 transition-colors">
+							<div>
+								<h4 className="text-slate-300 font-bold text-sm">{item.label}</h4>
+								<span className="text-xs text-slate-500">Relatos confirmados</span>
+							</div>
+							<div className="text-right">
+								<span className="text-2xl font-black text-white block">{item.count}</span>
+								{item.trend === 'up' && <span className="text-[10px] text-red-400 font-bold uppercase">↑ Subindo</span>}
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 
@@ -341,11 +370,28 @@ export default function ImpactPage() {
 					</div>
 				</div>
 			</div>
-		</div>
+
+			{/* ODS Explainer - Contexto Global */}
+			<div className="mt-12">
+				<ODSExplainer />
+			</div>
+		</div >
 	);
 }
 
-function KpiCard({ title, value, icon, desc, alert = false }: any) {
+function KpiCard({
+	title,
+	value,
+	icon,
+	desc,
+	alert = false,
+}: {
+	title: string;
+	value: string;
+	icon: React.ReactNode;
+	desc: string;
+	alert?: boolean;
+}) {
 	return (
 		<div
 			className={`p-6 rounded-xl border ${alert ? "bg-red-950/40 border-red-500/50" : "bg-slate-900 border-slate-800"}`}

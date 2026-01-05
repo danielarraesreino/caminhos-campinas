@@ -5,70 +5,88 @@ import { useGameContext } from "@/contexts/GameContext";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
 
 export function useAudioDirector() {
-	const { state } = useGameContext();
+	const gameContext = useGameContext();
+	// Defensively access properties in case context is partial or undefined during init
+	// Defensively access properties
+	const time = gameContext?.time ?? 8;
+	const health = gameContext?.health ?? 100;
+	const sanity = gameContext?.sanity ?? 80;
+	const activeDilemmaId = gameContext?.activeDilemmaId;
+
 	const { playAmbience, setVolume } = useAudioSystem();
 
-	const lastHourRef = useRef(state?.time || 8);
+	const lastHourRef = useRef(time || 8);
 
 	useEffect(() => {
 		// Initialize Audio System
 		const interactHandler = () => {
-			// Browser requires interaction to play audio
-			// We can optimistically try to resume context here if we had access to it,
-			// but essentially this handler is just a placeholder for now unless we invoke a "resume" method.
+			// Placeholder for resume context
 		};
 		document.addEventListener("click", interactHandler);
-		// Clean up
 		return () => document.removeEventListener("click", interactHandler);
 	}, []);
 
-	// 1. Cycle Day/Night & Traffic
+	// 1. Cycle Day/Night & Traffic & Director Intensity
 	useEffect(() => {
-		if (!state) return;
-		const hour = (state.time || 0) % 24;
+		const hour = (time || 0) % 24;
 		const isNight = hour >= 19 || hour < 6;
 
-		// Base Ambience
-		// We use 'traffic' as the city hum.
-		// At night, volume lowers or track changes.
-
-		// Check for specific conditions overriding normal ambience
-		if (state.health < 20) {
-			// Low Health - Tension
-			setVolume(0.3);
-		} else if (state.sanity < 30) {
-			// Low Sanity - Disorienting
-			setVolume(0.8);
-		} else {
-			// Normal State
-			setVolume(isNight ? 0.4 : 0.6);
+		// Lookup Active Dilemma for Sensory Overrides
+		let activeDilemma: any = null;
+		if (activeDilemmaId) {
+			try {
+				// Inline require to avoid top-level optional chaining issues if module not ready
+				activeDilemma =
+					require("@/features/game-loop/dilemmas").GAME_DILEMMAS.find(
+						(d: any) => d.id === activeDilemmaId,
+					);
+			} catch (e) {
+				console.warn("Audio Director could not load dilemmas", e);
+			}
 		}
 
+		// Base Ambience Logic
+		let targetVolume = isNight ? 0.4 : 0.6;
+		let targetTrack = "traffic"; // Default
+
+		// Priority 1: Director High Intensity (Crisis)
+		if (activeDilemma?.intensity === "HIGH") {
+			// High Intensity overrides everything
+			targetVolume = 0.9; // Loud
+
+			if (
+				activeDilemma.aspect === "HEALTH" ||
+				activeDilemma.aspect === "SECURITY"
+			) {
+				// Danger / Sirens / Heartbeat (simulated by volume/track if we had multiple)
+				// For now, boost volume to max to create urgency
+				targetVolume = 1.0;
+			}
+		}
+		// Priority 2: Low Stats
+		else if (health < 20) {
+			targetVolume = 0.3; // Weakness
+		} else if (sanity < 30) {
+			targetVolume = 0.8; // Noise/Confusion
+		}
+
+		setVolume(targetVolume);
+
 		// Logic to trigger ambience track
-		// Wrapped in try-catch via the hook usually, but good to be safe if Logic changes
 		try {
-			playAmbience("traffic", { fade: true });
+			playAmbience(targetTrack, { fade: true });
 		} catch (err) {
 			console.warn("[AudioDirector] Autoplay prevented or audio error:", err);
 		}
-	}, [
-		state,
-		state?.time,
-		state?.health,
-		state?.sanity,
-		playAmbience,
-		setVolume,
-	]);
+	}, [time, health, sanity, activeDilemmaId, playAmbience, setVolume]);
 
 	// 2. Event Triggers (One-shot SFX)
 	useEffect(() => {
-		if (!state) return;
-
-		if (state.time !== lastHourRef.current) {
+		if (time !== lastHourRef.current) {
 			// Time changed
-			lastHourRef.current = state.time;
+			lastHourRef.current = time;
 		}
-	}, [state, state?.time]);
+	}, [time]);
 
 	return null; // Logic-only hook
 }

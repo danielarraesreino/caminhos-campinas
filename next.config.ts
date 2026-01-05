@@ -33,6 +33,8 @@ const nextConfig: NextConfig = {
 	},
 	// Optimization to avoid timeouts in Serverless Functions
 	experimental: {
+		// @ts-expect-error: Experimental feature not yet in types
+		reactCompiler: true,
 		serverActions: {
 			bodySizeLimit: "2mb",
 		},

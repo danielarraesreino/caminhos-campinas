@@ -47,7 +47,12 @@ export function GameOverModal({
 	};
 
 	return (
-		<div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
+		<div
+			className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="game-over-title"
+		>
 			<div className="w-full max-w-2xl bg-zinc-950 border-2 border-zinc-800 rounded-3xl overflow-hidden shadow-2xl shadow-black/80">
 				{/* Header com motivo */}
 				<div
@@ -56,7 +61,10 @@ export function GameOverModal({
 					<div className="flex justify-center mb-4 text-white/80">
 						{getReasonIcon()}
 					</div>
-					<h2 className="text-4xl font-black text-white mb-2 uppercase tracking-wider">
+					<h2
+						id="game-over-title"
+						className="text-4xl font-black text-white mb-2 uppercase tracking-wider"
+					>
 						Fim de Jogo
 					</h2>
 					<p className="text-2xl font-bold text-red-500 uppercase tracking-widest font-mono">

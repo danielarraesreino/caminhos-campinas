@@ -24,7 +24,7 @@ import {
 
 function ServiceCard({ service }: { service: ServiceLocation }) {
 	const { documents, modifyStat } = useGameContext();
-	const { coords } = service;
+	const { coords: _coords } = service;
 	const [enrollmentStatus, setEnrollmentStatus] = useState<
 		"idle" | "enrolling" | "enrolled"
 	>("idle");
@@ -79,7 +79,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 
 	const isEducation = false; // "educacao" removed from ServiceType, handled as ASSISTENCIA generally or via specific ID checking if needed.
 	// We can check category if we want specific styling for education
-	const isEducationStyle =
+	const _isEducationStyle =
 		service.type === "EDUCACAO" ||
 		service.type === "DOCUMENTS" ||
 		service.category === "Qualificação Profissional" ||

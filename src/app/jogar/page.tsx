@@ -12,10 +12,12 @@ import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
 import { AvatarCreation } from "@/features/ui/AvatarCreation";
 import { DilemmaModal } from "@/features/ui/DilemmaModal";
 import { EffectsOverlay } from "@/features/ui/EffectsOverlay";
+import { EffectsLayer } from "@/features/ui/EffectsLayer";
 import { GameChat } from "@/features/ui/GameChat";
 import { GameHUD } from "@/features/ui/GameHUD";
-import { GameOverModal } from "@/features/ui/GameOverModal";
+
 import { OnboardingTutorial } from "@/features/ui/OnboardingTutorial";
+import { VoiceReporter } from "@/features/ui/VoiceReporter";
 import { useAudioDirector } from "@/hooks/useAudioDirector";
 import { useEventEngine } from "@/hooks/useEventEngine";
 
@@ -30,6 +32,7 @@ export default function GamePage() {
 		null,
 	);
 	const [isChatOpen, setIsChatOpen] = useState(false);
+	const [isVoiceOpen, setIsVoiceOpen] = useState(false);
 	const [showTutorial, setShowTutorial] = useState(false);
 
 	useEffect(() => {
@@ -122,8 +125,10 @@ export default function GamePage() {
 					<GameHUD
 						onToggleChat={() => setIsChatOpen(!isChatOpen)}
 						onToggleMenu={() => window.open("/recursos", "_blank")}
+						onToggleVoice={() => setIsVoiceOpen(true)}
 					/>
 					<EffectsOverlay />
+					<EffectsLayer />
 				</div>
 			</div>
 
@@ -149,6 +154,12 @@ export default function GamePage() {
 						</button>
 						<GameChat onDilemmaTriggered={triggerDilemma} />
 					</div>
+				</div>
+			)}
+
+			{isVoiceOpen && (
+				<div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+					<VoiceReporter onClose={() => setIsVoiceOpen(false)} />
 				</div>
 			)}
 

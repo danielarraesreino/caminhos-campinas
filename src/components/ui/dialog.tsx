@@ -50,9 +50,11 @@ function DialogContent({
 	className,
 	children,
 	showCloseButton = true,
+	accessibleTitle,
 	...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
 	showCloseButton?: boolean;
+	accessibleTitle?: string;
 }) {
 	return (
 		<DialogPortal data-slot="dialog-portal">
@@ -65,6 +67,9 @@ function DialogContent({
 				)}
 				{...props}
 			>
+				{accessibleTitle && (
+					<DialogTitle className="sr-only">{accessibleTitle}</DialogTitle>
+				)}
 				{children}
 				{showCloseButton && (
 					<DialogPrimitive.Close

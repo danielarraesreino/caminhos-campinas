@@ -41,7 +41,7 @@ export function DataExport() {
 
 			// Convert data to CSV rows
 			const csvRows = events.map((event) => {
-				const meta = event.metadata as any;
+				const meta = event.metadata as Record<string, unknown>;
 
 				// Privacy Audit: Ensure simpler location usage
 				// meta.location is already anonymized (grid), but we ensure we don't access meta.lat/lng

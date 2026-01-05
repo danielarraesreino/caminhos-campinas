@@ -143,7 +143,20 @@ export function useEventEngine() {
 				setEmployedFormal(effectToApply.employed_formal);
 			}
 
-			// 4. [NEW] PDU Logic
+			// 4. [NEW] Action Logic (Flags & Quests)
+			if (option.action === "SET_FLAG" && option.flag) {
+				// biome-ignore lint/suspicious/noExplicitAny: context expansion
+				(useGameContext() as any).setFlag(option.flag, true);
+
+				// TRIGGER PDU UPDATE if flag is quest starter
+				if (option.flag === "quest_rg_started") {
+					initPDU("TRABALHO"); // Example: Document path leads to work
+					// Or just notify? Ideally we use PDU state.
+					// Let's assume initPDU handles the toast natively or we rely on UI state changes.
+				}
+			}
+
+			// 5. [NEW] PDU Logic (Explicit)
 			if (option.pduAction) {
 				const { type, value } = option.pduAction;
 				if (type === "INIT") {

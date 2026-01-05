@@ -112,8 +112,9 @@ export function OnboardingTutorial({
 						<div
 							// biome-ignore lint/suspicious/noArrayIndexKey: slides are static constant
 							key={idx}
-							className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? "w-6 bg-blue-500" : "w-1.5 bg-slate-700"
-								}`}
+							className={`h-1.5 rounded-full transition-all duration-300 ${
+								idx === currentSlide ? "w-6 bg-blue-500" : "w-1.5 bg-slate-700"
+							}`}
 						/>
 					))}
 				</div>

@@ -1,64 +1,22 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "./fixtures/game-state";
 
 test.describe("Exclusão Digital e Resiliência", () => {
-	test.beforeEach(async ({ page }) => {
-		// Acessa o jogo
-		await page.goto("/jogar");
-
-		// Flow: Avatar Creation (if present)
-		const avatarHeader = page.getByText("Quem é você nesta jornada?");
-		if (await avatarHeader.isVisible({ timeout: 5000 })) {
-			// Step 1: Name & Demographics
-			await page.locator("#avatar-name").fill("Tester Playwright");
-			await page
-				.locator('select[title="Selecione o gênero"]')
-				.selectOption("masculino");
-			await page
-				.locator('select[title="Selecione a faixa etária"]')
-				.selectOption("adulto");
-			await page.getByRole("button", { name: "Próximo Passo" }).click();
-
-			// Step 2: Avatar Image (Select first option)
-			// Code defaults to avatar_1. So just click Next.
-			await page.getByRole("button", { name: "Próximo Passo" }).click();
-
-			// Step 3: Ethnicity
-			// Code has buttons with text "branco", "preto", etc.
-			await page
-				.getByRole("button", { name: "preto", exact: false })
-				.first()
-				.click();
-			// Step 3 has no internal transition, so we click Next
-			await page.getByRole("button", { name: "Próximo Passo" }).click();
-
-			// Step 4: Time on Street
-			await page.getByRole("button", { name: "Recém-chegado" }).click();
-			// Click Next
-			await page.getByRole("button", { name: "Próximo Passo" }).click();
-
-			// Step 5: Review
-			// Button changes to "Iniciar Jornada"
-			await page.getByRole("button", { name: "Iniciar Jornada" }).click();
-
-			// Wait for transition (resetGame + delay)
-			await page.waitForTimeout(2000);
-		}
-
-		// Flow: Tutorial (if present)
-		const tutorialHeader = page.getByText("Bem-vindo às Ruas");
-		if (await tutorialHeader.isVisible({ timeout: 5000 })) {
-			await page.locator('button[aria-label="Fechar tutorial"]').click();
-		}
-	});
-
+	// Override default test with fixture usage
 	test("Cenário 1: Navegabilidade Offline (Service Worker)", async ({
 		page,
 		context,
+		gameState, // custom fixture
 	}) => {
+		// Inject state and reload (at root)
+		await gameState.injectGameState();
+
+		// Navigate to game page where HUD is visible
+		await page.goto('/jogar');
+
 		// 1. Garante que o mapa carregou
-		await expect(page.locator(".leaflet-container")).toBeVisible({
-			timeout: 10000,
-		});
+		// Wait for HUD to ensure game is totally loaded
+		await expect(page.getByRole('status', { name: 'SAÚDE' })).toBeVisible({ timeout: 15000 });
 
 		// 2. Corta a internet
 		await context.setOffline(true);
@@ -73,8 +31,13 @@ test.describe("Exclusão Digital e Resiliência", () => {
 		await expect(page.locator(".leaflet-container")).toBeVisible();
 	});
 
-	test("Cenário 2: Bateria Baixa (Bloqueio de Chat)", async ({ page }) => {
+	test("Cenário 2: Bateria Baixa (Bloqueio de Chat)", async ({ page, gameState }) => {
+		// Inject state
+		await gameState.injectGameState();
+		await page.goto('/jogar');
+
 		// 1. Verifica estado inicial (Chat disponível)
+		await expect(page.getByRole('status', { name: 'SAÚDE' })).toBeVisible({ timeout: 15000 });
 		await page.waitForTimeout(2000);
 
 		const chatButton = page.locator('button[aria-label="Abrir Chat de Ação"]');

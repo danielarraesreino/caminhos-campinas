@@ -1,4 +1,5 @@
 import { Instagram } from "lucide-react";
+import NextImage from "next/image";
 
 export function Footer() {
 	return (
@@ -38,10 +39,12 @@ export function Footer() {
 
 					<div className="flex items-center gap-4 bg-slate-800/50 px-6 py-3 rounded-full border border-slate-700/50 hover:bg-slate-800 transition-colors group">
 						<div className="relative">
-							<img
+							<NextImage
 								src="/daniel_dev.jpg"
 								alt="Daniel (Japa)"
-								className="w-20 h-20 rounded-full border-2 border-slate-600 group-hover:border-blue-500 transition-colors object-cover object-center"
+								width={80}
+								height={80}
+								className="rounded-full border-2 border-slate-600 group-hover:border-blue-500 transition-colors object-cover object-center"
 							/>
 							<div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"></div>
 						</div>

@@ -18,7 +18,11 @@ export interface DilemmaOption {
 	label: string;
 	consequence: string;
 	consequence_failure?: string;
+	consequence_success?: string; // [NEW] For probabilistic outcomes
 	risk?: number; // 0-100
+	chance?: number; // [NEW] 0-1 (Success probability)
+	action?: "SET_FLAG" | "START_QUEST"; // [NEW] Special Logic Actions
+	flag?: string; // [NEW] Payload for SET_FLAG
 	nextDilemmaId?: string; // ID for chained dilemma (immediate trigger)
 	effect: Partial<
 		Omit<
@@ -83,17 +87,38 @@ export interface DilemmaOption {
 	};
 }
 
+export interface DilemmaConditions {
+	gender?: "masculino" | "feminino" | "nao-binario" | "trans" | "all";
+	minHealth?: number;
+	requiredItem?: string;
+	requiredFlag?: string;
+}
+
+export type DilemmaAspect =
+	| "SECURITY"
+	| "HEALTH"
+	| "FOOD"
+	| "HYGIENE"
+	| "WORK"
+	| "FAMILY"
+	| "SOCIAL";
+
 export interface Dilemma {
 	id: string;
+	arcId?: string;
+	nextDilemmaId?: string;
 	title: string;
 	description: string;
+	aspect?: DilemmaAspect; // Optional for now to avoid breaking existing data immediately
+	intensity?: "LOW" | "HIGH";
+	conditions?: DilemmaConditions;
 	trigger: {
 		type: TriggerType;
 		value: number | string; // Updated to allow string values (e.g. "PERFIL_NEGRO")
 		locationId?: string;
 		statusCondition?: Record<string, number>;
 		prev_id?: string;
-		condition?: "slept_outside" | "no_docs" | "accepted_help";
+		condition?: string; // Updated to allow "state.documents.hasRG" expressions
 	};
 	source_fact?: string;
 	ods?: string[];
@@ -109,6 +134,8 @@ export interface Dilemma {
 	soundEffect?: string;
 	prerequisite?: string;
 	repeatable?: boolean;
-	requiredGender?: string[]; // "masculino" | "feminino" | "nao-binario" | "trans"
+	occurrenceCount?: number; // Termômetro Social: quantas vezes isso foi relatado
+	relatedKeywords?: string[]; // Para agrupar relatos livres (ex: "fome", "comida")
+	requiredGender?: string[]; // Legacy support, prefer 'conditions.gender'
 	options: DilemmaOption[];
 }

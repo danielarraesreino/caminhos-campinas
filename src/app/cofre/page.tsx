@@ -132,7 +132,14 @@ export default function VaultPage() {
 	);
 }
 
-function DocCard({ icon, title, desc, count }: any) {
+interface DocCardProps {
+	icon: React.ReactNode;
+	title: string;
+	desc: string;
+	count: number;
+}
+
+function DocCard({ icon, title, desc, count }: DocCardProps) {
 	return (
 		<Card className="bg-slate-800 border-slate-700 p-4 hover:border-blue-500/50 transition-colors cursor-pointer group">
 			<div className="flex justify-between items-start mb-3">
@@ -149,7 +156,7 @@ function DocCard({ icon, title, desc, count }: any) {
 	);
 }
 
-function ActivityIcon(props: any) {
+function ActivityIcon(props: React.SVGProps<SVGSVGElement>) {
 	return (
 		<svg
 			role="img"
