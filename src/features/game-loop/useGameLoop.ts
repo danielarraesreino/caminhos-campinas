@@ -50,6 +50,8 @@ export function useGameLoop() {
 		removeBuff,
 		phoneBattery,
 		pdu,
+		documents,
+		flags,
 	} = useGameContext();
 
 	const [isRaining, setIsRaining] = useState(false);
@@ -66,7 +68,7 @@ export function useGameLoop() {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
 				(userPosition[0] - lastPosition[0]) ** 2 +
-					(userPosition[1] - lastPosition[1]) ** 2,
+				(userPosition[1] - lastPosition[1]) ** 2,
 			);
 			if (dist < 0.001) {
 				setTimeInLocation((prev) => prev + 1);
@@ -83,7 +85,7 @@ export function useGameLoop() {
 		if (userPosition) {
 			const distToCenter = Math.sqrt(
 				(userPosition[0] - CENTER_COORDS.lat) ** 2 +
-					(userPosition[1] - CENTER_COORDS.lng) ** 2,
+				(userPosition[1] - CENTER_COORDS.lng) ** 2,
 			);
 			if (distToCenter < 0.005 && timeInLocation >= IDLE_THRESHOLD) {
 				setActiveDilemma("enquadro_13_maio");
@@ -191,6 +193,12 @@ export function useGameLoop() {
 				timeInLocation,
 				activeDilemmaId,
 				phoneBattery,
+				avatar,
+				inventory,
+				workTool,
+				activeBuffs,
+				documents,
+				flags,
 			});
 
 			if (triggered) {
@@ -264,7 +272,10 @@ export function useGameLoop() {
 		phoneBattery,
 		timeInLocation,
 		pdu,
+		pdu,
 		resolvedDilemmas,
+		documents,
+		flags,
 	]);
 
 	return { isRaining, batteryLevel: phoneBattery / 100 };

@@ -537,7 +537,8 @@ export class DilemmaManager {
 		if (!dilemma.conditions) return true;
 
 		const { gender } = state.avatar || {};
-		const { inventory } = state;
+		const inventory = state.inventory || [];
+		const resolvedIds = this.resolvedIds || new Set();
 
 		// 1. Gender Check
 		if (dilemma.conditions.gender) {
@@ -587,9 +588,9 @@ export class DilemmaManager {
 		const a =
 			Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 			Math.cos((lat1 * Math.PI) / 180) *
-				Math.cos((lat2 * Math.PI) / 180) *
-				Math.sin(dLon / 2) *
-				Math.sin(dLon / 2);
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		return R * c;
 	}
