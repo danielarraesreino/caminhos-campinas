@@ -23,6 +23,8 @@ export class DilemmaManager {
 	): Dilemma | null {
 		const { day, time, avatar, userPosition, activeDilemmaId } = state;
 
+		console.log(`[DilemmaManager] Checking for triggered dilemmas. Day: ${day}, Time: ${time}, Active: ${activeDilemmaId}, Total dilemmas: ${this.dilemmas.length}`);
+
 		if (activeDilemmaId) return null;
 
 		// 0. Priority: Hardcoded Systemic Triggers (RealityAtlas Based)
@@ -31,6 +33,7 @@ export class DilemmaManager {
 			time === 8 &&
 			!this.resolvedIds.has("intro_acordar_praca")
 		) {
+			console.log(`[DilemmaManager] Triggering intro_acordar_praca (day 1, time 8)`);
 			return this.getDilemmaById("intro_acordar_praca");
 		}
 
@@ -129,6 +132,11 @@ export class DilemmaManager {
 			}
 		}
 
+		console.log(`[DilemmaManager] Found ${candidates.length} candidate dilemmas`);
+		if (candidates.length > 0) {
+			console.log(`[DilemmaManager] Candidate IDs:`, candidates.map(d => d.id));
+		}
+
 		if (candidates.length === 0) return null;
 
 		// 3. Director of Intensity Logic
@@ -182,7 +190,9 @@ export class DilemmaManager {
 		// OR just random pick from the candidates.
 		// Let's pick a random candidate from what's left to ensure variety.
 		const randomIndex = Math.floor(Math.random() * candidates.length);
-		return candidates[randomIndex];
+		const selected = candidates[randomIndex];
+		console.log(`[DilemmaManager] Selected dilemma: ${selected?.id}`);
+		return selected;
 	}
 
 	// biome-ignore lint/suspicious/noExplicitAny: avatar type legacy
@@ -631,9 +641,9 @@ export class DilemmaManager {
 		const a =
 			Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 			Math.cos((lat1 * Math.PI) / 180) *
-				Math.cos((lat2 * Math.PI) / 180) *
-				Math.sin(dLon / 2) *
-				Math.sin(dLon / 2);
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		return R * c;
 	}

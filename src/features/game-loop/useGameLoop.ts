@@ -74,7 +74,7 @@ export function useGameLoop() {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
 				(userPosition[0] - lastPosition[0]) ** 2 +
-					(userPosition[1] - lastPosition[1]) ** 2,
+				(userPosition[1] - lastPosition[1]) ** 2,
 			);
 			if (dist < 0.001) {
 				setTimeInLocation((prev) => prev + 1);
@@ -91,7 +91,7 @@ export function useGameLoop() {
 		if (userPosition) {
 			const distToCenter = Math.sqrt(
 				(userPosition[0] - CENTER_COORDS.lat) ** 2 +
-					(userPosition[1] - CENTER_COORDS.lng) ** 2,
+				(userPosition[1] - CENTER_COORDS.lng) ** 2,
 			);
 			if (distToCenter < 0.005 && timeInLocation >= IDLE_THRESHOLD) {
 				setActiveDilemma("enquadro_13_maio");
@@ -199,7 +199,12 @@ export function useGameLoop() {
 
 		function checkSystemicEvents(currentHour: number) {
 			// 🛡️ Guard: No events until hydrated or if paused
-			if (!hasHydrated || activeDilemmaId) return;
+			if (!hasHydrated || activeDilemmaId) {
+				console.log(`[GameLoop] Skipping dilemma check. hasHydrated: ${hasHydrated}, activeDilemmaId: ${activeDilemmaId}`);
+				return;
+			}
+
+			console.log(`[GameLoop] Checking systemic events at hour ${currentHour}`);
 
 			try {
 				const triggered = dilemmaManager.findTriggeredDilemma({
@@ -224,6 +229,7 @@ export function useGameLoop() {
 				});
 
 				if (triggered) {
+					console.log(`[GameLoop] Dilemma triggered: ${triggered.id}`);
 					setActiveDilemma(triggered.id);
 					return;
 				}
