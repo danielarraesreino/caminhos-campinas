@@ -69,7 +69,12 @@ function DialogContent({
 				{...props}
 			>
 				{accessibleTitle && (
-					<DialogTitle className="sr-only">{accessibleTitle}</DialogTitle>
+					<>
+						<DialogTitle className="sr-only">{accessibleTitle}</DialogTitle>
+						<DialogDescription className="sr-only">
+							Dilema e escolhas para {accessibleTitle}
+						</DialogDescription>
+					</>
 				)}
 				{children}
 				{showCloseButton && (
