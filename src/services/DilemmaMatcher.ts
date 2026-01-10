@@ -33,34 +33,55 @@ export const DilemmaMatcher = {
 			.normalize("NFD")
 			.replace(/[\u0300-\u036f]/g, "");
 
-		// Filter by tags
-		const relevantDilemmas = gameDilemmas.filter((d) => {
-			// 1. Tag Match (High Precision)
-			if (
-				d.tags &&
-				Array.isArray(d.tags) &&
-				d.tags.some((tag: string) =>
-					normalizedInput.includes(tag.toLowerCase()),
-				)
-			) {
-				return true;
+		// Collect all matching dilemmas with a score
+		const matches: { dilemma: Dilemma; score: number }[] = [];
+
+		for (const d of gameDilemmas) {
+			let score = 0;
+
+			// 1. Tag Match (Highest priority)
+			if (d.tags && Array.isArray(d.tags)) {
+				for (const tag of d.tags) {
+					const normalizedTag = tag.toLowerCase();
+					if (normalizedTag === normalizedInput) {
+						score += 20; // Exact tag match
+					} else if (normalizedTag.includes(normalizedInput)) {
+						score += 10; // Partial tag match
+					}
+				}
 			}
-			// 2. Text Match (Fallback) - Search in Title and Description
-			if (!d.title || !d.description) return false;
-			const titleMatch = d.title.toLowerCase().includes(normalizedInput);
-			const descMatch = d.description.toLowerCase().includes(normalizedInput);
 
-			return titleMatch || descMatch;
-		});
+			// 2. Title Match
+			if (d.title && d.title.toLowerCase().includes(normalizedInput)) {
+				score += 5;
+			}
 
-		if (relevantDilemmas.length === 0) return null;
+			// 3. Description Match (Lowest priority fallback)
+			if (d.description && d.description.toLowerCase().includes(normalizedInput)) {
+				score += 1;
+			}
 
-		// Rank by Distance & Specificity
+			if (score > 0) {
+				matches.push({ dilemma: d, score });
+			}
+		}
+
+		if (matches.length === 0) return null;
+
+		// Sort matches by score descending
+		matches.sort((a, b) => b.score - a.score);
+
+		// Now pick the best one considering location
 		let bestMatch: Dilemma | null = null;
+		let highestScore = -1;
 		let minDistance = Infinity;
 
-		for (const dilemma of relevantDilemmas) {
-			// 1. If location trigger exists (direct coords)
+		// We only consider the top matches (those with the highest score)
+		const topScore = matches[0].score;
+		const candidates = matches.filter((m) => m.score >= topScore * 0.8 || m.score > 10); // Include high-relevance matches
+
+		for (const { dilemma, score } of candidates) {
+			// A. High-Priority: Location Trigger match
 			if (dilemma.location_trigger && userLocation) {
 				const distance = calculateDistance(userLocation, {
 					lat: dilemma.location_trigger.lat,
@@ -68,46 +89,44 @@ export const DilemmaMatcher = {
 				});
 
 				if (distance <= dilemma.location_trigger.radius) {
+					// Direct location match within radius wins if distance is closer
 					if (distance < minDistance) {
 						minDistance = distance;
 						bestMatch = dilemma;
+						highestScore = score + 50; // Boost location matches
 					}
+					continue;
 				}
 			}
-			// 2. Service Location Match (via locationId in trigger)
-			else if (
+
+			// B. Service Location Match
+			if (
 				dilemma.trigger?.type === "LOCATION" &&
 				dilemma.trigger.locationId &&
 				userLocation
 			) {
-				const service = services.find(
-					(s) => s.id === dilemma.trigger.locationId,
-				);
+				const service = services.find((s) => s.id === dilemma.trigger.locationId);
 				if (service?.coords && service.coords.length === 2) {
 					const distance = calculateDistance(userLocation, {
 						lat: service.coords[0],
 						lng: service.coords[1],
 					});
 
-					// 500m threshold for Service-based dilemmas
 					if (distance <= 500) {
-						// High priority match
-						return dilemma;
+						// Nearby service match
+						if (score + 30 > highestScore) {
+							highestScore = score + 30;
+							bestMatch = dilemma;
+						}
+						continue;
 					}
 				}
 			}
-			// 3. If no location trigger (Contextual/Topic based only)
-			else if (
-				!dilemma.location_trigger &&
-				dilemma.trigger?.type !== "LOCATION"
-			) {
-				if (
-					!bestMatch ||
-					(!bestMatch.location_trigger &&
-						bestMatch.trigger?.type !== "LOCATION")
-				) {
-					bestMatch = dilemma;
-				}
+
+			// C. Normal Relevance Match
+			if (score > highestScore) {
+				highestScore = score;
+				bestMatch = dilemma;
 			}
 		}
 
