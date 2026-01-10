@@ -91,6 +91,7 @@ const INITIAL_STATE: GameState = {
 	score: 0,
 	security: 0,
 	history: [], // [NEW] Telemetry Log
+	hasHydrated: false,
 };
 
 // --- Reducer ---
@@ -237,7 +238,10 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return { ...state, userPosition: action.payload };
 
 		case "RESET_GAME":
-			return INITIAL_STATE;
+			return {
+				...INITIAL_STATE,
+				time: new Date().getHours(),
+			};
 
 		case "SLEEP":
 			return {
@@ -302,7 +306,10 @@ const DOC_ID = "game_state_v1";
 const GAME_VERSION = "1.1"; // Census 2024 Refactor & Fixes
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
-	const [state, dispatch] = useReducer(gameReducer, INITIAL_STATE);
+	const [state, dispatch] = useReducer(gameReducer, {
+		...INITIAL_STATE,
+		time: typeof window !== "undefined" ? new Date().getHours() : 8,
+	});
 	const [hasHydrated, setHasHydrated] = useState(false);
 	const { db } = useOfflineDB();
 
@@ -354,14 +361,24 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				}
 
 				console.log("✅ Game State Hydrated & Validated", savedData);
-				dispatch({ type: "SET_STATE", payload: savedData as GameState });
+				dispatch({
+					type: "SET_STATE",
+					payload: { ...savedData, hasHydrated: true } as GameState,
+				});
 			} catch (err: any) {
 				if (err.status === 404) {
 					console.log("ℹ️ New Game (No saved state found)");
 				} else {
 					console.error("❌ Error loading state:", err);
 					// Failsafe: Ensure we start with something valid even on DB error
-					// dispatch({ type: "SET_STATE", payload: INITIAL_STATE }); // Already initial
+					dispatch({
+						type: "SET_STATE",
+						payload: {
+							...INITIAL_STATE,
+							time: new Date().getHours(),
+							hasHydrated: true,
+						},
+					});
 				}
 			} finally {
 				setHasHydrated(true);

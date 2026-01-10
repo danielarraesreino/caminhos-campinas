@@ -76,6 +76,7 @@ export interface GameState {
 	score: number; // Legacy score
 	security: number; // 0-100 (Moradia/Segurança)
 	history: GameEvent[];
+	hasHydrated: boolean;
 }
 
 export interface GameEvent {

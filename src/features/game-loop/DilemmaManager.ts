@@ -23,17 +23,17 @@ export class DilemmaManager {
 	): Dilemma | null {
 		const { day = 1, time = 8, avatar, userPosition, activeDilemmaId } = state;
 
-		console.log(`[DilemmaManager] Checking for triggered dilemmas. Day: ${day}, Time: ${time}, Active: ${activeDilemmaId}, Total dilemmas: ${this.dilemmas.length}`);
+		console.log(
+			`[DilemmaManager] Checking for triggered dilemmas. Day: ${day}, Time: ${time}, Active: ${activeDilemmaId}, Total dilemmas: ${this.dilemmas.length}`,
+		);
 
 		if (activeDilemmaId) return null;
 
 		// 0. Priority: Hardcoded Systemic Triggers (RealityAtlas Based)
-		if (
-			day === 1 &&
-			time >= 8 &&
-			!this.resolvedIds.has("intro_acordar_praca")
-		) {
-			console.log(`[DilemmaManager] Triggering intro_acordar_praca (Day 1, Time: ${time})`);
+		if (day === 1 && !this.resolvedIds.has("intro_acordar_praca")) {
+			console.log(
+				`[DilemmaManager] Triggering intro_acordar_praca (Day 1, Time: ${time})`,
+			);
 			return this.getDilemmaById("intro_acordar_praca");
 		}
 
@@ -132,9 +132,14 @@ export class DilemmaManager {
 			}
 		}
 
-		console.log(`[DilemmaManager] Found ${candidates.length} candidate dilemmas`);
+		console.log(
+			`[DilemmaManager] Found ${candidates.length} candidate dilemmas`,
+		);
 		if (candidates.length > 0) {
-			console.log(`[DilemmaManager] Candidate IDs:`, candidates.map(d => d.id));
+			console.log(
+				`[DilemmaManager] Candidate IDs:`,
+				candidates.map((d) => d.id),
+			);
 		}
 
 		if (candidates.length === 0) return null;
@@ -294,17 +299,6 @@ export class DilemmaManager {
 					return true;
 				}
 				return false;
-			case "LOCATION":
-				if (dilemma.location_trigger && userPosition) {
-					const dist = this.calculateDistance(
-						userPosition[0],
-						userPosition[1],
-						dilemma.location_trigger.lat,
-						dilemma.location_trigger.lng,
-					);
-					return dist * 1000 <= (dilemma.location_trigger.radius || 50);
-				}
-				break;
 			case "LOCATION_IDLE":
 				// ... existing logic ...
 				// NEW: Check dynamic conditions

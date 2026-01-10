@@ -74,7 +74,7 @@ export function useGameLoop() {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
 				(userPosition[0] - lastPosition[0]) ** 2 +
-				(userPosition[1] - lastPosition[1]) ** 2,
+					(userPosition[1] - lastPosition[1]) ** 2,
 			);
 			if (dist < 0.001) {
 				setTimeInLocation((prev) => prev + 1);
@@ -91,7 +91,7 @@ export function useGameLoop() {
 		if (userPosition) {
 			const distToCenter = Math.sqrt(
 				(userPosition[0] - CENTER_COORDS.lat) ** 2 +
-				(userPosition[1] - CENTER_COORDS.lng) ** 2,
+					(userPosition[1] - CENTER_COORDS.lng) ** 2,
 			);
 			if (distToCenter < 0.005 && timeInLocation >= IDLE_THRESHOLD) {
 				setActiveDilemma("enquadro_13_maio");
@@ -194,9 +194,16 @@ export function useGameLoop() {
 		// Run on mount or when time OR hydration status changes
 		// We only run the check if hydrated. If we weren't hydrated when the hour changed,
 		// we'll run it now because hasHydrated changed.
-		if (hasHydrated && (lastHourRef.current === null || time !== lastHourRef.current)) {
-			console.log(`[GameLoop] Triggering systemic event check for hour ${time}. (Hydrated: ${hasHydrated})`);
-			checkSystemicEvents(time);
+		if (
+			hasHydrated &&
+			(lastHourRef.current === null || time !== lastHourRef.current)
+		) {
+			// [CRITICAL] Use real local time for dilemas condizentes com a interação
+			const currentRealHour = new Date().getHours();
+			console.log(
+				`[GameLoop] Triggering systemic event check for real hour ${currentRealHour}. (State hour: ${time})`,
+			);
+			checkSystemicEvents(currentRealHour);
 			lastHourRef.current = time;
 
 			if (Math.random() < 0.2) setIsRaining(true);
@@ -206,11 +213,15 @@ export function useGameLoop() {
 		function checkSystemicEvents(currentHour: number) {
 			// 🛡️ Guard: No events if already a dilemma is active
 			if (activeDilemmaId) {
-				console.log(`[GameLoop] Skipping dilemma check. activeDilemmaId: ${activeDilemmaId}`);
+				console.log(
+					`[GameLoop] Skipping dilemma check. activeDilemmaId: ${activeDilemmaId}`,
+				);
 				return;
 			}
 
-			console.log(`[GameLoop] Running findTriggeredDilemma at hour ${currentHour}`);
+			console.log(
+				`[GameLoop] Running findTriggeredDilemma at hour ${currentHour}`,
+			);
 
 			try {
 				const triggered = dilemmaManager.findTriggeredDilemma({

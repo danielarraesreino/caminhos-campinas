@@ -1,15 +1,24 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { Keyboard, MapPin, Mic, Square, Utensils, Thermometer, ShieldAlert, MessageCircleHeart } from "lucide-react";
+import {
+	Keyboard,
+	MapPin,
+	MessageCircleHeart,
+	Mic,
+	ShieldAlert,
+	Square,
+	Thermometer,
+	Utensils,
+} from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";
+import { useNativeSpeech } from "@/hooks/useNativeSpeech";
 import { DilemmaMatcher } from "@/services/DilemmaMatcher";
 import { ActionInput } from "./ActionInput";
 import { ChatMessage } from "./ChatMessage";
-import { useNativeSpeech } from "@/hooks/useNativeSpeech";
 
 export function GameChat({
 	initialMessages,
@@ -30,9 +39,11 @@ export function GameChat({
 		lng: number;
 	} | null>(null);
 
-	const { speak, isListening, startListening, stopListening } = useNativeSpeech({
-		onTranscription: (text) => handleAction(text),
-	});
+	const { speak, isListening, startListening, stopListening } = useNativeSpeech(
+		{
+			onTranscription: (text) => handleAction(text),
+		},
+	);
 
 	// Get location on mount
 	useEffect(() => {
@@ -64,13 +75,7 @@ export function GameChat({
 		},
 	} as any);
 
-	const {
-		messages,
-		setMessages,
-		isLoading,
-		error,
-		append,
-	} = chat as any;
+	const { messages, setMessages, isLoading, error, append } = chat as any;
 
 	// [DEBUG] Log hook status
 	useEffect(() => {
@@ -108,15 +113,24 @@ export function GameChat({
 					triggerType: string,
 				) => {
 					const thoughts: Record<string, string> = {
-						HUNGER_LOW: "O estômago embrulha. A fraqueza bate e a boca fica com gosto de chumbo...",
-						"Fome Apertando": "A dor na barriga não é de hoje. Preciso comer qualquer coisa que pare em pé.",
-						HYGIENE_LOW: "As pessoas desviam o olhar. O cheiro da rua impregnou na roupa.",
-						"A Necessidade do Banho": "Sinto a sujeira colada na pele. Um banho frio seria um luxo agora.",
-						"Violência Policial": "A sirene corta o silêncio. Um calafrio sobe pela espinha. É o Rapa ou a GM?",
-						Baculejo: "Mãos na cabeça. O coração dispara. 'Documento, vagabundo', eles gritam.",
-						"Crise de Abstinência": "O corpo treme. A fissura é um bicho arranhando por dentro.",
-						"A Tosse Que Não Passa": "O peito chiando... essa tosse seca tá me rasgando.",
-						DEFAULT: "Mais um dia. A cidade passa apressada e eu continuo invisível.",
+						HUNGER_LOW:
+							"O estômago embrulha. A fraqueza bate e a boca fica com gosto de chumbo...",
+						"Fome Apertando":
+							"A dor na barriga não é de hoje. Preciso comer qualquer coisa que pare em pé.",
+						HYGIENE_LOW:
+							"As pessoas desviam o olhar. O cheiro da rua impregnou na roupa.",
+						"A Necessidade do Banho":
+							"Sinto a sujeira colada na pele. Um banho frio seria um luxo agora.",
+						"Violência Policial":
+							"A sirene corta o silêncio. Um calafrio sobe pela espinha. É o Rapa ou a GM?",
+						Baculejo:
+							"Mãos na cabeça. O coração dispara. 'Documento, vagabundo', eles gritam.",
+						"Crise de Abstinência":
+							"O corpo treme. A fissura é um bicho arranhando por dentro.",
+						"A Tosse Que Não Passa":
+							"O peito chiando... essa tosse seca tá me rasgando.",
+						DEFAULT:
+							"Mais um dia. A cidade passa apressada e eu continuo invisível.",
 					};
 
 					return (
@@ -132,7 +146,11 @@ export function GameChat({
 						matchedDilemma.trigger.type,
 					);
 
-					const userMsg = { id: Date.now().toString(), role: "user", content: text };
+					const userMsg = {
+						id: Date.now().toString(),
+						role: "user",
+						content: text,
+					};
 					const sysMsg = {
 						id: (Date.now() + 1).toString(),
 						role: "assistant", // Changed to assistant for consistent styling
@@ -154,12 +172,19 @@ export function GameChat({
 
 			try {
 				if (typeof append !== "function") {
-					console.error("[GameChat] AI SDK error: append is not a function", { chatKeys: Object.keys(chat) });
-					const userMsg = { id: Date.now().toString(), role: "user", content: text };
+					console.error("[GameChat] AI SDK error: append is not a function", {
+						chatKeys: Object.keys(chat),
+					});
+					const userMsg = {
+						id: Date.now().toString(),
+						role: "user",
+						content: text,
+					};
 					const fallbackSysMsg = {
 						id: (Date.now() + 1).toString(),
 						role: "assistant",
-						content: "*Conexão com o rádio instável. Tente novamente em alguns segundos.*",
+						content:
+							"*Conexão com o rádio instável. Tente novamente em alguns segundos.*",
 					};
 					setMessages((prev: any[]) => [...prev, userMsg, fallbackSysMsg]);
 					setIsThinking(false);
@@ -185,7 +210,15 @@ export function GameChat({
 				setIsThinking(false);
 			}
 		},
-		[append, userLocation, onDilemmaTriggered, gameState, setMessages, speak, chat],
+		[
+			append,
+			userLocation,
+			onDilemmaTriggered,
+			gameState,
+			setMessages,
+			speak,
+			chat,
+		],
 	);
 
 	const QuickActionBtn = ({ icon: Icon, label, color, action }: any) => (
@@ -195,7 +228,9 @@ export function GameChat({
 			className={`flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all active:scale-95 ${color} flex-1`}
 		>
 			<Icon className="w-6 h-6 mb-1" />
-			<span className="text-[10px] font-bold uppercase tracking-tight">{label}</span>
+			<span className="text-[10px] font-bold uppercase tracking-tight">
+				{label}
+			</span>
 		</button>
 	);
 
@@ -242,8 +277,15 @@ export function GameChat({
 			<div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
 				{messages.length === 0 && (
 					<div className="text-center text-gray-400 mt-10">
-						<p className="font-bold text-lg">Segure o Microfone para falar.</p>
-						<p className="text-xs mt-2">"Onde tem comida?", "Tô com frio"</p>
+						<div
+							className={`w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center border-4 ${isListening ? "border-red-500 animate-ping" : "border-zinc-800"}`}
+						>
+							<Mic
+								className={`w-10 h-10 ${isListening ? "text-red-500" : "text-zinc-700"}`}
+							/>
+						</div>
+						<p className="font-bold text-lg">Transmissão Ativa</p>
+						<p className="text-xs mt-2 italic">"Câmbio... estou ouvindo."</p>
 					</div>
 				)}
 				{messages.map((m: any) => (
@@ -251,10 +293,11 @@ export function GameChat({
 				))}
 				{(isLoading || isThinking) && (
 					<div className="flex gap-3 px-2">
-						<div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm flex items-center gap-1">
-							<span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-							<span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse [animation-delay:-0.2s]"></span>
-							<span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse [animation-delay:-0.4s]"></span>
+						<div className="bg-zinc-100 dark:bg-zinc-800 border-2 border-green-500/50 rounded-2xl rounded-tl-none px-4 py-3 shadow-lg flex items-center gap-2">
+							<span className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
+							<span className="text-xs font-mono text-green-600 dark:text-green-400 uppercase tracking-widest">
+								Sintonizando...
+							</span>
 						</div>
 					</div>
 				)}
@@ -267,7 +310,7 @@ export function GameChat({
 					<button
 						type="button"
 						onClick={() => setShowKeyboard(!showKeyboard)}
-						className={`p-4 rounded-full border transition-all ${showKeyboard ? "bg-zinc-300 dark:bg-zinc-700" : "bg-white dark:bg-zinc-800"}`}
+						className={`p-4 rounded-full border-2 transition-all ${showKeyboard ? "bg-zinc-300 dark:bg-zinc-700 border-zinc-400" : "bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"}`}
 						title="Teclado"
 					>
 						<Keyboard className="w-6 h-6" />
@@ -279,20 +322,27 @@ export function GameChat({
 						onMouseUp={() => stopListening()}
 						onTouchStart={() => startListening()}
 						onTouchEnd={() => stopListening()}
-						className={`flex-1 h-24 rounded-3xl flex flex-col items-center justify-center gap-1 transition-all active:scale-95 shadow-lg border-4 ${isListening
-							? "bg-red-600 border-red-400 animate-pulse"
-							: "bg-zinc-800 border-zinc-700"
-							}`}
+						className={`flex-1 h-28 rounded-3xl flex flex-col items-center justify-center gap-1 transition-all active:scale-95 shadow-xl border-4 ${
+							isListening
+								? "bg-red-600 border-red-400 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
+								: "bg-zinc-800 border-zinc-700"
+						}`}
 					>
 						{isListening ? (
 							<>
-								<Square className="w-8 h-8 text-white fill-white" />
-								<span className="text-white text-xs font-black uppercase">Ouvindo...</span>
+								<div className="w-12 h-12 rounded-full bg-white flex items-center justify-center animate-pulse">
+									<Square className="w-6 h-6 text-red-600 fill-red-600" />
+								</div>
+								<span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">
+									Transmitindo...
+								</span>
 							</>
 						) : (
 							<>
-								<Mic className="w-8 h-8 text-white" />
-								<span className="text-white text-xs font-black uppercase">Segure para Falar</span>
+								<Mic className="w-10 h-10 text-white mb-1" />
+								<span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">
+									Pressione para falar
+								</span>
 							</>
 						)}
 					</button>
