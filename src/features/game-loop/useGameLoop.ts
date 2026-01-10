@@ -113,7 +113,9 @@ export function useGameLoop() {
 	}, [phoneBattery, activeBuffs, addBuff, removeBuff]);
 
 	useEffect(() => {
-		if (!hasHydrated || isPaused) return;
+		// 🛡️ Guard: Wait for ecosystem and avatar
+		if (!hasHydrated || isPaused || !avatar) return;
+
 		const interval = setInterval(() => {
 			let hngDecay = 2;
 			const hygDecay = 1;
@@ -128,45 +130,45 @@ export function useGameLoop() {
 					snyDecay = Math.max(0, snyDecay - 0.2);
 					modifyStat("health", -0.2);
 				}
-			}
 
-			const totalWeight = inventory.reduce(
-				(acc: number, i: { weight: number }) => acc + i.weight,
-				0,
-			);
-			if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM")
-				enrDecay += 0.3;
+				const totalWeight = inventory.reduce(
+					(acc: number, i: { weight: number }) => acc + i.weight,
+					0,
+				);
+				if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM")
+					enrDecay += 0.3;
 
-			if (activeBuffs.includes("DESMOTIVADO")) {
-				enrDecay *= 2.0;
-			}
-
-			if (isRaining && !isAtShelter) {
-				snyDecay += 1;
-				hngDecay += 0.5;
-				modifyStat("health", -0.5);
-			}
-
-			modifyStat("hunger", -hngDecay);
-			modifyStat("hygiene", -hygDecay);
-			modifyStat("energy", -enrDecay);
-			modifyStat("sanity", -snyDecay);
-			modifyStat("phoneBattery", -5);
-
-			// Haptic Feedback for critical decay
-			if (snyDecay > 1 || hngDecay > 3) triggerWarning();
-
-			const rand = processRandomEvents({ dignity, workTool });
-			if (rand) {
-				if (rand.workTool) setWorkTool(rand.workTool);
-				if (rand.dignity) {
-					modifyStat("dignity", rand.dignity - dignity);
-					triggerImpact(); // Bad event
+				if (activeBuffs.includes("DESMOTIVADO")) {
+					enrDecay *= 2.0;
 				}
-			}
 
-			checkBattery();
-			advanceTime(1);
+				if (isRaining && !isAtShelter) {
+					snyDecay += 1;
+					hngDecay += 0.5;
+					modifyStat("health", -0.5);
+				}
+
+				modifyStat("hunger", -hngDecay);
+				modifyStat("hygiene", -hygDecay);
+				modifyStat("energy", -enrDecay);
+				modifyStat("sanity", -snyDecay);
+				modifyStat("phoneBattery", -5);
+
+				// Haptic Feedback for critical decay
+				if (snyDecay > 1 || hngDecay > 3) triggerWarning();
+
+				const rand = processRandomEvents({ dignity, workTool });
+				if (rand) {
+					if (rand.workTool) setWorkTool(rand.workTool);
+					if (rand.dignity) {
+						modifyStat("dignity", rand.dignity - dignity);
+						triggerImpact(); // Bad event
+					}
+				}
+
+				checkBattery();
+				advanceTime(1);
+			}
 		}, 10000);
 		return () => clearInterval(interval);
 	}, [

@@ -21,7 +21,7 @@ export class DilemmaManager {
 			timeInLocation: number;
 		},
 	): Dilemma | null {
-		const { day, time, avatar, userPosition, activeDilemmaId } = state;
+		const { day = 1, time = 8, avatar, userPosition, activeDilemmaId } = state;
 
 		console.log(`[DilemmaManager] Checking for triggered dilemmas. Day: ${day}, Time: ${time}, Active: ${activeDilemmaId}, Total dilemmas: ${this.dilemmas.length}`);
 
@@ -30,10 +30,10 @@ export class DilemmaManager {
 		// 0. Priority: Hardcoded Systemic Triggers (RealityAtlas Based)
 		if (
 			day === 1 &&
-			time === 8 &&
+			time >= 8 &&
 			!this.resolvedIds.has("intro_acordar_praca")
 		) {
-			console.log(`[DilemmaManager] Triggering intro_acordar_praca (day 1, time 8)`);
+			console.log(`[DilemmaManager] Triggering intro_acordar_praca (Day 1, Time: ${time})`);
 			return this.getDilemmaById("intro_acordar_praca");
 		}
 
