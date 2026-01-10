@@ -618,6 +618,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				dispatch({ type: "SET_FLAG", payload: { key, value } }),
 			registerOccurrence: (text: string) =>
 				dispatch({ type: "REGISTER_OCCURRENCE", payload: text }),
+			hasHydrated, // [CRITICAL] Export hydration status
 		}),
 		[
 			state,
@@ -642,6 +643,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			initPDU,
 			updatePduStage,
 			completePduStage,
+			hasHydrated,
 		],
 	);
 
