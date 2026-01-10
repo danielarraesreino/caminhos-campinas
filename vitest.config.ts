@@ -8,5 +8,13 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    exclude: [
+      '**/node_modules/**',
+      '**/tests/**/*.spec.ts', // Playwright E2E tests
+    ],
+    include: [
+      'src/**/*.test.ts',
+      'src/**/*.test.tsx',
+    ],
   },
 });

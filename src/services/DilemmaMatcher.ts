@@ -52,12 +52,12 @@ export const DilemmaMatcher = {
 			}
 
 			// 2. Title Match
-			if (d.title && d.title.toLowerCase().includes(normalizedInput)) {
+			if (d.title?.toLowerCase().includes(normalizedInput)) {
 				score += 5;
 			}
 
 			// 3. Description Match (Lowest priority fallback)
-			if (d.description && d.description.toLowerCase().includes(normalizedInput)) {
+			if (d.description?.toLowerCase().includes(normalizedInput)) {
 				score += 1;
 			}
 
@@ -78,7 +78,9 @@ export const DilemmaMatcher = {
 
 		// We only consider the top matches (those with the highest score)
 		const topScore = matches[0].score;
-		const candidates = matches.filter((m) => m.score >= topScore * 0.8 || m.score > 10); // Include high-relevance matches
+		const candidates = matches.filter(
+			(m) => m.score >= topScore * 0.8 || m.score > 10,
+		); // Include high-relevance matches
 
 		for (const { dilemma, score } of candidates) {
 			// A. High-Priority: Location Trigger match
@@ -105,7 +107,9 @@ export const DilemmaMatcher = {
 				dilemma.trigger.locationId &&
 				userLocation
 			) {
-				const service = services.find((s) => s.id === dilemma.trigger.locationId);
+				const service = services.find(
+					(s) => s.id === dilemma.trigger.locationId,
+				);
 				if (service?.coords && service.coords.length === 2) {
 					const distance = calculateDistance(userLocation, {
 						lat: service.coords[0],

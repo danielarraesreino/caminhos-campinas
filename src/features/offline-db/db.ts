@@ -16,13 +16,17 @@ export const getDB = async () => {
 		try {
 			// Dynamic import to prevent SSR module evaluation
 			const PouchDBModule = await import("pouchdb-browser");
+			const PouchDBFindModule = await import("pouchdb-find");
 			const PouchDB = PouchDBModule.default || PouchDBModule;
+			const PouchDBFind = PouchDBFindModule.default || PouchDBFindModule;
+
+			PouchDB.plugin(PouchDBFind);
 
 			dbInstance = new PouchDB("pop_rua_game_db", {
 				auto_compaction: true,
 				adapter: "idb", // Force IndexedDB adapter to avoid guessing
 			});
-			console.log("✅ PouchDB initialized successfully (client-side)");
+			console.log("✅ PouchDB initialized with find plugin (client-side)");
 		} catch (error) {
 			// Suppress "IndexedDB not supported" error on environments that look like browser but aren't
 			console.warn("⚠️ PouchDB initialization skipped:", error);

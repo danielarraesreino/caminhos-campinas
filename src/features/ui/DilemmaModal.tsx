@@ -35,7 +35,7 @@ export function DilemmaModal({
 	const [selectedOption, setSelectedOption] = useState<number | null>(null);
 	const [outcome, setOutcome] = useState<"success" | "failure" | null>(null);
 	const [isPending, startTransition] = useTransition();
-	const { playAmbience, stopAmbience } = useAudioSystem();
+	const { playAmbience, stopAmbience, playSfx } = useAudioSystem();
 	const { triggerClick } = useHaptics();
 	const { trackDilemmaDecision } = useODSTracker();
 	const { auditResolution } = useImpactLogger();
@@ -93,10 +93,16 @@ export function DilemmaModal({
 		setZoomLevel((prev) => (prev >= 1.4 ? 1 : prev + 0.2));
 	};
 
-	// Effect to manage audio
+	// 🔊 AUDIO FIRST: Efeitos sonoros quando o dilema aparece
 	useEffect(() => {
-		if (dilemma?.audioId) {
-			playAmbience(dilemma.audioId);
+		if (dilemma) {
+			// Tocar SFX de alerta quando dilema abre
+			playSfx("click");
+
+			// Tocar ambiente específico do dilema se existir
+			if (dilemma.audioId) {
+				playAmbience(dilemma.audioId);
+			}
 		}
 
 		return () => {
@@ -105,7 +111,7 @@ export function DilemmaModal({
 			}
 			window.speechSynthesis.cancel();
 		};
-	}, [dilemma?.audioId, playAmbience, stopAmbience]);
+	}, [dilemma, dilemma?.audioId, playAmbience, stopAmbience, playSfx]);
 
 	if (!dilemma) return null;
 

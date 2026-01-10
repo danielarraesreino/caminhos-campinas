@@ -15,5 +15,8 @@ export const ALL_DILEMMAS: Dilemma[] = [...GAME_DILEMMAS];
 console.log(`[Dilemmas] Loaded ${GAME_DILEMMAS.length} dilemmas from JSON`);
 if (GAME_DILEMMAS.length > 0) {
 	console.log(`[Dilemmas] First dilemma:`, GAME_DILEMMAS[0]?.id);
-	console.log(`[Dilemmas] Sample IDs:`, GAME_DILEMMAS.slice(0, 5).map(d => d.id));
+	console.log(
+		`[Dilemmas] Sample IDs:`,
+		GAME_DILEMMAS.slice(0, 5).map((d) => d.id),
+	);
 }

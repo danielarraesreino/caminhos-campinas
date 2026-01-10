@@ -1,9 +1,14 @@
 "use client";
 
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { Lock, MapPin, Navigation } from "lucide-react";
-
 import { useCallback, useMemo } from "react";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import {
+	Drawer,
+	DrawerContent,
+	DrawerTitle,
+	DrawerTrigger,
+} from "@/components/ui/drawer";
 import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
@@ -191,6 +196,9 @@ export function NearbyList() {
 			</DrawerTrigger>
 
 			<DrawerContent className="bg-slate-950 border-t border-slate-800 h-[85vh]">
+				<VisuallyHidden.Root>
+					<DrawerTitle>Recursos Disponíveis</DrawerTitle>
+				</VisuallyHidden.Root>
 				<div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-slate-800 mb-6 mt-4" />
 				<div className="px-4 pb-4 overflow-y-auto h-full space-y-4">
 					<h2 className="text-xl font-bold text-white mb-4 px-2">

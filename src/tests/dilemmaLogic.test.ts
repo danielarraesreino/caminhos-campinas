@@ -55,7 +55,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			dignity: 100,
 			money: 0,
 			time: 8,
-			day: 1,
+			day: 2, // Day 2 to bypass intro_acordar_praca hardcoded trigger
 			weather: "sun",
 			activeDilemmaId: null,
 			resolvedDilemmas: [],
@@ -79,6 +79,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			resolvedDilemmas: [],
 			userPosition: null,
 			timeInLocation: 0,
+			day: 2,
 		};
 
 		const dilemma1 = manager.findTriggeredDilemma(stateNoItem as any);
@@ -99,6 +100,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			resolvedDilemmas: [],
 			userPosition: null, // Explicit to satisfy intersection type
 			timeInLocation: 0,
+			day: 2,
 		};
 
 		// Resolve male so item one can pick
@@ -140,6 +142,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			resolvedDilemmas: [],
 			userPosition: null,
 			timeInLocation: 0,
+			day: 2,
 		};
 
 		const picked = directorManager.findTriggeredDilemma(criticalState as any);
@@ -174,6 +177,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			resolvedDilemmas: [],
 			userPosition: null,
 			timeInLocation: 0,
+			day: 2,
 		};
 
 		const picked = chainManager.findTriggeredDilemma(criticalState as any);

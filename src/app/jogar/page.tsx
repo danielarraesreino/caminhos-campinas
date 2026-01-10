@@ -8,6 +8,7 @@ import {
 	type GameOverResult,
 } from "@/features/game-loop/gameOverConditions";
 import { useGameLoop } from "@/features/game-loop/useGameLoop";
+import { LocationList } from "@/features/locations/LocationList";
 import { SurvivalMap } from "@/features/survival-map/SurvivalMap";
 import { AvatarCreation } from "@/features/ui/AvatarCreation";
 import { DilemmaModal } from "@/features/ui/DilemmaModal";
@@ -33,6 +34,7 @@ export default function GamePage() {
 	);
 	const [isChatOpen, setIsChatOpen] = useState(false);
 	const [isVoiceOpen, setIsVoiceOpen] = useState(false);
+	const [isLocationsOpen, setIsLocationsOpen] = useState(false);
 	const [showTutorial, setShowTutorial] = useState(false);
 
 	useEffect(() => {
@@ -168,6 +170,7 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 						onToggleChat={() => setIsChatOpen(!isChatOpen)}
 						onToggleMenu={() => window.open("/recursos", "_blank")}
 						onToggleVoice={() => setIsVoiceOpen(true)}
+						onToggleLocations={() => setIsLocationsOpen(true)}
 					/>
 					<EffectsOverlay />
 					<EffectsLayer />
@@ -202,6 +205,28 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 			{isVoiceOpen && (
 				<div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
 					<VoiceReporter onClose={() => setIsVoiceOpen(false)} />
+				</div>
+			)}
+
+			{isLocationsOpen && (
+				<div className="fixed inset-0 z-[150] flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">
+					<div className="w-full h-[80vh] md:w-[500px] md:h-[600px] bg-zinc-950 border border-zinc-800 rounded-t-2xl md:rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 relative">
+						<header className="p-4 border-b border-zinc-900 flex justify-between items-center bg-zinc-950/50 backdrop-blur-md sticky top-0 z-10">
+							<h2 className="text-zinc-100 font-bold uppercase tracking-widest text-xs">
+								Atlas de Realidade
+							</h2>
+							<button
+								type="button"
+								className="text-zinc-500 hover:text-white transition-colors"
+								onClick={() => setIsLocationsOpen(false)}
+							>
+								FECHAR
+							</button>
+						</header>
+						<div className="flex-1 overflow-y-auto mt-4">
+							<LocationList />
+						</div>
+					</div>
 				</div>
 			)}
 

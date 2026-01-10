@@ -51,7 +51,29 @@ export function useAudioDirector() {
 
 		// Base Ambience Logic
 		let targetVolume = isNight ? 0.4 : 0.6;
-		const targetTrack = "traffic"; // Default
+
+		// 🎵 AUDIO FIRST: Seleção dinâmica de track baseada no contexto
+		const getAmbienceTrack = (): string => {
+			// Prioridade 1: Dilema com audioId específico
+			if (activeDilemma?.audioId) {
+				return activeDilemma.audioId;
+			}
+
+			// Prioridade 2: Estado mental do jogador
+			if (sanity < 30) {
+				return "rain_heavy"; // Chuva = ambiente opressivo para sanidade baixa
+			}
+
+			// Prioridade 3: Horário do dia
+			if (isNight) {
+				return "rain_heavy"; // Noite = chuva, atmosfera isolada
+			}
+
+			// Default: Trânsito durante o dia
+			return "traffic";
+		};
+
+		const targetTrack = getAmbienceTrack();
 
 		// Priority 1: Director High Intensity (Crisis)
 		if (activeDilemma?.intensity === "HIGH") {

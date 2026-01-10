@@ -11,7 +11,6 @@ import {
 	Thermometer,
 	Utensils,
 } from "lucide-react";
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";

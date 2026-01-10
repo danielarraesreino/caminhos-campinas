@@ -14,7 +14,22 @@ interface ImpactReportProps {
 
 export function ImpactReport({ onRestart, gameOverResult }: ImpactReportProps) {
 	const { state } = useGameContext();
-	const { history, employed_formal, addiction, avatar } = state;
+
+	// Defensive check: state may be undefined during hydration or error states
+	if (!state) {
+		return (
+			<div className="flex flex-col items-center justify-center h-full bg-slate-950 text-slate-300 p-6">
+				<p className="text-slate-500 font-mono">Carregando relatório...</p>
+			</div>
+		);
+	}
+
+	const {
+		history = [],
+		employed_formal = false,
+		addiction = 0,
+		avatar = null,
+	} = state;
 
 	// Métricas do Jogador
 	const violations = history.filter(
@@ -182,7 +197,7 @@ export function ImpactReport({ onRestart, gameOverResult }: ImpactReportProps) {
 					history={history}
 					avatarName={
 						avatar
-							? `${avatar.name}, ${avatar.age} anos`
+							? `${avatar.name} (${avatar.ageRange === "jovem" ? "Jovem" : avatar.ageRange === "adulto" ? "Adulto" : "Idoso"})`
 							: "Cidadão Desconhecido"
 					}
 					deathReason={gameOverResult?.reason}

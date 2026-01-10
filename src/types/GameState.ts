@@ -113,3 +113,32 @@ export type GameAction =
 	| { type: "LOG_EVENT"; payload: GameEvent }
 	| { type: "SET_FLAG"; payload: { key: string; value: boolean } }
 	| { type: "REGISTER_OCCURRENCE"; payload: string };
+export interface RiskFactor {
+	id: string;
+	label: string;
+	probability: number; // 0-1
+	intensity: number; // multiplier for impact
+	description: string;
+}
+
+export interface Resource {
+	id: string;
+	label: string;
+	cost: number;
+	impact: {
+		stat: keyof GameState;
+		amount: number;
+	}[];
+	timeRequired: number; // in hours
+}
+
+export interface Location {
+	id: string;
+	name: string;
+	coords: { lat: number; lng: number };
+	description: string;
+	resources: Resource[];
+	risks: RiskFactor[];
+	stigmaMultiplier: number; // how much social stigma affects risks here
+	sanityDrainBase: number; // base sanity drain per hour
+}

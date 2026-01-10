@@ -5,9 +5,12 @@ import {
 	Battery,
 	Brain,
 	Clock,
+	MapPin,
 	Megaphone,
 	Mic,
 	Package,
+	Volume2,
+	VolumeX,
 	Wallet,
 	Wifi,
 	WifiOff,
@@ -15,18 +18,46 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
+import { useAudioSystem } from "@/hooks/useAudioSystem";
 import { InteractiveStatus } from "./InteractiveStatus";
 
 export function GameHUD({
 	onToggleChat,
 	onToggleMenu,
 	onToggleVoice,
+	onToggleLocations,
 }: {
 	onToggleChat?: () => void;
 	onToggleMenu?: () => void;
 	onToggleVoice?: () => void;
+	onToggleLocations?: () => void;
 }) {
 	const [isOnline, setIsOnline] = useState(true);
+	const [isMuted, setIsMuted] = useState(false);
+	const { setVolume, initAudio } = useAudioSystem();
+
+	// 🔊 AUDIO FIRST: Inicializar estado mute do localStorage
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		const savedMute = localStorage.getItem("caminhos_audio_muted");
+		if (savedMute === "true") {
+			setIsMuted(true);
+			setVolume(0);
+		} else {
+			initAudio(); // Inicializa áudio se não estiver mudo
+		}
+	}, [setVolume, initAudio]);
+
+	// 🔊 AUDIO FIRST: Toggle mute e persistir
+	const handleToggleMute = () => {
+		const newMuted = !isMuted;
+		setIsMuted(newMuted);
+		setVolume(newMuted ? 0 : 0.5);
+		localStorage.setItem("caminhos_audio_muted", String(newMuted));
+		if (!newMuted) {
+			initAudio(); // Garante inicialização do áudio ao desmutar
+		}
+	};
 
 	useEffect(() => {
 		if (typeof window === "undefined") return;
@@ -124,6 +155,24 @@ export function GameHUD({
 							<Battery className="w-3.5 h-3.5" />
 							<span>{phoneBattery}%</span>
 						</div>
+						{/* 🔊 AUDIO FIRST: Botão Mute/Unmute */}
+						<button
+							type="button"
+							onClick={handleToggleMute}
+							className={`ml-1 p-1 rounded-md transition-all ${
+								isMuted
+									? "text-red-400 hover:bg-red-900/30"
+									: "text-emerald-400 hover:bg-emerald-900/30"
+							}`}
+							aria-label={isMuted ? "Ativar som" : "Desativar som"}
+							title={isMuted ? "Ativar som" : "Desativar som"}
+						>
+							{isMuted ? (
+								<VolumeX className="w-4 h-4" />
+							) : (
+								<Volume2 className="w-4 h-4" />
+							)}
+						</button>
 					</div>
 				</div>
 			</header>
@@ -157,7 +206,15 @@ export function GameHUD({
 
 				<Button
 					size="icon"
-					variant="secondary"
+					className="h-12 w-12 rounded-full bg-slate-100 hover:bg-white shadow-lg shadow-white/10 border border-zinc-400 transition-transform active:scale-95"
+					onClick={onToggleLocations}
+					aria-label="Explorar Locais"
+				>
+					<MapPin className="h-5 w-5 text-zinc-950" />
+				</Button>
+
+				<Button
+					size="icon"
 					className="h-10 w-10 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-lg transition-transform active:scale-95"
 					onClick={onToggleMenu}
 					title="Guia de Recursos"
