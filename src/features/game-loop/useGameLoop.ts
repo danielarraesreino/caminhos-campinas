@@ -189,22 +189,26 @@ export function useGameLoop() {
 	]);
 
 	useEffect(() => {
-		// Run on mount (lastHourRef.current is null) or when time changes
-		if (lastHourRef.current === null || time !== lastHourRef.current) {
+		// Run on mount or when time OR hydration status changes
+		// We only run the check if hydrated. If we weren't hydrated when the hour changed,
+		// we'll run it now because hasHydrated changed.
+		if (hasHydrated && (lastHourRef.current === null || time !== lastHourRef.current)) {
+			console.log(`[GameLoop] Triggering systemic event check for hour ${time}. (Hydrated: ${hasHydrated})`);
 			checkSystemicEvents(time);
 			lastHourRef.current = time;
+
 			if (Math.random() < 0.2) setIsRaining(true);
 			else setIsRaining(false);
 		}
 
 		function checkSystemicEvents(currentHour: number) {
-			// 🛡️ Guard: No events until hydrated or if paused
-			if (!hasHydrated || activeDilemmaId) {
-				console.log(`[GameLoop] Skipping dilemma check. hasHydrated: ${hasHydrated}, activeDilemmaId: ${activeDilemmaId}`);
+			// 🛡️ Guard: No events if already a dilemma is active
+			if (activeDilemmaId) {
+				console.log(`[GameLoop] Skipping dilemma check. activeDilemmaId: ${activeDilemmaId}`);
 				return;
 			}
 
-			console.log(`[GameLoop] Checking systemic events at hour ${currentHour}`);
+			console.log(`[GameLoop] Running findTriggeredDilemma at hour ${currentHour}`);
 
 			try {
 				const triggered = dilemmaManager.findTriggeredDilemma({
