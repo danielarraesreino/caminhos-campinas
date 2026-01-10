@@ -44,7 +44,10 @@
 		"intensity": "HIGH",
 		"tags": [
 			"violência_institucional",
-			"segurança"
+			"segurança",
+			"policia",
+			"gcm",
+			"guarda"
 		],
 		"options": [
 			{
@@ -202,7 +205,11 @@
 		"intensity": "HIGH",
 		"tags": [
 			"institucional",
-			"sobrevivência"
+			"sobrevivência",
+			"cachorro",
+			"pet",
+			"animal",
+			"abrigo"
 		],
 		"options": [
 			{
@@ -237,6 +244,11 @@
 			"type": "RANDOM",
 			"value": 0.1
 		},
+		"tags": [
+			"chuva",
+			"frio",
+			"clima"
+		],
 		"options": [
 			{
 				"label": "Proteger o Papelão",
@@ -277,7 +289,10 @@
 		},
 		"tags": [
 			"segurança_noturna",
-			"institucional"
+			"institucional",
+			"cambui",
+			"preconceito",
+			"aporofobia"
 		],
 		"options": [
 			{
@@ -312,7 +327,10 @@
 			"value": 0.05
 		},
 		"tags": [
-			"segurança_noturna"
+			"segurança_noturna",
+			"trabalho",
+			"bico",
+			"dinheiro"
 		],
 		"options": [
 			{
