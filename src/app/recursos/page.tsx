@@ -102,8 +102,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<span
 					className={`
 					px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
-					${
-						service.type === "ALIMENTACAO"
+					${service.type === "ALIMENTACAO"
 							? "bg-orange-900 text-orange-400"
 							: service.type === "ABRIGO"
 								? "bg-indigo-900 text-indigo-400"
@@ -112,7 +111,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 									: service.type === "EDUCACAO"
 										? "bg-blue-900 text-blue-400"
 										: "bg-slate-800 text-slate-400"
-					}
+						}
 				`}
 				>
 					{service.type}
@@ -231,12 +230,11 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						disabled={!canEnroll || enrollmentStatus !== "idle"}
 						onClick={handleEnroll}
 						className={`flex-1 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors relative overflow-hidden
-							${
-								canEnroll
-									? enrollmentStatus === "enrolled"
-										? "bg-green-600"
-										: "bg-blue-600 hover:bg-blue-500"
-									: "bg-zinc-800 opacity-50 cursor-not-allowed"
+							${canEnroll
+								? enrollmentStatus === "enrolled"
+									? "bg-green-600"
+									: "bg-blue-600 hover:bg-blue-500"
+								: "bg-zinc-800 opacity-50 cursor-not-allowed"
 							}
 						`}
 					>
@@ -471,7 +469,9 @@ export default function ResourcesPage() {
 									strokeLinecap="round"
 									strokeLinejoin="round"
 									className="text-yellow-500"
+									aria-labelledby="svg-edu-title"
 								>
+									<title id="svg-edu-title">Ícone de Educação e Autonomia</title>
 									<path d="M22 10v6M2 10l10-5 10 5-10 5z" />
 									<path d="M6 12v5c3 3 9 3 12 0v-5" />
 								</svg>
