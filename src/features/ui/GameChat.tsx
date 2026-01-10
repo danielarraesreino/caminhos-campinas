@@ -49,13 +49,7 @@ export function GameChat({
 		}
 	}, []);
 
-	const {
-		messages,
-		setMessages,
-		isLoading,
-		error,
-		append,
-	} = useChat({
+	const chat = useChat({
 		api: "/api/chat",
 		initialMessages: initialMessages || [],
 		onError: (err: any) => {
@@ -64,12 +58,25 @@ export function GameChat({
 		},
 		onFinish: (message: any) => {
 			setIsThinking(false);
-			// [NEW] Speak the response
 			if (message?.content) {
 				speak(message.content);
 			}
 		},
-	} as any) as any;
+	} as any);
+
+	const {
+		messages,
+		setMessages,
+		isLoading,
+		error,
+		append,
+	} = chat as any;
+
+	// [DEBUG] Log hook status
+	useEffect(() => {
+		console.log("[GameChat] useChat keys:", Object.keys(chat));
+		console.log("[GameChat] append type:", typeof append);
+	}, [chat, append]);
 
 	useEffect(() => {
 		if (messages.length > 0) {
@@ -128,13 +135,12 @@ export function GameChat({
 					const userMsg = { id: Date.now().toString(), role: "user", content: text };
 					const sysMsg = {
 						id: (Date.now() + 1).toString(),
-						role: "system",
+						role: "assistant", // Changed to assistant for consistent styling
 						content: `*${narrativeThought}* \n\n${matchedDilemma.description}`,
 					};
 
 					setMessages((prev: any[]) => [...prev, userMsg, sysMsg]);
 
-					// [NEW] Speak the dilemma
 					speak(`${narrativeThought}. ${matchedDilemma.description}`);
 
 					if (typeof onDilemmaTriggered === "function") {
@@ -148,11 +154,12 @@ export function GameChat({
 
 			try {
 				if (typeof append !== "function") {
+					console.error("[GameChat] AI SDK error: append is not a function", { chatKeys: Object.keys(chat) });
 					const userMsg = { id: Date.now().toString(), role: "user", content: text };
 					const fallbackSysMsg = {
 						id: (Date.now() + 1).toString(),
-						role: "system",
-						content: "*O sistema de comunicação parece instável...*",
+						role: "assistant",
+						content: "*Conexão com o rádio instável. Tente novamente em alguns segundos.*",
 					};
 					setMessages((prev: any[]) => [...prev, userMsg, fallbackSysMsg]);
 					setIsThinking(false);
@@ -178,7 +185,7 @@ export function GameChat({
 				setIsThinking(false);
 			}
 		},
-		[append, userLocation, onDilemmaTriggered, gameState, setMessages, speak],
+		[append, userLocation, onDilemmaTriggered, gameState, setMessages, speak, chat],
 	);
 
 	const QuickActionBtn = ({ icon: Icon, label, color, action }: any) => (
@@ -273,8 +280,8 @@ export function GameChat({
 						onTouchStart={() => startListening()}
 						onTouchEnd={() => stopListening()}
 						className={`flex-1 h-24 rounded-3xl flex flex-col items-center justify-center gap-1 transition-all active:scale-95 shadow-lg border-4 ${isListening
-								? "bg-red-600 border-red-400 animate-pulse"
-								: "bg-zinc-800 border-zinc-700"
+							? "bg-red-600 border-red-400 animate-pulse"
+							: "bg-zinc-800 border-zinc-700"
 							}`}
 					>
 						{isListening ? (
