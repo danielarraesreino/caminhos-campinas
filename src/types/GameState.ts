@@ -1,3 +1,46 @@
+/**
+ * Metas ODS específicas para população em situação de rua
+ * Baseado em: Relatórios Luz, Relatório Nacional Voluntário 2024, Censo FEAC 2024
+ */
+export type ODSTarget =
+	| "1.3" // Proteção Social / CadÚnico
+	| "1.4" // Acesso a serviços básicos e recursos econômicos
+	| "2.1" // Acesso a alimento seguro o ano todo
+	| "3.5" // Prevenção/tratamento abuso de substâncias (Redução de Danos)
+	| "3.8" // Cobertura universal de saúde
+	| "6.2" // Acesso a saneamento/higiene (Banho/Banheiro)
+	| "8.5" // Emprego pleno e trabalho decente
+	| "10.2" // Inclusão social independente de condição
+	| "11.1" // Habitação/abrigo seguro
+	| "16.9" // Identidade legal (Documentos)
+	| "18"; // Igualdade Étnico-Racial (ODS proposto pelo Brasil)
+
+/**
+ * Barreiras de acesso a serviços - dados reais do Censo FEAC 2024
+ * Cada barreira representa um bloqueio institucional que exclui pessoas
+ */
+export type AccessBarrier =
+	| "REQUIRES_RG" // Exige RG
+	| "REQUIRES_CPF" // Exige CPF
+	| "REQUIRES_SOBRIETY" // Exige sobriedade
+	| "NO_ANIMALS" // Não aceita animais
+	| "NO_CARTS" // Não aceita carroças
+	| "REQUIRES_APPOINTMENT" // Exige agendamento prévio (digital)
+	| "REQUIRES_REFERRAL" // Exige encaminhamento técnico
+	| "DRESS_CODE" // Exige vestimenta adequada
+	| "TIME_RESTRICTED" // Horário rígido de entrada
+	| "CAPACITY_LIMITED"; // Vagas limitadas por dia
+
+/**
+ * Registro ODS para telemetria e auditoria social
+ */
+export interface ODSMetadata {
+	target: ODSTarget;
+	label: string;
+	description: string;
+	color: string;
+}
+
 export interface Avatar {
 	name: string;
 	gender: "masculino" | "feminino" | "trans" | "nao-binario";

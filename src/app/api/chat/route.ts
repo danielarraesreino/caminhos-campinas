@@ -25,15 +25,6 @@ export async function POST(req: Request) {
 			);
 		}
 
-		interface GameState {
-			health?: number;
-			hunger?: number;
-			hygiene?: number;
-			money?: number;
-			time?: number;
-			[key: string]: unknown;
-		}
-
 		const body = await req.json();
 		console.log("📨 Received Body Keys:", Object.keys(body));
 

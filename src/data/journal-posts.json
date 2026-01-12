@@ -1,5 +1,29 @@
 [
 	{
+		"id": "matematica-viciada",
+		"title": "Você fuma cigarro? Para o sistema, você pode ser um 'dependente químico'",
+		"date": "2026-01-12",
+		"author": "Auditoria Cidadã",
+		"category": "Investigação",
+		"content": "O Censo FEAC 2024 (Pergunta Q.19) coloca na mesma lista: Cigarro, Álcool, Maconha e Crack. Resultado: 70,8% usavam cigarro e 62,5% álcool antes da rua. Ao divulgar dados de 'dependência', o sistema agrupa tudo. Se você fuma para acalmar a fome, você entra na estatística que justifica repasse para Comunidades Terapêuticas. Misturar tabaco com crack não é erro técnico; é estratégia política."
+	},
+	{
+		"id": "guerra-numeros",
+		"title": "1.557 ou 3.000? Quem o Estado escolhe não ver?",
+		"date": "2026-01-12",
+		"author": "Coletivo A Rua Tem Voz",
+		"category": "Denúncia",
+		"content": "A Prefeitura diz que existem 1.557 pessoas em situação de rua. ONGs estimam mais de 3.000. O Censo perde quem trabalha (70,9% têm atividade remunerada), quem se esconde (medo do Conselho Tutelar) e quem foge da GCM. Um número menor é conveniente: menos gente significa menos verba para habitação. Nosso jornal existe para contar os invisíveis."
+	},
+	{
+		"id": "freakonomics-rua",
+		"title": "Quanto vale a sua cabeça? (Dica: Mais internada do que educada)",
+		"date": "2026-01-12",
+		"author": "Daniel Arraes",
+		"category": "Freakonomics",
+		"content": "O Estado gasta R$ 316/mês por aluno no Ensino Médio. Para manter alguém internado em Comunidade Terapêutica, paga R$ 1.350/mês (a 'Bolsa Crack'). Um morador de rua 'limpo' vale R$ 300; um diagnosticado como 'viciado' vale R$ 1.300. É por isso que o questionário do Censo mistura cigarro com crack: eles precisam que você seja um 'problema médico' para justificar contratos milionários, em vez de te dar a chave de uma kitnet."
+	},
+	{
 		"id": "1",
 		"title": "A Invisibilidade é uma Escolha Política?",
 		"date": "2025-12-27",

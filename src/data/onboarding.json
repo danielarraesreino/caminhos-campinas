@@ -1,35 +1,35 @@
 [
 	{
-		"title": "Bem-vindo às Ruas",
-		"description": "Este é um Serious Game sobre a realidade da população em situação de rua em Campinas. Seu objetivo não é apenas sobreviver, mas reconquistar sua cidadania.",
+		"title": "Você é um Dado Vivo",
+		"description": "Cada vez que você tenta acessar um serviço (Saúde, Abrigo) e não consegue, o aplicativo registra anonimamente essa falha. Estamos auditando a cidade em tempo real para mapear onde o Estado falha.",
 		"iconName": "User",
 		"color": "text-blue-400",
 		"bg": "bg-blue-900/20"
 	},
 	{
-		"title": "Sinais Vitais (Fome/Sanidade)",
-		"description": "Monitore seus sinais vitais no topo da tela: Fome, Energia, Higiene e Integridade Física. Se algum chegar a zero, você corre riscos graves.",
-		"iconName": "Heart",
-		"color": "text-red-400",
-		"bg": "bg-red-900/20"
-	},
-	{
-		"title": "PDU (Plano de Desenvolvimento)",
-		"description": "Acompanhe seu progresso na barra 'Plano de Vida'. Você começa pela Sobrevivência e deve buscar Documentos (RG/CPF), Benefícios e Autonomia (Trabalho).",
+		"title": "Sua Voz, Sua Lei",
+		"description": "No jogo e na rua, a informação é seu escudo. Você aprenderá a usar o Decreto 7.053 e a Lei Padre Júlio Lancellotti para impedir que levem seus pertences ou te expulsem de espaços públicos.",
 		"iconName": "Shield",
 		"color": "text-emerald-400",
 		"bg": "bg-emerald-900/20"
 	},
 	{
-		"title": "Sua Voz Importa",
-		"description": "Use o Chat para interagir. Você pode DIGITAR ou FALAR (ícone de microfone). Sua voz é transcrita e enviada para análise para criar respostas mais reais.",
+		"title": "Ninguém Caminha Sozinho",
+		"description": "O mapa mostra ONGs, Coletivos e Serviços Públicos. Verde = Aberto e Acolhedor. Vermelho = Barreira de Entrada (ex: exige RG). Use a rede para sobreviver e denunciar falhas.",
+		"iconName": "Heart",
+		"color": "text-red-400",
+		"bg": "bg-red-900/20"
+	},
+	{
+		"title": "Seus Sinais Vitais",
+		"description": "Monitore Fome, Energia e Higiene no topo da tela. Se algum chegar a zero, você enfrenta riscos graves. Cada queda é um dado sobre a precariedade da rede de proteção social.",
 		"iconName": "Mic",
 		"color": "text-purple-400",
 		"bg": "bg-purple-900/20"
 	},
 	{
 		"title": "Contribua com a Realidade",
-		"description": "O jogo é alimentado por histórias reais. Você pode submeter dilemas que vivenciou ou presenciou para enriquecer a simulação e ajudar na conscientização.",
+		"description": "O jogo é alimentado por histórias reais do Censo FEAC 2024. Você pode submeter dilemas que vivenciou ou presenciou para enriquecer a simulação e ajudar na conscientização.",
 		"iconName": "MessageSquare",
 		"color": "text-yellow-400",
 		"bg": "bg-yellow-900/20"

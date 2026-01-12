@@ -107,9 +107,18 @@ export type DilemmaAspect =
 	| "FAMILY"
 	| "SOCIAL";
 
+export interface LegalReference {
+	law: string; // e.g., "Decreto 7.053/2009"
+	article?: string; // e.g., "Art. 7º, II e VIII"
+	summary: string; // Brief description of what this law protects
+	url?: string; // Link to official source (Planalto, etc.)
+}
+
 export interface Dilemma {
 	id: string;
 	arcId?: string;
+	wiki_context?: string; // Wikipedia article slug or Wikidata ID (e.g., "Q12345" or "População_em_situação_de_rua")
+	legal_reference?: LegalReference; // Reference to Brazilian laws protecting homeless rights
 	nextDilemmaId?: string;
 	title: string;
 	description: string;

@@ -24,12 +24,7 @@ export function ImpactReport({ onRestart, gameOverResult }: ImpactReportProps) {
 		);
 	}
 
-	const {
-		history = [],
-		employed_formal = false,
-		addiction = 0,
-		avatar = null,
-	} = state;
+	const { history = [], employed_formal = false, avatar = null } = state;
 
 	// Métricas do Jogador
 	const violations = history.filter(

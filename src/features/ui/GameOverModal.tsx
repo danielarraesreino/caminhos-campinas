@@ -63,11 +63,11 @@ export function GameOverModal({
 					</div>
 					<h2
 						id="game-over-title"
-						className="text-4xl font-black text-white mb-2 uppercase tracking-wider"
+						className="text-3xl md:text-4xl font-black text-white mb-2 uppercase tracking-wider"
 					>
-						Fim de Jogo
+						O Sistema Falhou com Você
 					</h2>
-					<p className="text-2xl font-bold text-red-500 uppercase tracking-widest font-mono">
+					<p className="text-xl font-bold text-red-400 uppercase tracking-widest font-mono">
 						{reason}
 					</p>
 				</div>
@@ -155,12 +155,25 @@ export function GameOverModal({
 						</div>
 					)}
 
+					{/* Mensagem de Advocacy */}
+					<div className="bg-purple-900/30 border border-purple-700/50 p-4 rounded-xl mt-6">
+						<p className="text-sm text-purple-200 leading-relaxed">
+							<strong className="text-white">
+								Na vida real, não existe botão de reiniciar.
+							</strong>{" "}
+							A falta de acesso ao Bom Prato ou ao Abrigo não é um erro seu; é
+							uma <span className="text-yellow-400">violação do ODS 1.4</span>{" "}
+							(acesso a serviços básicos). Junte-se ao movimento{" "}
+							<strong className="text-blue-400">"A Rua Tem Voz"</strong>.
+						</p>
+					</div>
+
 					{/* Ação e Conversão */}
-					<div className="flex flex-col gap-4 mt-8 bg-slate-900/50 p-6 rounded-xl border border-slate-700">
+					<div className="flex flex-col gap-4 mt-6 bg-slate-900/50 p-6 rounded-xl border border-slate-700">
 						<div className="text-center mb-2">
 							<p className="text-lg text-white font-medium italic">
-								"Na vida real, não existe respawn. Mas sua solidariedade pode
-								salvar vidas."
+								"O frio que mata é o mesmo que o Estado ignora. Sua
+								solidariedade pode salvar vidas."
 							</p>
 						</div>
 

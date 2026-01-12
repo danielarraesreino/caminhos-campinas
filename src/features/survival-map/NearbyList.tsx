@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
+import { getODSForServiceType, useDenialEvents } from "@/hooks/useDenialEvents";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
 
 // import servicesData from "@/data/services-campinas.json"; // Removed direct import
@@ -67,8 +68,9 @@ function calculateDistance(
 export function NearbyList() {
 	const { userPosition, money, documents, modifyStat, addBuff, addMoney } =
 		useGameContext();
-	const { services: contextServices } = useServices(); // Use context services
+	const { services: contextServices } = useServices();
 	const { trackServiceAccess } = useODSMetrics();
+	const { addEvent: addDenialEvent } = useDenialEvents();
 
 	const services = useMemo(() => {
 		if (!contextServices) return [];

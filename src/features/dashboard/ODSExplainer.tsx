@@ -54,6 +54,22 @@ export function ODSExplainer() {
 					bgColor="bg-orange-500/5"
 					borderColor="border-orange-900/30"
 				/>
+				<ODSItem
+					icon={<GraduationCap size={24} />}
+					title="ODS 8: Trabalho Decente"
+					desc="Programas como o Mão Amiga oferecem bolsa-auxílio e qualificação profissional. É a 'porta de saída' mais concreta, mas exige documentos e encaminhamento técnico."
+					color="text-pink-400"
+					bgColor="bg-pink-500/5"
+					borderColor="border-pink-900/30"
+				/>
+				<ODSItem
+					icon={<Info size={24} />}
+					title="ODS 16: Identidade Legal"
+					desc="Sem RG ou CPF, não há CadÚnico, Bolsa Família ou emprego formal. O Poupatempo exige agendamento digital - uma barreira para quem não tem celular."
+					color="text-blue-400"
+					bgColor="bg-blue-500/5"
+					borderColor="border-blue-900/30"
+				/>
 			</div>
 		</div>
 	);

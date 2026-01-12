@@ -11,6 +11,8 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { CENSUS_REALITY } from "@/data/census-reality";
+import { HiddenDataToggle } from "@/features/dashboard/HiddenDataToggle";
+import { ImpactInfographics } from "@/features/dashboard/ImpactInfographics";
 import { ODSExplainer } from "@/features/dashboard/ODSExplainer";
 import {
 	runCensusSimulation,
@@ -107,6 +109,97 @@ export default function ImpactPage() {
 					icon={<AlertTriangle className="text-yellow-400" />}
 					desc="Pretos ou Pardos (Desigualdade)"
 				/>
+			</div>
+
+			{/* NOVA SEÇÃO: Guerra dos Números - Subnotificação */}
+			<div className="mb-12 bg-gradient-to-br from-purple-950/50 to-slate-900 p-8 rounded-3xl border border-purple-800/50">
+				<h2 className="text-2xl font-bold mb-2 flex items-center gap-3">
+					<span className="w-3 h-3 bg-purple-500 rounded-full animate-pulse" />A
+					Guerra dos Números: Fotografia vs Filme
+				</h2>
+				<p className="text-slate-300 mb-8 max-w-2xl">
+					O Censo oficial captura uma "fotografia" de dias específicos. A
+					realidade da rua é um "filme" em movimento constante.
+				</p>
+
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+					{/* Barra: Censo Oficial */}
+					<div className="space-y-4">
+						<div className="flex justify-between items-end">
+							<span className="text-sm text-slate-300 uppercase font-bold tracking-wider">
+								Censo Oficial (FEAC 2024)
+							</span>
+							<span className="text-3xl font-black text-blue-400">
+								{CENSUS_REALITY.populationContrast.official}
+							</span>
+						</div>
+						<div className="h-8 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+							<div
+								className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-1000"
+								style={{
+									width: `${(CENSUS_REALITY.populationContrast.official / CENSUS_REALITY.populationContrast.estimated) * 100}%`,
+								}}
+							/>
+						</div>
+						<p className="text-xs text-slate-400">
+							{CENSUS_REALITY.populationContrast.methodology}
+						</p>
+					</div>
+
+					{/* Barra: Estimativa Coletivos */}
+					<div className="space-y-4">
+						<div className="flex justify-between items-end">
+							<span className="text-sm text-slate-300 uppercase font-bold tracking-wider">
+								Estimativa Coletivos
+							</span>
+							<span className="text-3xl font-black text-purple-400">
+								~{CENSUS_REALITY.populationContrast.estimated}
+							</span>
+						</div>
+						<div className="h-8 bg-slate-800 rounded-full overflow-hidden border-2 border-dashed border-purple-500/50">
+							<div
+								className="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full"
+								style={{ width: "100%" }}
+							/>
+						</div>
+						<p className="text-xs text-purple-400/80">
+							{CENSUS_REALITY.populationContrast.limitation}
+						</p>
+					</div>
+				</div>
+
+				{/* Multiplicador */}
+				<div className="mt-8 p-4 bg-slate-900/50 rounded-xl border border-slate-700 flex items-center justify-between">
+					<div>
+						<span className="text-sm text-slate-400">
+							Fator de Subnotificação
+						</span>
+						<p className="text-4xl font-black text-white">
+							{CENSUS_REALITY.populationContrast.multiplier}x
+						</p>
+					</div>
+					<div className="text-right text-xs text-slate-400 max-w-sm">
+						<p className="mb-1">
+							Fontes: {CENSUS_REALITY.populationContrast.sources.join(" • ")}
+						</p>
+						<p className="text-yellow-400/80">
+							⚠️ ~
+							{CENSUS_REALITY.populationContrast.estimated -
+								CENSUS_REALITY.populationContrast.official}{" "}
+							pessoas invisíveis para as políticas públicas
+						</p>
+					</div>
+				</div>
+			</div>
+
+			{/* FREAKONOMICS: Realidade Paralela Toggle */}
+			<div className="mb-12">
+				<HiddenDataToggle />
+			</div>
+
+			{/* DATA STORYTELLING: Infográficos de Impacto */}
+			<div className="mb-12">
+				<ImpactInfographics />
 			</div>
 
 			{/* Visualização da Lacuna (Supply vs Demand) */}

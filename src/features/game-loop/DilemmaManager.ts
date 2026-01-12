@@ -2,6 +2,64 @@ import type { GameState } from "@/contexts/GameContext";
 import { REALITY_ATLAS } from "@/data/RealityAtlas";
 import type { Dilemma } from "./dilemma-types";
 
+// Bom Prato operating hours (based on real data)
+const BOM_PRATO_HOURS = {
+	CAFE: { start: 7, end: 9 }, // 07h-09h
+	ALMOCO: { start: 10.5, end: 14 }, // 10h30-14h
+	JANTAR: { start: 17, end: 18 }, // 17h-18h
+} as const;
+
+type MealType = "CAFE" | "ALMOCO" | "JANTAR" | null;
+
+/**
+ * Returns the currently available meal at Bom Prato based on time.
+ * Returns null if Bom Prato is closed for meals.
+ */
+function getAvailableBomPratoMeal(time: number): MealType {
+	if (time >= BOM_PRATO_HOURS.CAFE.start && time < BOM_PRATO_HOURS.CAFE.end) {
+		return "CAFE";
+	}
+	if (
+		time >= BOM_PRATO_HOURS.ALMOCO.start &&
+		time < BOM_PRATO_HOURS.ALMOCO.end
+	) {
+		return "ALMOCO";
+	}
+	if (
+		time >= BOM_PRATO_HOURS.JANTAR.start &&
+		time < BOM_PRATO_HOURS.JANTAR.end
+	) {
+		return "JANTAR";
+	}
+	return null;
+}
+
+/**
+ * Returns the next meal period and how long until it opens.
+ */
+function getNextBomPratoMeal(time: number): {
+	meal: MealType;
+	hoursUntil: number;
+} {
+	if (time < BOM_PRATO_HOURS.CAFE.start) {
+		return { meal: "CAFE", hoursUntil: BOM_PRATO_HOURS.CAFE.start - time };
+	}
+	if (time >= BOM_PRATO_HOURS.CAFE.end && time < BOM_PRATO_HOURS.ALMOCO.start) {
+		return { meal: "ALMOCO", hoursUntil: BOM_PRATO_HOURS.ALMOCO.start - time };
+	}
+	if (
+		time >= BOM_PRATO_HOURS.ALMOCO.end &&
+		time < BOM_PRATO_HOURS.JANTAR.start
+	) {
+		return { meal: "JANTAR", hoursUntil: BOM_PRATO_HOURS.JANTAR.start - time };
+	}
+	if (time >= BOM_PRATO_HOURS.JANTAR.end) {
+		// Next meal is breakfast tomorrow
+		return { meal: "CAFE", hoursUntil: 24 - time + BOM_PRATO_HOURS.CAFE.start };
+	}
+	return { meal: null, hoursUntil: 0 };
+}
+
 export class DilemmaManager {
 	private dilemmas: Dilemma[];
 	private resolvedIds: Set<string>;
@@ -34,7 +92,12 @@ export class DilemmaManager {
 			console.log(
 				`[DilemmaManager] Triggering intro_acordar_praca (Day 1, Time: ${time})`,
 			);
-			return this.getDilemmaById("intro_acordar_praca");
+			const introDilemma = this.getDilemmaById("intro_acordar_praca");
+			if (introDilemma) {
+				// Apply time-aware modifications to the intro dilemma
+				return this.adaptIntroDilemmaToTime(introDilemma, time);
+			}
+			return null;
 		}
 
 		// 1. Reality-Weighted Triggers ("O Rapa", etc.) - Keep as immediate interrupts
@@ -640,5 +703,87 @@ export class DilemmaManager {
 				Math.sin(dLon / 2);
 		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		return R * c;
+	}
+
+	/**
+	 * Adapts the intro dilemma to reflect time-accurate meal options at Bom Prato.
+	 * This ensures players don't see "Buscar café no Bom Prato" when breakfast is closed.
+	 */
+	private adaptIntroDilemmaToTime(dilemma: Dilemma, time: number): Dilemma {
+		const modified = JSON.parse(JSON.stringify(dilemma)) as Dilemma;
+		const currentMeal = getAvailableBomPratoMeal(time);
+		const nextMeal = getNextBomPratoMeal(time);
+
+		// Find the Bom Prato option (first option in intro_acordar_praca)
+		const bomPratoOption = modified.options.find((opt) =>
+			opt.label.toLowerCase().includes("bom prato"),
+		);
+
+		if (bomPratoOption) {
+			if (currentMeal === "CAFE") {
+				// Breakfast available (7h-9h)
+				bomPratoOption.label = "Buscar café no Bom Prato";
+				bomPratoOption.consequence =
+					"Você se levanta rápido. O Bom Prato é perto e o café é barato. É um bom começo.";
+				bomPratoOption.effect = { hunger: 10, energy: 10 };
+			} else if (currentMeal === "ALMOCO") {
+				// Lunch available (10h30-14h)
+				bomPratoOption.label = "Buscar almoço no Bom Prato";
+				bomPratoOption.consequence =
+					"Você caminha até o Bom Prato. Por R$ 1,00, uma refeição completa. É o que você precisava.";
+				bomPratoOption.effect = { hunger: 30, energy: 15 };
+			} else if (currentMeal === "JANTAR") {
+				// Dinner available (17h-18h)
+				bomPratoOption.label = "Buscar jantar no Bom Prato";
+				bomPratoOption.consequence =
+					"O jantar no Bom Prato é sua última chance de comer bem hoje. R$ 1,00 por uma refeição quente.";
+				bomPratoOption.effect = { hunger: 25, energy: 10 };
+			} else {
+				// Bom Prato is closed - adapt option to reflect reality
+				const hoursUntil = Math.round(nextMeal.hoursUntil);
+				const mealName =
+					nextMeal.meal === "CAFE"
+						? "café da manhã"
+						: nextMeal.meal === "ALMOCO"
+							? "almoço"
+							: "jantar";
+
+				if (time >= 9 && time < 10.5) {
+					// Between breakfast and lunch
+					bomPratoOption.label = "Esperar o almoço no Bom Prato";
+					bomPratoOption.consequence = `O Bom Prato está fechado agora. O café acabou às 9h e o almoço só abre às 10h30. Você espera na praça, sentindo a fome apertar.`;
+					bomPratoOption.effect = {
+						hunger: -5,
+						energy: -10,
+					};
+					// Add time advance to waiting
+					(bomPratoOption.effect as Record<string, number>).timeAdvance =
+						nextMeal.hoursUntil;
+				} else if (time >= 14 && time < 17) {
+					// Between lunch and dinner
+					bomPratoOption.label = "Caminhar até o Bom Prato (fechado)";
+					bomPratoOption.consequence = `O Bom Prato está fechado. O almoço terminou às 14h e o jantar só abre às 17h. ${hoursUntil}h de espera pela frente.`;
+					bomPratoOption.effect = { energy: -5, sanity: -5 };
+				} else if (time >= 18 && time < 24) {
+					// After dinner closes
+					bomPratoOption.label = "Ir ao Bom Prato (já fechou)";
+					bomPratoOption.consequence =
+						"Você chegou tarde demais. O jantar do Bom Prato acabou às 18h. Vai ter que procurar outra opção.";
+					bomPratoOption.effect = { energy: -10, sanity: -5 };
+				} else {
+					// Very early morning (before 7h)
+					bomPratoOption.label = `Esperar o ${mealName} (abre em ${hoursUntil}h)`;
+					bomPratoOption.consequence = `Ainda é cedo. O Bom Prato só abre às 7h. Você aguarda o dia clarear.`;
+					bomPratoOption.effect = { energy: -5 };
+				}
+			}
+		}
+
+		// Log the adaptation for debugging
+		console.log(
+			`[DilemmaManager] Adapted intro dilemma for time ${time}. Current meal: ${currentMeal}, Next meal: ${nextMeal.meal} in ${nextMeal.hoursUntil.toFixed(1)}h`,
+		);
+
+		return modified;
 	}
 }

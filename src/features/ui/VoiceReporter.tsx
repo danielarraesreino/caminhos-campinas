@@ -132,6 +132,7 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 		<div className="relative p-6 bg-slate-900 rounded-2xl border border-slate-800 shadow-2xl w-full max-w-sm mx-auto animate-in fade-in zoom-in duration-300">
 			{onClose && (
 				<button
+					type="button"
 					onClick={onClose}
 					className="absolute top-2 right-2 p-2 text-slate-400 hover:text-white transition-colors"
 				>
@@ -152,12 +153,14 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 				{uploadStatus === "idle" && !isRecording && (
 					<div className="flex bg-slate-800/50 p-1 rounded-lg mb-2">
 						<button
+							type="button"
 							onClick={() => setMode("audio")}
 							className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === "audio" ? "bg-slate-700 text-amber-400 shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
 						>
 							Áudio
 						</button>
 						<button
+							type="button"
 							onClick={() => setMode("text")}
 							className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === "text" ? "bg-slate-700 text-amber-400 shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
 						>
@@ -169,6 +172,7 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 				{/* AUDIO MODE */}
 				{mode === "audio" && uploadStatus === "idle" && (
 					<button
+						type="button"
 						onClick={isRecording ? stopRecording : startRecording}
 						className={`w-20 h-20 rounded-full flex items-center justify-center transition-all shadow-xl ${
 							isRecording
@@ -200,6 +204,7 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 							onChange={(e) => setTextReport(e.target.value)}
 						/>
 						<button
+							type="button"
 							onClick={async () => {
 								const fb = await handleSaveReport(null, textReport);
 								setFeedbackMessage(fb || null);
@@ -242,6 +247,7 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 						)}
 
 						<button
+							type="button"
 							onClick={() => {
 								setUploadStatus("idle");
 								setTextReport("");
@@ -263,6 +269,7 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 							Verifique conexão e permissões.
 						</p>
 						<button
+							type="button"
 							onClick={() => setUploadStatus("idle")}
 							className="px-4 py-2 bg-red-900/50 rounded-lg text-xs hover:bg-red-800 transition-colors text-white"
 						>

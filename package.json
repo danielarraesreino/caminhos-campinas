@@ -6,6 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
+		"sync:wikidata": "npx tsx scripts/sync-wikidata.ts",
 		"test": "vitest",
 		"test:e2e": "playwright test",
 		"lint": "biome check src/",
@@ -57,6 +58,7 @@
 		"recharts": "^3.6.0",
 		"tailwind-merge": "^3.4.0",
 		"vaul": "^1.1.2",
+		"wikibase-sdk": "^11.2.1",
 		"zod": "^4.3.5"
 	},
 	"devDependencies": {

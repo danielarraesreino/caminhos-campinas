@@ -74,7 +74,7 @@ export function GameChat({
 		},
 	} as any);
 
-	const { messages, setMessages, isLoading, error, append } = chat as any;
+	const { messages, setMessages, isLoading, append } = chat as any;
 
 	// [DEBUG] Log hook status
 	useEffect(() => {

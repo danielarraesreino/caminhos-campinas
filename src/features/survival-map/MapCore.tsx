@@ -2,7 +2,16 @@
 
 import L from "leaflet";
 import { memo, useEffect } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import {
+	CircleMarker,
+	MapContainer,
+	Marker,
+	Popup,
+	TileLayer,
+	useMap,
+} from "react-leaflet";
+import { ODS_REGISTRY } from "@/data/ods-registry";
+import type { ODSTarget } from "@/types/GameState";
 
 // Fix for default marker icon
 // @ts-expect-error
@@ -38,10 +47,12 @@ const getIconForType = (type: string) => {
 		colorUrl = "marker-icon-2x-orange.png";
 	} else if (type === "health" || type === "saude") {
 		colorUrl = "marker-icon-2x-red.png";
-	} else if (type === "work" || type === "educacao") {
+	} else if (type === "work" || type === "educacao" || type === "trabalho") {
 		colorUrl = "marker-icon-2x-gold.png";
 	} else if (type === "assistencia") {
-		colorUrl = "marker-icon-2x-blue.png"; // Default blue
+		colorUrl = "marker-icon-2x-blue.png";
+	} else if (type === "documentos" || type === "cidadania") {
+		colorUrl = "marker-icon-2x-green.png";
 	}
 
 	return new L.Icon({
@@ -55,6 +66,53 @@ const getIconForType = (type: string) => {
 	});
 };
 
+/**
+ * Mapeia tipo de serviço para meta ODS principal
+ */
+function getODSForType(type: string): ODSTarget {
+	const t = type.toUpperCase();
+	switch (t) {
+		case "ALIMENTACAO":
+			return "2.1";
+		case "ABRIGO":
+			return "11.1";
+		case "SAUDE":
+			return "3.8";
+		case "ASSISTENCIA":
+			return "1.3";
+		case "DOCUMENTOS":
+			return "16.9";
+		case "TRABALHO":
+			return "8.5";
+		case "HIGIENE":
+			return "6.2";
+		case "CIDADANIA":
+			return "10.2";
+		default:
+			return "1.4";
+	}
+}
+
+/**
+ * Verifica se é um serviço público que merece texto de advocacy
+ */
+function isPublicService(name: string): boolean {
+	const publicKeywords = [
+		"CRAS",
+		"CREAS",
+		"Centro POP",
+		"CAPS",
+		"UBS",
+		"SAMIM",
+		"Poupatempo",
+		"CPAT",
+		"DAS",
+	];
+	return publicKeywords.some((k) =>
+		name.toUpperCase().includes(k.toUpperCase()),
+	);
+}
+
 function MapController({ center }: { center: [number, number] }) {
 	const map = useMap();
 	useEffect(() => {
@@ -65,6 +123,14 @@ function MapController({ center }: { center: [number, number] }) {
 	return null;
 }
 
+interface DenialPoint {
+	coords: [number, number];
+	count: number;
+	types: string[];
+	primaryODS?: string;
+	color?: { fill: string; stroke: string };
+}
+
 interface MapCoreProps {
 	userPosition: [number, number] | null;
 	resources: {
@@ -73,7 +139,10 @@ interface MapCoreProps {
 		type: string;
 		lat: number;
 		lng: number;
+		odsTargets?: string[];
 	}[];
+	denialPoints?: DenialPoint[];
+	showDenials?: boolean;
 	onTravel?: (lat: number, lng: number) => void;
 	onResourceInteract?: (res: any) => void;
 }
@@ -81,6 +150,8 @@ interface MapCoreProps {
 const MapCore = memo(function MapCore({
 	userPosition,
 	resources,
+	denialPoints = [],
+	showDenials = false,
 	onTravel,
 	onResourceInteract,
 }: MapCoreProps) {
@@ -102,6 +173,47 @@ const MapCore = memo(function MapCore({
 
 			<MapController center={initialPosition} />
 
+			{/* Denial Heatmap Layer (Círculos com cores ODS) */}
+			{showDenials &&
+				denialPoints.map((point, idx) => {
+					const radius = 15 + point.count * 5; // Raio baseado na frequência
+					// Usa cores ODS do ponto ou fallback para vermelho
+					const fillColor = point.color?.fill || "rgba(220, 38, 38, 0.5)";
+					const strokeColor = point.color?.stroke || "#7f1d1d";
+
+					return (
+						<CircleMarker
+							key={`denial-${idx}`}
+							center={point.coords}
+							radius={radius}
+							pathOptions={{
+								fillColor,
+								fillOpacity: 0.6,
+								color: strokeColor,
+								weight: 2,
+							}}
+						>
+							<Popup>
+								<div className="text-center p-2">
+									<span className="text-2xl">🚫</span>
+									<h3 className="font-bold text-red-700 mt-1">
+										Zona de Direito Negado
+									</h3>
+									<p className="text-xs text-gray-600 mt-1">
+										{point.count} ocorrência{point.count > 1 ? "s" : ""}{" "}
+										registrada{point.count > 1 ? "s" : ""}
+									</p>
+									{point.primaryODS && (
+										<p className="text-[10px] text-purple-600 mt-2 font-medium">
+											Violação do ODS {point.primaryODS}
+										</p>
+									)}
+								</div>
+							</Popup>
+						</CircleMarker>
+					);
+				})}
+
 			{/* User Marker */}
 			{userPosition && (
 				<Marker position={userPosition} icon={UserIcon}>
@@ -112,35 +224,77 @@ const MapCore = memo(function MapCore({
 			)}
 
 			{/* Resources Markers */}
-			{resources.map((res) => (
-				<Marker
-					key={res.id}
-					position={[res.lat, res.lng]}
-					icon={getIconForType(res.type)}
-				>
-					<Popup>
-						<div className="flex flex-col gap-2 min-w-[150px]">
-							<div>
-								<strong className="text-sm text-slate-900">{res.name}</strong>
-								<br />
-								<span className="text-xs text-gray-500 uppercase tracking-wide">
-									{res.type}
-								</span>
+			{resources.map((res) => {
+				const odsTarget = getODSForType(res.type);
+				const odsInfo = ODS_REGISTRY[odsTarget];
+				const isPublic = isPublicService(res.name);
+
+				return (
+					<Marker
+						key={res.id}
+						position={[res.lat, res.lng]}
+						icon={getIconForType(res.type)}
+					>
+						<Popup>
+							<div className="flex flex-col gap-2 min-w-[200px]">
+								<div>
+									<strong className="text-sm text-slate-900">{res.name}</strong>
+									<br />
+									<span className="text-xs text-gray-500 uppercase tracking-wide">
+										{res.type}
+									</span>
+								</div>
+
+								{/* Tag ODS */}
+								{odsInfo && (
+									<div
+										className="text-[10px] px-2 py-1 rounded-full inline-flex items-center gap-1 w-fit"
+										style={{
+											backgroundColor: odsInfo.color + "20",
+											color: odsInfo.color,
+										}}
+									>
+										<span>🎯</span>
+										<span>
+											Meta {odsTarget}: {odsInfo.label}
+										</span>
+									</div>
+								)}
+
+								{/* Advocacy Text para serviços públicos */}
+								{isPublic && (
+									<div className="mt-2 pt-2 border-t border-gray-200">
+										<p className="text-[11px] text-purple-700 leading-relaxed">
+											<strong>⚖️ Equipamento Público:</strong> Este serviço é
+											vital para o cumprimento da{" "}
+											<strong>Meta {odsTarget}</strong> dos ODS. Se estiver
+											fechado ou negar atendimento,{" "}
+											<a
+												href="/sugerir"
+												className="underline text-blue-600 font-bold"
+											>
+												denuncie aqui
+											</a>
+											.
+										</p>
+									</div>
+								)}
+
+								<button
+									type="button"
+									onClick={() => {
+										onTravel?.(res.lat, res.lng);
+										onResourceInteract?.(res);
+									}}
+									className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded shadow-md transition-colors w-full mt-2"
+								>
+									👣 Ir e Interagir
+								</button>
 							</div>
-							<button
-								type="button"
-								onClick={() => {
-									onTravel?.(res.lat, res.lng);
-									onResourceInteract?.(res);
-								}}
-								className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-3 rounded shadow-md transition-colors w-full"
-							>
-								👣 Ir e Interagir
-							</button>
-						</div>
-					</Popup>
-				</Marker>
-			))}
+						</Popup>
+					</Marker>
+				);
+			})}
 		</MapContainer>
 	);
 });

@@ -75,8 +75,6 @@ export function GameHUD({
 	const {
 		health,
 		sanity,
-		hunger, // Added hunger as requested by user
-		energy, // Added energy for completeness
 		money,
 		time,
 		day,

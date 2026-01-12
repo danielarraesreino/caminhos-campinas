@@ -1,9 +1,11 @@
 "use client";
 
+import { Filter } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
+import { useDenialEvents } from "@/hooks/useDenialEvents";
 import { NearbyList } from "./NearbyList";
 
 const MapCore = dynamic(() => import("./MapCore"), {
@@ -16,9 +18,15 @@ const MapCore = dynamic(() => import("./MapCore"), {
 export function SurvivalMap() {
 	const { userPosition, setUserPosition, eat, modifyStat } = useGameContext();
 	const [loadingLocation, setLoadingLocation] = useState(false);
+	const [showDenials, setShowDenials] = useState(false);
 
 	// Use ServicesContext for real data
 	const { services } = useServices();
+
+	// Hook de eventos de negação (auditoria social)
+	const { getHeatmapData, getStatistics } = useDenialEvents();
+	const denialPoints = useMemo(() => getHeatmapData(), [getHeatmapData]);
+	const denialStats = useMemo(() => getStatistics(), [getStatistics]);
 
 	// Define a custom type guard ensuring coords is [number, number]
 	const hasValidCoords = (
@@ -249,9 +257,30 @@ export function SurvivalMap() {
 					🚨 SOS EMERGÊNCIA
 				</a>
 
+				{/* Toggle de Negações (Mapa de Calor) */}
+				<button
+					type="button"
+					onClick={() => setShowDenials(!showDenials)}
+					className={`absolute top-24 right-4 z-[1000] px-4 py-2 rounded-full shadow-lg font-bold text-sm flex items-center gap-2 transition-all ${
+						showDenials
+							? "bg-red-600 text-white"
+							: "bg-white/90 text-slate-700 hover:bg-slate-100"
+					}`}
+				>
+					<Filter size={16} />
+					{showDenials ? "Ocultar Negações" : "Ver Negações"}
+					{denialStats.total > 0 && (
+						<span className="ml-1 bg-red-700 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+							{denialStats.total}
+						</span>
+					)}
+				</button>
+
 				<MapCore
 					userPosition={userPosition}
 					resources={resources}
+					denialPoints={denialPoints}
+					showDenials={showDenials}
 					onResourceInteract={handleInteraction}
 				/>
 			</div>

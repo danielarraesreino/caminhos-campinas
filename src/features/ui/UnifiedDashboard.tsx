@@ -21,7 +21,7 @@ export function UnifiedDashboard() {
 							Caminhos CPS <span className="text-slate-500 text-sm">| 019</span>
 						</h1>
 						<p className="text-slate-400 text-xs mt-1">
-							Tecnologia Social & Sobrevivência
+							Denúncia Gamificada & Mapa de Sobrevivência
 						</p>
 					</div>
 					<div className="flex items-center gap-2 text-xs font-mono text-slate-400">
@@ -44,16 +44,19 @@ export function UnifiedDashboard() {
 							<div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4 text-blue-400 group-hover:text-blue-300 group-hover:scale-110 transition-transform">
 								<Gamepad2 size={24} />
 							</div>
-							<h2 className="text-3xl font-black mb-2 uppercase italic tracking-tight">
-								Jogar Simulador
+							<h2 className="text-2xl md:text-3xl font-black mb-2 uppercase tracking-tight leading-tight">
+								A Invisibilidade é Política de Estado.
+								<span className="block text-red-400">O Jogo é a Denúncia.</span>
 							</h2>
-							<p className="text-slate-400 max-w-sm">
-								Entre na pele de quem vive nas ruas de Campinas. Enfrente
-								dilemas reais, sobreviva à burocracia e busque a autonomia.
+							<p className="text-slate-400 max-w-md text-sm">
+								Simule a jornada de quem vive nas ruas de Campinas. Cada
+								barreira que você enfrenta gera um{" "}
+								<strong className="text-white">dado real</strong> sobre a falha
+								da rede de proteção social (ODS 1, 3 e 11).
 							</p>
 						</div>
 						<div className="relative z-10 mt-6 flex items-center gap-2 text-blue-400 font-bold uppercase text-sm tracking-widest">
-							Iniciar Jornada{" "}
+							Iniciar Auditoria Social{" "}
 							<span className="group-hover:translate-x-1 transition-transform">
 								→
 							</span>

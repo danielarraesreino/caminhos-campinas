@@ -41,6 +41,7 @@ export function ProjectRegistrationForm() {
 					validar as informações.
 				</p>
 				<button
+					type="button"
 					onClick={() => setSubmitted(false)}
 					className="mt-4 text-sm text-green-400 underline hover:text-green-300"
 				>
@@ -56,10 +57,14 @@ export function ProjectRegistrationForm() {
 			className="space-y-4 p-4 bg-slate-900/50 rounded-lg border border-slate-700"
 		>
 			<div>
-				<label className="block text-sm font-medium text-slate-300 mb-1">
+				<label
+					htmlFor="project-name"
+					className="block text-sm font-medium text-slate-300 mb-1"
+				>
 					Nome do Projeto
 				</label>
 				<input
+					id="project-name"
 					type="text"
 					name="name"
 					required
@@ -71,10 +76,14 @@ export function ProjectRegistrationForm() {
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-slate-300 mb-1">
+				<label
+					htmlFor="organization"
+					className="block text-sm font-medium text-slate-300 mb-1"
+				>
 					Organização / Coletivo
 				</label>
 				<input
+					id="organization"
 					type="text"
 					name="organization"
 					required
@@ -86,10 +95,14 @@ export function ProjectRegistrationForm() {
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-slate-300 mb-1">
+				<label
+					htmlFor="area"
+					className="block text-sm font-medium text-slate-300 mb-1"
+				>
 					Área de Atuação
 				</label>
 				<select
+					id="area"
 					name="area"
 					value={formData.area}
 					onChange={handleChange}
@@ -104,10 +117,14 @@ export function ProjectRegistrationForm() {
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-slate-300 mb-1">
+				<label
+					htmlFor="contact"
+					className="block text-sm font-medium text-slate-300 mb-1"
+				>
 					Contato (WhatsApp/Email)
 				</label>
 				<input
+					id="contact"
 					type="text"
 					name="contact"
 					required
@@ -118,10 +135,14 @@ export function ProjectRegistrationForm() {
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-slate-300 mb-1">
+				<label
+					htmlFor="description"
+					className="block text-sm font-medium text-slate-300 mb-1"
+				>
 					Descrição Breve
 				</label>
 				<textarea
+					id="description"
 					name="description"
 					required
 					value={formData.description}
@@ -133,10 +154,14 @@ export function ProjectRegistrationForm() {
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium text-slate-300 mb-1">
+				<label
+					htmlFor="needs"
+					className="block text-sm font-medium text-slate-300 mb-1"
+				>
 					Principais Necessidades
 				</label>
 				<textarea
+					id="needs"
 					name="needs"
 					value={formData.needs}
 					onChange={handleChange}

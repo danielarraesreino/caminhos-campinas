@@ -45,11 +45,17 @@ export function VaultPage() {
 					</div>
 
 					<div className="grid grid-cols-2 gap-4">
-						<button className="p-4 bg-blue-900/50 hover:bg-blue-800 border border-blue-700 rounded-lg flex flex-col items-center gap-2 transition-colors">
+						<button
+							type="button"
+							className="p-4 bg-blue-900/50 hover:bg-blue-800 border border-blue-700 rounded-lg flex flex-col items-center gap-2 transition-colors"
+						>
 							<span className="text-2xl">📄</span>
 							<span className="text-sm font-bold text-blue-200">Meus Docs</span>
 						</button>
-						<button className="p-4 bg-green-900/50 hover:bg-green-800 border border-green-700 rounded-lg flex flex-col items-center gap-2 transition-colors">
+						<button
+							type="button"
+							className="p-4 bg-green-900/50 hover:bg-green-800 border border-green-700 rounded-lg flex flex-col items-center gap-2 transition-colors"
+						>
 							<span className="text-2xl">📤</span>
 							<span className="text-sm font-bold text-green-200">
 								Novo Upload
@@ -58,6 +64,7 @@ export function VaultPage() {
 					</div>
 
 					<button
+						type="button"
 						onClick={() => {
 							if (session) signOut();
 							else setIsGuestMode(false);
@@ -70,6 +77,7 @@ export function VaultPage() {
 			) : (
 				<div className="space-y-4">
 					<button
+						type="button"
 						onClick={handleGoogleLogin}
 						className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white text-gray-900 rounded-lg font-bold hover:bg-gray-100 transition-transform hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
 						title="Desabilitado temporariamente para ajustes de API"
@@ -93,6 +101,7 @@ export function VaultPage() {
 					</div>
 
 					<button
+						type="button"
 						onClick={handleGuestAccess}
 						className="w-full px-6 py-3 bg-slate-800 border-2 border-slate-700 text-slate-300 rounded-lg font-bold hover:bg-slate-700 hover:text-white transition-all"
 					>

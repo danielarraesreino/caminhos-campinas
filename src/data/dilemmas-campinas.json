@@ -2,6 +2,7 @@
 	{
 		"id": "intro_acordar_praca",
 		"title": "Despertar no Centro",
+		"wiki_context": "Q137764129",
 		"description": "O sol bate no seu rosto. Você está no Largo do Rosário. Ao seu redor, a cidade de Campinas começa a se movimentar para o trabalho. Sua primeira decisão: como começar o dia?",
 		"trigger": {
 			"type": "STATUS",
@@ -33,6 +34,12 @@
 	{
 		"id": "enquadro_gcm_centro",
 		"title": "A Geografia do Medo",
+		"legal_reference": {
+			"law": "Decreto 7.053/2009",
+			"article": "Art. 7º, II e VIII",
+			"summary": "Política Nacional garante respeito à dignidade e proteção contra violência institucional",
+			"url": "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2009/decreto/d7053.htm"
+		},
 		"description": "Você parou para descansar no Centro. Uma viatura da GM se aproxima em baixa velocidade. O Censo diz que 51% da violência vem deles.",
 		"trigger": {
 			"type": "LOCATION_IDLE",
@@ -90,6 +97,7 @@
 	{
 		"id": "tuberculose_risco_latente",
 		"title": "A Tosse Que Não Passa",
+		"wiki_context": "Q137764231",
 		"description": "Você acorda com o peito chiando. Dormiu em local úmido por 3 dias seguidos. O risco de Tuberculose na rua é 56x maior que a média.",
 		"trigger": {
 			"type": "STATUS",
@@ -127,6 +135,7 @@
 	{
 		"id": "pobreza_menstrual_rua",
 		"title": "Dilema do Ciclo",
+		"wiki_context": "Q137764231",
 		"description": "Sua menstruação desceu e você não tem absorventes. O papelão machuca e o risco de infecção é alto. Ir ao banheiro de um shopping ou pedir no Consultório na Rua?",
 		"trigger": {
 			"type": "RANDOM",
@@ -170,6 +179,7 @@
 	{
 		"id": "cachorro_abrigo",
 		"title": "O Fiel Companheiro",
+		"wiki_context": "Q137764274",
 		"description": "Está começando a esfriar muito. O SAMIM tem vaga, mas não aceita seu cachorro. Deixar ele na rua sozinho ou enfrentar o frio lá fora com ele?",
 		"trigger": {
 			"type": "STATUS",
@@ -358,6 +368,12 @@
 	{
 		"id": "arquitetura_hostil_denuncia",
 		"title": "Pedras sob a Ponte",
+		"legal_reference": {
+			"law": "Lei 14.489/2022",
+			"article": "Art. 2º",
+			"summary": "Proíbe técnicas hostis que afastem pessoas em situação de rua de espaços públicos",
+			"url": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14489.htm"
+		},
 		"description": "Instalaram pedras pontiagudas onde você dormia. É a Lei Padre Júlio Lancellotti sendo ignorada. O que fazer?",
 		"trigger": {
 			"type": "RANDOM",
@@ -462,6 +478,7 @@
 	{
 		"id": "saude_mental_vinculo",
 		"title": "A Recaída ou o Vínculo",
+		"wiki_context": "Q137764166",
 		"description": "O silêncio da noite traz lembranças da família que você deixou. A solidão é um peso físico. Você tem R$ 5: ligar para eles ou comprar algo para entorpecer a dor?",
 		"trigger": {
 			"type": "STATUS",
@@ -505,6 +522,7 @@
 	{
 		"id": "tentativa_abrigo_samim",
 		"title": "A Roleta do Acolhimento",
+		"wiki_context": "Q137764274",
 		"description": "São 18:45. Você está na frente do SAMIM. A fila é grande e os seguranças já avisaram: poucas vagas hoje.",
 		"trigger": {
 			"type": "LOCATION",
@@ -541,6 +559,7 @@
 	{
 		"id": "chain_bagageiro_01_start",
 		"title": "A Corrida Contra o Relógio",
+		"wiki_context": "Q137764382",
 		"description": "São 16:30. Você está no Centro com seu carrinho cheio de papelão (R$ 35,00). O Bagageiro Municipal (Vila Industrial) fecha às 17h. Se você não guardar o carrinho, não consegue entrar no SAMIM para dormir.",
 		"trigger": {
 			"type": "TIME_SPECIFIC",
@@ -656,6 +675,7 @@
 	{
 		"id": "pdu_intro_trigger",
 		"title": "A Oferta do Plano",
+		"wiki_context": "Q137764152",
 		"description": "Um assistente social do Centro Pop te chama para uma conversa. 'Percebi que você está vindo sempre aqui. Quer tentar traçar um plano de saída?' (PDU/PIA)",
 		"trigger": {
 			"type": "LOCATION",
@@ -2650,5 +2670,93 @@
 			}
 		],
 		"source_fact": "Baseado em: 'A Rua Tem Voz' - A venda do jornal por 3 reais e a quebra de estigma. [Source 907]"
+	},
+	{
+		"id": "censo_rua_chegou",
+		"title": "O Censo Chegou",
+		"description": "Pesquisadores da Prefeitura estão fazendo o Censo Pop Rua. Se você responder, entra nas estatísticas e ajuda a exigir verba pública. Mas se tiver mandado em aberto ou medo de perder a guarda dos filhos, responder pode ser perigoso.",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.05
+		},
+		"aspect": "SOCIAL",
+		"intensity": "HIGH",
+		"tags": ["censo", "invisibilidade", "cidadania", "ods16", "subnotificacao"],
+		"options": [
+			{
+				"label": "Responder ao Censo",
+				"consequence": "Você se tornou um dado oficial. A assistente social anotou seu nome para o Cadastro Único, mas a polícia nas redondezas agora sabe que você está ali.",
+				"effect": {
+					"dignity": 20,
+					"socialStigma": -10,
+					"security": -20
+				}
+			},
+			{
+				"label": "Se esconder até passarem",
+				"consequence": "Você permaneceu invisível e seguro atrás da banca de jornal. Para a estatística oficial da Prefeitura, você não existe hoje.",
+				"effect": {
+					"security": 10,
+					"dignity": -15,
+					"stabilityGap": 5
+				}
+			}
+		],
+		"source_fact": "Oficialmente são 1.557 pessoas (2024), mas ONGs estimam o dobro. O medo da perda da guarda dos filhos ou prisão gera subnotificação.",
+		"ods": ["ODS 1", "ODS 16"]
+	},
+	{
+		"id": "diagnostico_viciado",
+		"title": "O Diagnóstico Viciado",
+		"description": "Uma equipe de pesquisa do CAPS te aborda com um questionário de saúde. A assistente social pergunta gentilmente: 'Você usou alguma substância hoje?' Você fumou um cigarro de manhã para aguentar a fome. A resposta que você der vai definir seu futuro no sistema.",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.04
+		},
+		"aspect": "HEALTH",
+		"intensity": "HIGH",
+		"tags": [
+			"saude_mental",
+			"reducao_danos",
+			"comunidade_terapeutica",
+			"metodologia",
+			"freakonomics"
+		],
+		"legal_reference": {
+			"law": "Lei 10.216/2001",
+			"article": "Art. 4º",
+			"summary": "A internação só será indicada quando recursos extra-hospitalares forem insuficientes"
+		},
+		"options": [
+			{
+				"label": "Dizer a verdade (fumei cigarro)",
+				"consequence": "A assistente anota 'uso de substância'. Semanas depois, você recebe oferta de vaga em Comunidade Terapêutica a 40km do centro. Se aceitar, perde seus bicos e sua rede de apoio. O diagnóstico te seguirá.",
+				"effect": {
+					"dignity": -20,
+					"sanity": -15,
+					"addBuff": "ROTULADO_DEPENDENTE"
+				}
+			},
+			{
+				"label": "Mentir (não usei nada)",
+				"consequence": "A assistente sorri e te libera. Você continua na rua, sem auxílio formal, mas com sua liberdade e seus bicos intactos. O sistema não te viu.",
+				"effect": {
+					"sanity": -5,
+					"security": 10,
+					"dignity": 5
+				}
+			},
+			{
+				"label": "Questionar a metodologia",
+				"consequence": "Você pergunta: 'Cigarro é a mesma coisa que crack pra vocês?' A assistente fica desconfortável. Ela anota 'paciente não cooperativo'. Você ganhou uma inimiga no sistema, mas plantou uma semente de dúvida.",
+				"effect": {
+					"dignity": 25,
+					"sanity": 10,
+					"security": -15
+				}
+			}
+		],
+		"source_fact": "A metodologia de coleta mistura substâncias lícitas e ilícitas na mesma categoria, inflando dados de dependência para justificar internações em Comunidades Terapêuticas (R$ 1.350/mês) em vez de moradia (Housing First).",
+		"ods": ["ODS 3", "ODS 16"]
 	}
 ]

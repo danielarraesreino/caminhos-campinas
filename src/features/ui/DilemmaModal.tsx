@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, X } from "lucide-react";
+import { ExternalLink, MessageSquare, X } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +19,7 @@ import { useAudioSystem } from "@/hooks/useAudioSystem";
 import { useHaptics } from "@/hooks/useHaptics";
 import { useImpactLogger } from "@/hooks/useImpactLogger";
 import { useODSTracker } from "@/hooks/useODSTracker";
+import { getWikipediaUrl } from "@/services/WikiAdapter";
 
 interface DilemmaModalProps {
 	dilemma: Dilemma | null;
@@ -324,6 +325,39 @@ export function DilemmaModal({
 														</div>
 													</div>
 												)}
+
+												{/* Legal Reference - Seu Direito */}
+												{dilemma.legal_reference && (
+													<div className="space-y-2 pt-3 border-t border-slate-800">
+														<div className="text-amber-400 uppercase text-[10px] tracking-widest font-bold flex items-center gap-2">
+															<span>⚖️</span> SEU DIREITO:
+														</div>
+														<div className="text-slate-200 text-sm">
+															<span className="font-bold text-amber-300">
+																{dilemma.legal_reference.law}
+															</span>
+															{dilemma.legal_reference.article && (
+																<span className="text-slate-400 ml-2">
+																	({dilemma.legal_reference.article})
+																</span>
+															)}
+														</div>
+														<div className="text-slate-300 text-xs italic">
+															{dilemma.legal_reference.summary}
+														</div>
+														{dilemma.legal_reference.url && (
+															<a
+																href={dilemma.legal_reference.url}
+																target="_blank"
+																rel="noopener noreferrer"
+																className="inline-flex items-center gap-1 text-amber-400 hover:text-amber-300 text-xs underline"
+															>
+																<span>Ver Lei Completa</span>
+																<ExternalLink size={10} />
+															</a>
+														)}
+													</div>
+												)}
 											</div>
 										)}
 									</div>
@@ -374,6 +408,21 @@ export function DilemmaModal({
 								{currentOption.telemetryTag.ods.replace(/_/g, " ")}
 							</div>
 						)}
+
+						{/* Wikipedia Context Link */}
+						{dilemma.wiki_context && (
+							<a
+								href={getWikipediaUrl(dilemma.wiki_context)}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-900/50 hover:bg-slate-800 border border-slate-700 rounded text-slate-300 hover:text-white transition-colors text-sm font-mono"
+							>
+								<span>📚</span>
+								<span>Contexto (Wikipédia)</span>
+								<ExternalLink size={14} className="opacity-60" />
+							</a>
+						)}
+
 						{currentOption && (
 							<Button
 								type="button"
