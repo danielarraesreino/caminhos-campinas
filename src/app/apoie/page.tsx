@@ -229,47 +229,45 @@ export default function FundraisingPage() {
 				{activeTab === "individuals" && (
 					<div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
 						{/* Por que doar? - Narrativa de Relevância */}
-						<section className="text-center max-w-3xl mx-auto">
-							<h2 className="text-3xl font-bold text-slate-900 mb-6">
-								Por que este projeto importa para você?
+						<section className="text-center max-w-4xl mx-auto">
+							<h2 className="text-4xl font-black text-slate-900 mb-6 uppercase tracking-tighter">
+								Não Basta Olhar,{" "}
+								<span className="text-blue-600">É Preciso Ocupar.</span>
 							</h2>
-							<p className="text-slate-600 text-lg leading-relaxed mb-8">
-								Vivemos na mesma cidade, mas em mundos diferentes. O{" "}
-								<strong>Coletivo A Rua Tem Voz</strong> usa a tecnologia para
-								quebrar a indiferença. Ao apoiar, você não está apenas "dando
-								dinheiro". Você está financiando uma ferramenta de educação que
-								combate o preconceito e conecta quem quer ajudar com quem
-								precisa de ajuda.
+							<p className="text-slate-600 text-lg leading-relaxed mb-12">
+								O Caminhos Campinas convida você a sair da passividade. Abaixo,
+								três formas de atuar agora para transformar a cidade:
 							</p>
-							<div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-								<div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-									<Smartphone className="text-blue-600 mb-3" size={24} />
-									<h3 className="font-bold text-slate-900 mb-2">
-										Acesso à Informação
+							<div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+								<div className="bg-white p-6 rounded-2xl border-2 border-slate-100 shadow-sm hover:border-blue-500 transition-all">
+									<Globe className="text-blue-600 mb-4" size={32} />
+									<h3 className="font-black text-slate-900 mb-2 uppercase text-sm">
+										1. Ativismo de Dados (Wiki-Edição)
 									</h3>
-									<p className="text-sm text-slate-500">
-										Mapeamos serviços reais (Bom Prato, CRAS, Abrigos)
-										facilitando o acesso para quem precisa.
+									<p className="text-sm text-slate-500 leading-relaxed">
+										Use nossos dados para atualizar a Wikipédia. Torne a
+										informação sobre pobreza visível na maior enciclopédia do
+										mundo.
 									</p>
 								</div>
-								<div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-									<MapPin className="text-amber-500 mb-3" size={24} />
-									<h3 className="font-bold text-slate-900 mb-2">
-										Visibilidade Real
+								<div className="bg-white p-6 rounded-2xl border-2 border-slate-100 shadow-sm hover:border-amber-500 transition-all">
+									<ShieldCheck className="text-amber-500 mb-4" size={32} />
+									<h3 className="font-black text-slate-900 mb-2 uppercase text-sm">
+										2. Monitoramento Urbano (Fiscal da Lei)
 									</h3>
-									<p className="text-sm text-slate-500">
-										Mostramos os "pontos invisíveis" da cidade e as histórias de
-										quem vive neles.
+									<p className="text-sm text-slate-500 leading-relaxed">
+										A Lei Padre Júlio Lancellotti precisa de fiscais.
+										Identifique a Arquitetura Hostil e denuncie via plataforma.
 									</p>
 								</div>
-								<div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-									<ShieldCheck className="text-emerald-600 mb-3" size={24} />
-									<h3 className="font-bold text-slate-900 mb-2">
-										Cidadania Digital
+								<div className="bg-white p-6 rounded-2xl border-2 border-slate-100 shadow-sm hover:border-pink-500 transition-all">
+									<Heart className="text-pink-600 mb-4" size={32} />
+									<h3 className="font-black text-slate-900 mb-2 uppercase text-sm">
+										3. Solidariedade Imediata
 									</h3>
-									<p className="text-sm text-slate-500">
-										Promovemos o direito à cidade e a documentação básica
-										através da conscientização.
+									<p className="text-sm text-slate-500 leading-relaxed">
+										Enquanto a política pública não chega, a fome tem pressa.
+										Apoie o Coletivo A Rua Tem Voz com doações diretas.
 									</p>
 								</div>
 							</div>

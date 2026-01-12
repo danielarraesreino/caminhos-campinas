@@ -23,28 +23,6 @@ export class HubService {
 		return HubService.instance;
 	}
 
-	private getStoredPartners(): Partner[] {
-		if (typeof window === "undefined") return [];
-		const stored = localStorage.getItem(STORAGE_KEY);
-		if (stored) return JSON.parse(stored);
-
-		// Seeding initial data if empty
-		const initialPartners = SEED_DATA.map((p) => ({
-			...p,
-			location: p.coordinates, // Mapping coordinates to location
-			verified: true, // Trusted sources
-			createdAt: Date.now(),
-		})) as unknown as Partner[]; // Cast to match Partner type slightly different structure
-
-		this.savePartners(initialPartners);
-		return initialPartners;
-	}
-
-	private savePartners(partners: Partner[]): void {
-		if (typeof window === "undefined") return;
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(partners));
-	}
-
 	public validateLocation(lat: number, lng: number): boolean {
 		return (
 			lat <= CAMPINAS_BOUNDS.north &&
@@ -55,51 +33,88 @@ export class HubService {
 	}
 
 	public async registerPartner(
-		data: Omit<Partner, "id" | "verified" | "createdAt">,
+		data: Partial<Partner> & {
+			category?: string;
+			whatsapp?: string;
+			pixKey?: string;
+		},
 	): Promise<{ success: boolean; id?: string; error?: string }> {
-		// Simulate a small network delay for UX realism
-		await new Promise((resolve) => setTimeout(resolve, 600));
-
-		// 1. Validation
-		if (!this.validateLocation(data.location.lat, data.location.lng)) {
-			return {
-				success: false,
-				error: "Localização fora do perímetro de Campinas (DDD 019).",
-			};
-		}
-
-		// 2. Persistence
 		try {
-			const partners = this.getStoredPartners();
-
-			const newPartner: Partner = {
-				...data,
-				id: crypto.randomUUID(),
-				verified: false, // Default unverified
-				createdAt: Date.now(),
+			const payload = {
+				name: data.name,
+				category: data.category || (data.services?.[0] as string) || "OUTROS",
+				whatsapp: data.whatsapp || data.phone || "",
+				description: data.description,
+				pixKey: data.pixKey || null,
+				address: data.address,
+				latitude: data.location?.lat,
+				longitude: data.location?.lng,
 			};
 
-			partners.push(newPartner);
-			this.savePartners(partners);
+			const response = await fetch("/api/partners", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
 
-			console.log("[HubService] Partner persisted:", newPartner);
-			return { success: true, id: newPartner.id };
+			const result = await response.json();
+
+			if (!response.ok || !result.success) {
+				return {
+					success: false,
+					error: result.error || "Erro ao cadastrar parceiro.",
+				};
+			}
+
+			return { success: true, id: result.partner.id };
 		} catch (error) {
-			console.error("Storage error:", error);
-			return { success: false, error: "Falha ao salvar no dispositivo." };
+			console.error("API error:", error);
+			return { success: false, error: "Falha na conexão com o servidor." };
 		}
 	}
 
 	public async getPartners(): Promise<Partner[]> {
-		// Simulate network fetch
-		await new Promise((resolve) => setTimeout(resolve, 300));
-		return this.getStoredPartners();
+		try {
+			const response = await fetch("/api/partners");
+			const result = await response.json();
+
+			if (!response.ok || !result.success) {
+				throw new Error(result.error || "Erro ao buscar parceiros.");
+			}
+
+			// Map Prisma models back to Partner interface
+			return result.data.map((p: any) => ({
+				id: p.id,
+				name: p.name,
+				description: p.description || "",
+				type: "ONG", // Default as Prisma model is simpler
+				services: [p.category],
+				location: {
+					lat: p.latitude || -22.9056,
+					lng: p.longitude || -47.0608,
+				},
+				address: p.address || "",
+				phone: p.whatsapp,
+				verified: p.status === "APPROVED",
+				createdAt: new Date(p.createdAt).getTime(),
+				constraints: [],
+			})) as Partner[];
+		} catch (error) {
+			console.error("Fetch error:", error);
+			// Fallback to seed data if API fails (useful in dev without DB)
+			return SEED_DATA.map((p) => ({
+				...p,
+				location: p.coordinates,
+				verified: true,
+				createdAt: Date.now(),
+				constraints: [],
+			})) as unknown as Partner[];
+		}
 	}
 
 	public async clearPartners(): Promise<void> {
-		if (typeof window !== "undefined") {
-			localStorage.removeItem(STORAGE_KEY);
-		}
+		// Not implemented for API yet (requires admin)
+		console.warn("Clear partners not implemented for persistent database.");
 	}
 }
 

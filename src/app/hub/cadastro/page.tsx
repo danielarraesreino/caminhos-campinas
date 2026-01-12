@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { hubService } from "@/services/hubService";
 
 // Tipos expandidos para incluir ODS
 type ServiceType =
@@ -100,8 +101,23 @@ export default function HubCadastroPage() {
 	const [partnersList, setPartnersList] = useState<Partner[]>([]);
 
 	useEffect(() => {
-		const saved = localStorage.getItem("hub_partners_db");
-		if (saved) setPartnersList(JSON.parse(saved));
+		const loadPartners = async () => {
+			const data = await hubService.getPartners();
+			// Map to local interface
+			const mapped = data.map((p) => ({
+				id: p.id,
+				name: p.name,
+				type: "ONG" as const,
+				address: p.address,
+				whatsapp: (p as any).phone || "",
+				services: p.services as any,
+				odsLinks: [], // Not supported in DB yet
+				operatingHours: "",
+				description: p.description,
+			}));
+			setPartnersList(mapped);
+		};
+		loadPartners();
 	}, []);
 
 	const [formData, setFormData] = useState<Partial<Partner>>({
@@ -130,22 +146,34 @@ export default function HubCadastroPage() {
 		e.preventDefault();
 		setLoading(true);
 
-		setTimeout(() => {
-			const newPartner = {
-				...formData,
-				id: crypto.randomUUID(),
-				createdAt: Date.now(),
-				status: "PENDENTE",
-			} as Partner;
+		const result = await hubService.registerPartner({
+			name: formData.name,
+			address: formData.address,
+			whatsapp: formData.whatsapp,
+			description: `${formData.description}\n\nHorário: ${formData.operatingHours}\nODS: ${formData.odsLinks?.join(", ")}`,
+			category: formData.services?.[0] || "OUTROS",
+		});
 
-			const updatedList = [...partnersList, newPartner];
-			localStorage.setItem("hub_partners_db", JSON.stringify(updatedList));
-			setPartnersList(updatedList);
-
-			console.log("[HUB] Nova ONG cadastrada:", newPartner);
+		if (result.success) {
 			setSuccess(true);
-			setLoading(false);
-		}, 1000);
+			// Refresh list
+			const data = await hubService.getPartners();
+			const mapped = data.map((p) => ({
+				id: p.id,
+				name: p.name,
+				type: "ONG" as const,
+				address: p.address,
+				whatsapp: (p as any).phone || "",
+				services: p.services as any,
+				odsLinks: [],
+				operatingHours: "",
+				description: p.description,
+			}));
+			setPartnersList(mapped);
+		} else {
+			alert(result.error || "Erro ao cadastrar");
+		}
+		setLoading(false);
 	};
 
 	if (success) {

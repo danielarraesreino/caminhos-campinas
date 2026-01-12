@@ -18,23 +18,37 @@ export function UnifiedDashboard() {
 				<div className="max-w-6xl mx-auto flex items-center justify-between">
 					<div>
 						<h1 className="text-2xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-							Caminhos CPS <span className="text-slate-500 text-sm">| 019</span>
+							Campinas Invisível{" "}
+							<span className="text-slate-500 text-sm">| Auditoria</span>
 						</h1>
 						<p className="text-slate-400 text-xs mt-1">
-							Denúncia Gamificada & Mapa de Sobrevivência
+							Dados Abertos & Defesa de Direitos Humanos
 						</p>
 					</div>
 					<div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-						<span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-						SISTEMA ONLINE
+						<span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+						INFRAESTRUTURA CÍVICA
 					</div>
 				</div>
 			</header>
 
 			{/* Main Grid */}
 			<main className="max-w-6xl mx-auto px-6 py-12">
+				{/* Intro Section - New Strategic Vision */}
+				<div className="mb-12 border-l-4 border-blue-500 pl-6 py-2">
+					<h2 className="text-4xl font-black uppercase tracking-tighter text-white mb-2">
+						A Invisibilidade é uma{" "}
+						<span className="text-blue-500">Escolha Política.</span>
+					</h2>
+					<p className="text-slate-400 text-lg max-w-3xl leading-relaxed">
+						1.300 vidas, 362 vagas e uma cidade repleta de barreiras invisíveis.
+						Não somos apenas um mapa; somos uma ferramenta de reconhecimento
+						territorial que transforma estatísticas em ação direta.
+					</p>
+				</div>
+
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-					{/* Card 1: JOGAR (Hero) */}
+					{/* Card 1: JOGAR (Serious Game) */}
 					<Link
 						href="/jogar"
 						className="group relative overflow-hidden rounded-3xl bg-slate-900 border border-slate-800 p-8 hover:border-blue-500/50 transition-all duration-300 shadow-2xl hover:shadow-blue-900/20 col-span-1 md:col-span-2 lg:col-span-1 aspect-video lg:aspect-auto flex flex-col justify-between"
@@ -45,18 +59,19 @@ export function UnifiedDashboard() {
 								<Gamepad2 size={24} />
 							</div>
 							<h2 className="text-2xl md:text-3xl font-black mb-2 uppercase tracking-tight leading-tight">
-								A Invisibilidade é Política de Estado.
-								<span className="block text-red-400">O Jogo é a Denúncia.</span>
+								Onde você dormiria se a cidade
+								<span className="block text-red-400 text-4xl">
+									te fechasse as portas?
+								</span>
 							</h2>
-							<p className="text-slate-400 max-w-md text-sm">
-								Simule a jornada de quem vive nas ruas de Campinas. Cada
-								barreira que você enfrenta gera um{" "}
-								<strong className="text-white">dado real</strong> sobre a falha
-								da rede de proteção social (ODS 1, 3 e 11).
+							<p className="text-slate-300 max-w-md text-sm leading-relaxed mt-4">
+								Vivencie os dilemas baseados em fatos reais. Enfrente as
+								escolhas impossíveis de quem vive com menos de R$ 10,00 por dia
+								e descubra a falha sistêmica dos direitos garantidos por lei.
 							</p>
 						</div>
 						<div className="relative z-10 mt-6 flex items-center gap-2 text-blue-400 font-bold uppercase text-sm tracking-widest">
-							Iniciar Auditoria Social{" "}
+							Iniciar Jornada de Empatia{" "}
 							<span className="group-hover:translate-x-1 transition-transform">
 								→
 							</span>

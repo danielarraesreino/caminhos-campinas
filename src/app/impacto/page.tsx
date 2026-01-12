@@ -204,43 +204,59 @@ export default function ImpactPage() {
 
 			{/* Visualização da Lacuna (Supply vs Demand) */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-				{/* Removido transparência e escurecido fundo para auto-contraste */}
 				<div className="bg-slate-900 p-6 rounded-2xl border border-slate-700">
-					<h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-						<Home className="w-5 h-5 text-blue-500" />
-						Capacidade de Acolhimento (Campinas)
+					<h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-blue-400">
+						<Home className="w-5 h-5" />O Abismo dos Números: Capacidade de
+						Acolhimento
 					</h2>
 
-					{/* Gráfico de Barras CSS Puro */}
-					<div className="space-y-6">
-						<div>
-							<div className="flex justify-between text-sm mb-2">
-								{/* Texto clareado de slate-400 para slate-200 */}
-								<span className="text-slate-200">Demanda Real (Censo)</span>
-								<span className="font-bold">1.557 Pessoas</span>
-							</div>
-							<div className="h-4 bg-slate-700 rounded-full overflow-hidden">
-								<div className="h-full bg-red-500 w-full animate-pulse"></div>
-							</div>
-						</div>
-
-						<div>
-							<div className="flex justify-between text-sm mb-2">
-								{/* Texto clareado */}
-								<span className="text-slate-200">
-									Vagas Disponíveis (SAMIM + OSCs)
-								</span>
-								<span className="font-bold text-green-400">~300 Vagas</span>
-							</div>
-							<div className="h-4 bg-slate-700 rounded-full overflow-hidden">
-								{/* 300 é aprox 19% de 1557 */}
-								<div className="h-full bg-green-500 w-[19%]"></div>
-							</div>
-							<p className="text-xs text-red-400 mt-2">
-								⚠️ 1.257 pessoas sem vaga garantida esta noite.
-							</p>
-						</div>
+					<div className="overflow-x-auto">
+						<table className="w-full text-left text-sm text-slate-300">
+							<thead className="text-xs uppercase text-slate-500 border-b border-slate-800">
+								<tr>
+									<th className="pb-3 px-2">Equipamento</th>
+									<th className="pb-3 px-2">Vagas</th>
+									<th className="pb-3 px-2">Status</th>
+								</tr>
+							</thead>
+							<tbody className="divide-y divide-slate-800">
+								<tr>
+									<td className="py-3 px-2">Albergue Municipal</td>
+									<td className="py-3 px-2 font-bold">~50</td>
+									<td className="py-3 px-2 text-red-400">Saturado</td>
+								</tr>
+								<tr>
+									<td className="py-3 px-2">Abrigos Institucionais</td>
+									<td className="py-3 px-2 font-bold">~210</td>
+									<td className="py-3 px-2 text-yellow-500">Lotação Máxima</td>
+								</tr>
+								<tr>
+									<td className="py-3 px-2">Casas de Passagem</td>
+									<td className="py-3 px-2 font-bold">~100</td>
+									<td className="py-3 px-2 text-orange-400">Giro Alto</td>
+								</tr>
+								<tr className="bg-slate-800/20">
+									<td className="py-3 px-2 font-black text-white">
+										TOTAL VAGAS
+									</td>
+									<td className="py-3 px-2 font-black text-white">~362</td>
+									<td className="py-3 px-2">-</td>
+								</tr>
+								<tr className="bg-red-900/10">
+									<td className="py-3 px-2 font-black text-red-400 uppercase">
+										Déficit Real
+									</td>
+									<td className="py-3 px-2 font-black text-red-400">
+										938 VAGAS
+									</td>
+									<td className="py-3 px-2 text-xs">Censo 2024</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
+					<p className="text-[10px] text-slate-500 mt-4 italic">
+						Fonte: Cruzamento de dados SMCAIS e Censo FEAC 2024.
+					</p>
 				</div>
 
 				{/* Insight Qualitativo */}

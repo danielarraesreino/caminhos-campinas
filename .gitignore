@@ -50,3 +50,5 @@ caminhoscampinas*.json
 !src/data/*.json
 !biome.json
 .env*.local
+
+/src/generated/prisma

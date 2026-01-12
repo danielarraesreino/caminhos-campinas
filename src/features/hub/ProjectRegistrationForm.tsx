@@ -1,6 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { hubService } from "@/services/hubService";
+
+// Mapeamento área -> categoria do banco
+const AREA_TO_CATEGORY: Record<string, string> = {
+	food: "ALIMENTACAO",
+	health: "SAUDE",
+	education: "EDUCACAO",
+	shelter: "ABRIGO",
+	rights: "JURIDICO",
+};
 
 export function ProjectRegistrationForm() {
 	const [formData, setFormData] = useState({
@@ -10,9 +20,13 @@ export function ProjectRegistrationForm() {
 		contact: "",
 		description: "",
 		needs: "",
+		address: "",
+		pixKey: "",
 	});
 
 	const [submitted, setSubmitted] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const handleChange = (
 		e: React.ChangeEvent<
@@ -23,11 +37,33 @@ export function ProjectRegistrationForm() {
 		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log("Projeto Submetido:", formData);
-		// Aqui entraria a integração com Backend/Google Sheets
-		setSubmitted(true);
+		setIsLoading(true);
+		setError(null);
+
+		try {
+			const result = await hubService.registerPartner({
+				name: `${formData.name} (${formData.organization})`,
+				category: AREA_TO_CATEGORY[formData.area] || "ALIMENTACAO",
+				whatsapp: formData.contact,
+				description: `${formData.description}${formData.needs ? `\n\nNecessidades: ${formData.needs}` : ""}`,
+				address: formData.address || undefined,
+				pixKey: formData.pixKey || undefined,
+			});
+
+			if (!result.success) {
+				throw new Error(result.error || "Erro ao cadastrar parceiro");
+			}
+
+			console.log("✅ Parceiro cadastrado:", result.id);
+			setSubmitted(true);
+		} catch (err) {
+			console.error("❌ Erro no cadastro:", err);
+			setError(err instanceof Error ? err.message : "Erro desconhecido");
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	if (submitted) {
@@ -37,12 +73,24 @@ export function ProjectRegistrationForm() {
 					Projeto Cadastrado!
 				</h3>
 				<p className="text-gray-300">
-					Obrigado por fortalecer a rede. Entraremos em contato em breve para
-					validar as informações.
+					Obrigado por fortalecer a rede. Seu cadastro está em análise e será
+					publicado após validação.
 				</p>
 				<button
 					type="button"
-					onClick={() => setSubmitted(false)}
+					onClick={() => {
+						setSubmitted(false);
+						setFormData({
+							name: "",
+							organization: "",
+							area: "food",
+							contact: "",
+							description: "",
+							needs: "",
+							address: "",
+							pixKey: "",
+						});
+					}}
 					className="mt-4 text-sm text-green-400 underline hover:text-green-300"
 				>
 					Cadastrar outro projeto
@@ -56,12 +104,18 @@ export function ProjectRegistrationForm() {
 			onSubmit={handleSubmit}
 			className="space-y-4 p-4 bg-slate-900/50 rounded-lg border border-slate-700"
 		>
+			{error && (
+				<div className="p-3 bg-red-900/30 border border-red-500 rounded text-red-300 text-sm">
+					{error}
+				</div>
+			)}
+
 			<div>
 				<label
 					htmlFor="project-name"
 					className="block text-sm font-medium text-slate-300 mb-1"
 				>
-					Nome do Projeto
+					Nome do Projeto *
 				</label>
 				<input
 					id="project-name"
@@ -80,7 +134,7 @@ export function ProjectRegistrationForm() {
 					htmlFor="organization"
 					className="block text-sm font-medium text-slate-300 mb-1"
 				>
-					Organização / Coletivo
+					Organização / Coletivo *
 				</label>
 				<input
 					id="organization"
@@ -99,7 +153,7 @@ export function ProjectRegistrationForm() {
 					htmlFor="area"
 					className="block text-sm font-medium text-slate-300 mb-1"
 				>
-					Área de Atuação
+					Área de Atuação *
 				</label>
 				<select
 					id="area"
@@ -121,7 +175,7 @@ export function ProjectRegistrationForm() {
 					htmlFor="contact"
 					className="block text-sm font-medium text-slate-300 mb-1"
 				>
-					Contato (WhatsApp/Email)
+					WhatsApp ou Telefone *
 				</label>
 				<input
 					id="contact"
@@ -131,6 +185,25 @@ export function ProjectRegistrationForm() {
 					value={formData.contact}
 					onChange={handleChange}
 					className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-slate-100 focus:border-blue-500 outline-none"
+					placeholder="(19) 99999-9999"
+				/>
+			</div>
+
+			<div>
+				<label
+					htmlFor="address"
+					className="block text-sm font-medium text-slate-300 mb-1"
+				>
+					Endereço de Atuação
+				</label>
+				<input
+					id="address"
+					type="text"
+					name="address"
+					value={formData.address}
+					onChange={handleChange}
+					className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-slate-100 focus:border-blue-500 outline-none"
+					placeholder="Rua, número - Bairro"
 				/>
 			</div>
 
@@ -139,7 +212,7 @@ export function ProjectRegistrationForm() {
 					htmlFor="description"
 					className="block text-sm font-medium text-slate-300 mb-1"
 				>
-					Descrição Breve
+					Descrição Breve *
 				</label>
 				<textarea
 					id="description"
@@ -171,11 +244,30 @@ export function ProjectRegistrationForm() {
 				/>
 			</div>
 
+			<div>
+				<label
+					htmlFor="pixKey"
+					className="block text-sm font-medium text-slate-300 mb-1"
+				>
+					Chave PIX para Doações
+				</label>
+				<input
+					id="pixKey"
+					type="text"
+					name="pixKey"
+					value={formData.pixKey}
+					onChange={handleChange}
+					className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-slate-100 focus:border-blue-500 outline-none"
+					placeholder="CPF, e-mail ou chave aleatória"
+				/>
+			</div>
+
 			<button
 				type="submit"
-				className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-lg"
+				disabled={isLoading}
+				className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 disabled:cursor-wait text-white font-bold rounded-lg transition-colors shadow-lg"
 			>
-				Cadastrar Projeto
+				{isLoading ? "Cadastrando..." : "Cadastrar Projeto"}
 			</button>
 		</form>
 	);

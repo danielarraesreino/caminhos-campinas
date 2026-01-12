@@ -69,13 +69,13 @@ export const CENSUS_REALITY = {
 	// GUERRA DOS NÚMEROS: Censo Oficial vs. Visão dos Coletivos
 	// ═══════════════════════════════════════════════════════════════════
 	populationContrast: {
-		official: 1557, // Censo FEAC 2024 (1.300 rua + 257 acolhidos)
-		estimated: 2800, // Estimativa Coletivos (Toca de Assis, A Rua Tem Voz)
-		multiplier: 1.8, // Fator de subnotificação
+		official: 1300, // Censo FEAC 2024 (Evolução 2021-2024)
+		estimated: 3000, // Estimativa Coletivos e ONGs
+		multiplier: 2.3, // Fator de subnotificação ajustado
 		methodology: "Censo = fotografia de dias específicos (março/abril)",
 		limitation:
-			"Perde quem se esconde (medo da GCM), trabalha à noite, dorme em áreas dispersas",
-		sources: ["FEAC 2024", "Toca de Assis", "Coletivo A Rua Tem Voz"],
+			"Perde quem se esconde (medo da GCM/Conselho Tutelar), trabalha à noite ou viaja",
+		sources: ["FEAC 2024", "Cáritas", "Coletivo A Rua Tem Voz"],
 	},
 
 	// Mito da "Vadiagem" vs. Realidade do Trabalho
@@ -118,10 +118,10 @@ export const CENSUS_REALITY = {
 export const NGO_ESTIMATES = {
 	// População real estimada pelos coletivos
 	population: {
-		official: 1557, // Censo FEAC 2024
-		estimated: 3100, // ONGs estimam "pelo menos o dobro"
-		invisiblePopulation: 1543, // A diferença = pessoas que o Estado não vê
-		multiplier: 2.0,
+		official: 1300, // Censo FEAC 2024
+		estimated: 3000, // ONGs estimam mais do que o dobro
+		invisiblePopulation: 1700, // A diferença = pessoas que o Estado não vê
+		multiplier: 2.3,
 	},
 
 	// Crítica Metodológica (Baseada em experiência de campo)
@@ -146,6 +146,7 @@ export const NGO_ESTIMATES = {
 		critique:
 			"Há incentivo financeiro em diagnosticar 'químico' e não 'social'",
 		consequence: "Priorização de internação sobre Housing First",
+		housingDeficit: 938, // 1300 - 362 vagas
 	},
 
 	// ONGs que realmente contam

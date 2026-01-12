@@ -1,0 +1,28 @@
+// prisma/schema.prisma
+// Schema para persistência de parceiros (ONGs, coletivos, instituições)
+// do Hub de Parceiros do Caminhos Campinas
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Partner {
+  id          String   @id @default(uuid())
+  name        String
+  category    String   // ALIMENTACAO, ABRIGO, SAUDE, EDUCACAO, etc.
+  whatsapp    String
+  description String?
+  pixKey      String?
+  address     String?
+  latitude    Float?
+  longitude   Float?
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("partners")
+}

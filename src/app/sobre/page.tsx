@@ -25,40 +25,60 @@ export default function SobrePage() {
 				</header>
 
 				<section className="bg-slate-900/50 border border-slate-800 p-8 rounded-2xl space-y-6">
-					<h2 className="text-2xl font-bold text-white mb-4">O Manifesto</h2>
-					<div className="prose prose-invert max-w-none text-slate-300 leading-relaxed space-y-4">
+					<h2 className="text-2xl font-bold text-white mb-4">
+						Tecnologia Cívica para Direitos Reais
+					</h2>
+					<div className="prose prose-invert max-w-none text-slate-300 leading-relaxed space-y-6">
 						<p>
 							O{" "}
 							<span className="text-blue-400 font-bold">Caminhos Campinas</span>{" "}
-							não é apenas um jogo; é uma ferramenta de auditoria sociotécnica.
-							Baseado nos dados do Censo 2024, que identificou{" "}
-							<strong>1.557 pessoas em situação de rua</strong> na cidade, e na
-							teoria de Milton Santos sobre a cidadania mutilada, criamos uma
-							simulação que expõe as barreiras invisíveis da burocracia.
+							nasceu da inconformidade com a invisibilidade. Nascemos como uma
+							iniciativa de cartografia social e jornalismo de dados. Quando
+							olhamos para a cidade, não vemos apenas ruas e prédios; vemos
+							territórios de disputa, exclusão e resistência.
 						</p>
-						<p>Nosso objetivo é duplo:</p>
-						<ul className="grid md:grid-cols-2 gap-4 not-prose">
+						<p>
+							Segundo o Censo 2024, Campinas tem{" "}
+							<strong>1.300 pessoas em situação de rua</strong> (com estimativas
+							reais chegando a 3.000). Não são apenas números; são histórias
+							interrompidas por conflitos familiares (71,5%) e desemprego (45%).
+							A tecnologia social deste projeto visa quebrar essa estatística,
+							transformando dados em empatia e ação política direta.
+						</p>
+
+						<h3 className="text-xl font-bold text-white mt-8 mb-4">
+							Nossa Metodologia: Do Censo ao Commons
+						</h3>
+						<p>
+							Nossa base de dados é um organismo vivo alimentado por três
+							fontes:
+						</p>
+
+						<ul className="grid md:grid-cols-3 gap-4 not-prose mt-4">
 							<li className="bg-slate-800 p-4 rounded-xl border border-slate-700">
 								<strong className="text-white flex items-center gap-2 mb-2">
-									<Users className="w-4 h-4 text-purple-400" /> Para a Sociedade
+									<Target className="w-4 h-4 text-blue-400" /> Dados Oficiais
 								</strong>
-								Gerar empatia através da simulação da escassez (fome, frio,
-								falta de bateria).
+								Processamos os relatórios técnicos da Fundação FEAC e os
+								microdados do Censo 2024 para garantir rigor estatístico.
 							</li>
 							<li className="bg-slate-800 p-4 rounded-xl border border-slate-700">
 								<strong className="text-white flex items-center gap-2 mb-2">
-									<Target className="w-4 h-4 text-emerald-400" /> Para a Gestão
-									Pública
+									<Users className="w-4 h-4 text-purple-400" /> Saber das Ruas
 								</strong>
-								Gerar dados sobre onde a rede de proteção falha (gaps de
-								serviço).
+								Trabalhamos em sintonia com coletivos de base, garantindo que a
+								narrativa respeite a vivência de quem dorme sob o relento.
+							</li>
+							<li className="bg-slate-800 p-4 rounded-xl border border-slate-700">
+								<strong className="text-white flex items-center gap-2 mb-2">
+									<BookOpen className="w-4 h-4 text-emerald-400" /> Filosofia
+									Wiki
+								</strong>
+								Acreditamos que dados sobre direitos humanos devem ser Bens
+								Públicos Digitais, integrados ao ecossistema global da
+								Wikimedia.
 							</li>
 						</ul>
-					</div>
-					<div className="pt-4 mt-4 border-t border-slate-800">
-						<p className="text-xs text-slate-500 italic">
-							Fontes: Censo FEAC 2024, Auditoria Sociotécnica.
-						</p>
 					</div>
 				</section>
 

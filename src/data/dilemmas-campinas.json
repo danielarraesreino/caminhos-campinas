@@ -2758,5 +2758,83 @@
 		],
 		"source_fact": "A metodologia de coleta mistura substâncias lícitas e ilícitas na mesma categoria, inflando dados de dependência para justificar internações em Comunidades Terapêuticas (R$ 1.350/mês) em vez de moradia (Housing First).",
 		"ods": ["ODS 3", "ODS 16"]
+	},
+	{
+		"id": "relogio_acolhida",
+		"title": "O Relógio da Acolhida",
+		"description": "São 16h30. O céu em Campinas está fechando para uma tempestade de verão. Você está na região central com uma mochila e R$ 4,00 no bolso. O Albergue Municipal Samaritano exige chegada antecipada para triagem. A fila começou a se formar às 14h.",
+		"trigger": {
+			"type": "TIME_SPECIFIC",
+			"value": 16.5
+		},
+		"aspect": "SHELTER",
+		"intensity": "HIGH",
+		"tags": ["temporal", "abrigo", "chuva"],
+		"options": [
+			{
+				"label": "Arriscar a fila do Albergue",
+				"consequence": "Vaga negada por lotação. Você dorme sob a chuva na calçada da Av. Francisco Glicério. A pneumonia é um risco real agora.",
+				"risk": 73,
+				"effect": {
+					"health": 10,
+					"energy": 20
+				},
+				"effect_failure": {
+					"health": -30,
+					"sanity": -20,
+					"addBuff": "PNEUMONIA_RISCO"
+				},
+				"consequence_failure": "Lotação esgotada. Você ficou na chuva por 3 horas e não entrou. Dorme molhado e exausto."
+			},
+			{
+				"label": "Garantir a Marquise (Segurança)",
+				"consequence": "Você protege seu lugar cedo. Está seco, mas a noite é longa e a Guarda Municipal costuma 'limpar' essa área com jatos d'água de madrugada.",
+				"effect": {
+					"health": -5,
+					"sanity": -10,
+					"energy": -10,
+					"addBuff": "EXPOSTO_VIOLENCIA"
+				}
+			}
+		],
+		"source_fact": "Capacidade vs Demanda: Campinas tem 1.300 pessoas para apenas 362 vagas. A chance matemática de acolhimento é de apenas 27%.",
+		"ods": ["ODS 11"]
+	},
+	{
+		"id": "espaco_negado_arquitetura",
+		"title": "O Espaço Negado",
+		"description": "Você caminhou 12km hoje buscando recicláveis. Suas pernas doem. Você avista um banco de concreto na praça, mas ele possui divisórias de metal a cada 40cm. Não há como deitar.",
+		"trigger": {
+			"type": "RANDOM",
+			"value": 0.08
+		},
+		"aspect": "REST",
+		"intensity": "MEDIUM",
+		"tags": ["arquitetura_hostil", "lei_padre_julio"],
+		"options": [
+			{
+				"label": "Tentar dormir sentado",
+				"consequence": "Sua coluna trava. A dor te impede de trabalhar amanhã. O design do banco cumpriu sua função: ele te expulsou da praça.",
+				"effect": {
+					"health": -15,
+					"energy": -20,
+					"dignity": -10
+				}
+			},
+			{
+				"label": "Denunciar Arquitetura Hostil",
+				"consequence": "Você usa o Caminhos Campinas para fotografar. A foto vai para o Wikimedia Commons. Você ainda está com dor, mas agiu como cidadão.",
+				"effect": {
+					"dignity": 30,
+					"sanity": 10
+				},
+				"telemetryTag": {
+					"type": "WIKI_COMMONS_AUDIT",
+					"law": "14.489/22"
+				}
+			}
+		],
+		"source_fact": "A Lei Padre Júlio Lancellotti (14.489/2022) proíbe técnicas construtivas hostis, mas bancos com divisórias persistem em Campinas como forma de exclusão invisível.",
+		"ods": ["ODS 10", "ODS 11"]
 	}
 ]
