@@ -1,7 +1,7 @@
 "use client";
 
-import { Share2 } from "lucide-react";
-import { useMemo } from "react";
+import { Share2, Check } from "lucide-react";
+import { useMemo, useState } from "react";
 import {
 	Bar,
 	BarChart,
@@ -57,7 +57,10 @@ export function ImpactInfographics() {
 		[],
 	);
 
-	const handleShare = async (title: string, text: string) => {
+	// State to track which graph is currently showing success feedback
+	const [sharedId, setSharedId] = useState<string | null>(null);
+
+	const handleShare = async (id: string, title: string, text: string) => {
 		if (navigator.share) {
 			try {
 				await navigator.share({ title, text, url: window.location.href });
@@ -69,7 +72,11 @@ export function ImpactInfographics() {
 			await navigator.clipboard.writeText(
 				`${title}\n${text}\n${window.location.href}`,
 			);
-			alert("Copiado para a área de transferência!");
+			// Show inline feedback instead of blocking alert
+			setSharedId(id);
+			setTimeout(() => {
+				if (sharedId === id) setSharedId(null);
+			}, 2000);
 		}
 	};
 
@@ -95,13 +102,14 @@ export function ImpactInfographics() {
 							type="button"
 							onClick={() =>
 								handleShare(
+									"graph1",
 									"A Economia da Exclusão",
 									`Sabia que Campinas paga 4x mais para internar (R$ 1.350) do que para educar (R$ 316)? O modelo atual custa caro e não resolve. Apoie o Housing First! #CaminhosCampinas #HousingFirst`,
 								)
 							}
-							className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+							className={`p-2 rounded-lg transition-colors ${sharedId === "graph1" ? "bg-green-500/20 text-green-400" : "hover:bg-slate-700 text-slate-400"}`}
 						>
-							<Share2 className="w-4 h-4 text-slate-400" />
+							{sharedId === "graph1" ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
 						</button>
 					</div>
 
@@ -145,13 +153,14 @@ export function ImpactInfographics() {
 							type="button"
 							onClick={() =>
 								handleShare(
+									"graph2",
 									"O Mito da Vadiagem",
 									"Não é preguiça, é falta de oportunidade. 70% da população de rua TRABALHA. O que falta é a chance, não a vontade. Jogue e entenda: caminhos-campinas.vercel.app #CaminhosCampinas",
 								)
 							}
-							className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+							className={`p-2 rounded-lg transition-colors ${sharedId === "graph2" ? "bg-green-500/20 text-green-400" : "hover:bg-slate-700 text-slate-400"}`}
 						>
-							<Share2 className="w-4 h-4 text-slate-400" />
+							{sharedId === "graph2" ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
 						</button>
 					</div>
 
@@ -209,13 +218,14 @@ export function ImpactInfographics() {
 							type="button"
 							onClick={() =>
 								handleShare(
+									"graph3",
 									"A Rua Começa em Casa",
 									"71,5% foram para a rua por conflitos familiares. O buraco é afetivo antes de ser químico. A droga entra onde o vínculo rompeu. #CaminhosCampinas #SaúdeMental",
 								)
 							}
-							className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+							className={`p-2 rounded-lg transition-colors ${sharedId === "graph3" ? "bg-green-500/20 text-green-400" : "hover:bg-slate-700 text-slate-400"}`}
 						>
-							<Share2 className="w-4 h-4 text-slate-400" />
+							{sharedId === "graph3" ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
 						</button>
 					</div>
 
