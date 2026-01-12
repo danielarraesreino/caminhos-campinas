@@ -96,7 +96,7 @@ export function ImpactInfographics() {
 							onClick={() =>
 								handleShare(
 									"A Economia da Exclusão",
-									`O Estado paga R$ ${NGO_ESTIMATES.hiddenIncentives.costComparison.tcPerMonth}/mês para internar vs R$ ${NGO_ESTIMATES.hiddenIncentives.costComparison.studentPerMonth}/mês para educar. É mais lucrativo manter a doença. #CaminhosCampinas`,
+									`Sabia que Campinas paga 4x mais para internar (R$ 1.350) do que para educar (R$ 316)? O modelo atual custa caro e não resolve. Apoie o Housing First! #CaminhosCampinas #HousingFirst`,
 								)
 							}
 							className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
@@ -146,7 +146,7 @@ export function ImpactInfographics() {
 							onClick={() =>
 								handleShare(
 									"O Mito da Vadiagem",
-									"70,9% da população de rua exerce atividade remunerada. A rua trabalha. Apenas uma minoria vive de esmolas. #CaminhosCampinas",
+									"Não é preguiça, é falta de oportunidade. 70% da população de rua TRABALHA. O que falta é a chance, não a vontade. Jogue e entenda: caminhos-campinas.vercel.app #CaminhosCampinas",
 								)
 							}
 							className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
@@ -209,8 +209,8 @@ export function ImpactInfographics() {
 							type="button"
 							onClick={() =>
 								handleShare(
-									"O Buraco é Afetivo",
-									"71,5% foram para a rua por conflitos familiares. A droga entra onde a família rompeu. O problema é afetivo, não apenas químico. #CaminhosCampinas",
+									"A Rua Começa em Casa",
+									"71,5% foram para a rua por conflitos familiares. O buraco é afetivo antes de ser químico. A droga entra onde o vínculo rompeu. #CaminhosCampinas #SaúdeMental",
 								)
 							}
 							className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
