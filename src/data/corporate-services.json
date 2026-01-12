@@ -1,0 +1,65 @@
+[
+    {
+        "id": "esg-training",
+        "type": "corporate",
+        "title": "Workshop ESG: Saúde Mental & Realidade",
+        "subtitle": "Redução de Danos Corporativa",
+        "description": "Treinamento impactante ministrado por Agilizadores Sociais. Aborda prevenção ao uso de substâncias e saúde mental através da ótica da realidade, não da teoria.",
+        "investment_target": "Financia 5 bolsas de formação de Agilizadores",
+        "value": "R$ 3.000,00",
+        "ods": [
+            3,
+            8,
+            10
+        ],
+        "features": [
+            "Relatório de Impacto para Balanço ESG",
+            "Treinamento in-company ou online",
+            "Fomenta a diversidade e inclusão",
+            "Certificado 'Empresa que Dá Voz à Rua'"
+        ],
+        "cta_link": "https://wa.me/5519999999999?text=Tenho%20interesse%20no%20Workshop%20ESG"
+    },
+    {
+        "id": "school-experience",
+        "type": "education",
+        "title": "Vivência Pedagógica: A Rua Tem Voz",
+        "subtitle": "Gamificação da Empatia (BNCC)",
+        "description": "Leve o simulador para a sala de aula com debate mediado por um Agilizador Social formado pelo projeto. Uma aula de cidadania que nenhum livro entrega.",
+        "investment_target": "Cobre custos do educador + material",
+        "value": "Sob Consulta",
+        "ods": [
+            4,
+            10,
+            16
+        ],
+        "features": [
+            "Alinhado às Competências Socioemocionais (BNCC)",
+            "Sessão de jogo guiada",
+            "Debate sobre Direitos Humanos e Cidadania",
+            "Certificado de horas complementares"
+        ],
+        "cta_link": "https://wa.me/5519999999999?text=Tenho%20interesse%20na%20Vivência%20Escolar"
+    },
+    {
+        "id": "sponsorship",
+        "type": "corporate",
+        "title": "Patrocínio Transformação",
+        "subtitle": "Ciclo Formativo Completo",
+        "description": "Sua empresa adota uma turma inteira de Agilizadores Sociais. O investimento mais alto com o maior retorno de impacto social e visibilidade de marca.",
+        "investment_target": "Financia turma completa (Bolsas + Alimentação)",
+        "value": "R$ 5.000,00",
+        "ods": [
+            1,
+            8,
+            17
+        ],
+        "features": [
+            "02 Workshops 'Caminhos' para colaboradores",
+            "Selo de Patrocinador Master no Jogo",
+            "Relatório de Dados de Impacto exclusivo",
+            "Brand Awareness em pauta positiva"
+        ],
+        "cta_link": "https://wa.me/5519999999999?text=Tenho%20interesse%20no%20Patrocínio%20Transformação"
+    }
+]
