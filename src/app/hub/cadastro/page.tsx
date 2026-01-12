@@ -46,43 +46,43 @@ const ODS_OPTIONS: {
 	description: string;
 	color: string;
 }[] = [
-	{
-		value: "ODS_1",
-		label: "ODS 1: Erradicação da Pobreza",
-		description: "Doação de renda, itens ou proteção social",
-		color: "text-red-400 border-red-800 bg-red-900/20",
-	},
-	{
-		value: "ODS_2",
-		label: "ODS 2: Fome Zero",
-		description: "Marmitas, cestas básicas, alimentação",
-		color: "text-yellow-400 border-yellow-800 bg-yellow-900/20",
-	},
-	{
-		value: "ODS_3",
-		label: "ODS 3: Saúde e Redução de Danos",
-		description: "Consultório, psicologia, curativos",
-		color: "text-green-400 border-green-800 bg-green-900/20",
-	},
-	{
-		value: "ODS_6",
-		label: "ODS 6: Higiene e Saneamento",
-		description: "Banho, lavanderia, banheiro",
-		color: "text-cyan-400 border-cyan-800 bg-cyan-900/20",
-	},
-	{
-		value: "ODS_8",
-		label: "ODS 8: Trabalho e Renda",
-		description: "Capacitação, emprego, bolsas",
-		color: "text-pink-400 border-pink-800 bg-pink-900/20",
-	},
-	{
-		value: "ODS_16",
-		label: "ODS 16: Acesso à Justiça/Documentos",
-		description: "RG, CPF, orientação jurídica",
-		color: "text-blue-400 border-blue-800 bg-blue-900/20",
-	},
-];
+		{
+			value: "ODS_1",
+			label: "ODS 1: Erradicação da Pobreza",
+			description: "Doação de renda, itens ou proteção social",
+			color: "text-red-400 border-red-800 bg-red-900/20",
+		},
+		{
+			value: "ODS_2",
+			label: "ODS 2: Fome Zero",
+			description: "Marmitas, cestas básicas, alimentação",
+			color: "text-yellow-400 border-yellow-800 bg-yellow-900/20",
+		},
+		{
+			value: "ODS_3",
+			label: "ODS 3: Saúde e Redução de Danos",
+			description: "Consultório, psicologia, curativos",
+			color: "text-green-400 border-green-800 bg-green-900/20",
+		},
+		{
+			value: "ODS_6",
+			label: "ODS 6: Higiene e Saneamento",
+			description: "Banho, lavanderia, banheiro",
+			color: "text-cyan-400 border-cyan-800 bg-cyan-900/20",
+		},
+		{
+			value: "ODS_8",
+			label: "ODS 8: Trabalho e Renda",
+			description: "Capacitação, emprego, bolsas",
+			color: "text-pink-400 border-pink-800 bg-pink-900/20",
+		},
+		{
+			value: "ODS_16",
+			label: "ODS 16: Acesso à Justiça/Documentos",
+			description: "RG, CPF, orientação jurídica",
+			color: "text-blue-400 border-blue-800 bg-blue-900/20",
+		},
+	];
 
 const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
 	{ value: "ALIMENTACAO", label: "🍽️ Alimentação" },
@@ -104,16 +104,16 @@ export default function HubCadastroPage() {
 		const loadPartners = async () => {
 			const data = await hubService.getPartners();
 			// Map to local interface
-			const mapped = data.map((p) => ({
+			const mapped = data.map((p: any) => ({
 				id: p.id,
 				name: p.name,
 				type: "ONG" as const,
-				address: p.address,
-				whatsapp: (p as any).phone || "",
-				services: p.services as any,
+				address: p.address || "",
+				whatsapp: p.phone || p.whatsapp || "",
+				services: p.services || [],
 				odsLinks: [], // Not supported in DB yet
 				operatingHours: "",
-				description: p.description,
+				description: p.description || "",
 			}));
 			setPartnersList(mapped);
 		};
@@ -147,18 +147,18 @@ export default function HubCadastroPage() {
 		setLoading(true);
 
 		const result = await hubService.registerPartner({
-			name: formData.name,
-			address: formData.address,
+			name: formData.name || "Sem Nome",
+			address: formData.address || "",
 			whatsapp: formData.whatsapp,
 			description: `${formData.description}\n\nHorário: ${formData.operatingHours}\nODS: ${formData.odsLinks?.join(", ")}`,
 			category: formData.services?.[0] || "OUTROS",
-		});
+		} as any);
 
 		if (result.success) {
 			setSuccess(true);
 			// Refresh list
 			const data = await hubService.getPartners();
-			const mapped = data.map((p) => ({
+			const mapped = data.map((p: any) => ({
 				id: p.id,
 				name: p.name,
 				type: "ONG" as const,
@@ -383,11 +383,10 @@ export default function HubCadastroPage() {
 									key={svc.value}
 									type="button"
 									onClick={() => handleServiceToggle(svc.value)}
-									className={`p-3 rounded-lg border text-xs font-bold transition-all ${
-										formData.services?.includes(svc.value)
-											? "bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-900/50"
-											: "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-600"
-									}`}
+									className={`p-3 rounded-lg border text-xs font-bold transition-all ${formData.services?.includes(svc.value)
+										? "bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-900/50"
+										: "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-600"
+										}`}
 								>
 									{svc.label}
 								</button>
@@ -413,12 +412,11 @@ export default function HubCadastroPage() {
 									key={ods.value}
 									type="button"
 									onClick={() => handleODSToggle(ods.value)}
-									className={`w-full p-4 rounded-lg border text-left transition-all ${
-										formData.odsLinks?.includes(ods.value)
-											? ods.color +
-												" ring-2 ring-offset-2 ring-offset-slate-950 ring-white/20"
-											: "bg-slate-900 border-slate-800 hover:border-slate-600"
-									}`}
+									className={`w-full p-4 rounded-lg border text-left transition-all ${formData.odsLinks?.includes(ods.value)
+										? ods.color +
+										" ring-2 ring-offset-2 ring-offset-slate-950 ring-white/20"
+										: "bg-slate-900 border-slate-800 hover:border-slate-600"
+										}`}
 								>
 									<div className="font-bold text-sm mb-1">
 										{formData.odsLinks?.includes(ods.value) ? "✓ " : "○ "}
