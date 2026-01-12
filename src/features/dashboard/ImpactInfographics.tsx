@@ -109,7 +109,11 @@ export function ImpactInfographics() {
 							}
 							className={`p-2 rounded-lg transition-colors ${sharedId === "graph1" ? "bg-green-500/20 text-green-400" : "hover:bg-slate-700 text-slate-400"}`}
 						>
-							{sharedId === "graph1" ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+							{sharedId === "graph1" ? (
+								<Check className="w-4 h-4" />
+							) : (
+								<Share2 className="w-4 h-4" />
+							)}
 						</button>
 					</div>
 
@@ -160,7 +164,11 @@ export function ImpactInfographics() {
 							}
 							className={`p-2 rounded-lg transition-colors ${sharedId === "graph2" ? "bg-green-500/20 text-green-400" : "hover:bg-slate-700 text-slate-400"}`}
 						>
-							{sharedId === "graph2" ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+							{sharedId === "graph2" ? (
+								<Check className="w-4 h-4" />
+							) : (
+								<Share2 className="w-4 h-4" />
+							)}
 						</button>
 					</div>
 
@@ -225,7 +233,11 @@ export function ImpactInfographics() {
 							}
 							className={`p-2 rounded-lg transition-colors ${sharedId === "graph3" ? "bg-green-500/20 text-green-400" : "hover:bg-slate-700 text-slate-400"}`}
 						>
-							{sharedId === "graph3" ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+							{sharedId === "graph3" ? (
+								<Check className="w-4 h-4" />
+							) : (
+								<Share2 className="w-4 h-4" />
+							)}
 						</button>
 					</div>
 

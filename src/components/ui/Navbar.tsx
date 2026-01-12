@@ -48,11 +48,7 @@ export function Navbar() {
 			label: "Rede de Apoio",
 			icon: <HeartHandshake className="w-4 h-4" />,
 		},
-		{
-			href: "/cofre",
-			label: "Meus Docs",
-			icon: <Shield className="w-4 h-4" />,
-		},
+
 		{
 			href: "/impacto",
 			label: "Impacto",

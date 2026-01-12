@@ -1,10 +1,10 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-// import Google from "next-auth/providers/google";
+import Google from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	providers: [
-		// Google,
+		Google,
 		Credentials({
 			name: "Anônimo",
 			credentials: {},
@@ -30,5 +30,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			}
 			return session;
 		},
+	},
+	pages: {
+		signIn: "/login",
 	},
 });

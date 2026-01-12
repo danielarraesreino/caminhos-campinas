@@ -1,37 +1,23 @@
 import { Partner } from "@/types/Partner";
 
-/**
- * Service para interagir com a API de Parceiros.
- * Substitui o antigo localStorage.
- */
 export const hubService = {
-	async registerPartner(data: Omit<Partner, "id" | "status" | "createdAt" | "updatedAt">) {
-		const res = await fetch("/api/partners", {
+	async registerPartner(
+		data: Omit<Partner, "id" | "status" | "createdAt">,
+	): Promise<Partner> {
+		const response = await fetch("/api/partners", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(data),
 		});
 
-		if (!res.ok) {
-			const error = await res.json();
-			throw new Error(error.error || "Erro ao registrar parceiro.");
-		}
-
-		return await res.json();
+		if (!response.ok) throw new Error("Falha ao registrar parceiro");
+		return response.json();
 	},
 
-	async getPartners() {
-		const res = await fetch("/api/partners", {
-			method: "GET",
-		});
-
-		if (!res.ok) {
-			// Fallback or empty array on error
-			console.error("Erro ao buscar parceiros");
-			return [];
-		}
-
-		const json = await res.json();
-		return json.data || [];
-	}
+	async getPartners(status?: string): Promise<Partner[]> {
+		const url = status ? `/api/partners?status=${status}` : "/api/partners";
+		const response = await fetch(url);
+		if (!response.ok) throw new Error("Falha ao buscar parceiros");
+		return response.json();
+	},
 };

@@ -14,12 +14,14 @@ import {
 	Wallet,
 	Wifi,
 	WifiOff,
+	Shield,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
 import { InteractiveStatus } from "./InteractiveStatus";
+import Link from "next/link";
 
 export function GameHUD({
 	onToggleChat,
@@ -210,6 +212,16 @@ export function GameHUD({
 				>
 					<MapPin className="h-5 w-5 text-zinc-950" />
 				</Button>
+
+				<Link href="/cofre">
+					<Button
+						size="icon"
+						className="h-10 w-10 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-lg transition-transform active:scale-95"
+						title="Meus Documentos (Cofre)"
+					>
+						<Shield className="h-4 w-4 text-blue-400" />
+					</Button>
+				</Link>
 
 				<Button
 					size="icon"

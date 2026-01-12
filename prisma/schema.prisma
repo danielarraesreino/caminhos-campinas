@@ -15,18 +15,28 @@ datasource db {
 model Partner {
   id          String   @id @default(uuid())
   name        String
-  category    String   // ALIMENTACAO, ABRIGO, SAUDE, EDUCACAO, etc.
-  whatsapp    String
+  category    String   // Enum-like: "NGO", "GOV", "COMPANY"
+  whatsapp    String?
   description String?
   pixKey      String?
   address     String?
-  latitude    Float?
-  longitude   Float?
-  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  status      String   @default("PENDING")
+  lat         Float?
+  lng         Float?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
   @@map("partners")
+}
+
+model DilemmaFeedback {
+  id          String   @id @default(uuid())
+  dilemmaId   String
+  userId      String
+  isRealistic Boolean
+  comment     String?
+  createdAt   DateTime @default(now())
+
+  @@map("dilemma_feedbacks")
 }
 
 model Post {
