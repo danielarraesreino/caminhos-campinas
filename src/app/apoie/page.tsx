@@ -1,160 +1,142 @@
 "use client";
 
-import { ArrowRight, Building2, Code, Heart, Info, Monitor, Users, GraduationCap } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { CopyButton } from "@/components/ui/CopyButton";
-import corporateServices from "@/data/corporate-services.json";
+import React, { useState } from 'react';
+import { Heart, Server, ShieldCheck, Users, Coffee, Code, AlertTriangle, Globe } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 
 export default function ApoiePage() {
-	const PIX_DEV = "19999912915"; // Placeholder desenvolvedor
-	const PIX_SOCIAL = "19999912915"; // PIX do Projeto Social (Simulado/Real)
+	const [copied, setCopied] = useState(false);
 
-	const GOAL_SOCIAL = 13970;
-	const CURRENT_SOCIAL = 450; // Simulado
+	// Chave PIX PESSOAL APENAS PARA O DEV (Tech Stack)
+	const devPixKey = "19999912915";
 
-	const progress = (CURRENT_SOCIAL / GOAL_SOCIAL) * 100;
+	const handleCopyPix = () => {
+		navigator.clipboard.writeText(devPixKey);
+		setCopied(true);
+		setTimeout(() => setCopied(false), 2000);
+	};
 
 	return (
-		<div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-20">
+		<div className="min-h-screen bg-slate-50 pb-20">
 			{/* Header */}
-			<header className="pt-24 pb-12 px-6 text-center border-b border-slate-900 bg-slate-900/50">
-				<h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">
-					Ciclo Fechado de <span className="text-blue-500">Impacto</span>
-				</h1>
-				<p className="text-xl text-slate-400 max-w-2xl mx-auto">
-					Não é apenas doação. É uma solução para a cidade.
-					<strong className="text-white block mt-2">Tecnologia + Pedagogia + Responsabilidade Corporativa</strong>
-				</p>
-			</header>
-
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-				{/* COLUNA A: SUSTENTAR A TECNOLOGIA (DEV) */}
-				<div className="bg-[#0c0c0f] border border-slate-800 rounded-3xl p-6 relative overflow-hidden group hover:border-blue-500/30 transition-all flex flex-col">
-					<div className="absolute top-0 right-0 p-4 opacity-10">
-						<Code size={100} />
-					</div>
-
-					<div className="relative z-10 flex-1">
-						<div className="inline-flex items-center gap-2 bg-blue-900/20 text-blue-400 px-3 py-1 rounded-full text-xs font-bold uppercase mb-6">
-							<Monitor size={14} /> Para o Desenvolvedor
-						</div>
-
-						<h2 className="text-2xl font-bold text-white mb-4">
-							Sustentar a <span className="text-blue-500">Tecnologia</span>
-						</h2>
-
-						<p className="text-slate-400 mb-6 text-sm leading-relaxed">
-							Mantenha o servidor online, a Inteligência Artificial ativa e financie a expansão do código.
-						</p>
-
-						<div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 mb-6">
-							<p className="text-[10px] text-slate-500 mb-1 uppercase font-bold tracking-wider">Chave PIX (Dev)</p>
-							<div className="flex items-center justify-between gap-2">
-								<code className="text-sm font-mono text-white truncate">{PIX_DEV}</code>
-								<CopyButton text={PIX_DEV} />
-							</div>
-						</div>
-					</div>
+			<div className="bg-slate-900 text-white py-16 px-4">
+				<div className="max-w-4xl mx-auto text-center space-y-4">
+					<h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight">
+						Quem financia a mudança?
+					</h1>
+					<p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto">
+						A transparência é nossa regra. Dividimos o apoio em dois pilares:
+						a <strong>Tecnologia</strong> (que mantém o sistema) e a <strong>Vida</strong> (que transforma as pessoas).
+					</p>
 				</div>
+			</div>
 
-				{/* COLUNA B: SUSTENTAR A VIDA (SOCIAL) */}
-				<div className="bg-slate-900/80 border border-slate-700/50 rounded-3xl p-6 relative overflow-hidden group hover:border-green-500/50 transition-all flex flex-col">
-					<div className="absolute top-0 right-0 p-4 opacity-5">
-						<Heart size={100} />
-					</div>
+			<div className="max-w-6xl mx-auto px-4 -mt-10 grid md:grid-cols-2 gap-8">
 
-					<div className="relative z-10 flex-1">
-						<div className="inline-flex items-center gap-2 bg-green-900/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold uppercase mb-6 border border-green-500/20">
-							<Users size={14} /> Para o Projeto Social
+				{/* PILAR 1: AÇÃO SOCIAL (INSTITUCIONAL) */}
+				<Card className="shadow-xl border-t-4 border-t-green-600">
+					<CardHeader>
+						<div className="flex items-center gap-3 mb-2">
+							<div className="p-3 bg-green-100 rounded-full text-green-700">
+								<Users size={24} />
+							</div>
+							<div>
+								<CardTitle className="text-2xl font-bold text-slate-800">Fundo Educacional</CardTitle>
+								<CardDescription>Projeto Piloto: Agilizadores Sociais</CardDescription>
+							</div>
+						</div>
+					</CardHeader>
+					<CardContent className="space-y-6">
+						<div className="p-4 bg-slate-100 rounded-lg text-sm text-slate-600">
+							<p className="font-semibold mb-2">Objetivo: R$ 13.970,00</p>
+							<ul className="list-disc pl-4 space-y-1">
+								<li>Bolsas para 20 alunos (R$ 400/cada)</li>
+								<li>Alimentação e Transporte</li>
+								<li>Formatura e Certificação</li>
+							</ul>
 						</div>
 
-						<h2 className="text-2xl font-bold text-white mb-4">
-							Sustentar a <span className="text-green-400">Vida</span>
-						</h2>
+						<div className="space-y-2">
+							<div className="flex justify-between text-xs font-bold uppercase text-slate-500">
+								<span>Arrecadado: R$ 0,00</span>
+								<span>Meta: R$ 13.970,00</span>
+							</div>
+							<Progress value={0} className="h-3" />
+						</div>
 
-						<p className="text-slate-300 mb-6 text-sm leading-relaxed">
-							Financie a formação de <strong>Agilizadores Sociais</strong> (ex-moradores de rua).
+						<div className="p-4 border border-yellow-200 bg-yellow-50 rounded-lg flex gap-3 items-start">
+							<AlertTriangle className="text-yellow-600 shrink-0" size={20} />
+							<div className="text-sm text-yellow-800">
+								<span className="font-bold">Status: Em Trâmite Institucional.</span>
+								<br />
+								Os recursos deste fundo serão geridos por entidade parceira auditada (em tratativas com FEAC/Cândido Ferreira).
+								<span className="block mt-2 font-medium">Aguarde a liberação da conta oficial para doar para o curso.</span>
+							</div>
+						</div>
+
+						<div className="text-xs text-center text-slate-400">
+							* Economia Solidária: Profissionais técnicos doaram R$ 45.000+ em horas de trabalho para viabilizar este projeto.
+						</div>
+					</CardContent>
+				</Card>
+
+				{/* PILAR 2: TECNOLOGIA (DEV/INFRA) */}
+				<Card className="shadow-xl border-t-4 border-t-blue-600 bg-slate-900 text-slate-100">
+					<CardHeader>
+						<div className="flex items-center gap-3 mb-2">
+							<div className="p-3 bg-blue-500/20 rounded-full text-blue-400">
+								<Server size={24} />
+							</div>
+							<div>
+								<CardTitle className="text-2xl font-bold text-white">Infraestrutura & Dev</CardTitle>
+								<CardDescription className="text-slate-400">Mantenha o sistema online</CardDescription>
+							</div>
+						</div>
+					</CardHeader>
+					<CardContent className="space-y-6">
+						<p className="text-slate-300">
+							Eu sou um desenvolvedor independente. Enquanto o fundo social não sai,
+							preciso pagar os custos reais para manter o <strong>Caminhos Campinas</strong> no ar.
 						</p>
 
-						{/* PROGRESS BAR */}
-						<div className="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6 shadow-inner">
-							<div className="flex justify-between items-end mb-2">
-								<span className="text-xs font-medium text-slate-400">Meta: Piloto 20</span>
-								<span className="text-lg font-bold text-white">R$ {CURRENT_SOCIAL}</span>
+						<div className="space-y-3">
+							<div className="flex items-center gap-3 p-3 bg-slate-800 rounded-lg border border-slate-700">
+								<Server className="text-blue-400" size={18} />
+								<span className="text-sm">Servidores Vercel & Banco de Dados</span>
 							</div>
-							<div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-1">
-								<div
-									className="h-full bg-green-500 rounded-full transition-all duration-1000 ease-out"
-									style={{ width: `${progress}%` }}
-								></div>
+							<div className="flex items-center gap-3 p-3 bg-slate-800 rounded-lg border border-slate-700">
+								<Globe className="text-purple-400" size={18} />
+								<span className="text-sm">Domínio .org.br & APIs de IA</span>
 							</div>
-							<p className="text-[10px] text-right text-green-400 font-bold">{progress.toFixed(1)}%</p>
-						</div>
-
-						<div className="bg-slate-900/80 p-4 rounded-xl border border-green-900/30 mb-2">
-							<p className="text-[10px] text-slate-500 mb-1 uppercase font-bold tracking-wider">Chave PIX (Social)</p>
-							<div className="flex items-center justify-between gap-2">
-								<code className="text-sm font-mono text-white truncate">{PIX_SOCIAL}</code>
-								<CopyButton text={PIX_SOCIAL} />
+							<div className="flex items-center gap-3 p-3 bg-slate-800 rounded-lg border border-slate-700">
+								<Coffee className="text-amber-400" size={18} />
+								<span className="text-sm">Sobrevivência do Desenvolvedor</span>
 							</div>
 						</div>
 
-						<Link href="/transparencia/projeto-piloto" className="block w-full mt-4">
-							<button className="w-full py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2">
-								Detalhes do "High Price" <ArrowRight size={16} />
-							</button>
-						</Link>
-					</div>
-				</div>
+						<div className="pt-4">
+							<p className="text-sm text-slate-400 mb-3 text-center">
+								Apoie diretamente a pessoa física que coda o projeto:
+							</p>
 
-				{/* COLUNA C: EMPRESAS & ESCOLAS (NOVO) */}
-				<div className="bg-slate-50 border border-slate-200 text-slate-900 rounded-3xl p-6 relative overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all flex flex-col">
-					<div className="absolute top-0 right-0 p-4 opacity-10 text-purple-900">
-						<Building2 size={100} />
-					</div>
-
-					<div className="relative z-10 flex-1">
-						<div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase mb-6 border border-purple-200">
-							<GraduationCap size={14} /> Empresas & Escolas
-						</div>
-
-						<h2 className="text-2xl font-bold text-slate-900 mb-4">
-							Sustentar o <span className="text-purple-600">Futuro</span>
-						</h2>
-
-						<p className="text-slate-600 mb-8 text-sm leading-relaxed">
-							Transforme seu orçamento de T&D ou Eventos em impacto real. Contrate nossos serviços.
-						</p>
-
-						<div className="space-y-4">
-							{corporateServices.map((service) => (
-								<div key={service.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-purple-400 transition-colors">
-									<h3 className="font-bold text-slate-800 text-sm flex justify-between">
-										{service.title}
-										<span className="text-xs font-normal text-slate-400">{service.type === 'corporate' ? 'B2B' : 'Escola'}</span>
-									</h3>
-									<p className="text-xs text-slate-500 mt-1 mb-2">{service.investment_target}</p>
-									<a
-										href={service.cta_link}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-xs font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1"
-									>
-										Solicitar Proposta <ArrowRight size={12} />
-									</a>
-								</div>
-							))}
-						</div>
-
-						<div className="mt-8 p-3 bg-purple-50 rounded-lg border border-purple-100">
-							<p className="text-xs text-purple-800 italic">
-								"Resolvemos um problema social na cidade e ajudamos a resolver problemas comportamentais na sua empresa."
+							<Button
+								onClick={handleCopyPix}
+								className={`w-full py-6 text-lg font-bold transition-all ${copied
+										? "bg-green-600 hover:bg-green-700 text-white"
+										: "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/50"
+									}`}
+							>
+								<Code className="mr-2" size={20} />
+								{copied ? "Chave Copiada!" : "Copiar PIX do Dev (R$ 2.000 meta)"}
+							</Button>
+							<p className="text-center text-xs text-slate-500 mt-2 font-mono">
+								Chave: {devPixKey} (Daniel Arraes / Banco Neon)
 							</p>
 						</div>
-					</div>
-				</div>
+					</CardContent>
+				</Card>
 
 			</div>
 		</div>
