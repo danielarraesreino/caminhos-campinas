@@ -61,12 +61,12 @@ export default function HubPage() {
 				<p className="text-slate-400">
 					Você representa uma organização e quer fazer parte da rede?
 				</p>
-				<button
-					type="button"
-					className="mt-4 px-6 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-md transition-colors"
+				<a
+					href="/hub/cadastro"
+					className="mt-4 inline-block px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-md transition-colors"
 				>
-					Cadastrar Instituição (Em Breve)
-				</button>
+					Cadastrar Instituição
+				</a>
 			</div>
 		</div>
 	);
