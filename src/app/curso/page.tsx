@@ -65,13 +65,13 @@ export default function CoursePage() {
 									Turma Piloto 2026
 								</span>
 							</div>
-							<h2 className="text-2xl font-bold text-white leading-tight">
-								Agente de Redução de Danos e Tecnologia Social
+							<h2 className="text-2xl font-black text-white leading-tight uppercase tracking-tight">
+								De Sobrevivente <br /> a Educador Social.
 							</h2>
 							<p className="text-slate-300 leading-relaxed">
-								Formação gratuita para pessoas com trajetória de rua. Aprenda a
-								usar dados, leis e tecnologia para transformar a sua realidade e
-								a da sua comunidade.
+								Conhecimento é a única coisa que não podem tirar de você.
+								Aprenda a usar dados, leis (Decreto 7.053) e tecnologia para
+								transformar a invisibilidade em agência política.
 							</p>
 						</section>
 
@@ -152,33 +152,30 @@ export default function CoursePage() {
 										<button
 											type="button"
 											onClick={() => setContactMethod("whatsapp")}
-											className={`p-2 rounded-lg text-xs font-bold border transition-all ${
-												contactMethod === "whatsapp"
+											className={`p-2 rounded-lg text-xs font-bold border transition-all ${contactMethod === "whatsapp"
 													? "bg-green-600 border-green-500 text-white"
 													: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
-											}`}
+												}`}
 										>
 											Whatsapp
 										</button>
 										<button
 											type="button"
 											onClick={() => setContactMethod("email")}
-											className={`p-2 rounded-lg text-xs font-bold border transition-all ${
-												contactMethod === "email"
+											className={`p-2 rounded-lg text-xs font-bold border transition-all ${contactMethod === "email"
 													? "bg-blue-600 border-blue-500 text-white"
 													: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
-											}`}
+												}`}
 										>
 											E-mail
 										</button>
 										<button
 											type="button"
 											onClick={() => setContactMethod("proxy")}
-											className={`p-2 rounded-lg text-xs font-bold border transition-all ${
-												contactMethod === "proxy"
+											className={`p-2 rounded-lg text-xs font-bold border transition-all ${contactMethod === "proxy"
 													? "bg-purple-600 border-purple-500 text-white"
 													: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
-											}`}
+												}`}
 										>
 											Recado
 										</button>

@@ -48,7 +48,7 @@ export function UnifiedDashboard() {
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-					{/* Card 1: JOGAR (Serious Game) */}
+					{/* Card 1: JOGAR (Hero) */}
 					<Link
 						href="/jogar"
 						className="group relative overflow-hidden rounded-3xl bg-slate-900 border border-slate-800 p-8 hover:border-blue-500/50 transition-all duration-300 shadow-2xl hover:shadow-blue-900/20 col-span-1 md:col-span-2 lg:col-span-1 aspect-video lg:aspect-auto flex flex-col justify-between"
@@ -59,98 +59,109 @@ export function UnifiedDashboard() {
 								<Gamepad2 size={24} />
 							</div>
 							<h2 className="text-2xl md:text-3xl font-black mb-2 uppercase tracking-tight leading-tight">
-								Onde você dormiria se a cidade
-								<span className="block text-red-400 text-4xl">
-									te fechasse as portas?
-								</span>
+								A Invisibilidade é Política de Estado.
+								<span className="block text-red-400">O Jogo é a Denúncia.</span>
 							</h2>
-							<p className="text-slate-300 max-w-md text-sm leading-relaxed mt-4">
-								Vivencie os dilemas baseados em fatos reais. Enfrente as
-								escolhas impossíveis de quem vive com menos de R$ 10,00 por dia
-								e descubra a falha sistêmica dos direitos garantidos por lei.
+							<p className="text-slate-400 max-w-md text-sm">
+								Simule a jornada de quem vive nas ruas de Campinas. Cada
+								barreira que você enfrenta gera um{" "}
+								<strong className="text-white">dado real</strong> sobre a falha
+								da rede de proteção social (ODS 1, 3 e 11).
 							</p>
 						</div>
 						<div className="relative z-10 mt-6 flex items-center gap-2 text-blue-400 font-bold uppercase text-sm tracking-widest">
-							Iniciar Jornada de Empatia{" "}
+							Iniciar Auditoria Social{" "}
 							<span className="group-hover:translate-x-1 transition-transform">
 								→
 							</span>
 						</div>
 					</Link>
 
-					{/* Card 2: BLOG (Informar) */}
-					<Link
-						href="/jornal"
-						className="group relative overflow-hidden rounded-3xl bg-slate-900 border border-slate-800 p-8 hover:border-purple-500/50 transition-all duration-300 shadow-xl hover:shadow-purple-900/10 flex flex-col justify-between"
-					>
-						<div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent group-hover:from-purple-600/20 transition-all"></div>
-						<div className="relative z-10">
-							<div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4 text-purple-400">
-								<Newspaper size={20} />
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
+						{/* Card 2: DADOS (Auditoria) */}
+						<Link
+							href="/impacto"
+							className="group relative overflow-hidden rounded-3xl bg-slate-900 border border-slate-800 p-8 hover:border-red-500/50 transition-all duration-300 shadow-xl hover:shadow-red-900/10 flex flex-col justify-between"
+						>
+							<div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent group-hover:from-red-600/20 transition-all"></div>
+							<div className="relative z-10">
+								<div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center mb-4 text-red-400">
+									<BarChart3 size={20} />
+								</div>
+								<h2 className="text-xl font-bold mb-2 uppercase text-white">Abismo dos Números</h2>
+								<p className="text-slate-400 text-sm">
+									1.300 oficiais vs 3.000 invisíveis. Veja a auditoria real da
+									rede de acolhimento de Campinas.
+								</p>
 							</div>
-							<h2 className="text-xl font-bold mb-2">Jornal da Rua</h2>
-							<p className="text-slate-400 text-sm">
-								Notícias, denúncias de violência e tradução de leis (Padre
-								Júlio, LOAS) para linguagem acessível.
-							</p>
-						</div>
-					</Link>
+						</Link>
 
-					{/* Card 3: CURSO (Aprender) */}
-					<Link
-						href="/curso"
-						className="group relative overflow-hidden rounded-3xl bg-slate-900 border border-slate-800 p-8 hover:border-emerald-500/50 transition-all duration-300 shadow-xl hover:shadow-emerald-900/10 flex flex-col justify-between"
-					>
-						<div className="absolute inset-0 bg-gradient-to-br from-emerald-600/10 to-transparent group-hover:from-emerald-600/20 transition-all"></div>
-						<div className="relative z-10">
-							<div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4 text-emerald-400">
-								<BookOpen size={20} />
+						{/* Card 3: JORNAL (Investigação) */}
+						<Link
+							href="/jornal"
+							className="group relative overflow-hidden rounded-3xl bg-slate-900 border border-slate-800 p-8 hover:border-purple-500/50 transition-all duration-300 shadow-xl hover:shadow-purple-900/10 flex flex-col justify-between"
+						>
+							<div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent group-hover:from-purple-600/20 transition-all"></div>
+							<div className="relative z-10">
+								<div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4 text-purple-400">
+									<Newspaper size={20} />
+								</div>
+								<h2 className="text-xl font-bold mb-2 uppercase text-white">Jornal da Rua</h2>
+								<p className="text-slate-400 text-sm">
+									"Quanto vale sua cabeça?". Investigações sobre a "Matemática Viciada"
+									da assistência social.
+								</p>
 							</div>
-							<h2 className="text-xl font-bold mb-2">Formação</h2>
-							<p className="text-slate-400 text-sm">
-								Área educativa para Redutores de Danos e Agentes de Saúde.
-								Cursos sobre direitos e cidadania.
-							</p>
-						</div>
-					</Link>
-
-					{/* Card 4: HUB (Apoiar) */}
-					<Link
-						href="/hub"
-						className="group relative overflow-hidden rounded-3xl bg-slate-900 border border-slate-800 p-8 hover:border-pink-500/50 transition-all duration-300 shadow-xl hover:shadow-pink-900/10 flex flex-col justify-between lg:col-span-1"
-					>
-						<div className="absolute inset-0 bg-gradient-to-br from-pink-600/10 to-transparent group-hover:from-pink-600/20 transition-all"></div>
-						<div className="relative z-10">
-							<div className="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center mb-4 text-pink-400">
-								<HeartHandshake size={20} />
-							</div>
-							<h2 className="text-xl font-bold mb-2">Rede de Apoio</h2>
-							<p className="text-slate-400 text-sm">
-								Mapa de ONGs, cadastro de parceiros e recursos para doadores.
-								Conecte-se com quem faz a diferença.
-							</p>
-						</div>
-					</Link>
+						</Link>
+					</div>
 				</div>
 
+				{/* Nova Seção: Como Funciona a Auditoria */}
+				<section className="grid grid-cols-1 md:grid-cols-3 gap-12 py-12 border-y border-slate-800">
+					<div className="space-y-4">
+						<div className="text-blue-500 font-bold text-4xl">01</div>
+						<h3 className="text-xl font-bold text-white uppercase tracking-tight">Você Joga</h3>
+						<p className="text-slate-400 text-sm leading-relaxed">
+							Cada escolha no jogo simula uma barreira real: falta de documentos,
+							violência institucional ou arquitetura hostil.
+						</p>
+					</div>
+					<div className="space-y-4">
+						<div className="text-red-500 font-bold text-4xl">02</div>
+						<h3 className="text-xl font-bold text-white uppercase tracking-tight">O App Audita</h3>
+						<p className="text-slate-400 text-sm leading-relaxed">
+							Suas decisões geram estatísticas anônimas que confrontamos com os
+							dados oficiais da Prefeitura e da FEAC.
+						</p>
+					</div>
+					<div className="space-y-4">
+						<div className="text-emerald-500 font-bold text-4xl">03</div>
+						<h3 className="text-xl font-bold text-white uppercase tracking-tight">A Cidade Muda</h3>
+						<p className="text-slate-400 text-sm leading-relaxed">
+							Usamos esses registros para pressionar por políticas públicas reais e
+							integrar dados ao ecossistema Wikimedia.
+						</p>
+					</div>
+				</section>
+
 				{/* Footer Info */}
-				<div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-slate-800 pt-8 text-slate-300 text-sm">
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-slate-300 text-sm mb-12">
 					<div>
 						<h3 className="font-bold text-slate-100 mb-2 flex items-center gap-2">
-							<Shield size={14} /> Dados Seguros
+							<Shield size={14} /> DADOS SOBERANOS
 						</h3>
 						<p>
-							Plataforma em conformidade com LGPD. Seus dados são anônimos e
-							focados em impacto social.
+							Baseado no Censo Pop Rua 2024 e no Decreto Federal 7.053/2009.
+							Auditoria cidadã em tempo real.
 						</p>
 					</div>
 					<div>
 						<h3 className="font-bold text-slate-100 mb-2 flex items-center gap-2">
-							<MapPin size={14} /> Campinas / SP
+							<MapPin size={14} /> CAMPINAS / DDD 019
 						</h3>
 						<p>
-							Focado na realidade do DDD 019. Dados baseados no Censo Pop Rua
-							2024.
+							Focado na realidade socioterritorial da Região Metropolitana de
+							Campinas.
 						</p>
 					</div>
 					<div>
