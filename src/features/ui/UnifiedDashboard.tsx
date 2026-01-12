@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	BarChart3,
 	BookOpen,
 	Gamepad2,
 	HeartHandshake,
@@ -88,7 +89,9 @@ export function UnifiedDashboard() {
 								<div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center mb-4 text-red-400">
 									<BarChart3 size={20} />
 								</div>
-								<h2 className="text-xl font-bold mb-2 uppercase text-white">Abismo dos Números</h2>
+								<h2 className="text-xl font-bold mb-2 uppercase text-white">
+									Abismo dos Números
+								</h2>
 								<p className="text-slate-400 text-sm">
 									1.300 oficiais vs 3.000 invisíveis. Veja a auditoria real da
 									rede de acolhimento de Campinas.
@@ -106,10 +109,12 @@ export function UnifiedDashboard() {
 								<div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4 text-purple-400">
 									<Newspaper size={20} />
 								</div>
-								<h2 className="text-xl font-bold mb-2 uppercase text-white">Jornal da Rua</h2>
+								<h2 className="text-xl font-bold mb-2 uppercase text-white">
+									Jornal da Rua
+								</h2>
 								<p className="text-slate-400 text-sm">
-									"Quanto vale sua cabeça?". Investigações sobre a "Matemática Viciada"
-									da assistência social.
+									"Quanto vale sua cabeça?". Investigações sobre a "Matemática
+									Viciada" da assistência social.
 								</p>
 							</div>
 						</Link>
@@ -120,15 +125,19 @@ export function UnifiedDashboard() {
 				<section className="grid grid-cols-1 md:grid-cols-3 gap-12 py-12 border-y border-slate-800">
 					<div className="space-y-4">
 						<div className="text-blue-500 font-bold text-4xl">01</div>
-						<h3 className="text-xl font-bold text-white uppercase tracking-tight">Você Joga</h3>
+						<h3 className="text-xl font-bold text-white uppercase tracking-tight">
+							Você Joga
+						</h3>
 						<p className="text-slate-400 text-sm leading-relaxed">
-							Cada escolha no jogo simula uma barreira real: falta de documentos,
-							violência institucional ou arquitetura hostil.
+							Cada escolha no jogo simula uma barreira real: falta de
+							documentos, violência institucional ou arquitetura hostil.
 						</p>
 					</div>
 					<div className="space-y-4">
 						<div className="text-red-500 font-bold text-4xl">02</div>
-						<h3 className="text-xl font-bold text-white uppercase tracking-tight">O App Audita</h3>
+						<h3 className="text-xl font-bold text-white uppercase tracking-tight">
+							O App Audita
+						</h3>
 						<p className="text-slate-400 text-sm leading-relaxed">
 							Suas decisões geram estatísticas anônimas que confrontamos com os
 							dados oficiais da Prefeitura e da FEAC.
@@ -136,10 +145,12 @@ export function UnifiedDashboard() {
 					</div>
 					<div className="space-y-4">
 						<div className="text-emerald-500 font-bold text-4xl">03</div>
-						<h3 className="text-xl font-bold text-white uppercase tracking-tight">A Cidade Muda</h3>
+						<h3 className="text-xl font-bold text-white uppercase tracking-tight">
+							A Cidade Muda
+						</h3>
 						<p className="text-slate-400 text-sm leading-relaxed">
-							Usamos esses registros para pressionar por políticas públicas reais e
-							integrar dados ao ecossistema Wikimedia.
+							Usamos esses registros para pressionar por políticas públicas
+							reais e integrar dados ao ecossistema Wikimedia.
 						</p>
 					</div>
 				</section>

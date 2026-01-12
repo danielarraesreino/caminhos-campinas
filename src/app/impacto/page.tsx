@@ -69,19 +69,35 @@ export default function ImpactPage() {
 				</h1>
 			</header>
 
+			{/* ALERTA DE EMERGÊNCIA */}
+			<div className="mb-12 bg-red-950/50 border-2 border-red-500 p-6 rounded-2xl flex items-center gap-6 animate-pulse">
+				<div className="bg-red-500 p-4 rounded-full shadow-lg shadow-red-500/50">
+					<AlertTriangle className="w-8 h-8 text-white" />
+				</div>
+				<div>
+					<h2 className="text-2xl font-black uppercase tracking-tighter text-white">
+						Estado de Emergência Habitacional
+					</h2>
+					<p className="text-red-200">
+						Campinas possui um déficit real de <strong>938 vagas</strong> de
+						acolhimento. A invisibilidade é uma falha deliberada do sistema.
+					</p>
+				</div>
+			</div>
+
 			{/* KPIs de Impacto */}
 			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-12">
 				<KpiCard
 					title="População Mapeada"
-					value={stats.total.toString()}
+					value="1.300+"
 					icon={<Users className="text-blue-400" />}
-					desc="Vidas simuladas hoje"
+					desc="Oficial (Censo 2024)"
 				/>
 				<KpiCard
 					title="Déficit Habitacional"
-					value={`${stats.housingDeficit}%`}
+					value="938"
 					icon={<Home className="text-red-400" />}
-					desc="Dormindo na rua hoje (ODS 11)"
+					desc="Vagas Faltantes (SAMIM)"
 					alert
 				/>
 				<KpiCard
@@ -98,16 +114,16 @@ export default function ImpactPage() {
 					alert
 				/>
 				<KpiCard
-					title="Dignidade Menstrual"
-					value={`${stats.menstrualPoverty}%`}
-					icon={<Droplets className="text-pink-400" />}
-					desc="Mulheres sem insumos (ODS 3)"
+					title="Custo Internação (CT)"
+					value="R$ 1.350"
+					icon={<Shield className="text-pink-400" />}
+					desc="Investimento em isolamento"
 				/>
 				<KpiCard
-					title="ODS 18 - Equidade Racial"
-					value={`${stats.racialGap}%`}
-					icon={<AlertTriangle className="text-yellow-400" />}
-					desc="Pretos ou Pardos (Desigualdade)"
+					title="Aluguel Social"
+					value="R$ 500"
+					icon={<Home className="text-yellow-400" />}
+					desc="Custo da Moradia Real"
 				/>
 			</div>
 
@@ -210,53 +226,37 @@ export default function ImpactPage() {
 						Acolhimento
 					</h2>
 
-					<div className="overflow-x-auto">
-						<table className="w-full text-left text-sm text-slate-300">
-							<thead className="text-xs uppercase text-slate-500 border-b border-slate-800">
-								<tr>
-									<th className="pb-3 px-2">Equipamento</th>
-									<th className="pb-3 px-2">Vagas</th>
-									<th className="pb-3 px-2">Status</th>
-								</tr>
-							</thead>
-							<tbody className="divide-y divide-slate-800">
-								<tr>
-									<td className="py-3 px-2">Albergue Municipal</td>
-									<td className="py-3 px-2 font-bold">~50</td>
-									<td className="py-3 px-2 text-red-400">Saturado</td>
-								</tr>
-								<tr>
-									<td className="py-3 px-2">Abrigos Institucionais</td>
-									<td className="py-3 px-2 font-bold">~210</td>
-									<td className="py-3 px-2 text-yellow-500">Lotação Máxima</td>
-								</tr>
-								<tr>
-									<td className="py-3 px-2">Casas de Passagem</td>
-									<td className="py-3 px-2 font-bold">~100</td>
-									<td className="py-3 px-2 text-orange-400">Giro Alto</td>
-								</tr>
-								<tr className="bg-slate-800/20">
-									<td className="py-3 px-2 font-black text-white">
-										TOTAL VAGAS
-									</td>
-									<td className="py-3 px-2 font-black text-white">~362</td>
-									<td className="py-3 px-2">-</td>
-								</tr>
-								<tr className="bg-red-900/10">
-									<td className="py-3 px-2 font-black text-red-400 uppercase">
-										Déficit Real
-									</td>
-									<td className="py-3 px-2 font-black text-red-400">
-										938 VAGAS
-									</td>
-									<td className="py-3 px-2 text-xs">Censo 2024</td>
-								</tr>
-							</tbody>
-						</table>
+					{/* Gráfico de Barras: O Abismo */}
+					<div className="space-y-8 mt-4">
+						<div className="space-y-2">
+							<div className="flex justify-between items-end">
+								<span className="text-sm text-slate-400 font-bold uppercase tracking-wider">
+									Demanda (1.300+)
+								</span>
+								<span className="text-2xl font-black text-red-500">100%</span>
+							</div>
+							<div className="h-6 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+								<div className="h-full bg-red-600 w-full shadow-[0_0_20px_rgba(239,68,68,0.3)]"></div>
+							</div>
+						</div>
+
+						<div className="space-y-2">
+							<div className="flex justify-between items-end">
+								<span className="text-sm text-slate-400 font-bold uppercase tracking-wider">
+									Oferta (362 Vagas)
+								</span>
+								<span className="text-2xl font-black text-emerald-500">
+									27.8%
+								</span>
+							</div>
+							<div className="h-6 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+								<div className="h-full bg-emerald-500 w-[27.8%] shadow-[0_0_20px_rgba(16,185,129,0.3)]"></div>
+							</div>
+							<p className="text-right text-red-500 font-black text-lg uppercase tracking-tighter mt-2">
+								Déficit de 938 Prontuários sem Teto
+							</p>
+						</div>
 					</div>
-					<p className="text-[10px] text-slate-500 mt-4 italic">
-						Fonte: Cruzamento de dados SMCAIS e Censo FEAC 2024.
-					</p>
 				</div>
 
 				{/* Insight Qualitativo */}

@@ -30,55 +30,37 @@ export default function SobrePage() {
 					</h2>
 					<div className="prose prose-invert max-w-none text-slate-300 leading-relaxed space-y-6">
 						<p>
-							O{" "}
+							Nascemos da inconformidade. O{" "}
 							<span className="text-blue-400 font-bold">Caminhos Campinas</span>{" "}
-							nasceu da inconformidade com a invisibilidade. Nascemos como uma
-							iniciativa de cartografia social e jornalismo de dados. Quando
-							olhamos para a cidade, não vemos apenas ruas e prédios; vemos
-							territórios de disputa, exclusão e resistência.
+							não é apenas um guia, é um manifesto técnico. O Censo 2024 revelou
+							um aumento de <strong>40% na população de rua</strong> em Campinas
+							(de 932 para 1.300+ pessoas). Enquanto a narrativa oficial muitas
+							vezes higieniza esses dados, nós os auditamos.
 						</p>
 						<p>
-							Segundo o Censo 2024, Campinas tem{" "}
-							<strong>1.300 pessoas em situação de rua</strong> (com estimativas
-							reais chegando a 3.000). Não são apenas números; são histórias
-							interrompidas por conflitos familiares (71,5%) e desemprego (45%).
-							A tecnologia social deste projeto visa quebrar essa estatística,
-							transformando dados em empatia e ação política direta.
+							Ao jogar, você simula a <strong>"Restrição de Agência"</strong>: a
+							experiência real de ter suas escolhas limitadas pela{" "}
+							<strong>Arquitetura Hostil</strong>, pela burocracia do CadÚnico e
+							pela falta crônica de leitos no SAMIM (Déficit de 938 vagas).
+						</p>
+						<p>
+							Baseamos nossa denúncia na{" "}
+							<strong>Lei Padre Júlio Lancellotti (Lei 14.489/22)</strong>, que
+							proíbe o uso de materiais, estruturas e técnicas construtivas
+							hostis em espaços livres de uso público. O que a cidade chama de
+							"design", nós revelamos como exclusão deliberada.
 						</p>
 
 						<h3 className="text-xl font-bold text-white mt-8 mb-4">
-							Nossa Metodologia: Do Censo ao Commons
+							Nossa Missão: Do Censo ao Commons
 						</h3>
 						<p>
-							Nossa base de dados é um organismo vivo alimentado por três
-							fontes:
+							Transformamos estatísticas frias em agência política. Nossos dados
+							são <strong>Bens Públicos Digitais</strong>, integrados ao
+							ecossistema global da <strong>Wikimedia/Wikidata</strong> para
+							garantir que a invisibilidade nunca seja uma opção política
+							aceitável.
 						</p>
-
-						<ul className="grid md:grid-cols-3 gap-4 not-prose mt-4">
-							<li className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-								<strong className="text-white flex items-center gap-2 mb-2">
-									<Target className="w-4 h-4 text-blue-400" /> Dados Oficiais
-								</strong>
-								Processamos os relatórios técnicos da Fundação FEAC e os
-								microdados do Censo 2024 para garantir rigor estatístico.
-							</li>
-							<li className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-								<strong className="text-white flex items-center gap-2 mb-2">
-									<Users className="w-4 h-4 text-purple-400" /> Saber das Ruas
-								</strong>
-								Trabalhamos em sintonia com coletivos de base, garantindo que a
-								narrativa respeite a vivência de quem dorme sob o relento.
-							</li>
-							<li className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-								<strong className="text-white flex items-center gap-2 mb-2">
-									<BookOpen className="w-4 h-4 text-emerald-400" /> Filosofia
-									Wiki
-								</strong>
-								Acreditamos que dados sobre direitos humanos devem ser Bens
-								Públicos Digitais, integrados ao ecossistema global da
-								Wikimedia.
-							</li>
-						</ul>
 					</div>
 				</section>
 

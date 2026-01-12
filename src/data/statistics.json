@@ -1,23 +1,30 @@
 {
 	"census2024": {
-		"totalPopulation": 1557,
-		"source": "Censo da População de Rua de Campinas 2024"
+		"totalPopulation": 1300,
+		"shelterVacancies": 362,
+		"housingDeficit": 938,
+		"source": "Censo da População de Rua de Campinas 2024 / FEAC"
 	},
 	"stats": [
 		{
 			"label": "Conflito Familiar",
-			"value": "71%",
-			"description": "Principal motivo citado para ida às ruas."
+			"value": "71.5%",
+			"description": "Principal motivo citado para ida às ruas (Censo 2024)."
 		},
 		{
-			"label": "Insegurança Alimentar",
-			"value": "38.5%",
-			"description": "Relataram passar fome recentemente (pelo menos 1 vez na semana)."
+			"label": "Vagas Disponíveis",
+			"value": "27.8%",
+			"description": "Apenas 362 vagas para 1.300+ pessoas (Déficit de 938)."
 		},
 		{
 			"label": "Violência Institucional",
 			"value": "51%",
-			"description": "Afirmam ter sofrido violência ou humilhação por agentes do estado ou segurança privada."
+			"description": "Afirmam ter sofrido violência por agentes do estado ou segurança pública."
 		}
-	]
+	],
+	"housing_vs_internment": {
+		"ct_cost": 1350,
+		"rent_social_cost": 500,
+		"gap_factor": 2.7
+	}
 }

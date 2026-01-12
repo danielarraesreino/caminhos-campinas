@@ -1,0 +1,123 @@
+# Page snapshot
+
+```yaml
+- generic:
+  - main:
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - link:
+                - /url: "https://wa.me/?text=SOS! Estou em situação de emergência. Minha localização aproximada: Desconhecida"
+                - text: 🚨 SOS EMERGÊNCIA
+              - button:
+                - img
+                - text: Ver Negações
+              - paragraph: Carregando mapa interativo...
+        - generic:
+          - generic:
+            - generic [ref=e1]:
+              - generic [ref=e2]:
+                - button [ref=e3]:
+                  - generic [ref=e4]:
+                    - img [ref=e5]
+                    - generic [ref=e7]: 100%
+                  - progressbar [ref=e8]
+                  - generic [ref=e10]: "SAÚDE: 100%. Clique para ver detalhes."
+                - button [ref=e11]:
+                  - generic [ref=e12]:
+                    - img [ref=e13]
+                    - generic [ref=e21]: 100%
+                  - progressbar [ref=e22]
+                  - generic [ref=e24]: "MENTE: 100%. Clique para ver detalhes."
+                - button [ref=e25]:
+                  - generic [ref=e26]:
+                    - img [ref=e27]
+                    - generic [ref=e30]: R$ 20
+                  - generic [ref=e31]: "CAIXA: R$ 20. Clique para ver detalhes."
+              - generic [ref=e32]:
+                - generic [ref=e33]:
+                  - img [ref=e34]
+                  - generic [ref=e37]: 08:00
+                - generic [ref=e38]:
+                  - img [ref=e39]
+                  - generic [ref=e43]:
+                    - img [ref=e44]
+                    - generic [ref=e46]: 85%
+                  - button [ref=e47]:
+                    - img [ref=e48]
+            - generic [ref=e52]:
+              - button [ref=e53]:
+                - img
+              - button [ref=e54]:
+                - img
+              - button [ref=e55]:
+                - img
+              - button [ref=e56]:
+                - img
+  - generic:
+    - button:
+      - generic:
+        - img
+      - generic: Apoiar na Realidade
+  - alert
+  - dialog:
+    - generic:
+      - generic:
+        - heading [level=2]: Tutorial (1/5)
+        - button:
+          - img
+    - generic:
+      - generic:
+        - img
+      - heading [level=3]: Você é um Dado Vivo
+      - paragraph: Cada vez que você tenta acessar um serviço (Saúde, Abrigo) e não consegue, o aplicativo registra anonimamente essa falha. Estamos auditando a cidade em tempo real para mapear onde o Estado falha.
+    - generic:
+      - generic:
+        - checkbox
+        - generic: Não mostrar novamente
+      - button:
+        - text: Próximo
+        - img
+    - button:
+      - img
+      - generic: Close
+  - dialog [ref=e59]:
+    - heading [level=2] [ref=e60]: Despertar no Centro
+    - paragraph [ref=e61]: Dilema e escolhas para Despertar no Centro
+    - generic [ref=e63]:
+      - button [active] [ref=e64]: A+
+      - button [ref=e65]: 🔈
+      - button [ref=e66]:
+        - img [ref=e67]
+    - button [ref=e69]:
+      - img [ref=e70]
+    - generic [ref=e73]:
+      - generic [ref=e74]:
+        - heading [level=2] [ref=e75]: Despertar_no Centro
+        - generic [ref=e77]:
+          - generic [ref=e78]: "O sol bate no seu rosto. Você está no Largo do Rosário. Ao seu redor, a cidade de Campinas começa a se movimentar para o trabalho. Sua primeira decisão: como começar o dia?"
+          - generic [ref=e79]:
+            - generic [ref=e80]:
+              - generic [ref=e81]: AUDITORIA_REAL
+              - generic [ref=e83]: "REF: CENSO_2024_CAMPINAS"
+            - generic [ref=e84]: "[FATO VERIFICADO]:Bom Prato Campinas serve mais de 2 mil refeições diárias a R$ 1,00."
+            - generic [ref=e85]:
+              - generic [ref=e86]: "Compromisso Global (ONU):"
+              - generic [ref=e88]: ODS 2
+      - generic [ref=e90]:
+        - button [ref=e91]:
+          - generic [ref=e92]:
+            - generic [ref=e93]: ">>"
+            - text: Buscar café no Bom Prato
+        - button [ref=e94]:
+          - generic [ref=e95]:
+            - generic [ref=e96]: ">>"
+            - text: Circule para evitar a Guarda
+      - link [ref=e98] [cursor=pointer]:
+        - /url: https://pt.wikipedia.org/wiki/Special:GoToLinkedPage/wikidata/Q137764129
+        - generic [ref=e99]: 📚
+        - generic [ref=e100]: Contexto (Wikipédia)
+        - img [ref=e101]
+```

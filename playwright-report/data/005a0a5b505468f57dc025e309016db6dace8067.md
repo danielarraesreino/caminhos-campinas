@@ -1,0 +1,103 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "C Caminhos Campinas" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: C
+        - generic [ref=e7]: Caminhos Campinas
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - link "Início" [ref=e10] [cursor=pointer]:
+            - /url: /
+          - link "Jogar" [ref=e11] [cursor=pointer]:
+            - /url: /jogar
+            - img [ref=e12]
+            - text: Jogar
+          - link "Rede de Apoio" [ref=e14] [cursor=pointer]:
+            - /url: /hub
+            - img [ref=e15]
+            - text: Rede de Apoio
+          - link "Meus Docs" [ref=e17] [cursor=pointer]:
+            - /url: /cofre
+            - img [ref=e18]
+            - text: Meus Docs
+          - link "Impacto" [ref=e20] [cursor=pointer]:
+            - /url: /impacto
+            - img [ref=e21]
+            - text: Impacto
+          - link "Jornal" [ref=e22] [cursor=pointer]:
+            - /url: /jornal
+            - img [ref=e23]
+            - text: Jornal
+        - link "Guia de Rua" [ref=e26] [cursor=pointer]:
+          - /url: /recursos
+          - img [ref=e27]
+          - text: Guia de Rua
+        - link "Apoie Agora" [ref=e30] [cursor=pointer]:
+          - /url: /apoie
+          - button "Apoie Agora" [ref=e31]:
+            - generic [ref=e32]: Apoie Agora
+        - generic "Você está Online" [ref=e33]:
+          - img [ref=e34]
+  - main [ref=e38]:
+    - generic [ref=e40]:
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - img [ref=e45]
+          - text: Construção de Identidade
+        - heading "Quem é você nesta jornada?" [level=2] [ref=e48]
+        - paragraph [ref=e49]: Cada detalhe molda as interações e desafios que virão.
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e59]: Como seu personagem é chamado?
+          - textbox "Como seu personagem é chamado?" [ref=e60]:
+            - /placeholder: "Ex: Zé do Pátio, Maria da Praça..."
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: Gênero
+            - combobox "Gênero" [ref=e64]:
+              - option "Masculino" [selected]
+              - option "Feminino"
+              - option "Trans / Travesti"
+              - option "Não-binário"
+          - generic [ref=e65]:
+            - generic [ref=e66]: Faixa Etária
+            - combobox "Faixa Etária" [ref=e67]:
+              - option "Jovem (18-29)"
+              - option "Adulto (30-59)" [selected]
+              - option "Idoso (60+)"
+      - generic [ref=e68]:
+        - button "Voltar" [ref=e69]:
+          - img
+          - text: Voltar
+        - button "Próximo Passo" [disabled]:
+          - text: Próximo Passo
+          - img
+  - contentinfo [ref=e70]:
+    - generic [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - heading "Caminhos Campinas" [level=4] [ref=e74]
+          - paragraph [ref=e75]: Uma iniciativa para transformar a realidade das ruas através da tecnologia social.
+        - generic [ref=e76]:
+          - generic [ref=e77]: Siga o Coletivo
+          - link "@COLETIVOARUATEMVOZ" [ref=e78] [cursor=pointer]:
+            - /url: https://www.instagram.com/coletivoaruatemvoz
+            - img [ref=e79]
+            - text: "@COLETIVOARUATEMVOZ"
+      - generic [ref=e82]:
+        - paragraph [ref=e83]: © 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
+        - generic [ref=e84]:
+          - img "Daniel (Japa)" [ref=e86]
+          - generic [ref=e88]:
+            - paragraph [ref=e89]: Desenvolvido por Daniel (Japa/Oclinhos)
+            - paragraph [ref=e90]: Vibe Coding &boxvh; Inovação Social
+        - paragraph [ref=e91]: "\"Informação é a libertação real, única e verdadeira.\""
+  - button "Apoiar na Realidade" [ref=e93]:
+    - img [ref=e96]
+    - generic: Apoiar na Realidade
+  - alert [ref=e98]
+```

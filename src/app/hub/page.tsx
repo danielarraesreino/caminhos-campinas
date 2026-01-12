@@ -4,11 +4,13 @@ export default function HubPage() {
 	return (
 		<div className="min-h-screen bg-slate-950 text-white p-8">
 			<h1 className="text-4xl font-black uppercase tracking-tighter mb-4 text-white">
-				Censo da Solidariedade <span className="text-slate-500 text-sm">| Hub</span>
+				Censo da Solidariedade{" "}
+				<span className="text-slate-500 text-sm">| Hub</span>
 			</h1>
 			<p className="mb-8 text-lg text-slate-300 max-w-2xl leading-relaxed">
 				Mapeamento de impacto social e redes de apoio. Aqui, a tecnologia cívica
-				conecta as organizações que enfrentam o "Abismo dos Números" diariamente em Campinas.
+				conecta as organizações que enfrentam o "Abismo dos Números" diariamente
+				em Campinas.
 			</p>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

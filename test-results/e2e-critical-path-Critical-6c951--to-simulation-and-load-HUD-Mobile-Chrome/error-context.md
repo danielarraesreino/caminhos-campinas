@@ -1,0 +1,73 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "C Caminhos Campinas" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: C
+        - generic [ref=e7]: Caminhos Campinas
+      - button "Abrir menu principal" [ref=e9]:
+        - generic [ref=e10]: Abrir menu principal
+        - img [ref=e11]
+  - main [ref=e12]:
+    - generic [ref=e14]:
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - img [ref=e19]
+          - text: Construção de Identidade
+        - heading "Quem é você nesta jornada?" [level=2] [ref=e22]
+        - paragraph [ref=e23]: Cada detalhe molda as interações e desafios que virão.
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]: Como seu personagem é chamado?
+          - textbox "Como seu personagem é chamado?" [active] [ref=e34]:
+            - /placeholder: "Ex: Zé do Pátio, Maria da Praça..."
+            - text: Testador Automatizado
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - generic [ref=e37]: Gênero
+            - combobox "Gênero" [ref=e38]:
+              - option "Masculino" [selected]
+              - option "Feminino"
+              - option "Trans / Travesti"
+              - option "Não-binário"
+          - generic [ref=e39]:
+            - generic [ref=e40]: Faixa Etária
+            - combobox "Faixa Etária" [ref=e41]:
+              - option "Jovem (18-29)"
+              - option "Adulto (30-59)" [selected]
+              - option "Idoso (60+)"
+      - generic [ref=e42]:
+        - button "Voltar" [ref=e43]:
+          - img
+          - text: Voltar
+        - button "Próximo Passo" [ref=e44]:
+          - text: Próximo Passo
+          - img
+  - contentinfo [ref=e45]:
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - heading "Caminhos Campinas" [level=4] [ref=e49]
+          - paragraph [ref=e50]: Uma iniciativa para transformar a realidade das ruas através da tecnologia social.
+        - generic [ref=e51]:
+          - generic [ref=e52]: Siga o Coletivo
+          - link "@COLETIVOARUATEMVOZ" [ref=e53] [cursor=pointer]:
+            - /url: https://www.instagram.com/coletivoaruatemvoz
+            - img [ref=e54]
+            - text: "@COLETIVOARUATEMVOZ"
+      - generic [ref=e57]:
+        - paragraph [ref=e58]: © 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
+        - generic [ref=e59]:
+          - img "Daniel (Japa)" [ref=e61]
+          - generic [ref=e63]:
+            - paragraph [ref=e64]: Desenvolvido por Daniel (Japa/Oclinhos)
+            - paragraph [ref=e65]: Vibe Coding &boxvh; Inovação Social
+        - paragraph [ref=e66]: "\"Informação é a libertação real, única e verdadeira.\""
+  - button "Apoiar na Realidade" [ref=e68]:
+    - img [ref=e71]
+    - generic: Apoiar na Realidade
+  - alert [ref=e73]
+```

@@ -521,9 +521,9 @@
 	},
 	{
 		"id": "tentativa_abrigo_samim",
-		"title": "A Roleta do Acolhimento",
+		"title": "O Dilema do SAMIM",
 		"wiki_context": "Q137764274",
-		"description": "São 18:45. Você está na frente do SAMIM. A fila é grande e os seguranças já avisaram: poucas vagas hoje.",
+		"description": "São 18:45. A regra é clara (e cruel): o acolhimento fecha às 19:00. Se você não entrar agora, dorme na rua. Mas você acabou de conseguir um 'bico' que paga R$ 20,00 se ficar até as 20h. O que vale mais: um teto por uma noite ou o dinheiro para comer amanhã?",
 		"trigger": {
 			"type": "LOCATION",
 			"value": 1,
@@ -533,16 +533,17 @@
 				"radius": 50
 			}
 		},
-		"tags": ["institucional", "abrigo"],
+		"tags": ["institucional", "abrigo", "restrição_agência"],
 		"options": [
 			{
-				"label": "Tentar a vaga",
-				"consequence": "Você conseguiu! Cama, banho e um teto por uma noite.",
+				"label": "Garantir o Teto (Entrar agora)",
+				"consequence": "Você abandona o bico e entra. Cama e banho garantidos, mas amanhã você acorda com R$ 0,00 e a fome de sempre.",
 				"risk": 83.5,
 				"effect": {
 					"energy": 50,
 					"hygiene": 50,
 					"health": 10,
+					"money": 0,
 					"isAtShelter": true
 				},
 				"effect_failure": {
@@ -550,39 +551,53 @@
 					"energy": -20,
 					"health": -5
 				},
-				"consequence_failure": "Não teve vaga. Você vai ter que procurar uma marquise segura no escuro."
+				"consequence_failure": "Mesmo chegando no horário, a fila estava grande demais. 'Acabaram as vagas'. Você se sente humilhado e sem o dinheiro do bico."
+			},
+			{
+				"label": "Terminar o Bico (Risco de Rua)",
+				"consequence": "Você ganha os R$ 20,00, mas o portão do SAMIM está trancado. 'Só amanhã'. A noite será longa e fria.",
+				"effect": {
+					"money": 20,
+					"energy": -20,
+					"sanity": -10,
+					"temperature": -5
+				}
 			}
 		],
-		"source_fact": "Apenas 16,5% da PopRua de Campinas consegue acolhimento institucional (Censo 2024).",
-		"ods": ["ODS 11"]
+		"source_fact": "Apenas 16,5% da PopRua de Campinas consegue acolhimento (Censo 2024). A barreira de horário (19h) é uma das maiores formas de controle e restrição de agência.",
+		"ods": ["ODS 11", "ODS 1"]
 	},
 	{
 		"id": "chain_bagageiro_01_start",
-		"title": "A Corrida Contra o Relógio",
+		"title": "Logística da Exclusão",
 		"wiki_context": "Q137764382",
-		"description": "São 16:30. Você está no Centro com seu carrinho cheio de papelão (R$ 35,00). O Bagageiro Municipal (Vila Industrial) fecha às 17h. Se você não guardar o carrinho, não consegue entrar no SAMIM para dormir.",
+		"description": "São 16:30. Você está no Centro com seu carrinho de recicláveis. O Bagageiro Municipal (Vila Industrial) fecha às 17h. Se você não guardar o carrinho, a Guarda Municipal (GM) tem o pretexto legal para confiscar seus pertences se você for para o abrigo. O relógio é seu maior inimigo.",
 		"trigger": {
 			"type": "TIME_SPECIFIC",
 			"value": 16.5
 		},
 		"options": [
 			{
-				"label": "Correr para o Bagageiro",
-				"consequence": "Você dispara pela Av. Campos Sales. O esforço é brutal.",
+				"label": "Correr para o Bagageiro (Exaustão)",
+				"consequence": "Você corre como se sua vida dependesse disso. Chega ofegante às 16:58. Guardou, mas sua energia está no limite.",
 				"effect": {
-					"energy": -20,
-					"hygiene": -10
+					"energy": -30,
+					"hygiene": -15,
+					"sanity": -5
 				}
 			},
 			{
-				"label": "Vender a carga agora",
-				"consequence": "Você para no ferro-velho. Consegue o dinheiro, mas perde o horário do bagageiro.",
+				"label": "Vender a carga e arriscar",
+				"consequence": "Você vende rápido por R$ 35,00. O depósito fechou. Agora você tem que carregar o carrinho vazio ou escondê-lo num matagal. O risco da GCM levar tudo é alto.",
 				"effect": {
 					"money": 35,
-					"energy": -5
+					"energy": -5,
+					"risk": 50
 				}
 			}
-		]
+		],
+		"source_fact": "A sincronia perversa entre horários de equipamentos públicos (Bagageiro 17h vs Abrigo 19h) inviabiliza a logística de sobrevivência autônoma.",
+		"ods": ["ODS 11", "ODS 16"]
 	},
 	{
 		"id": "chain_health_03_pharmacy",

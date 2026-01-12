@@ -184,18 +184,19 @@ export default function LandingPage() {
 							</div>
 
 							<h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[0.9] mb-8 tracking-tight">
-								A Invisibilidade <br />é uma{" "}
-								<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-									Escolha?
+								Campinas Invisível: <br />
+								Onde você{" "}
+								<span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">
+									dormiria?
 								</span>
 							</h1>
 
-							<p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-blue-500/30 pl-6">
-								Entre na pele de uma das{" "}
-								<strong className="text-white">1.557 pessoas</strong> que vivem
-								nas ruas de Campinas (Censo 2024). <br />A principal causa?{" "}
-								<strong className="text-white">Conflitos familiares</strong>,
-								não "vagabundagem". Transforme sua empatia em impacto real.
+							<p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light border-l-4 border-red-500/30 pl-6">
+								<strong className="text-white">1.300 vidas.</strong> Apenas{" "}
+								<strong className="text-white">362 vagas</strong> de abrigo. Uma
+								cidade desenhada para excluir. Este não é apenas um jogo; é uma
+								ferramenta de auditoria cívica sobre a falência do pacto social
+								em Campinas.
 							</p>
 
 							{/* Dual Action Buttons */}
@@ -206,12 +207,12 @@ export default function LandingPage() {
 										<button
 											type="button"
 											onClick={handleContinue}
-											className="group relative px-8 py-5 bg-green-700 hover:bg-green-600 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-green-900/20 overflow-hidden"
+											className="group relative px-8 py-5 bg-red-700 hover:bg-red-600 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-red-900/20 overflow-hidden"
 										>
 											<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
 											<span className="relative flex items-center gap-3">
 												<ArrowRight className="h-5 w-5" />
-												Continuar Jornada
+												Continuar Auditoria
 											</span>
 										</button>
 
@@ -241,13 +242,12 @@ export default function LandingPage() {
 									<button
 										type="button"
 										onClick={handleNewGame}
-										className="group relative px-8 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-blue-900/20 overflow-hidden"
+										className="group relative px-8 py-5 bg-red-600 hover:bg-red-500 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-red-900/20 overflow-hidden"
 									>
 										<div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
 										<span className="relative flex items-center gap-3">
 											<ArrowRight className="h-5 w-5" />
-											<ArrowRight className="h-5 w-5" />
-											Iniciar Jornada (Simulador)
+											Iniciar Simulação
 										</span>
 									</button>
 								)}
@@ -256,18 +256,18 @@ export default function LandingPage() {
 								<button
 									type="button"
 									onClick={() => {
-										window.location.href = "/recursos";
+										window.location.href = "/impacto";
 									}}
-									className="px-8 py-5 bg-transparent border border-slate-700 hover:border-yellow-500/50 text-slate-300 hover:text-yellow-400 rounded-2xl font-medium text-lg transition-all flex items-center justify-center gap-3"
+									className="px-8 py-5 bg-transparent border border-slate-700 hover:border-red-500/50 text-slate-300 hover:text-red-400 rounded-2xl font-medium text-lg transition-all flex items-center justify-center gap-3"
 								>
 									<div className="flex items-center gap-2">
-										<div className="bg-yellow-500/20 p-1 rounded">
-											<MapPin className="h-5 w-5 text-yellow-500" />
+										<div className="bg-red-500/20 p-1 rounded">
+											<BarChart3 className="h-5 w-5 text-red-500" />
 										</div>
 										<div className="flex flex-col items-start leading-none">
-											<span>Guia de Rua</span>
-											<span className="text-[10px] uppercase font-bold text-yellow-500 tracking-wider">
-												Acesso Offline
+											<span>Dados do Abismo</span>
+											<span className="text-[10px] uppercase font-bold text-red-500 tracking-wider">
+												Dashboard
 											</span>
 										</div>
 									</div>
