@@ -48,7 +48,7 @@ export function GameOverModal({
 
 	return (
 		<div
-			className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in"
+			className="fixed inset-0 z-[var(--z-game-over)] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in"
 			role="dialog"
 			aria-modal="true"
 			aria-labelledby="game-over-title"

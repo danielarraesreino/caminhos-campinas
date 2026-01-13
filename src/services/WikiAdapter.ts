@@ -63,7 +63,7 @@ export function parseWikidataCoordinates(
 	if (match) {
 		const lng = parseFloat(match[1]);
 		const lat = parseFloat(match[2]);
-		if (!isNaN(lat) && !isNaN(lng)) {
+		if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
 			return [lat, lng];
 		}
 	}

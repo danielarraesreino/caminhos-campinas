@@ -56,7 +56,7 @@ export function InteractiveText({ text }: InteractiveTextProps) {
 								</span>
 							</DialogTrigger>
 							{/* Z-Index 200 to overlay DilemmaModal (100) and Chat (150) */}
-							<DialogContent className="z-[200] max-w-xs bg-slate-900 border-slate-700 text-slate-200">
+							<DialogContent className="z-[var(--z-glossary)] max-w-xs bg-slate-900 border-slate-700 text-slate-200">
 								<DialogHeader>
 									<DialogTitle className="text-yellow-500 uppercase tracking-wider text-sm">
 										{termKey}

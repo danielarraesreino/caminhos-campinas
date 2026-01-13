@@ -190,7 +190,7 @@ export function DilemmaModal({
 			<DialogContent
 				showCloseButton={false}
 				accessibleTitle={dilemma.title || "Dilema de Sobrevivência"}
-				className="sm:max-w-[500px] max-h-[85vh] flex flex-col border border-slate-800 bg-black text-slate-300 rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)] z-[100]"
+				className="sm:max-w-[500px] max-h-[85vh] flex flex-col border border-slate-800 bg-black text-slate-300 rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)] z-[var(--z-modal-queue)]"
 			>
 				{/* Header decorativo técnico */}
 				<div className="h-1 w-full bg-slate-900 shrink-0" />

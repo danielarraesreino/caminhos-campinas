@@ -1,3 +1,4 @@
+import { ArrowRight, Building2, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -9,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building2, GraduationCap, ArrowRight } from "lucide-react";
 
 export default function ParceriasPage() {
 	return (

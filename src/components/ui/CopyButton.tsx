@@ -22,6 +22,7 @@ export function CopyButton({ text }: CopyButtonProps) {
 
 	return (
 		<button
+			type="button"
 			onClick={handleCopy}
 			className={`p-2 rounded-lg transition-all ${
 				copied

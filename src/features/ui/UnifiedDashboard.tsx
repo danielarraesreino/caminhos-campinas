@@ -1,14 +1,6 @@
 "use client";
 
-import {
-	BarChart3,
-	BookOpen,
-	Gamepad2,
-	HeartHandshake,
-	MapPin,
-	Newspaper,
-	Shield,
-} from "lucide-react";
+import { BarChart3, Gamepad2, MapPin, Newspaper, Shield } from "lucide-react";
 import Link from "next/link";
 
 export function UnifiedDashboard() {

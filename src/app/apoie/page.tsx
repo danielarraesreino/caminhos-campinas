@@ -1,4 +1,4 @@
-import { Users, AlertTriangle, Briefcase, Info } from "lucide-react";
+import { AlertTriangle, Briefcase, Info, Users } from "lucide-react";
 import {
 	Card,
 	CardContent,

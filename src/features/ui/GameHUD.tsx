@@ -9,19 +9,19 @@ import {
 	Megaphone,
 	Mic,
 	Package,
+	Shield,
 	Volume2,
 	VolumeX,
 	Wallet,
 	Wifi,
 	WifiOff,
-	Shield,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
 import { InteractiveStatus } from "./InteractiveStatus";
-import Link from "next/link";
 
 export function GameHUD({
 	onToggleChat,

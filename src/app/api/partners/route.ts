@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
 	try {
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 			},
 		});
 		return NextResponse.json(partner);
-	} catch (error) {
+	} catch (_error) {
 		return NextResponse.json(
 			{ error: "Failed to create partner" },
 			{ status: 500 },
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 		});
 
 		return NextResponse.json(partners);
-	} catch (error) {
+	} catch (_error) {
 		return NextResponse.json(
 			{ error: "Failed to fetch partners" },
 			{ status: 500 },

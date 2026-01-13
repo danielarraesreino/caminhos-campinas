@@ -7,7 +7,6 @@ import {
 	MapPin,
 	Menu,
 	Newspaper,
-	Shield,
 	Wifi,
 	WifiOff,
 	X,
@@ -75,7 +74,7 @@ export function Navbar() {
 	// if (pathname === "/jogar") return null;
 
 	return (
-		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-[100]">
+		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-[var(--z-navbar)]">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex items-center justify-between h-16">
 					{/* 1. BRANDING */}

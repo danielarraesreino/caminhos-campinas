@@ -1,7 +1,7 @@
 # Page snapshot
 
 ```yaml
-- generic [active] [ref=e1]:
+- generic [ref=e1]:
   - navigation [ref=e2]:
     - generic [ref=e4]:
       - link "C Caminhos Campinas" [ref=e5] [cursor=pointer]:
@@ -20,84 +20,92 @@
             - /url: /hub
             - img [ref=e15]
             - text: Rede de Apoio
-          - link "Meus Docs" [ref=e17] [cursor=pointer]:
-            - /url: /cofre
-            - img [ref=e18]
-            - text: Meus Docs
-          - link "Impacto" [ref=e20] [cursor=pointer]:
+          - link "Impacto" [ref=e17] [cursor=pointer]:
             - /url: /impacto
-            - img [ref=e21]
+            - img [ref=e18]
             - text: Impacto
-          - link "Jornal" [ref=e22] [cursor=pointer]:
+          - link "Jornal" [ref=e19] [cursor=pointer]:
             - /url: /jornal
-            - img [ref=e23]
+            - img [ref=e20]
             - text: Jornal
-        - link "Guia de Rua" [ref=e26] [cursor=pointer]:
+        - link "Guia de Rua" [ref=e23] [cursor=pointer]:
           - /url: /recursos
-          - img [ref=e27]
+          - img [ref=e24]
           - text: Guia de Rua
-        - link "Apoie Agora" [ref=e30] [cursor=pointer]:
+        - link "Apoie Agora" [ref=e27] [cursor=pointer]:
           - /url: /apoie
-          - button "Apoie Agora" [ref=e31]:
-            - generic [ref=e32]: Apoie Agora
-        - generic "Você está Online" [ref=e33]:
-          - img [ref=e34]
-  - main [ref=e38]:
-    - generic [ref=e40]:
-      - generic [ref=e43]:
-        - generic [ref=e44]:
-          - img [ref=e45]
+          - button "Apoie Agora" [ref=e28]:
+            - generic [ref=e29]: Apoie Agora
+        - generic "Você está Online" [ref=e30]:
+          - img [ref=e31]
+  - main [ref=e35]:
+    - generic [ref=e37]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - img [ref=e42]
           - text: Construção de Identidade
-        - heading "Quem é você nesta jornada?" [level=2] [ref=e48]
-        - paragraph [ref=e49]: Cada detalhe molda as interações e desafios que virão.
-      - generic [ref=e57]:
-        - generic [ref=e58]:
-          - generic [ref=e59]: Como seu personagem é chamado?
-          - textbox "Como seu personagem é chamado?" [ref=e60]:
+        - heading "Quem é você nesta jornada?" [level=2] [ref=e45]
+        - paragraph [ref=e46]: Cada detalhe molda as interações e desafios que virão.
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic [ref=e56]: Como seu personagem é chamado?
+          - textbox "Como seu personagem é chamado?" [active] [ref=e57]:
             - /placeholder: "Ex: Zé do Pátio, Maria da Praça..."
-        - generic [ref=e61]:
-          - generic [ref=e62]:
-            - generic [ref=e63]: Gênero
-            - combobox "Gênero" [ref=e64]:
+            - text: A11y Tester
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - generic [ref=e60]: Gênero
+            - combobox "Gênero" [ref=e61]:
               - option "Masculino" [selected]
               - option "Feminino"
               - option "Trans / Travesti"
               - option "Não-binário"
-          - generic [ref=e65]:
-            - generic [ref=e66]: Faixa Etária
-            - combobox "Faixa Etária" [ref=e67]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: Faixa Etária
+            - combobox "Faixa Etária" [ref=e64]:
               - option "Jovem (18-29)"
               - option "Adulto (30-59)" [selected]
               - option "Idoso (60+)"
-      - generic [ref=e68]:
-        - button "Voltar" [ref=e69]:
+      - generic [ref=e65]:
+        - button "Voltar" [ref=e66]:
           - img
           - text: Voltar
-        - button "Próximo Passo" [disabled]:
+        - button "Próximo Passo" [ref=e67]:
           - text: Próximo Passo
           - img
-  - contentinfo [ref=e70]:
-    - generic [ref=e71]:
-      - generic [ref=e72]:
-        - generic [ref=e73]:
-          - heading "Caminhos Campinas" [level=4] [ref=e74]
-          - paragraph [ref=e75]: Uma iniciativa para transformar a realidade das ruas através da tecnologia social.
-        - generic [ref=e76]:
-          - generic [ref=e77]: Siga o Coletivo
-          - link "@COLETIVOARUATEMVOZ" [ref=e78] [cursor=pointer]:
+  - contentinfo [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - heading "Caminhos Campinas" [level=4] [ref=e72]
+          - paragraph [ref=e73]: Uma iniciativa para transformar a realidade das ruas através da tecnologia social.
+        - generic [ref=e74]:
+          - generic [ref=e75]: Institucional & Impacto
+          - navigation [ref=e76]:
+            - link "Para Empresas (ESG)" [ref=e77] [cursor=pointer]:
+              - /url: /parceiros
+            - link "Curso Agilizadores" [ref=e78] [cursor=pointer]:
+              - /url: /curso
+            - link "Portal da Transparência" [ref=e79] [cursor=pointer]:
+              - /url: /transparencia
+            - link "Área Técnica (Restrito)" [ref=e80] [cursor=pointer]:
+              - /url: /auditoria/validar
+        - generic [ref=e81]:
+          - generic [ref=e82]: Siga o Coletivo
+          - link "@COLETIVOARUATEMVOZ" [ref=e83] [cursor=pointer]:
             - /url: https://www.instagram.com/coletivoaruatemvoz
-            - img [ref=e79]
+            - img [ref=e84]
             - text: "@COLETIVOARUATEMVOZ"
-      - generic [ref=e82]:
-        - paragraph [ref=e83]: © 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
-        - generic [ref=e84]:
-          - img "Daniel (Japa)" [ref=e86]
-          - generic [ref=e88]:
-            - paragraph [ref=e89]: Desenvolvido por Daniel (Japa/Oclinhos)
-            - paragraph [ref=e90]: Vibe Coding &boxvh; Inovação Social
-        - paragraph [ref=e91]: "\"Informação é a libertação real, única e verdadeira.\""
-  - button "Apoiar na Realidade" [ref=e93]:
-    - img [ref=e96]
+      - generic [ref=e87]:
+        - paragraph [ref=e88]: © 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
+        - generic [ref=e89]:
+          - img "Daniel (Japa)" [ref=e91]
+          - generic [ref=e93]:
+            - paragraph [ref=e94]: Desenvolvido por Daniel (Japa/Oclinhos)
+            - paragraph [ref=e95]: Vibe Coding &boxvh; Inovação Social
+        - paragraph [ref=e96]: "\"Informação é a libertação real, única e verdadeira.\""
+  - button "Apoiar na Realidade" [ref=e98]:
+    - img [ref=e101]
     - generic: Apoiar na Realidade
-  - alert [ref=e98]
+  - alert [ref=e103]
 ```

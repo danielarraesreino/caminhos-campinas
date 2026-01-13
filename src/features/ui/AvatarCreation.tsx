@@ -141,6 +141,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								<select
 									id="avatar-gender"
 									title="Selecione o gênero"
+									data-testid="avatar-gender-select"
 									className="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-4 text-white font-bold focus:ring-blue-500"
 									value={formData.gender}
 									onChange={(e) => updateField("gender", e.target.value)}

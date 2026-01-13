@@ -15,6 +15,24 @@ const MapCore = dynamic(() => import("./MapCore"), {
 	ssr: false,
 });
 
+// Define a custom type guard ensuring coords is [number, number]
+const hasValidCoords = (
+	s: any,
+): s is {
+	coords: [number, number];
+	id: string;
+	name: string;
+	type: string;
+} => {
+	return (
+		s &&
+		Array.isArray(s.coords) &&
+		s.coords.length === 2 &&
+		s.coords[0] != null &&
+		s.coords[1] != null
+	);
+};
+
 export function SurvivalMap() {
 	const { userPosition, setUserPosition, eat, modifyStat } = useGameContext();
 	const [loadingLocation, setLoadingLocation] = useState(false);
@@ -28,24 +46,6 @@ export function SurvivalMap() {
 	const denialPoints = useMemo(() => getHeatmapData(), [getHeatmapData]);
 	const denialStats = useMemo(() => getStatistics(), [getStatistics]);
 
-	// Define a custom type guard ensuring coords is [number, number]
-	const hasValidCoords = (
-		s: any,
-	): s is {
-		coords: [number, number];
-		id: string;
-		name: string;
-		type: string;
-	} => {
-		return (
-			s &&
-			Array.isArray(s.coords) &&
-			s.coords.length === 2 &&
-			s.coords[0] != null &&
-			s.coords[1] != null
-		);
-	};
-
 	// Map services to resources format expected by MapCore (splitting coords [lat, lng] -> lat, lng)
 	const resources = useMemo(() => {
 		return (services || []).filter(hasValidCoords).map((s) => {
@@ -58,7 +58,7 @@ export function SurvivalMap() {
 				lng: c[1],
 			};
 		});
-	}, [services, hasValidCoords]); // Stable resource mapping
+	}, [services]); // Stable resource mapping
 
 	useEffect(() => {
 		// Only fetch if not already set (or we could force refresh? Let's respect existing if valid)

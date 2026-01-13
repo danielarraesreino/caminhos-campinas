@@ -120,6 +120,7 @@ export interface GameState {
 	security: number; // 0-100 (Moradia/Segurança)
 	history: GameEvent[];
 	hasHydrated: boolean;
+	tutorialActive?: boolean; // [NEW] Tutorial Block
 }
 
 export interface GameEvent {
@@ -155,7 +156,8 @@ export type GameAction =
 	| { type: "SET_EMPLOYED_FORMAL"; payload: boolean }
 	| { type: "LOG_EVENT"; payload: GameEvent }
 	| { type: "SET_FLAG"; payload: { key: string; value: boolean } }
-	| { type: "REGISTER_OCCURRENCE"; payload: string };
+	| { type: "REGISTER_OCCURRENCE"; payload: string }
+	| { type: "SET_TUTORIAL_ACTIVE"; payload: boolean };
 export interface RiskFactor {
 	id: string;
 	label: string;

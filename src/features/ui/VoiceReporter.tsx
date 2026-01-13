@@ -44,7 +44,9 @@ export function VoiceReporter({ onClose }: VoiceReporterProps) {
 			mediaRecorder.onstop = async () => {
 				const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
 				await handleSaveReport(audioBlob, null);
-				stream.getTracks().forEach((track) => track.stop()); // Stop mic access
+				stream.getTracks().forEach((track) => {
+					track.stop();
+				}); // Stop mic access
 			};
 
 			mediaRecorder.start();

@@ -23,25 +23,25 @@ export function Footer() {
 						<nav className="flex flex-col gap-2 text-sm">
 							<a
 								href="/parceiros"
-								className="text-slate-400 hover:text-blue-400 transition-colors"
+								className="text-slate-300 hover:text-blue-400 transition-colors"
 							>
 								Para Empresas (ESG)
 							</a>
 							<a
 								href="/curso"
-								className="text-slate-400 hover:text-yellow-400 transition-colors"
+								className="text-slate-300 hover:text-yellow-400 transition-colors"
 							>
 								Curso Agilizadores
 							</a>
 							<a
 								href="/transparencia"
-								className="text-slate-400 hover:text-emerald-400 transition-colors"
+								className="text-slate-300 hover:text-emerald-400 transition-colors"
 							>
 								Portal da Transparência
 							</a>
 							<a
 								href="/auditoria/validar"
-								className="text-slate-500 hover:text-red-400 transition-colors text-xs mt-2"
+								className="text-slate-400 hover:text-red-400 transition-colors text-xs mt-2"
 							>
 								Área Técnica (Restrito)
 							</a>

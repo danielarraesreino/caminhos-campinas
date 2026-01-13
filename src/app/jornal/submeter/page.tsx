@@ -62,10 +62,14 @@ export default function SubmeterJornalPage() {
 
 				<form onSubmit={handleSubmit} className="space-y-6">
 					<div>
-						<label className="block text-sm font-medium text-slate-400 mb-2">
+						<label
+							htmlFor="post-title"
+							className="block text-sm font-medium text-slate-400 mb-2"
+						>
 							Título (Opcional)
 						</label>
 						<input
+							id="post-title"
 							type="text"
 							className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
 							placeholder="Ex: O frio da Aquidaban..."
@@ -73,10 +77,16 @@ export default function SubmeterJornalPage() {
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium text-slate-400 mb-2">
+						<label
+							htmlFor="post-category"
+							className="block text-sm font-medium text-slate-400 mb-2"
+						>
 							Categoria
 						</label>
-						<select className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors">
+						<select
+							id="post-category"
+							className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
+						>
 							<option value="DENUNCIA">Denúncia</option>
 							<option value="RELATO">Relato Pessoal</option>
 							<option value="POESIA">Poesia / Arte</option>
@@ -84,10 +94,14 @@ export default function SubmeterJornalPage() {
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium text-slate-400 mb-2">
+						<label
+							htmlFor="post-content"
+							className="block text-sm font-medium text-slate-400 mb-2"
+						>
 							Seu Texto
 						</label>
 						<textarea
+							id="post-content"
 							required
 							rows={8}
 							className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"

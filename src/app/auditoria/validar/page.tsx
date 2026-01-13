@@ -1,7 +1,8 @@
 "use client";
 
 import { Check, ThumbsDown, ThumbsUp } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
 // import { DILEMMAS_CAMPINAS } from "@/data/dilemmas-campinas"; // Import real data if possible, or fetch
 // import { EcoButton } from "@/components/ui/EcoButton";
 
@@ -16,7 +17,7 @@ const MOCK_DILEMMA = {
 };
 
 export default function ValidacaoAuditPage() {
-	const [dilemma, setDilemma] = useState<any>(MOCK_DILEMMA);
+	const [dilemma, _setDilemma] = useState<any>(MOCK_DILEMMA);
 	const [feedback, setFeedback] = useState<"pass" | "fail" | null>(null);
 	const [comment, setComment] = useState("");
 	const [submitted, setSubmitted] = useState(false);
@@ -46,6 +47,7 @@ export default function ValidacaoAuditPage() {
 					Base de dados atualizada. Obrigado pelo rigor técnico.
 				</p>
 				<button
+					type="button"
 					onClick={nextDilemma}
 					className="px-6 py-3 bg-slate-800 rounded-xl hover:bg-slate-700"
 				>
@@ -127,15 +129,15 @@ export default function ValidacaoAuditPage() {
 						<div>
 							<label className="block text-sm font-medium text-slate-700 mb-2">
 								Comentário Técnico (Obrigatório)
+								<textarea
+									required
+									value={comment}
+									onChange={(e) => setComment(e.target.value)}
+									className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500 mt-2"
+									rows={4}
+									placeholder="Ex: O horário de fechamento do SAMIM mudou para 19h30 no inverno..."
+								></textarea>
 							</label>
-							<textarea
-								required
-								value={comment}
-								onChange={(e) => setComment(e.target.value)}
-								className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"
-								rows={4}
-								placeholder="Ex: O horário de fechamento do SAMIM mudou para 19h30 no inverno..."
-							></textarea>
 						</div>
 
 						<div className="pt-4">

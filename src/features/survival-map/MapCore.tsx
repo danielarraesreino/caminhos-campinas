@@ -250,7 +250,7 @@ const MapCore = memo(function MapCore({
 									<div
 										className="text-[10px] px-2 py-1 rounded-full inline-flex items-center gap-1 w-fit"
 										style={{
-											backgroundColor: odsInfo.color + "20",
+											backgroundColor: `${odsInfo.color}20`,
 											color: odsInfo.color,
 										}}
 									>

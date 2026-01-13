@@ -1,6 +1,6 @@
 "use client";
 
-import { Share2, Check } from "lucide-react";
+import { Check, Share2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
 	Bar,

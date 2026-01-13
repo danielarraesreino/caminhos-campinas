@@ -1,13 +1,6 @@
 "use client";
 
-import {
-	ArrowLeft,
-	BookOpen,
-	CheckCircle2,
-	DollarSign,
-	Target,
-	Users,
-} from "lucide-react";
+import { ArrowLeft, BookOpen, DollarSign, Target } from "lucide-react";
 import Link from "next/link";
 
 export default function ProjetoPilotoPage() {
@@ -196,7 +189,10 @@ export default function ProjetoPilotoPage() {
 
 				<div className="pt-8">
 					<Link href="/apoie" className="block text-center">
-						<button className="px-8 py-4 bg-white text-slate-900 rounded-full font-black uppercase tracking-wider hover:bg-slate-200 transition-colors shadow-lg shadow-white/10">
+						<button
+							type="button"
+							className="px-8 py-4 bg-white text-slate-900 rounded-full font-black uppercase tracking-wider hover:bg-slate-200 transition-colors shadow-lg shadow-white/10"
+						>
 							Apoiar este Projeto Agora
 						</button>
 					</Link>

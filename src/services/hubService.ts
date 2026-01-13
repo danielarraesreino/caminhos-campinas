@@ -1,4 +1,4 @@
-import { Partner } from "@/types/Partner";
+import type { Partner } from "@/types/Partner";
 
 export const hubService = {
 	async registerPartner(

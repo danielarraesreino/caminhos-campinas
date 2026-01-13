@@ -17,16 +17,25 @@ export const getDB = async () => {
 			// Dynamic import to prevent SSR module evaluation
 			const PouchDBModule = await import("pouchdb-browser");
 			const PouchDBFindModule = await import("pouchdb-find");
+			const PouchDBIndexedDBModule = await import("pouchdb-adapter-indexeddb");
+
 			const PouchDB = PouchDBModule.default || PouchDBModule;
 			const PouchDBFind = PouchDBFindModule.default || PouchDBFindModule;
+			const PouchDBIndexedDB =
+				PouchDBIndexedDBModule.default || PouchDBIndexedDBModule;
 
+			// Explicitly load modern IndexedDB adapter first
+			// This prevents fallback to legacy Level adapters (leveldown, encoding-down)
+			PouchDB.plugin(PouchDBIndexedDB);
 			PouchDB.plugin(PouchDBFind);
 
 			dbInstance = new PouchDB("pop_rua_game_db", {
 				auto_compaction: true,
-				adapter: "idb", // Force IndexedDB adapter to avoid guessing
+				adapter: "indexeddb", // Explicit modern adapter (not 'idb' legacy alias)
 			});
-			console.log("✅ PouchDB initialized with find plugin (client-side)");
+			console.log(
+				"✅ PouchDB initialized with IndexedDB adapter (client-side)",
+			);
 		} catch (error) {
 			// Suppress "IndexedDB not supported" error on environments that look like browser but aren't
 			console.warn("⚠️ PouchDB initialization skipped:", error);

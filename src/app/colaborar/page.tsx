@@ -1,5 +1,8 @@
-import { auth } from "@/auth";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -7,11 +10,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import dilemmas from "@/data/dilemmas-campinas.json";
-import { CheckCircle2, AlertCircle } from "lucide-react";
 
 export default async function ColaborarPage() {
 	const session = await auth();

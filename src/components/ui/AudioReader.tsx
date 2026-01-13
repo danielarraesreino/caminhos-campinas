@@ -1,6 +1,6 @@
 "use client";
 
-import { Pause, Play, Volume2 } from "lucide-react";
+import { Pause, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface AudioReaderProps {
@@ -11,7 +11,7 @@ interface AudioReaderProps {
 export function AudioReader({ text, className = "" }: AudioReaderProps) {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isSupported, setIsSupported] = useState(false);
-	const [u, setU] = useState<SpeechSynthesisUtterance | null>(null);
+	const [_u, setU] = useState<SpeechSynthesisUtterance | null>(null);
 
 	useEffect(() => {
 		if (typeof window !== "undefined" && "speechSynthesis" in window) {
@@ -50,6 +50,7 @@ export function AudioReader({ text, className = "" }: AudioReaderProps) {
 
 	return (
 		<button
+			type="button"
 			onClick={togglePlay}
 			className={`flex items-center gap-2 px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-full text-blue-300 text-xs font-bold uppercase transition-all ${className} ${isPlaying ? "animate-pulse border-blue-400" : ""}`}
 			title="Ler em voz alta"

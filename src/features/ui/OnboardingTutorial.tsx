@@ -9,7 +9,7 @@ import {
 	User,
 	X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -18,6 +18,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { useGameContext } from "@/contexts/GameContext";
 
 interface OnboardingTutorialProps {
 	isOpen: boolean;
@@ -44,10 +45,18 @@ export function OnboardingTutorial({
 	isOpen,
 	onClose,
 }: OnboardingTutorialProps) {
+	const { setTutorialActive } = useGameContext();
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const [dontShowAgain, setDontShowAgain] = useState(false);
 
 	const [isExiting, setIsExiting] = useState(false);
+
+	// [FIX] Set tutorial active on mount if open
+	useEffect(() => {
+		if (isOpen) {
+			setTutorialActive(true);
+		}
+	}, [isOpen, setTutorialActive]);
 
 	const handleNext = async () => {
 		if (currentSlide < slides.length - 1) {
@@ -64,6 +73,7 @@ export function OnboardingTutorial({
 		if (dontShowAgain) {
 			localStorage.setItem("pop_rua_tutorial_seen", "true");
 		}
+		setTutorialActive(false); // [FIX] Release dilemma block
 		onClose();
 	};
 
@@ -73,7 +83,10 @@ export function OnboardingTutorial({
 
 	return (
 		<Dialog open={isOpen} onOpenChange={handleClose}>
-			<DialogContent className="sm:max-w-[500px] border-slate-700 bg-slate-950 text-white">
+			<DialogContent
+				className="sm:max-w-[500px] border-slate-700 bg-slate-950 text-white"
+				data-testid="tutorial-dialog"
+			>
 				<DialogHeader>
 					<div className="flex justify-between items-center mb-4">
 						<DialogTitle className="text-xl font-bold">
@@ -138,6 +151,7 @@ export function OnboardingTutorial({
 						onClick={handleNext}
 						disabled={isExiting}
 						className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition-all active:scale-95"
+						data-testid="tutorial-skip"
 					>
 						{isExiting ? (
 							<span className="flex items-center gap-2">

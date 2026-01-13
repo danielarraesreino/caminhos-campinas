@@ -10,6 +10,7 @@ import { Providers } from "@/components/Providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
 import { GameProvider } from "@/contexts/GameContext";
+import { ModalQueueProvider } from "@/contexts/ModalQueueContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
 import { StartupLogger } from "@/features/debug/StartupLogger";
 import { GameEffectsLayer } from "@/features/ui/GameEffectsLayer";
@@ -52,16 +53,18 @@ export default function RootLayout({
 				<Providers>
 					<SurvivalModeProvider>
 						<GameProvider>
-							<ServicesProvider>
-								<GameEffectsLayer />
-								<ClientLayoutWrapper>{children}</ClientLayoutWrapper>
-								<SpeedInsights />
-								<Clarity />
-								<Analytics />
-								<ServiceWorkerRegister />
-								<RealitySwitcher />
-								<StartupLogger />
-							</ServicesProvider>
+							<ModalQueueProvider tutorialActive={false}>
+								<ServicesProvider>
+									<GameEffectsLayer />
+									<ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+									<SpeedInsights />
+									<Clarity />
+									<Analytics />
+									<ServiceWorkerRegister />
+									<RealitySwitcher />
+									<StartupLogger />
+								</ServicesProvider>
+							</ModalQueueProvider>
 						</GameProvider>
 					</SurvivalModeProvider>
 				</Providers>

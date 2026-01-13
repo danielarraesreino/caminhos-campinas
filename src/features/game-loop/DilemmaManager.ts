@@ -77,9 +77,23 @@ export class DilemmaManager {
 		state: Partial<GameState> & {
 			userPosition: [number, number] | null;
 			timeInLocation: number;
+			tutorialActive?: boolean; // [NEW] Optional for backward compat, but key for fix
 		},
 	): Dilemma | null {
-		const { day = 1, time = 8, avatar, userPosition, activeDilemmaId } = state;
+		const {
+			day = 1,
+			time = 8,
+			avatar,
+			userPosition,
+			activeDilemmaId,
+			tutorialActive,
+		} = state;
+
+		// [CRITICAL] Block all dilemmas if tutorial is active
+		if (tutorialActive) {
+			console.log("[DilemmaManager] Dilemmas blocked: Tutorial is active.");
+			return null;
+		}
 
 		console.log(
 			`[DilemmaManager] Checking for triggered dilemmas. Day: ${day}, Time: ${time}, Active: ${activeDilemmaId}, Total dilemmas: ${this.dilemmas.length}`,

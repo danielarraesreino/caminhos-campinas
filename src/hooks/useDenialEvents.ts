@@ -249,9 +249,7 @@ export function useDenialEvents() {
 			const recentEvents = events.filter((e) => e.timestamp >= cutoff);
 
 			if (recentEvents.length === 0) {
-				return (
-					"Nenhuma violação registrada nas últimas " + hoursBack + " horas."
-				);
+				return `Nenhuma violação registrada nas últimas ${hoursBack} horas.`;
 			}
 
 			const byODS: Record<string, { count: number; services: string[] }> = {};

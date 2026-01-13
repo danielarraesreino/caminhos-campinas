@@ -36,7 +36,7 @@ export default function JornalPage() {
 									<span className="text-xs font-bold text-blue-400 uppercase tracking-widest bg-blue-900/20 px-2 py-1 rounded">
 										{post.category}
 									</span>
-									<span className="text-xs text-slate-500 font-mono">
+									<span className="text-xs text-slate-400 font-mono">
 										{post.date}
 									</span>
 								</div>

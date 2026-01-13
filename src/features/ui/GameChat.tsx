@@ -170,10 +170,16 @@ export function GameChat({
 			setIsThinking(true);
 
 			try {
-				if (typeof append !== "function") {
-					console.error("[GameChat] AI SDK error: append is not a function", {
-						chatKeys: Object.keys(chat),
-					});
+				// [FIX] Safety check for useChat append function
+				if (!append || typeof append !== "function") {
+					console.error(
+						"[GameChat] AI SDK error: append is not a function/available",
+						{
+							chatKeys: Object.keys(chat || {}),
+						},
+					);
+
+					// Graceful fallback: Simulate a local response to keep immersion
 					const userMsg = {
 						id: Date.now().toString(),
 						role: "user",
@@ -181,11 +187,17 @@ export function GameChat({
 					};
 					const fallbackSysMsg = {
 						id: (Date.now() + 1).toString(),
-						role: "assistant",
-						content:
-							"*Conexão com o rádio instável. Tente novamente em alguns segundos.*",
+						role: "assistant", // "system" role isn't displayed by useChat default usually
+						content: "*Sinal fraco... tente novamente.*",
 					};
-					setMessages((prev: any[]) => [...prev, userMsg, fallbackSysMsg]);
+
+					// Manually update messages if possible, or just stop thinking
+					// NOTE: setMessages from useChat might not work if the hook is broken,
+					// but it's worth trying if available
+					if (typeof setMessages === "function") {
+						setMessages((prev: any[]) => [...prev, userMsg, fallbackSysMsg]);
+					}
+
 					setIsThinking(false);
 					return;
 				}

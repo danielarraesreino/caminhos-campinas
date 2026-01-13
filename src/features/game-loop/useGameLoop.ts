@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { useModalQueue } from "@/contexts/ModalQueueContext";
 import { useHaptics } from "@/hooks/useHaptics";
 import { DilemmaManager } from "./DilemmaManager";
 import { GAME_DILEMMAS } from "./dilemmas"; // Unified import source
@@ -56,15 +57,41 @@ export function useGameLoop() {
 		hasHydrated,
 	} = useGameContext();
 
+	// [NEW] ModalQueue Integration
+	const { enqueueDilemma } = useModalQueue();
+
 	const [isRaining, setIsRaining] = useState(false);
 	// Refs to prevent effects running on every render
 	const lastHourRef = useRef<number | null>(null);
+	// [NEW] Initialization throttle - prevents "metralhadora caótica"
+	const [gameInitialized, setGameInitialized] = useState(false);
 	const { triggerImpact, triggerWarning } = useHaptics();
 
 	const [timeInLocation, setTimeInLocation] = useState(0);
 	const [lastPosition, setLastPosition] = useState<[number, number] | null>(
 		null,
 	);
+
+	// [NEW] 2-second initialization delay to prevent tutorial overlap
+	useEffect(() => {
+		if (hasHydrated && !gameInitialized) {
+			const timer = setTimeout(() => {
+				setGameInitialized(true);
+				console.log(
+					"[GameLoop] Initialization throttle complete - ready to process events",
+				);
+			}, 2000); // 2s delay
+			return () => clearTimeout(timer);
+		}
+	}, [hasHydrated, gameInitialized]);
+
+	// [NEW] Set data-game-ready flag for E2E tests
+	useEffect(() => {
+		if (typeof document !== "undefined" && gameInitialized && hasHydrated) {
+			document.body.setAttribute("data-game-ready", "true");
+			console.log("[GameLoop] Game ready flag set for E2E tests");
+		}
+	}, [gameInitialized, hasHydrated]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: Game loop logic depends on specific ticks
 	useEffect(() => {
@@ -219,6 +246,12 @@ export function useGameLoop() {
 				return;
 			}
 
+			// 🛡️ Guard: Wait for initialization throttle
+			if (!gameInitialized) {
+				console.log("[GameLoop] Skipping - initialization throttle active");
+				return;
+			}
+
 			console.log(
 				`[GameLoop] Running findTriggeredDilemma at hour ${currentHour}`,
 			);
@@ -246,8 +279,22 @@ export function useGameLoop() {
 				});
 
 				if (triggered) {
-					console.log(`[GameLoop] Dilemma triggered: ${triggered.id}`);
-					setActiveDilemma(triggered.id);
+					// [NEW] Calculate priority based on player state
+					let priority = 5; // default
+
+					// Critical health/hunger = max priority
+					if (health < 20 || hunger < 20) priority = 10;
+					else if (sanity < 30) priority = 8;
+					else if (triggered.intensity === "HIGH") priority = 7;
+					else if (triggered.aspect === "FOOD" || triggered.aspect === "HEALTH")
+						priority = 6;
+
+					console.log(
+						`[GameLoop] Enqueueing dilemma '${triggered.id}' with priority ${priority}`,
+					);
+
+					// [CHANGED] Use ModalQueue instead of direct trigger
+					enqueueDilemma(triggered, priority);
 					return;
 				}
 
@@ -314,7 +361,9 @@ export function useGameLoop() {
 		flags,
 		avatar,
 		hasHydrated,
-		workTool,
+		workTool, // [CHANGED] Use ModalQueue instead of direct trigger
+		enqueueDilemma,
+		gameInitialized,
 	]);
 
 	return { isRaining, batteryLevel: phoneBattery / 100 };

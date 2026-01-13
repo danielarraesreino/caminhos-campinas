@@ -79,6 +79,21 @@
 	--sidebar-accent-foreground: oklch(0.205 0 0);
 	--sidebar-border: oklch(0.922 0 0);
 	--sidebar-ring: oklch(0.708 0 0);
+
+	/* ========================================
+	   Z-INDEX GOVERNANCE (Audio-First System)
+	   ======================================== */
+	--z-base: 0;
+	--z-map: 10; /* SurvivalMap base layer */
+	--z-hud: 20; /* GameHUD, stats overlays */
+	--z-navbar: 30; /* Navigation bar */
+	--z-toast: 50; /* Toast notifications */
+	--z-modal-queue: 100; /* DilemmaModal, OnboardingTutorial */
+	--z-chat-overlay: 150; /* GameChat */
+	--z-glossary: 200; /* InteractiveText popups */
+	--z-critical-alerts: 250; /* Audio Director, Survival Radio */
+	--z-game-over: 300; /* GameOverModal */
+	--z-debug-tools: 9999; /* RealitySwitcher, dev tools */
 }
 
 .dark {

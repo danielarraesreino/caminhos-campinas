@@ -92,6 +92,7 @@ const INITIAL_STATE: GameState = {
 	security: 0,
 	history: [], // [NEW] Telemetry Log
 	hasHydrated: false,
+	tutorialActive: true, // [NEW] Starts true to block dilemmas on load
 };
 
 // --- Reducer ---
@@ -291,6 +292,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				socialThermometer: newThermometer,
 			};
 		}
+
+		case "SET_TUTORIAL_ACTIVE":
+			return { ...state, tutorialActive: action.payload };
 
 		default:
 			return state;
@@ -635,6 +639,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				dispatch({ type: "SET_FLAG", payload: { key, value } }),
 			registerOccurrence: (text: string) =>
 				dispatch({ type: "REGISTER_OCCURRENCE", payload: text }),
+			tutorialActive: state.tutorialActive, // [NEW] Expose tutorial state
+			setTutorialActive: (isActive: boolean) =>
+				dispatch({ type: "SET_TUTORIAL_ACTIVE", payload: isActive }),
 			hasHydrated, // [CRITICAL] Export hydration status
 		}),
 		[

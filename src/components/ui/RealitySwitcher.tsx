@@ -30,7 +30,7 @@ export function RealitySwitcher() {
 	};
 
 	return (
-		<div className="fixed bottom-6 left-6 z-[9999] group">
+		<div className="fixed bottom-6 left-6 z-[var(--z-debug-tools)] group">
 			<button
 				type="button"
 				onClick={toggleReality}

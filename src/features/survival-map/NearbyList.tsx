@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
-import { getODSForServiceType, useDenialEvents } from "@/hooks/useDenialEvents";
+import { useDenialEvents } from "@/hooks/useDenialEvents";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
 
 // import servicesData from "@/data/services-campinas.json"; // Removed direct import

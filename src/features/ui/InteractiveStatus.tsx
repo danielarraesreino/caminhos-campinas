@@ -51,6 +51,8 @@ export function InteractiveStatus({
 				<button
 					type="button"
 					className="flex flex-col items-center gap-1 group w-14 focus:outline-none"
+					aria-label={label}
+					data-testid={`stat-${label.toLowerCase()}`}
 				>
 					<div className="flex items-center gap-1">
 						<Icon
