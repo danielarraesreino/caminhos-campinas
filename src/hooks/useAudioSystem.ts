@@ -20,12 +20,20 @@ interface AudioSystemCallbacks {
 
 // Track Mapping
 const TRACK_MAP: Record<string, string> = {
+	// Existentes
 	rain_heavy: "rain_heavy",
 	chuva: "rain_heavy",
 	traffic: "traffic",
 	transito: "traffic",
 	click: "click",
 	clique: "click",
+
+	// NOVOS - Atmosfera Narrativa (com fallbacks)
+	heartbeat: "rain_heavy", // TODO: substituir por heartbeat_stress.mp3
+	phone_ring: "click", // TODO: substituir por phone_ringing_distance.mp3
+	bureaucracy: "traffic", // TODO: substituir por office_papers_typing.mp3
+	street_noise: "traffic", // Vozes, movimento - usa traffic como fallback
+	despair: "rain_heavy", // Vento vazio, solidão - usa rain como fallback
 };
 
 export function useAudioSystem(): AudioSystemCallbacks {
@@ -114,7 +122,7 @@ export function useAudioSystem(): AudioSystemCallbacks {
 
 				if (options?.fade) {
 					audio.volume = 0;
-					audio.play().catch(() => {});
+					audio.play().catch(() => { });
 
 					const steps = DEFAULT_FADE_DURATION / FADE_STEP_MS;
 					const stepVol = globalVolume / steps;

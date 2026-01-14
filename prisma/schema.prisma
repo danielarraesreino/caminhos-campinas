@@ -7,47 +7,57 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // Optional: only needed for Prisma Accelerate/connection pooling
 }
 
+/// Partner model - NGOs, Government agencies, and Companies supporting homeless population
+/// Registered through /parceiros form, moderated before public display
 model Partner {
   id          String   @id @default(uuid())
-  name        String
-  category    String   // Enum-like: "NGO", "GOV", "COMPANY"
-  whatsapp    String?
-  description String?
-  pixKey      String?
-  address     String?
-  status      String   @default("PENDING")
-  lat         Float?
-  lng         Float?
+  name        String   /// Organization name
+  category    String   /// Enum-like: "NGO", "GOV", "COMPANY"
+  whatsapp    String?  /// Contact via WhatsApp
+  description String?  /// Service description
+  pixKey      String?  /// PIX key for donations
+  address     String?  /// Physical address
+  status      String   @default("PENDING") /// PENDING, APPROVED, REJECTED
+  latitude    Float?   @map("latitude")   /// Geolocation for map display
+  longitude   Float?   @map("longitude")
   createdAt   DateTime @default(now())
 
+  @@index([category, status])  /// Fast filtering by category and status
+  @@index([createdAt])          /// Fast sorting by creation date
   @@map("partners")
 }
 
+/// User feedback on dilemma realism - helps validate narrative accuracy
 model DilemmaFeedback {
   id          String   @id @default(uuid())
-  dilemmaId   String
-  userId      String
-  isRealistic Boolean
-  comment     String?
+  dilemmaId   String   /// Reference to dilemma in JSON data
+  userId      String   /// Anonymous user identifier
+  isRealistic Boolean  /// True if user considers dilemma realistic
+  comment     String?  /// Optional feedback text
   createdAt   DateTime @default(now())
 
+  @@index([dilemmaId])          /// Fast lookup by dilemma
+  @@index([createdAt])          /// Time-based analysis
   @@map("dilemma_feedbacks")
 }
 
+/// Community posts - Jornal da Rua content (reports, stories, poetry)
 model Post {
   id        String   @id @default(uuid())
   title     String?
-  content   String
-  author    String?  // Opcional (anônimo)
-  contact   String?  // Para contato
-  category  String   // DENUNCIA, RELATO, POESIA
-  status    String   @default("PENDING")
+  content   String   /// Post content (markdown supported)
+  author    String?  /// Optional (anonymous allowed)
+  contact   String?  /// For follow-up
+  category  String   /// DENUNCIA, RELATO, POESIA
+  status    String   @default("PENDING") /// PENDING, APPROVED, REJECTED
   createdAt DateTime @default(now())
   
+  @@index([category, status])   /// Fast filtering by category and status
+  @@index([createdAt])          /// Chronological sorting
   @@map("posts")
 }

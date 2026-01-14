@@ -60,6 +60,45 @@ self.addEventListener("fetch", (event) => {
 	}
 
 	const url = new URL(event.request.url);
+
+	// ✅ DICEBEAR AVATARS - Cache-First para economia offline
+	const isDiceBear = /^https:\/\/api\.dicebear\.com/.test(event.request.url);
+	if (isDiceBear) {
+		event.respondWith(
+			caches.match(event.request).then((cachedResponse) => {
+				if (cachedResponse) {
+					console.log("[SW] DiceBear avatar served from cache:", url.pathname);
+					return cachedResponse;
+				}
+
+				// Se não está no cache, busca da rede e cacheia
+				return fetch(event.request)
+					.then((networkResponse) => {
+						if (!networkResponse || networkResponse.status !== 200) {
+							return networkResponse;
+						}
+
+						const responseToCache = networkResponse.clone();
+						caches.open(CACHE_NAME).then((cache) => {
+							cache.put(event.request, responseToCache);
+							console.log("[SW] DiceBear avatar cached:", url.pathname);
+						});
+
+						return networkResponse;
+					})
+					.catch(() => {
+						console.warn("[SW] DiceBear avatar failed to load (offline):", url.pathname);
+						// Retorna resposta vazia em caso de falha
+						return new Response(null, {
+							status: 503,
+							statusText: "Service Unavailable",
+						});
+					});
+			}),
+		);
+		return; // Early return para evitar fallthrough
+	}
+
 	const isAudioFile = /\.(mp3|wav|ogg|m4a|aac)$/i.test(url.pathname);
 
 	if (isAudioFile) {

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
+import { detectActiveArc } from "@/data/story-arcs";
 
 export function useAudioDirector() {
 	const gameContext = useGameContext();
@@ -35,6 +36,9 @@ export function useAudioDirector() {
 		const hour = (time || 0) % 24;
 		const isNight = hour >= 19 || hour < 6;
 
+		// 🎭 STORY ARC DETECTION
+		const activeArc = detectActiveArc(activeDilemmaId);
+
 		// Lookup Active Dilemma for Sensory Overrides
 		let activeDilemma: any = null;
 		if (activeDilemmaId) {
@@ -54,6 +58,11 @@ export function useAudioDirector() {
 
 		// 🎵 AUDIO FIRST: Seleção dinâmica de track baseada no contexto
 		const getAmbienceTrack = (): string => {
+			// 🎭 PRIORIDADE 0: Story Arc Override
+			if (activeArc?.audioProfile.ambience) {
+				return activeArc.audioProfile.ambience;
+			}
+
 			// Prioridade 1: Dilema com audioId específico
 			if (activeDilemma?.audioId) {
 				return activeDilemma.audioId;
@@ -75,8 +84,17 @@ export function useAudioDirector() {
 
 		const targetTrack = getAmbienceTrack();
 
+		// 🎭 STORY ARC: Ajustar volume baseado na intensidade do arco
+		if (activeArc) {
+			const intensityVolume = {
+				LOW: 0.4,
+				MEDIUM: 0.6,
+				HIGH: 0.9,
+			}[activeArc.audioProfile.intensity];
+			targetVolume = intensityVolume;
+		}
 		// Priority 1: Director High Intensity (Crisis)
-		if (activeDilemma?.intensity === "HIGH") {
+		else if (activeDilemma?.intensity === "HIGH") {
 			// High Intensity overrides everything
 			targetVolume = 0.9; // Loud
 

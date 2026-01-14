@@ -1,6 +1,51 @@
 import type { Dilemma } from "./dilemma-types";
 
 export const REAL_DILEMMAS: Dilemma[] = [
+	// --- ARCO 1: CRISE FAMILIAR (71,5% Motivo de Rua - Censo 2024) ---
+	{
+		id: "dilema_crise_familiar_inicio",
+		title: "O Grito Final",
+		description: "A briga em casa escalou. Gritos, ameaças e objetos quebrados. Seu cunhado diz que se você não sair hoje, 'algo pior vai acontecer'. Você só tem uma mochila.",
+		trigger: { type: "STORYLINE_START", value: 1.0 }, // Triggered via special event or random high probability
+		intensity: "HIGH",
+		aspect: "FAMILY",
+		options: [
+			{
+				label: "Sair agora (Fugir)",
+				consequence: "Você bateu a porta e saiu para a noite fria. O silêncio da rua é assustador, mas melhor que os gritos.",
+				nextDilemmaId: "dilema_primeira_noite_rua",
+				effect: { sanity: 10, dignity: -10, energy: -20, money: 0 }
+			},
+			{
+				label: "Tentar ficar e conversar",
+				consequence: "A conversa virou agressão física. Você foi expulso à força, machucado e sem pegar suas coisas.",
+				nextDilemmaId: "dilema_primeira_noite_rua",
+				effect: { health: -30, sanity: -20, inventoryRemove: "all" } // Perde tudo
+			}
+		]
+	},
+	{
+		id: "dilema_primeira_noite_rua",
+		title: "A Primeira Noite",
+		description: "É sua primeira noite sem teto. Você não conhece as regras, não sabe onde é seguro. O Largo do Rosário tem gente, mas parece perigoso. A estação rodoviária é iluminada.",
+		trigger: { type: "CHAIN", value: 1.0, prev_id: "dilema_crise_familiar_inicio" },
+		intensity: "HIGH",
+		aspect: "SECURITY",
+		options: [
+			{
+				label: "Dormir na Rodoviária (Luz/Movimento)",
+				consequence: "Os guardas te acordaram às 3h da manhã mandando circular. Você não dormiu nada, mas não foi roubado.",
+				effect: { energy: -30, security: 10, sanity: -10 }
+			},
+			{
+				label: "Se esconder num beco escuro",
+				consequence: "Ninguém te viu, mas você tremeu de frio e medo a noite toda. Pelo menos manteve sua privacidade.",
+				effect: { energy: -10, sanity: -20, health: -5 }
+			}
+		]
+	},
+
+	// --- Existing Dilemmas (Preserved) ---
 	{
 		id: "dilema_menstruacao",
 		title: "Período e Dignidade",
@@ -200,7 +245,8 @@ export const REAL_DILEMMAS: Dilemma[] = [
 			{
 				label: "Ir ao Poupatempo (Exige Agendamento/Taxa)",
 				consequence:
-					"É uma saga. Precisa de foto 3x4 (paga) e agendamento (internet). Sem dinheiro e pc, você depende de favor.",
+					"É uma saga. Para agendar, você precisa de internet. Sem celular, isso vira uma barreira intransponível.",
+				nextDilemmaId: "dilema_exclusao_digital_poupatempo",
 				effect: { money: -20, stabilityGap: -5, sanity: -10 },
 			},
 			{

@@ -109,6 +109,7 @@ export function GameHUD({
 				{/* LEFT: VITAL SIGNS */}
 				<div className="flex items-center gap-3">
 					<InteractiveStatus
+						data-testid="stat-saude"
 						icon={Activity}
 						value={health}
 						max={100}
@@ -117,6 +118,7 @@ export function GameHUD({
 						details="Sua vitalidade física. Mantenha acima de 30% para evitar desmaios e doenças."
 					/>
 					<InteractiveStatus
+						data-testid="stat-mente"
 						icon={Brain}
 						value={sanity}
 						max={100}
@@ -125,6 +127,7 @@ export function GameHUD({
 						details="Sua saúde mental. Níveis baixos podem causar alucinações e limitar opções de diálogo."
 					/>
 					<InteractiveStatus
+						data-testid="stat-caixa"
 						icon={Wallet}
 						value={money}
 						isCurrency
@@ -136,7 +139,7 @@ export function GameHUD({
 
 				{/* RIGHT: RESOURCES & TIME */}
 				<div className="flex items-center gap-3 font-mono">
-					<div className="flex items-center gap-1.5 bg-slate-900/50 px-2 py-1 rounded-md border border-slate-800">
+					<div data-testid="hud-time" className="flex items-center gap-1.5 bg-slate-900/50 px-2 py-1 rounded-md border border-slate-800">
 						<Clock className="w-3.5 h-3.5 text-blue-400" />
 						<span className="text-white font-bold">
 							{time.toString().padStart(2, "0")}:00
@@ -150,6 +153,7 @@ export function GameHUD({
 							<WifiOff className="w-3.5 h-3.5 text-red-500" />
 						)}
 						<div
+							data-testid="hud-battery"
 							className={`flex items-center gap-1 ${phoneBattery < 20 ? "text-red-500 animate-pulse" : "text-slate-400"}`}
 						>
 							<Battery className="w-3.5 h-3.5" />
@@ -159,11 +163,10 @@ export function GameHUD({
 						<button
 							type="button"
 							onClick={handleToggleMute}
-							className={`ml-1 p-1 rounded-md transition-all ${
-								isMuted
-									? "text-red-400 hover:bg-red-900/30"
-									: "text-emerald-400 hover:bg-emerald-900/30"
-							}`}
+							className={`ml-1 p-1 rounded-md transition-all ${isMuted
+								? "text-red-400 hover:bg-red-900/30"
+								: "text-emerald-400 hover:bg-emerald-900/30"
+								}`}
 							aria-label={isMuted ? "Ativar som" : "Desativar som"}
 							title={isMuted ? "Ativar som" : "Desativar som"}
 						>

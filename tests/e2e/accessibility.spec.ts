@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../fixtures/game-state";
 
 test.describe("Accessibility (WCAG)", () => {
 	test("landing page should not have any automatically detectable accessibility issues", async ({
@@ -14,7 +14,7 @@ test.describe("Accessibility (WCAG)", () => {
 		expect(accessibilityScanResults.violations).toEqual([]);
 	});
 
-	test("game HUD should be accessible", async ({ page }) => {
+	test("game HUD should be accessible", async ({ page, gameState }) => {
 		// [FIX 2] Skip tutorial by setting localStorage BEFORE page loads
 		await page.addInitScript(() => {
 			window.localStorage.setItem("pop_rua_tutorial_seen", "true");
@@ -23,29 +23,25 @@ test.describe("Accessibility (WCAG)", () => {
 		// Navigate to game
 		await page.goto("/jogar");
 
-		// [FIX 3] Wait for game initialization
-		await page.waitForSelector('body[data-game-ready="true"]', {
-			timeout: 15000,
+		// [FIX 3] Inject Game State (Bypass Avatar Creation)
+		await page.waitForURL(/.*\/jogar/);
+
+		await gameState.injectGameState({
+			avatar: {
+				name: "A11y Tester",
+				gender: "masculino",
+				ethnicity: "pardo",
+				ageRange: "adulto",
+				timeOnStreet: "recente",
+				startingSkill: "nenhuma",
+				avatarImage: "/avatars/avatar_1.png",
+			},
+			day: 1,
+			time: 8,
+			health: 100,
+			sanity: 100,
+			money: 20,
 		});
-
-		// If avatar creation is present, fill it securely to get to HUD
-		const avatarHeader = page.getByText("Identidade", { exact: false });
-		if (await avatarHeader.isVisible()) {
-			// [FIX] Aguardar formulário de Avatar estar visível
-			await expect(page.locator("#avatar-name")).toBeVisible({
-				timeout: 10000,
-			});
-
-			await page.fill("#avatar-name", "A11y Tester");
-
-			// [FIX] Usar data-testid em vez de role="combobox"
-			await page.selectOption(
-				'[data-testid="avatar-gender-select"]',
-				"masculino",
-			);
-
-			await page.click('button:has-text("Próximo Passo")');
-		}
 
 		// Wait for HUD
 		await expect(page.locator('[data-testid="stat-saúde"]')).toBeVisible({

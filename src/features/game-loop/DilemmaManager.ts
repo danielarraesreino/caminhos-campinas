@@ -1,5 +1,6 @@
 import type { GameState } from "@/contexts/GameContext";
 import { REALITY_ATLAS } from "@/data/RealityAtlas";
+import { detectActiveArc, STORY_ARCS } from "@/data/story-arcs";
 import type { Dilemma } from "./dilemma-types";
 
 // Bom Prato operating hours (based on real data)
@@ -267,7 +268,39 @@ export class DilemmaManager {
 			if (nightlifeRisk) return nightlifeRisk;
 		}
 
-		// 3.3 Environmental Pressure (Noise)
+		// 3.3 Thematic Coherence (New) - Prioritize dilemmas from active arc
+		// If player is in the middle of a story arc, prefer continuing that narrative
+		const activeArc = detectActiveArc(state.activeDilemmaId || null);
+		if (activeArc) {
+			const sameArcCandidate = candidates.find((d) =>
+				activeArc.dilemmaSequence.includes(d.id),
+			);
+			if (sameArcCandidate) {
+				console.log(
+					`[Director] Prioritizing same-arc dilemma: ${sameArcCandidate.id} (Arc: ${activeArc.id})`,
+				);
+				return sameArcCandidate;
+			}
+		}
+
+		// Check for arc synergy with last resolved dilemma
+		const lastResolvedId = Array.from(this.resolvedIds).pop();
+		if (lastResolvedId) {
+			const lastResolvedArc = detectActiveArc(lastResolvedId);
+			if (lastResolvedArc) {
+				const continueArcCandidate = candidates.find((d) =>
+					lastResolvedArc.dilemmaSequence.includes(d.id),
+				);
+				if (continueArcCandidate) {
+					console.log(
+						`[Director] Continuing arc: ${continueArcCandidate.id} (Arc: ${lastResolvedArc.id})`,
+					);
+					return continueArcCandidate;
+				}
+			}
+		}
+
+		// 3.4 Environmental Pressure (Noise)
 		// If no crisis, prefer Low Intensity events to keep the "vibe" without overwhelming,
 		// OR just random pick from the candidates.
 		// Let's pick a random candidate from what's left to ensure variety.
@@ -712,9 +745,9 @@ export class DilemmaManager {
 		const a =
 			Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 			Math.cos((lat1 * Math.PI) / 180) *
-				Math.cos((lat2 * Math.PI) / 180) *
-				Math.sin(dLon / 2) *
-				Math.sin(dLon / 2);
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
 		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		return R * c;
 	}

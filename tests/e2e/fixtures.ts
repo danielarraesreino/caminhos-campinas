@@ -8,6 +8,7 @@ export const test = base.extend<{ page: Page }>({
 				const text = msg.text();
 				// Allow some noisy but harmless errors if absolutely necessary (list exceptions here)
 				if (text.includes("404 (Not Found)")) return; // Ignore missing assets for now
+				if (text.includes("GeolocationPositionError")) return; // Ignore geo errors in headless
 
 				// For now: Zero Tolerance for JS errors.
 				throw new Error(

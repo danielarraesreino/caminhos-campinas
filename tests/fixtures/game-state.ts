@@ -56,6 +56,8 @@ const MOCK_PLAYER_STATE = {
 		startingSkill: "nenhuma",
 		avatarImage: "/avatars/avatar_1.png",
 	},
+	hasHydrated: true,
+	tutorialActive: false,
 };
 
 type GameStateFixture = {
@@ -73,9 +75,17 @@ export const test = base.extend<GameStateFixture>({
 			const stateToInject = { ...MOCK_PLAYER_STATE, ...customState };
 
 			// Wait for hydration or simply override
-			// We wait for the window property to be available
+			// Wait for the window property to be available
 			await page.waitForFunction(
 				() => (window as any).debugSetState !== undefined,
+				null,
+				{ timeout: 5000 },
+			);
+
+			// [FIX] Wait for initial DB hydration to complete to avoid overwrite
+			// If "Carregando..." is removed, or hasHydrated is true
+			await page.waitForFunction(
+				() => !document.body.innerText.includes("Carregando..."),
 				null,
 				{ timeout: 5000 },
 			);
@@ -91,3 +101,4 @@ export const test = base.extend<GameStateFixture>({
 		await use({ injectGameState: inject });
 	},
 });
+export { expect } from "@playwright/test";

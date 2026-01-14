@@ -7,6 +7,31 @@ interface UseNativeSpeechOptions {
 	onSpeechEnd?: () => void;
 }
 
+// 🔒 SINGLETON: Global Speech Recognition instance
+let globalRecognitionInstance: any = null;
+
+function getSpeechRecognitionInstance() {
+	if (typeof window === "undefined") return null;
+
+	if (globalRecognitionInstance) {
+		return globalRecognitionInstance;
+	}
+
+	const SpeechRecognition =
+		(window as any).SpeechRecognition ||
+		(window as any).webkitSpeechRecognition;
+
+	if (!SpeechRecognition) return null;
+
+	const recognition = new SpeechRecognition();
+	recognition.continuous = false;
+	recognition.lang = "pt-BR";
+	recognition.interimResults = false;
+
+	globalRecognitionInstance = recognition;
+	return recognition;
+}
+
 export function useNativeSpeech({
 	onTranscription,
 	onSpeechEnd,
@@ -16,40 +41,56 @@ export function useNativeSpeech({
 	const [error, setError] = useState<string | null>(null);
 	const recognitionRef = useRef<any>(null);
 	const synthesisRef = useRef<SpeechSynthesis | null>(null);
+	const isStartingRef = useRef(false); // 🛡️ GUARD: Prevent race conditions
 
-	// Initialize Speech Recognition
+	// Initialize Speech Recognition with Singleton
 	useEffect(() => {
-		if (typeof window !== "undefined") {
-			const SpeechRecognition =
-				(window as any).SpeechRecognition ||
-				(window as any).webkitSpeechRecognition;
-			if (SpeechRecognition) {
-				const recognition = new SpeechRecognition();
-				recognition.continuous = false;
-				recognition.lang = "pt-BR";
-				recognition.interimResults = false;
+		if (typeof window === "undefined") return;
 
-				recognition.onresult = (event: any) => {
-					const transcript = event.results[0][0].transcript;
-					if (onTranscription) onTranscription(transcript);
-				};
+		const recognition = getSpeechRecognitionInstance();
+		if (recognition) {
+			recognition.onresult = (event: any) => {
+				const transcript = event.results[0][0].transcript;
+				if (onTranscription) onTranscription(transcript);
+			};
 
-				recognition.onend = () => {
+			recognition.onend = () => {
+				setIsListening(false);
+				isStartingRef.current = false; // Reset guard
+				if (onSpeechEnd) onSpeechEnd();
+			};
+
+			recognition.onerror = (event: any) => {
+				// ✅ SILENT ABORT: Ignore "aborted" errors (normal cleanup)
+				if (event.error === "aborted") {
+					console.log("[Speech] Recognition aborted (intentional cleanup)");
 					setIsListening(false);
-					if (onSpeechEnd) onSpeechEnd();
-				};
+					isStartingRef.current = false;
+					return;
+				}
 
-				recognition.onerror = (event: any) => {
-					console.error("Speech recognition error", event.error);
-					setError(event.error);
-					setIsListening(false);
-				};
+				// Log other errors normally
+				console.error("[Speech] Recognition error:", event.error);
+				setError(event.error);
+				setIsListening(false);
+				isStartingRef.current = false;
+			};
 
-				recognitionRef.current = recognition;
-			}
-
-			synthesisRef.current = window.speechSynthesis;
+			recognitionRef.current = recognition;
 		}
+
+		synthesisRef.current = window.speechSynthesis;
+
+		// ✅ CLEANUP: Stop recognition on unmount (React 19/Next.js 16)
+		return () => {
+			if (recognitionRef.current) {
+				try {
+					recognitionRef.current.stop();
+				} catch (e) {
+					// Ignore if already stopped
+				}
+			}
+		};
 	}, [onTranscription, onSpeechEnd]);
 
 	const startListening = useCallback(() => {
@@ -57,23 +98,43 @@ export function useNativeSpeech({
 			setError("Speech recognition not supported");
 			return;
 		}
+
+		// 🛡️ GUARD: Prevent multiple start() calls
+		if (isListening || isStartingRef.current) {
+			console.log("[Speech] Already listening or starting, skipping");
+			return;
+		}
+
 		if (isSpeaking) {
 			synthesisRef.current?.cancel();
 			setIsSpeaking(false);
 		}
+
 		try {
+			isStartingRef.current = true;
 			recognitionRef.current.start();
 			setIsListening(true);
 			setError(null);
-		} catch (e) {
-			console.error("Failed to start recognition", e);
+		} catch (e: any) {
+			// Handle "already started" error gracefully
+			if (e.message?.includes("already started")) {
+				console.log("[Speech] Recognition already active");
+			} else {
+				console.error("[Speech] Failed to start recognition:", e);
+			}
+			isStartingRef.current = false;
 		}
-	}, [isSpeaking]);
+	}, [isSpeaking, isListening]);
 
 	const stopListening = useCallback(() => {
 		if (recognitionRef.current) {
-			recognitionRef.current.stop();
+			try {
+				recognitionRef.current.stop();
+			} catch (e) {
+				// Ignore if already stopped
+			}
 			setIsListening(false);
+			isStartingRef.current = false; // Reset guard
 		}
 	}, []);
 

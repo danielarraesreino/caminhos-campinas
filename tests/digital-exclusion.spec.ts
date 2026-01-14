@@ -62,8 +62,7 @@ test.describe("Exclusão Digital e Resiliência", () => {
 
 		// 2. Simula Bateria 0%
 		await page.evaluate(() => {
-			// biome-ignore lint/suspicious/noExplicitAny: testing/mocking
-			(window as any).debugSetBattery(0);
+			(window as any).debugSetState({ phoneBattery: 0 });
 		});
 
 		// 3. Verifica bloqueio

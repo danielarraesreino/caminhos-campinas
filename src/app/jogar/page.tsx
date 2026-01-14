@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { AudioDirector } from "@/features/audio/AudioDirector";
 import { ImpactReport } from "@/features/dashboard/ImpactReport";
+import { useModalQueue } from "@/contexts/ModalQueueContext";
 import {
 	checkGameOver,
 	type GameOverResult,
@@ -48,12 +50,15 @@ export default function GamePage() {
 
 	// Unpause when tutorial closes (only if no dilemma is active)
 	useEffect(() => {
-		if (!showTutorial && !activeDilemma) {
-			gameState.setPaused(false);
-		} else if (showTutorial) {
+		// [FIX] Guard against redundant updates to prevent infinite loops
+		const shouldBePaused = showTutorial;
+
+		if (showTutorial && !gameState.isPaused) {
 			gameState.setPaused(true);
+		} else if (!showTutorial && !activeDilemma && gameState.isPaused) {
+			gameState.setPaused(false);
 		}
-	}, [showTutorial, activeDilemma, gameState.setPaused]);
+	}, [showTutorial, activeDilemma, gameState.isPaused, gameState.setPaused]);
 
 	// [FIX] Ensure Chat closes when a Dilemma starts (so the Modal isn't hidden behind the Chat)
 	useEffect(() => {
@@ -148,6 +153,9 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 		.filter(Boolean)
 		.join(" ");
 
+	// [NEW] Use Modal Queue to check if audio is blocking visual modals
+	const { audioPlaying } = useModalQueue();
+
 	return (
 		// MUDANÇA 1: h-[100dvh] garante que cabe na tela real do celular sem scroll
 		<main className="relative w-full h-[100dvh] bg-slate-900 overflow-hidden">
@@ -178,7 +186,8 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 			</div>
 
 			{/* CAMADA 50: Modais de Decisão e Chat (Bloqueantes ou Interativos) */}
-			{activeDilemma && (
+			{/* WALKIE-TALKIE MODE: Block visual modal while audio is playing */}
+			{activeDilemma && !audioPlaying && (
 				<DilemmaModal
 					dilemma={activeDilemma}
 					onResolve={resolveDilemma}
@@ -207,6 +216,8 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 					<VoiceReporter onClose={() => setIsVoiceOpen(false)} />
 				</div>
 			)}
+
+			<AudioDirector />
 
 			{isLocationsOpen && (
 				<div className="fixed inset-0 z-[150] flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">

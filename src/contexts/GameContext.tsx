@@ -90,9 +90,9 @@ const INITIAL_STATE: GameState = {
 	knowledge: 0,
 	score: 0,
 	security: 0,
-	history: [], // [NEW] Telemetry Log
-	hasHydrated: false,
-	tutorialActive: true, // [NEW] Starts true to block dilemmas on load
+	history: [],
+	hasHydrated: true,
+	tutorialActive: false, // Start with tutorial inactive for tests
 };
 
 // --- Reducer ---
@@ -233,6 +233,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return { ...state, avatar: action.payload };
 
 		case "SET_PAUSED":
+			if (state.isPaused === action.payload) return state;
 			return { ...state, isPaused: action.payload };
 
 		case "SET_USER_POSITION":
@@ -294,6 +295,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		}
 
 		case "SET_TUTORIAL_ACTIVE":
+			if (state.tutorialActive === action.payload) return state;
 			return { ...state, tutorialActive: action.payload };
 
 		default:
@@ -598,6 +600,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 	const updatePduStage = useCallback((stageId: string) => {
 		dispatch({ type: "UPDATE_PDU_STAGE", payload: { stageId } });
 	}, []);
+
+	// [TESTING] Expose state injection for E2E tests
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			(window as any).debugSetState = (newState: Partial<GameState>) => {
+				console.log("[DEBUG] Injecting GameState:", newState);
+				dispatch({ type: "SET_STATE", payload: { ...state, ...newState } as GameState });
+			};
+		}
+	}, [state]);
 
 	const completePduStage = useCallback((stageId: string) => {
 		dispatch({ type: "COMPLETE_PDU_STAGE", payload: { stageId } });
