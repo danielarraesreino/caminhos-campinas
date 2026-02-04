@@ -20,6 +20,7 @@ import { useHaptics } from "@/hooks/useHaptics";
 import { useImpactLogger } from "@/hooks/useImpactLogger";
 import { useODSTracker } from "@/hooks/useODSTracker";
 import { getWikipediaUrl } from "@/services/WikiAdapter";
+import { useModalQueue } from "@/contexts/ModalQueueContext";
 
 interface DilemmaModalProps {
 	dilemma: Dilemma | null;
@@ -40,6 +41,7 @@ export function DilemmaModal({
 	const { triggerClick } = useHaptics();
 	const { trackDilemmaDecision } = useODSTracker();
 	const { auditResolution } = useImpactLogger();
+	const { setAudioPlaying, audioPlaying } = useModalQueue();
 
 	// A11y States
 	const [zoomLevel, setZoomLevel] = useState(1); // 1 = 100%, 1.2 = 120%
@@ -69,6 +71,7 @@ export function DilemmaModal({
 		if (isSpeaking) {
 			window.speechSynthesis.cancel();
 			setIsSpeaking(false);
+			setAudioPlaying(false);
 		} else {
 			const textToRead = currentOption
 				? outcome === "failure" && currentOption.consequence_failure
@@ -84,9 +87,13 @@ export function DilemmaModal({
 			utterance.rate = 1.1;
 			utterance.pitch = 1.0;
 
-			utterance.onend = () => setIsSpeaking(false);
+			utterance.onend = () => {
+				setIsSpeaking(false);
+				setAudioPlaying(false);
+			};
 			window.speechSynthesis.speak(utterance);
 			setIsSpeaking(true);
+			setAudioPlaying(true);
 		}
 	};
 
@@ -190,7 +197,7 @@ export function DilemmaModal({
 			<DialogContent
 				showCloseButton={false}
 				accessibleTitle={dilemma.title || "Dilema de Sobrevivência"}
-				className="sm:max-w-[500px] max-h-[85vh] flex flex-col border border-slate-800 bg-black text-slate-300 rounded-none p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,1)] z-[var(--z-modal-queue)]"
+				className="sm:max-w-[500px] max-h-[85vh] flex flex-col border border-slate-800 bg-slate-950 text-slate-300 rounded-2xl p-0 overflow-hidden shadow-2xl shadow-black z-[var(--z-modal-queue)]"
 			>
 				{/* Header decorativo técnico */}
 				<div className="h-1 w-full bg-slate-900 shrink-0" />
@@ -212,11 +219,10 @@ export function DilemmaModal({
 					<button
 						type="button"
 						onClick={toggleSpeech}
-						className={`p-1.5 rounded transition-colors border ${
-							isSpeaking
-								? "bg-blue-900/50 border-blue-500 text-blue-400"
-								: "bg-slate-900/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-						}`}
+						className={`p-1.5 rounded transition-colors border ${isSpeaking
+							? "bg-blue-900/50 border-blue-500 text-blue-400"
+							: "bg-slate-900/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+							}`}
 						aria-label="Ler texto em voz alta"
 						title="Ouvir Dilema"
 					>
@@ -378,7 +384,7 @@ export function DilemmaModal({
 										style={{
 											fontSize: `${Math.max(0.875, zoomLevel * 0.8)}rem`,
 										}} // Scale button text slightly less aggresive
-										disabled={isPending}
+										disabled={isPending || audioPlaying}
 										onClick={() => handleOptionSelect(index)}
 									>
 										<div

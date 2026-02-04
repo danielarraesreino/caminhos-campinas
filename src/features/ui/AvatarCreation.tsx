@@ -26,19 +26,25 @@ interface AvatarCreationProps {
 const AVATAR_OPTIONS = [
 	{
 		id: "avatar_1",
-		image: "/avatars/avatar_1.png",
-		label: "Identidade A",
+		image: "/avatars/avatar_sober_male.png", // "Realismo Sóbrio" - Male
+		label: "Retrato A",
 		gender: "masculino",
 		age: "maduro",
 	},
 	{
 		id: "avatar_2",
-		image: "/avatars/avatar_2.png",
-		label: "Identidade B",
-		gender: "trans",
-		age: "adulto",
+		image: "/avatars/avatar_sober_female.png", // "Realismo Sóbrio" - Female
+		label: "Retrato B",
+		gender: "feminino",
+		age: "idoso",
 	},
 ];
+
+// Placeholder for Vercel AI SDK generation function
+async function generateAIPortrait(prompt: string) {
+	console.log("Generating unique portrait for:", prompt);
+	// implementation: await fetch('/api/generate-avatar', { body: { prompt } })
+}
 
 export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 	const { setAvatar, resetGame } = useGameContext();
@@ -198,16 +204,13 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 										alt={opt.label}
 										fill
 										sizes="(max-width: 768px) 100vw, 33vw"
-										className={`object-cover ${formData.avatarImage === opt.id ? "opacity-100" : "opacity-40 hover:opacity-100"} transition-opacity`}
+										className={`object-cover ${formData.avatarImage === opt.id ? "opacity-100" : "opacity-80 hover:opacity-100"} transition-opacity grayscale hover:grayscale-0`}
 										onError={(_e) => {
-											// Fallback to purely visual if needed, but for now we just log
 											console.warn("Avatar load failed", opt.image);
-											// We could replace src with a placeholder here but Next/Image is tricky with onError.
-											// Better to wrap in a conditional if we had state, but this is a map.
 										}}
 									/>
 									<div
-										className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent transition-transform
+										className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent transition-transform
 										${formData.avatarImage === opt.image ? "translate-y-0" : "translate-y-full group-hover:translate-y-0"}
 									`}
 									>
@@ -217,6 +220,18 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 									</div>
 								</button>
 							))}
+
+							{/* AI GENERATION BUTTON */}
+							<button
+								type="button"
+								disabled
+								className="relative aspect-square rounded-3xl overflow-hidden border-2 border-dashed border-slate-700 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 transition-colors bg-slate-900/50"
+							>
+								<Sparkles className="w-8 h-8 text-slate-600 group-hover:text-blue-400 transition-colors" />
+								<span className="text-xs font-bold text-slate-500 group-hover:text-blue-400 uppercase text-center px-4">
+									Gerar com IA (Em Breve)
+								</span>
+							</button>
 						</div>
 					</div>
 				)}
@@ -362,9 +377,10 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 				<Button
 					variant="ghost"
 					onClick={handleBack}
-					className="flex-1 text-slate-500 hover:text-white font-black uppercase tracking-widest h-14 rounded-2xl"
+					className="flex-1 text-slate-400 hover:text-white font-black uppercase tracking-widest h-14 rounded-2xl"
+					aria-label="Voltar para o passo anterior"
 				>
-					<ArrowLeft className="h-4 w-4 mr-2" /> Voltar
+					<ArrowLeft className="h-4 w-4 mr-2" aria-hidden="true" /> Voltar
 				</Button>
 				<Button
 					onClick={handleNext}

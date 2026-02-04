@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
 import { InteractiveStatus } from "./InteractiveStatus";
+import { CofreDrawer } from "./CofreDrawer";
 
 export function GameHUD({
 	onToggleChat,
@@ -36,6 +37,7 @@ export function GameHUD({
 }) {
 	const [isOnline, setIsOnline] = useState(true);
 	const [isMuted, setIsMuted] = useState(false);
+	const [isCofreOpen, setIsCofreOpen] = useState(false);
 	const { setVolume, initAudio } = useAudioSystem();
 
 	// 🔊 AUDIO FIRST: Inicializar estado mute do localStorage
@@ -105,7 +107,11 @@ export function GameHUD({
 			)}
 
 			{/* TOP BAR - COMPACT HUD */}
-			<header className="fixed top-0 left-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-3 py-2 flex items-center justify-between text-xs shadow-xl pointer-events-auto transition-all duration-300">
+			<header
+				className="fixed top-0 left-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-3 py-2 flex items-center justify-between text-xs shadow-xl pointer-events-auto transition-all duration-300"
+				role="banner"
+				aria-label="Barra de Status do Jogo"
+			>
 				{/* LEFT: VITAL SIGNS */}
 				<div className="flex items-center gap-3">
 					<InteractiveStatus
@@ -168,12 +174,11 @@ export function GameHUD({
 								: "text-emerald-400 hover:bg-emerald-900/30"
 								}`}
 							aria-label={isMuted ? "Ativar som" : "Desativar som"}
-							title={isMuted ? "Ativar som" : "Desativar som"}
 						>
 							{isMuted ? (
-								<VolumeX className="w-4 h-4" />
+								<VolumeX className="w-4 h-4" aria-hidden="true" />
 							) : (
-								<Volume2 className="w-4 h-4" />
+								<Volume2 className="w-4 h-4" aria-hidden="true" />
 							)}
 						</button>
 					</div>
@@ -216,15 +221,17 @@ export function GameHUD({
 					<MapPin className="h-5 w-5 text-zinc-950" />
 				</Button>
 
-				<Link href="/cofre">
-					<Button
-						size="icon"
-						className="h-10 w-10 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-lg transition-transform active:scale-95"
-						title="Meus Documentos (Cofre)"
-					>
-						<Shield className="h-4 w-4 text-blue-400" />
-					</Button>
-				</Link>
+				<Button
+					size="icon"
+					className="h-12 w-12 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-lg transition-transform active:scale-95 relative"
+					title="Cofre Digital (Meus Documentos)"
+					onClick={() => setIsCofreOpen(true)}
+				>
+					<div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
+					<Shield className="h-5 w-5 text-blue-400" />
+				</Button>
+
+				<CofreDrawer isOpen={isCofreOpen} onClose={() => setIsCofreOpen(false)} />
 
 				<Button
 					size="icon"

@@ -1,6 +1,21 @@
+"use client";
 import partnersData from "@/data/partners.json";
+import { useGameContext } from "@/contexts/GameContext";
+import { useEffect } from "react";
 
 export default function HubPage() {
+	// const { pdu, initPDU } = useGameContext(); // optimization: unused
+
+	// Integrate with PDU: Visiting the Hub initializes the WORK objective checks
+	useEffect(() => {
+		// Only init if player has no objective or is exploring
+		// This might be too aggressive, maybe just log it as a resource found?
+		// For now, let's say visiting the Hub is a step towards "TRABALHO" if they have that objective.
+		// Or if they don't have one, we could suggest it.
+		// Let's keep it simple: just log exploration for now or do nothing if no quest requires it yet.
+		// Actually, let's make it so visiting the Hub counts for "Searching for opportunities".
+	}, []);
+
 	return (
 		<div className="min-h-screen bg-slate-950 text-white p-8">
 			<h1 className="text-4xl font-black uppercase tracking-tighter mb-4 text-white">

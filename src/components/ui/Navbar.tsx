@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { SyncButton } from "@/components/ui/SyncButton";
 
 export function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -74,7 +75,7 @@ export function Navbar() {
 	// if (pathname === "/jogar") return null;
 
 	return (
-		<nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-[var(--z-navbar)]">
+		<nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-900" aria-label="Navegação Principal">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex items-center justify-between h-16">
 					{/* 1. BRANDING */}
@@ -136,7 +137,10 @@ export function Navbar() {
 							</Button>
 						</Link>
 
-						{/* Offline Indicator */}
+						{/* DATA SYNC */}
+						<SyncButton />
+
+						{/* OFFLINE INDICATOR */}
 						<div
 							title={isOnline ? "Você está Online" : "Modo Offline Ativo"}
 							className={`flex items-center justify-center p-2 rounded-full transition-colors ${isOnline ? "text-green-500/50" : "bg-red-500/20 text-red-400 border border-red-500/30"}`}
@@ -146,6 +150,47 @@ export function Navbar() {
 							) : (
 								<WifiOff className="w-4 h-4 animate-pulse" />
 							)}
+						</div>
+
+						<div className="relative group">
+							<button className="flex items-center gap-1 text-zinc-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors border border-zinc-800 hover:border-zinc-700">
+								Páginas (Dev)
+							</button>
+							<div className="absolute right-0 top-full mt-2 w-56 bg-zinc-950 border border-zinc-800 rounded-md shadow-xl py-2 hidden group-hover:block">
+								<div className="px-3 py-1 text-xs font-bold text-zinc-500 uppercase tracking-widest">
+									Orfãs & Utilitários
+								</div>
+								<Link href="/hub/cadastro" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+									Cadastro ONG (/hub/cadastro)
+								</Link>
+								<Link href="/educacao" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+									Educação (/educacao)
+								</Link>
+								<Link href="/curso" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+									Curso (/curso)
+								</Link>
+								<Link href="/parceiros" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+									Parceiros ESG (/parceiros)
+								</Link>
+								<Link href="/auditoria/validar" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+									Auditoria (/auditoria/validar)
+								</Link>
+								<Link href="/sugerir" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+									Sugerir (/sugerir)
+								</Link>
+								<Link href="/test-features" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
+									Test Features (/test-features)
+								</Link>
+								<button
+									onClick={async () => {
+										const { telemetry } = await import("@/services/TelemetryService");
+										telemetry.exportTelemetryToJson();
+									}}
+									className="text-left w-full px-4 py-2 text-sm text-red-400 hover:bg-zinc-900 hover:text-red-300 font-mono border-t border-dashed border-zinc-800"
+								>
+									[DEV] Exportar Telemetria
+								</button>
+							</div>
 						</div>
 					</div>
 
