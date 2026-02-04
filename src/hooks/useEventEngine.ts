@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";
 
@@ -42,6 +42,8 @@ export function useEventEngine() {
 		}
 	}, [activeDilemmaId, activeDilemma, setActiveDilemma]);
 
+	const lastTriggerRef = useRef<number>(0);
+
 	const clearActiveDilemma = useCallback(
 		() => setActiveDilemma(null),
 		[setActiveDilemma],
@@ -49,6 +51,12 @@ export function useEventEngine() {
 
 	const triggerDilemma = useCallback(
 		(dilemmaId: string) => {
+			const now = Date.now();
+			if (now - lastTriggerRef.current < 2000) {
+				console.warn(`[EventEngine] Throttled dilemma '${dilemmaId}' (too fast)`);
+				return;
+			}
+			lastTriggerRef.current = now;
 			setActiveDilemma(dilemmaId);
 		},
 		[setActiveDilemma],

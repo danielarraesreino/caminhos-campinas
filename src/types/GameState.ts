@@ -58,7 +58,16 @@ export interface Item {
 	type: "valioso" | "sobrevivencia";
 }
 
-export type PDUObjective = "TRABALHO" | "FAMILIA" | "SAUDE" | "MORADIA";
+export type PDUObjective =
+	| "SOCIAL" // Encaminhamentos Sociais
+	| "SAUDE" // Saúde Física/Mental
+	| "EDUCACAO" // Formação/Educação
+	| "TRABALHO" // Trabalho/Renda
+	| "FINANCAS" // Organização Financeira
+	| "FAMILIA" // Vínculos Familiares
+	| "CONVIVENCIA" // Regras de Convivência
+	| "MORADIA" // Plano de Saída/Locação
+	| "CIDADANIA"; // Acesso à Justiça/Direitos
 
 export interface PDUState {
 	isActive: boolean;
@@ -91,6 +100,9 @@ export interface GameState {
 		hasCPF: boolean;
 		hasCarteiraTrabalho: boolean;
 		hasComprovanteResidencia: boolean;
+		rgPhoto?: string;
+		cpfPhoto?: string;
+		carteiraTrabalhoPhoto?: string;
 	};
 	socialThermometer: {
 		fome: number;

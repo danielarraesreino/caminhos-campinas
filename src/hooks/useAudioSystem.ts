@@ -76,7 +76,7 @@ export function useAudioSystem(): AudioSystemCallbacks {
 	useEffect(() => {
 		if (isInitialized && pendingTrack) {
 			const mappedId = TRACK_MAP[pendingTrack] || pendingTrack;
-			const src = `/sounds/${mappedId}.mp3`;
+			const src = `/sounds/${mappedId}.wav`;
 
 			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
 				setPendingTrack(null);
@@ -108,7 +108,7 @@ export function useAudioSystem(): AudioSystemCallbacks {
 			}
 
 			const mappedId = TRACK_MAP[trackId] || trackId;
-			const src = `/sounds/${mappedId}.mp3`;
+			const src = `/sounds/${mappedId}.wav`;
 
 			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
 				return;
@@ -153,7 +153,7 @@ export function useAudioSystem(): AudioSystemCallbacks {
 	const playSfx = useCallback((trackId: string) => {
 		try {
 			const mappedId = TRACK_MAP[trackId] || trackId;
-			const audio = new Audio(`/sounds/${mappedId}.mp3`);
+			const audio = new Audio(`/sounds/${mappedId}.wav`);
 			audio.volume = globalVolume;
 			audio.play().catch((e) => console.warn("SFX fail:", e));
 		} catch (err) {

@@ -109,6 +109,36 @@ class TelemetryService {
 		this.events = [];
 		this.saveEvents();
 	}
+
+	public exportTelemetryToJson() {
+		if (typeof window !== "undefined") {
+			// Get suggestions
+			const suggestionsStored = localStorage.getItem("user_suggestions");
+			let suggestions = [];
+			try {
+				suggestions = suggestionsStored ? JSON.parse(suggestionsStored) : [];
+			} catch (e) {
+				console.error("Failed to parse suggestions", e);
+			}
+
+			const exportData = {
+				telemetry: this.events,
+				suggestions: suggestions,
+				exportedAt: new Date().toISOString()
+			};
+
+			const jsonString = JSON.stringify(exportData, null, 2);
+			const blob = new Blob([jsonString], { type: "application/json" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = `caminhos_consolidado_${new Date().toISOString()}.json`;
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			URL.revokeObjectURL(url);
+		}
+	}
 }
 
 export const telemetry = TelemetryService.getInstance();

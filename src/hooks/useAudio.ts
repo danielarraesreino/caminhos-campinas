@@ -47,7 +47,7 @@ export function useAudio() {
 
 	const playAmbience = useCallback(
 		(trackId: AudioTrackId, options: AudioOptions = {}) => {
-			const src = `/sounds/${trackId}.mp3`;
+			const src = `/sounds/${trackId}.wav`;
 
 			// If same track is playing, do nothing
 			if (
@@ -105,9 +105,9 @@ export function useAudio() {
 	);
 
 	const playSfx = useCallback((trackId: AudioTrackId, volume = 1.0) => {
-		const audio = new Audio(`/sounds/${trackId}.mp3`);
+		const audio = new Audio(`/sounds/${trackId}.wav`);
 		audio.volume = Math.min(volume, 1);
-		audio.play().catch(() => {}); // Fire and forget
+		audio.play().catch(() => { }); // Fire and forget
 	}, []);
 
 	// Cleanup on unmount

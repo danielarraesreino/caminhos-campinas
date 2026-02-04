@@ -51,6 +51,9 @@ export const DocumentsSchema = z.object({
 	hasCPF: z.boolean().default(true),
 	hasCarteiraTrabalho: z.boolean().default(false),
 	hasComprovanteResidencia: z.boolean().default(false),
+	rgPhoto: z.string().optional(),
+	cpfPhoto: z.string().optional(),
+	carteiraTrabalhoPhoto: z.string().optional(),
 });
 
 export const SocialThermometerSchema = z.object({
