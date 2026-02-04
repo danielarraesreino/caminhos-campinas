@@ -2,25 +2,43 @@
 
 import { ArrowLeft, BookOpen, FileText, Target, Users } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { EcoButton } from "@/components/ui/EcoButton";
+import { AudioReader } from "@/components/ui/AudioReader";
 import SOURCES_DATA from "@/data/sources.json";
 
 export default function SobrePage() {
 	return (
-		<div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
-			<div className="max-w-4xl mx-auto space-y-8 p-6 pt-24">
+		<div className="min-h-screen bg-black text-slate-100 font-sans relative overflow-hidden">
+			{/* Background Image */}
+			<div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+				<Image
+					src="/images/sobrio/landing.png"
+					alt="Fundo Sobre - Realismo Sóbrio"
+					fill
+					priority
+					className="object-cover"
+					quality={85}
+				/>
+				<div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-black" />
+			</div>
+
+			<div className="max-w-4xl mx-auto space-y-8 p-6 pt-24 relative z-10">
 				<header className="flex items-center gap-4 border-b border-slate-800 pb-6">
 					<Link
 						href="/"
 						className="p-2 hover:bg-slate-900 rounded-full transition-colors group"
 					>
-						<ArrowLeft className="w-6 h-6 text-slate-400 group-hover:text-white" />
+						<ArrowLeft className="w-6 h-6 text-slate-300 group-hover:text-white" />
 					</Link>
 					<div>
 						<h1 className="text-3xl font-black uppercase tracking-tighter text-white">
 							Sobre o Projeto
 						</h1>
-						<p className="text-slate-400">Tecnologia Social & Dignidade</p>
+						<div className="flex items-center gap-2">
+							<p className="text-slate-400">Tecnologia Social & Dignidade</p>
+							<AudioReader text="Manifesto da Invisibilidade. Tecnologia Cívica para Direitos Reais. Nascemos da inconformidade. O Caminhos Campinas não é apenas um guia, é um manifesto técnico." />
+						</div>
 					</div>
 				</header>
 

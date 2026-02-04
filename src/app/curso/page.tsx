@@ -10,6 +10,7 @@ import {
 	User,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,8 +37,21 @@ export default function CoursePage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
-			<div className="max-w-4xl mx-auto space-y-8 p-6 pt-24">
+		<div className="min-h-screen bg-black text-slate-100 font-sans relative overflow-hidden">
+			{/* Background Image */}
+			<div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+				<Image
+					src="/images/sobrio/simulador.png"
+					alt="Fundo Curso - Realismo Sóbrio"
+					fill
+					priority
+					className="object-cover"
+					quality={85}
+				/>
+				<div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-black" />
+			</div>
+
+			<div className="max-w-4xl mx-auto space-y-8 p-6 pt-24 relative z-10">
 				{/* Header */}
 				<header className="flex items-center gap-4 border-b border-slate-800 pb-6">
 					<Link
@@ -152,33 +166,30 @@ export default function CoursePage() {
 										<button
 											type="button"
 											onClick={() => setContactMethod("whatsapp")}
-											className={`p-2 rounded-lg text-xs font-bold border transition-all ${
-												contactMethod === "whatsapp"
-													? "bg-green-600 border-green-500 text-white"
-													: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
-											}`}
+											className={`p-2 rounded-lg text-xs font-bold border transition-all ${contactMethod === "whatsapp"
+												? "bg-green-600 border-green-500 text-white"
+												: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
+												}`}
 										>
 											Whatsapp
 										</button>
 										<button
 											type="button"
 											onClick={() => setContactMethod("email")}
-											className={`p-2 rounded-lg text-xs font-bold border transition-all ${
-												contactMethod === "email"
-													? "bg-blue-600 border-blue-500 text-white"
-													: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
-											}`}
+											className={`p-2 rounded-lg text-xs font-bold border transition-all ${contactMethod === "email"
+												? "bg-blue-600 border-blue-500 text-white"
+												: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
+												}`}
 										>
 											E-mail
 										</button>
 										<button
 											type="button"
 											onClick={() => setContactMethod("proxy")}
-											className={`p-2 rounded-lg text-xs font-bold border transition-all ${
-												contactMethod === "proxy"
-													? "bg-purple-600 border-purple-500 text-white"
-													: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
-											}`}
+											className={`p-2 rounded-lg text-xs font-bold border transition-all ${contactMethod === "proxy"
+												? "bg-purple-600 border-purple-500 text-white"
+												: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
+												}`}
 										>
 											Recado
 										</button>

@@ -17,7 +17,12 @@
 		"rules": {
 			"recommended": true,
 			"suspicious": {
-				"noArrayIndexKey": "warn"
+				"noArrayIndexKey": "error",
+				"noExplicitAny": "warn"
+			},
+			"correctness": {
+				"noUnusedVariables": "error",
+				"noUndeclaredVariables": "error"
 			}
 		}
 	},

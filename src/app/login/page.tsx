@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -15,9 +16,19 @@ export default function LoginPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-			{/* Background Ambience */}
-			<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-slate-950" />
+		<div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 relative overflow-hidden">
+			{/* Background Image */}
+			<div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
+				<Image
+					src="/images/sobrio/cofre.png"
+					alt="Fundo Cofre - Realismo Sóbrio"
+					fill
+					priority
+					className="object-cover"
+					quality={85}
+				/>
+				<div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/90 to-black" />
+			</div>
 
 			<div className="relative z-10 max-w-md w-full space-y-8 animate-in fade-in zoom-in duration-500 text-center">
 				{/* Header Icon */}
@@ -27,11 +38,10 @@ export default function LoginPage() {
 
 				<div>
 					<h1 className="text-3xl font-black text-white tracking-tight mb-2">
-						Acesso ao Cofre
+						Acesso ao Cofre & Curadoria
 					</h1>
 					<p className="text-slate-400 text-lg leading-relaxed">
-						Para sua segurança, os documentos são protegidos. Faça login para
-						descriptografar.
+						Proteja seus documentos no Cofre Digital ou colabore validando a realidade do jogo.
 					</p>
 				</div>
 
@@ -68,6 +78,26 @@ export default function LoginPage() {
 								Entrar com Google
 							</>
 						)}
+					</Button>
+
+					<div className="relative my-4">
+						<div className="absolute inset-0 flex items-center">
+							<span className="w-full border-t border-slate-800" />
+						</div>
+						<div className="relative flex justify-center text-xs uppercase">
+							<span className="bg-slate-950 px-2 text-slate-500">
+								Ou (Modo Desenvolvimento)
+							</span>
+						</div>
+					</div>
+
+					<Button
+						onClick={() => signIn("credentials", { callbackUrl: "/cofre" })}
+						disabled={loading}
+						variant="outline"
+						className="w-full h-12 mb-4 text-slate-300 border-slate-700 hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-2"
+					>
+						Entrar como Visitante
 					</Button>
 
 					<Link href="/jogar" className="block">

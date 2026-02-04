@@ -1,16 +1,24 @@
-import { test as base, type Page } from "@playwright/test";
+import { test as base, type Page, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
-export const test = base.extend<{ page: Page }>({
+// Define the type for our custom fixtures
+type MyFixtures = {
+	page: Page;
+	checkAccessibility: (path: string) => Promise<void>;
+};
+
+export const test = base.extend<MyFixtures>({
 	page: async ({ page }, use) => {
 		// 1. Strict Console Error Monitoring
 		page.on("console", (msg) => {
 			if (msg.type() === "error") {
 				const text = msg.text();
-				// Allow some noisy but harmless errors if absolutely necessary (list exceptions here)
-				if (text.includes("404 (Not Found)")) return; // Ignore missing assets for now
-				if (text.includes("GeolocationPositionError")) return; // Ignore geo errors in headless
+				if (text.includes("404 (Not Found)")) return;
+				if (text.includes("GeolocationPositionError")) return;
+				if (text.includes("SpeechSynthesis Error")) {
+					throw new Error(`🛑 CRITICAL AUDIO FAILURE: "${text}"`);
+				}
 
-				// For now: Zero Tolerance for JS errors.
 				throw new Error(
 					`🛑 STRICT TEST FAILED: Console Error Detected: "${text}"`,
 				);
@@ -25,6 +33,16 @@ export const test = base.extend<{ page: Page }>({
 		});
 
 		await use(page);
+	},
+	checkAccessibility: async ({ page }, use) => {
+		const check = async (path: string) => {
+			await page.goto(path);
+			const accessibilityScanResults = await new AxeBuilder({ page })
+				.withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+				.analyze();
+			expect(accessibilityScanResults.violations).toEqual([]);
+		};
+		await use(check);
 	},
 });
 

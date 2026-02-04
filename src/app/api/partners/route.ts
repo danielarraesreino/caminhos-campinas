@@ -5,22 +5,29 @@ import { prisma } from "@/lib/prisma";
 // 🛡️ Input Validation Schema
 const PartnerCreateSchema = z.object({
 	name: z.string().min(2, "Nome muito curto").max(200, "Nome muito longo"),
-	category: z.enum(["NGO", "GOV", "COMPANY"]),
+	category: z.enum(["NGO", "GOV", "COMPANY"], {
+		message: "Categoria inválida. Use NGO, GOV ou COMPANY",
+	}),
 	whatsapp: z
 		.string()
-		.regex(/^\+?[1-9]\d{1,14}$/, "Número de WhatsApp inválido")
+		.regex(/^\+?[1-9]\d{9,14}$/, "Número de WhatsApp inválido (mínimo 10 dígitos)")
 		.optional()
-		.or(z.literal("")),
+		.or(z.literal("").transform(() => undefined)),
 	description: z
 		.string()
-		.max(1000, "Descrição muito longa")
+		.max(1000, "Descrição muito longa (máx 1000 caracteres)")
 		.optional()
-		.or(z.literal("")),
+		.or(z.literal("").transform(() => undefined)),
+	pixKey: z
+		.string()
+		.max(100, "Chave PIX muito longa")
+		.optional()
+		.or(z.literal("").transform(() => undefined)),
 	address: z
 		.string()
 		.max(500, "Endereço muito longo")
 		.optional()
-		.or(z.literal("")),
+		.or(z.literal("").transform(() => undefined)),
 	latitude: z.number().min(-90).max(90).optional(),
 	longitude: z.number().min(-180).max(180).optional(),
 });
@@ -63,11 +70,11 @@ export async function POST(request: Request) {
 		}
 
 		// 3. Log incoming data for debugging
-		console.log(`[${requestId}] Partner registration:`, {
+		console.log(`[${requestId}] Partner registration attempt:`, {
 			name: validated.name,
 			category: validated.category,
 			hasWhatsapp: !!validated.whatsapp,
-			hasDescription: !!validated.description,
+			hasPix: !!validated.pixKey,
 		});
 
 		// 4. Create partner
@@ -75,11 +82,12 @@ export async function POST(request: Request) {
 			data: {
 				name: validated.name,
 				category: validated.category,
-				whatsapp: validated.whatsapp || null,
-				description: validated.description || null,
-				address: validated.address || null,
-				latitude: validated.latitude || null,
-				longitude: validated.longitude || null,
+				whatsapp: validated.whatsapp ?? null,
+				description: validated.description ?? null,
+				pixKey: validated.pixKey ?? null,
+				address: validated.address ?? null,
+				latitude: validated.latitude ?? null,
+				longitude: validated.longitude ?? null,
 				status: "PENDING",
 			},
 		});

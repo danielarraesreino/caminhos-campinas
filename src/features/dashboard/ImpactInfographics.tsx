@@ -108,11 +108,12 @@ export function ImpactInfographics() {
 								)
 							}
 							className={`p-2 rounded-lg transition-colors ${sharedId === "graph1" ? "bg-green-500/20 text-green-400" : "hover:bg-slate-700 text-slate-400"}`}
+							aria-label={`Compartilhar gráfico: A Economia da Exclusão`}
 						>
 							{sharedId === "graph1" ? (
-								<Check className="w-4 h-4" />
+								<Check className="w-4 h-4" aria-hidden="true" />
 							) : (
-								<Share2 className="w-4 h-4" />
+								<Share2 className="w-4 h-4" aria-hidden="true" />
 							)}
 						</button>
 					</div>
@@ -163,11 +164,12 @@ export function ImpactInfographics() {
 								)
 							}
 							className={`p-2 rounded-lg transition-colors ${sharedId === "graph2" ? "bg-green-500/20 text-green-400" : "hover:bg-slate-700 text-slate-400"}`}
+							aria-label={`Compartilhar gráfico: O Mito da Vadiagem`}
 						>
 							{sharedId === "graph2" ? (
-								<Check className="w-4 h-4" />
+								<Check className="w-4 h-4" aria-hidden="true" />
 							) : (
-								<Share2 className="w-4 h-4" />
+								<Share2 className="w-4 h-4" aria-hidden="true" />
 							)}
 						</button>
 					</div>
@@ -232,11 +234,12 @@ export function ImpactInfographics() {
 								)
 							}
 							className={`p-2 rounded-lg transition-colors ${sharedId === "graph3" ? "bg-green-500/20 text-green-400" : "hover:bg-slate-700 text-slate-400"}`}
+							aria-label={`Compartilhar gráfico: A Rua Começa em Casa`}
 						>
 							{sharedId === "graph3" ? (
-								<Check className="w-4 h-4" />
+								<Check className="w-4 h-4" aria-hidden="true" />
 							) : (
-								<Share2 className="w-4 h-4" />
+								<Share2 className="w-4 h-4" aria-hidden="true" />
 							)}
 						</button>
 					</div>

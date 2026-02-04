@@ -13,9 +13,14 @@ const IDLE_THRESHOLD = 3;
 
 const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
 
+// [DEMO_MODE] Flag for GovChallenge
+const DEMO_MODE = true;
+
 // biome-ignore lint/suspicious/noExplicitAny: legacy workTool type
 const processRandomEvents = (state: { dignity: number; workTool: any }) => {
-	if (Math.random() < 0.02) {
+	// [DEMO_MODE] Disable 'O Rapa' (confiscation) to avoid frustration
+	const chance = DEMO_MODE ? 0 : 0.02;
+	if (Math.random() < chance) {
 		return {
 			workTool: { ...state.workTool, isConfiscated: true },
 			dignity: state.dignity - 15,
@@ -101,7 +106,7 @@ export function useGameLoop() {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
 				(userPosition[0] - lastPosition[0]) ** 2 +
-					(userPosition[1] - lastPosition[1]) ** 2,
+				(userPosition[1] - lastPosition[1]) ** 2,
 			);
 			if (dist < 0.001) {
 				setTimeInLocation((prev) => prev + 1);
@@ -118,7 +123,7 @@ export function useGameLoop() {
 		if (userPosition) {
 			const distToCenter = Math.sqrt(
 				(userPosition[0] - CENTER_COORDS.lat) ** 2 +
-					(userPosition[1] - CENTER_COORDS.lng) ** 2,
+				(userPosition[1] - CENTER_COORDS.lng) ** 2,
 			);
 			if (distToCenter < 0.005 && timeInLocation >= IDLE_THRESHOLD) {
 				setActiveDilemma("enquadro_13_maio");
@@ -175,6 +180,11 @@ export function useGameLoop() {
 					modifyStat("health", -0.5);
 				}
 
+				// [DEMO_MODE] Reduce sanity decay
+				if (DEMO_MODE) {
+					snyDecay *= 0.5;
+				}
+
 				modifyStat("hunger", -hngDecay);
 				modifyStat("hygiene", -hygDecay);
 				modifyStat("energy", -enrDecay);
@@ -196,7 +206,7 @@ export function useGameLoop() {
 				checkBattery();
 				advanceTime(1);
 			}
-		}, 10000);
+		}, DEMO_MODE ? 30000 : 10000); // 30s for Demo
 		return () => clearInterval(interval);
 	}, [
 		socialStigma,

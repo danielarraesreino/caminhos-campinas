@@ -16,12 +16,18 @@ export function proxy(request: NextRequest) {
 		"/avatars", // Whitelist avatars directory
 	];
 
-	if (publicPaths.some((path) => request.nextUrl.pathname.startsWith(path))) {
+	try {
+		if (publicPaths.some((path) => request.nextUrl.pathname.startsWith(path))) {
+			return NextResponse.next();
+		}
+
+		// Default behavior (continue)
+		return NextResponse.next();
+	} catch (error) {
+		console.error("[ProxyMiddleware] Error:", error);
+		// Fallback to next() to ensure the app doesn't crash completely on middleware capture failure
 		return NextResponse.next();
 	}
-
-	// Default behavior (continue)
-	return NextResponse.next();
 }
 
 export const config = {

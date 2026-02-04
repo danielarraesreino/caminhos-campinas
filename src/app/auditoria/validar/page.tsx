@@ -1,10 +1,10 @@
 "use client";
 
-import { Check, ThumbsDown, ThumbsUp } from "lucide-react";
-import { useState } from "react";
-
-// import { DILEMMAS_CAMPINAS } from "@/data/dilemmas-campinas"; // Import real data if possible, or fetch
-// import { EcoButton } from "@/components/ui/EcoButton";
+import { Check, ThumbsDown, ThumbsUp, Lock } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 // Mocking data fetch for simplicity in this prototype phase
 const MOCK_DILEMMA = {
@@ -17,10 +17,26 @@ const MOCK_DILEMMA = {
 };
 
 export default function ValidacaoAuditPage() {
+	const { data: session, status } = useSession();
+	const router = useRouter();
 	const [dilemma, _setDilemma] = useState<any>(MOCK_DILEMMA);
 	const [feedback, setFeedback] = useState<"pass" | "fail" | null>(null);
 	const [comment, setComment] = useState("");
 	const [submitted, setSubmitted] = useState(false);
+
+	useEffect(() => {
+		if (status === "unauthenticated") {
+			router.push("/login?callbackUrl=/auditoria/validar");
+		}
+	}, [status, router]);
+
+	if (status === "loading") {
+		return <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">Verificando credenciais...</div>;
+	}
+
+	if (!session) {
+		return null; // Will redirect
+	}
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { Footer } from "@/components/ui/Footer";
 import { Navbar } from "@/components/ui/Navbar";
 import { useGameContext } from "@/contexts/GameContext";
+import { AudioGuard } from "@/components/ui/AudioGuard";
 
 export function ClientLayoutWrapper({
 	children,
@@ -22,6 +23,7 @@ export function ClientLayoutWrapper({
 			{shouldShowUI && <Navbar />}
 			<main className="flex-grow flex flex-col min-h-screen">{children}</main>
 			{shouldShowUI && <Footer />}
+			<AudioGuard />
 		</>
 	);
 }

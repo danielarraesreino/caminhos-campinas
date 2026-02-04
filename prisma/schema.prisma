@@ -61,3 +61,27 @@ model Post {
   @@index([createdAt])          /// Chronological sorting
   @@map("posts")
 }
+
+/// Telemetry Data - Synchronized from offline play sessions
+model TelemetryEvent {
+  id        String   @id @default(uuid())
+  sessionId String   /// Client-side session ID
+  eventType String   /// SHOCK_EVENT, GAME_START, etc.
+  payload   Json     /// Flexible payload data
+  createdAt DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([eventType])
+  @@map("telemetry_events")
+}
+
+/// User Stories/Dilemmas - Collected from /sugerir and synchronized
+model CommunityStory {
+  id         String   @id @default(uuid())
+  content    String   /// The story text
+  source     String   /// e.g. "web-offline-form", "whatsapp"
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@map("community_stories")
+}

@@ -12,7 +12,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+import { useGameContext } from "@/contexts/GameContext";
+import { useEffect } from "react";
+
 export default function EducationPage() {
+	const { pdu, completePduStage } = useGameContext();
+
+	// Integrate with PDU: If user visits this page and has EDUCATION objective, mark step as done
+	useEffect(() => {
+		if (pdu.isActive && pdu.objective === "EDUCACAO") {
+			completePduStage("concluir_curso_direitos");
+		}
+	}, [pdu.isActive, pdu.objective, completePduStage]);
+
 	return (
 		<div className="min-h-screen bg-slate-50">
 			<div className="bg-blue-900 text-white pb-20 pt-8 px-6 rounded-b-[40px] shadow-2xl relative overflow-hidden">
@@ -50,13 +62,15 @@ export default function EducationPage() {
 			</div>
 
 			<main className="max-w-2xl mx-auto px-6 -mt-10 space-y-6 pb-10">
-				<ModuleCard
-					icon={<ShieldAlert className="w-8 h-8 text-amber-600" />}
-					title="Direitos Humanos e Abordagem"
-					desc="Como se portar numa abordagem policial (O que é legal/ilegal). O direito de ir e vir e a posse de pertences."
-					status="Disponível"
-					color="amber"
-				/>
+				<Link href="/curso">
+					<ModuleCard
+						icon={<ShieldAlert className="w-8 h-8 text-amber-600" />}
+						title="Direitos Humanos e Abordagem"
+						desc="Como se portar numa abordagem policial (O que é legal/ilegal). O direito de ir e vir e a posse de pertences. (Clique para iniciar)"
+						status="Disponível"
+						color="amber"
+					/>
+				</Link>
 
 				<ModuleCard
 					icon={<BookOpen className="w-8 h-8 text-emerald-600" />}
@@ -94,6 +108,8 @@ interface ModuleCardProps {
 	disabled?: boolean;
 }
 
+import { AudioReader } from "@/components/ui/AudioReader";
+
 function ModuleCard({
 	icon,
 	title,
@@ -124,7 +140,7 @@ function ModuleCard({
 				>
 					{icon}
 				</div>
-				<div className="space-y-2">
+				<div className="space-y-2 flex-1">
 					<div className="flex justify-between items-center">
 						<h3 className={`font-black text-lg ${textColors[color]}`}>
 							{title}
@@ -137,6 +153,9 @@ function ModuleCard({
 						</Badge>
 					</div>
 					<p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
+					<div className="pt-2">
+						<AudioReader text={desc} className="bg-white/50" />
+					</div>
 				</div>
 			</div>
 		</Card>

@@ -33,6 +33,7 @@ interface ModalQueueContextValue {
 	pendingEvents: QueuedEvent[];
 	activeModal: ModalType;
 	audioPlaying: boolean;
+	isUIBlocked: boolean;
 
 	// Controle de Modais
 	enqueueDilemma: (dilemma: Dilemma, priority?: number) => void;
@@ -127,6 +128,12 @@ export function ModalQueueProvider({
 	 * Processa a fila e retorna o próximo dilema a ser exibido
 	 */
 	const processQueue = useCallback((): Dilemma | null => {
+		// Strict Audio blocking: If audio is playing, absolutely do not process queue
+		if (audioPlaying) {
+			console.log("[ModalQueue] Blocked: Audio is playing (Strict Check)");
+			return null;
+		}
+
 		if (!canShowModal() || pendingEvents.length === 0) {
 			return null;
 		}
@@ -138,7 +145,12 @@ export function ModalQueueProvider({
 			`[ModalQueue] Processing dilemma '${nextEvent.dilemma.id}' from queue`,
 		);
 		return nextEvent.dilemma;
-	}, [canShowModal, pendingEvents]);
+	}, [canShowModal, pendingEvents, audioPlaying]);
+
+	// Debug Audio State
+	useEffect(() => {
+		console.log(`[ModalQueue] Audio playing state changed: ${audioPlaying}`);
+	}, [audioPlaying]);
 
 	/**
 	 * Define o tipo de modal ativo
@@ -188,6 +200,7 @@ export function ModalQueueProvider({
 		pendingEvents,
 		activeModal,
 		audioPlaying,
+		isUIBlocked: audioPlaying || activeModal !== null,
 		enqueueDilemma,
 		processQueue,
 		setActiveModal,

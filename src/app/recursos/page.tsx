@@ -15,6 +15,7 @@ import {
 	Utensils,
 } from "lucide-react"; // Updated icons for survival needs
 import { useEffect, useState } from "react";
+import { AudioReader } from "@/components/ui/AudioReader";
 import { useGameContext } from "@/contexts/GameContext";
 import {
 	type ServiceLocation,
@@ -102,8 +103,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				<span
 					className={`
 					px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider
-					${
-						service.type === "ALIMENTACAO"
+					${service.type === "ALIMENTACAO"
 							? "bg-orange-900 text-orange-400"
 							: service.type === "ABRIGO"
 								? "bg-indigo-900 text-indigo-400"
@@ -112,7 +112,7 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 									: service.type === "EDUCACAO"
 										? "bg-blue-900 text-blue-400"
 										: "bg-slate-800 text-slate-400"
-					}
+						}
 				`}
 				>
 					{service.type}
@@ -231,12 +231,11 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 						disabled={!canEnroll || enrollmentStatus !== "idle"}
 						onClick={handleEnroll}
 						className={`flex-1 text-white py-3 rounded-lg font-bold text-sm uppercase flex items-center justify-center gap-2 transition-colors relative overflow-hidden
-							${
-								canEnroll
-									? enrollmentStatus === "enrolled"
-										? "bg-green-600"
-										: "bg-blue-600 hover:bg-blue-500"
-									: "bg-zinc-800 opacity-50 cursor-not-allowed"
+							${canEnroll
+								? enrollmentStatus === "enrolled"
+									? "bg-green-600"
+									: "bg-blue-600 hover:bg-blue-500"
+								: "bg-zinc-800 opacity-50 cursor-not-allowed"
 							}
 						`}
 					>
@@ -359,18 +358,21 @@ export default function ResourcesPage() {
 					<h1 className="text-3xl font-black text-yellow-400 uppercase tracking-tighter">
 						Guia de Rua
 					</h1>
-					<p className="text-zinc-400 text-sm">
-						{isOffline ? (
-							<span className="flex items-center gap-2 text-red-500 font-bold animate-pulse">
-								<AlertTriangle className="w-4 h-4" /> MODO OFFLINE
-							</span>
-						) : (
-							<span className="flex items-center gap-2 text-green-500 text-xs">
-								<span className="w-2 h-2 bg-green-500 rounded-full"></span>{" "}
-								Conectado
-							</span>
-						)}
-					</p>
+					<div className="flex items-center gap-2">
+						<p className="text-zinc-400 text-sm">
+							{isOffline ? (
+								<span className="flex items-center gap-2 text-red-500 font-bold animate-pulse">
+									<AlertTriangle className="w-4 h-4" /> MODO OFFLINE
+								</span>
+							) : (
+								<span className="flex items-center gap-2 text-green-500 text-xs">
+									<span className="w-2 h-2 bg-green-500 rounded-full"></span>{" "}
+									Conectado
+								</span>
+							)}
+						</p>
+						<AudioReader text="Guia de Rua. Recursos de sobrevivência e apoio em Campinas. Alimentação, saúde, higiene, abrigo e documentos." />
+					</div>
 				</div>
 				<button
 					type="button"

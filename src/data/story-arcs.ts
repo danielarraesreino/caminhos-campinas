@@ -36,6 +36,7 @@ export const STORY_ARCS: Record<string, StoryArc> = {
             "saude_mental_vinculo", // Ligação para família (R$ 5)
             "pdu_intro_familia", // PDU: Trilha Familiar
             "egresso_prisao_inicio", // Rejeição da mãe
+            "abrigo_separacao_familia", // [NEW] Escolha entre teto ou parceiro
             "fianca_amigo_preso", // Solidariedade vs. bota nova
         ],
         audioProfile: {
@@ -54,6 +55,7 @@ export const STORY_ARCS: Record<string, StoryArc> = {
         theme: "urgência, exaustão, luta pelo sustento, sincronização perversa",
         dilemmaSequence: [
             "intro_acordar_praca", // Despertar no Centro
+            "censo_dia_contagem", // [NEW] Ser contado ou trabalhar?
             "chain_bagageiro_01_start", // Corrida para Bagageiro (17h)
             "tentativa_abrigo_samim", // Dilema SAMIM 19h vs Bico
             "mendicancia_vs_trabalho", // Esquina: esmola ou papelão
@@ -76,6 +78,7 @@ export const STORY_ARCS: Record<string, StoryArc> = {
         dilemmaSequence: [
             "documento_perdido_chuva", // RG destruído
             "pdu_dilemma_rg_fee", // Poupatempo: R$ 55 ou Declaração
+            "antecedentes_emprego", // [NEW] Barreira de CPF/Endereço
             "burocracia_fome_cras", // CadÚnico vs Bico
             "arquitetura_hostil_denuncia", // Sistema ignora cidadania
         ],

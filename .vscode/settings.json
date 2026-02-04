@@ -11,5 +11,14 @@
         "**/node_modules": true,
         "**/.next": true,
         "**/.git": true
+    },
+    "mcpServers": {
+        "next-devtools": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "next-devtools-mcp@latest"
+            ]
+        }
     }
 }

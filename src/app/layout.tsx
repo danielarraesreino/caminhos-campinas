@@ -15,6 +15,7 @@ import { ServicesProvider } from "@/contexts/ServicesContext";
 import { StartupLogger } from "@/features/debug/StartupLogger";
 import { GameEffectsLayer } from "@/features/ui/GameEffectsLayer";
 import { SurvivalModeProvider } from "@/features/ui/SurvivalModeContext";
+import { UrbanServiceSchema } from "@/components/seo/UrbanServiceSchema";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -61,6 +62,7 @@ export default function RootLayout({
 									<Clarity />
 									<Analytics />
 									<ServiceWorkerRegister />
+									<UrbanServiceSchema />
 									<RealitySwitcher />
 									<StartupLogger />
 								</ServicesProvider>

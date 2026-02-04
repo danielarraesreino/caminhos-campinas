@@ -10,6 +10,7 @@ import {
 	Wallet,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -61,73 +62,86 @@ export default function VaultClient() {
 
 	// --- Dashboard do Cofre ---
 	return (
-		<div className="min-h-screen bg-slate-900 text-slate-100">
-			<header className="border-b border-slate-800 p-4 sticky top-0 bg-slate-900/90 backdrop-blur z-50">
-				<div className="max-w-xl mx-auto flex items-center justify-between">
-					<Link href="/">
+		<div className="min-h-screen bg-black text-slate-100 realismo-sobrio relative overflow-hidden">
+			{/* Background Image - Realismo Sóbrio */}
+			<div className="absolute inset-0 z-0 opacity-25 pointer-events-none">
+				<Image
+					src="/images/sobrio/cofre.png"
+					alt="Fundo Cofre Digital - Realismo Sóbrio"
+					fill
+					className="object-cover realismo-sobrio-img"
+					quality={85}
+				/>
+				<div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/80 to-black" />
+			</div>
+			<div className="relative z-10">
+				<header className="border-b border-slate-800 p-4 sticky top-0 bg-slate-900/90 backdrop-blur z-50">
+					<div className="max-w-xl mx-auto flex items-center justify-between">
+						<Link href="/">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="text-slate-400 hover:text-white"
+							>
+								<ArrowLeft className="w-5 h-5" />
+							</Button>
+						</Link>
+						<div className="flex items-center gap-2 text-green-400 bg-green-950/30 px-3 py-1 rounded-full border border-green-900/50">
+							<Lock className="w-3 h-3" />
+							<span className="text-xs font-bold uppercase tracking-wider">
+								Criptografado (K-5)
+							</span>
+						</div>
+					</div>
+				</header>
+
+				<main className="max-w-xl mx-auto p-6 space-y-6">
+					<div className="grid grid-cols-2 gap-4">
+						<DocCard
+							icon={<CreditCard className="text-blue-400" />}
+							title="RG (Identidade)"
+							desc="Essencial para BPC"
+							count={0}
+						/>
+						<DocCard
+							icon={<FileText className="text-green-400" />}
+							title="CPF"
+							desc="Auxílios do Governo"
+							count={0}
+						/>
+						<DocCard
+							icon={<Wallet className="text-amber-400" />}
+							title="Carteira de Trabalho"
+							desc="Vagas de Emprego"
+							count={0}
+						/>
+						<DocCard
+							icon={<ActivityIcon className="text-red-400" />}
+							title="Receitas Médicas"
+							desc="Retirada no Posto"
+							count={0}
+						/>
+					</div>
+
+					<div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50 text-center space-y-4">
+						<div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center mx-auto">
+							<Upload className="text-slate-400" />
+						</div>
+						<div>
+							<h3 className="font-bold text-white">Adicionar Novo Documento</h3>
+							<p className="text-sm text-slate-400">
+								Tire uma foto legível frente e verso.
+							</p>
+						</div>
 						<Button
-							variant="ghost"
-							size="icon"
-							className="text-slate-400 hover:text-white"
+							variant="outline"
+							className="w-full border-slate-600 hover:bg-slate-700 text-slate-300"
 						>
-							<ArrowLeft className="w-5 h-5" />
+							Selecionar Foto da Galeria
 						</Button>
-					</Link>
-					<div className="flex items-center gap-2 text-green-400 bg-green-950/30 px-3 py-1 rounded-full border border-green-900/50">
-						<Lock className="w-3 h-3" />
-						<span className="text-xs font-bold uppercase tracking-wider">
-							Criptografado (K-5)
-						</span>
 					</div>
-				</div>
-			</header>
-
-			<main className="max-w-xl mx-auto p-6 space-y-6">
-				<div className="grid grid-cols-2 gap-4">
-					<DocCard
-						icon={<CreditCard className="text-blue-400" />}
-						title="RG (Identidade)"
-						desc="Essencial para BPC"
-						count={0}
-					/>
-					<DocCard
-						icon={<FileText className="text-green-400" />}
-						title="CPF"
-						desc="Auxílios do Governo"
-						count={0}
-					/>
-					<DocCard
-						icon={<Wallet className="text-amber-400" />}
-						title="Carteira de Trabalho"
-						desc="Vagas de Emprego"
-						count={0}
-					/>
-					<DocCard
-						icon={<ActivityIcon className="text-red-400" />}
-						title="Receitas Médicas"
-						desc="Retirada no Posto"
-						count={0}
-					/>
-				</div>
-
-				<div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/50 text-center space-y-4">
-					<div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center mx-auto">
-						<Upload className="text-slate-400" />
-					</div>
-					<div>
-						<h3 className="font-bold text-white">Adicionar Novo Documento</h3>
-						<p className="text-sm text-slate-400">
-							Tire uma foto legível frente e verso.
-						</p>
-					</div>
-					<Button
-						variant="outline"
-						className="w-full border-slate-600 hover:bg-slate-700 text-slate-300"
-					>
-						Selecionar Foto da Galeria
-					</Button>
-				</div>
-			</main>
+				</main>
+			</div>
 		</div>
 	);
 }

@@ -39,6 +39,9 @@ export default function GamePage() {
 	const [isLocationsOpen, setIsLocationsOpen] = useState(false);
 	const [showTutorial, setShowTutorial] = useState(false);
 
+	// [FIX] Move hooks to the top level to avoid Rules of Hooks violations (Previous render vs Next render)
+	const { audioPlaying } = useModalQueue();
+
 	useEffect(() => {
 		// Check if tutorial was seen
 		const tutorialSeen = localStorage.getItem("pop_rua_tutorial_seen");
@@ -153,12 +156,12 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 		.filter(Boolean)
 		.join(" ");
 
-	// [NEW] Use Modal Queue to check if audio is blocking visual modals
-	const { audioPlaying } = useModalQueue();
+	// Efeitos visuais de degradação (baseado nas regras de design "Realismo Sóbrio") [2]
 
 	return (
 		// MUDANÇA 1: h-[100dvh] garante que cabe na tela real do celular sem scroll
-		<main className="relative w-full h-[100dvh] bg-slate-900 overflow-hidden">
+		<main className="relative w-full h-[100dvh] bg-slate-900 overflow-hidden" aria-label="Ambiente de Jogo">
+			<h1 className="sr-only">Caminhos Campinas - Jornada de Sobrevivência</h1>
 			<OnboardingTutorial
 				isOpen={showTutorial}
 				onClose={() => setShowTutorial(false)}
@@ -186,8 +189,8 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 			</div>
 
 			{/* CAMADA 50: Modais de Decisão e Chat (Bloqueantes ou Interativos) */}
-			{/* WALKIE-TALKIE MODE: Block visual modal while audio is playing */}
-			{activeDilemma && !audioPlaying && (
+			{/* WALKIE-TALKIE MODE: AudioGuard handles strict blocking */}
+			{activeDilemma && (
 				<DilemmaModal
 					dilemma={activeDilemma}
 					onResolve={resolveDilemma}

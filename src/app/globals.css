@@ -180,10 +180,19 @@
 }
 
 .realismo-sobrio {
-	--background: var(--oled-black);
-	--foreground: var(--oled-content);
-	filter: saturate(0.7);
-	/* Dessaturação global de 30% */
+	--background: #000000;
+	--foreground: #d1d5db;
+	--card: #000000;
+	--border: #111827;
+	/* OLED Saver & Extreme Desaturation (5-10%) */
+	filter: saturate(0.1) contrast(1.1) brightness(0.95);
+	transition: filter 4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.realismo-sobrio-img {
+	filter: saturate(1.2) contrast(1.1);
+	/* Compensate a bit since parent is desaturated */
+	@apply grayscale;
 }
 
 @layer base {
