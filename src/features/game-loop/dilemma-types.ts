@@ -152,6 +152,7 @@ export interface Dilemma {
 		radius: number; // em metros
 	};
 	audioId?: string;
+	narrator?: string;
 	ambience?: string;
 	soundEffect?: string;
 	prerequisite?: string;

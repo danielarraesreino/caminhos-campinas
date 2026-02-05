@@ -7,8 +7,7 @@ import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";
 
 export function GameEffectsLayer() {
 	// Subscribing to game state
-	const { health, sanity, phoneBattery, activeDilemmaId, activeBuffs } =
-		useGameContext();
+	const { health, sanity, activeDilemmaId, activeBuffs } = useGameContext();
 	const [isLowPowerMode, setIsLowPowerMode] = useState(false);
 
 	// Detect low power devices or user preference (simplified)

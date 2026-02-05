@@ -275,6 +275,8 @@ export function GameHUD({
 	);
 }
 
+import type { PDUState } from "@/types/GameState";
+
 function PDUWidget({ pdu }: { pdu: PDUState }) {
 	if (!pdu?.isActive || !pdu?.objective) return null;
 

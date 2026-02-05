@@ -175,7 +175,7 @@ export function useEventEngine() {
 			if (option.pduAction) {
 				const { type, value } = option.pduAction;
 				if (type === "INIT") {
-					initPDU(value as PDUObjective);
+					initPDU(value as any);
 				} else if (type === "NEXT_STAGE") {
 					updatePduStage(value);
 				} else if (type === "COMPLETE_STAGE") {

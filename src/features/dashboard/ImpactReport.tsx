@@ -13,7 +13,7 @@ interface ImpactReportProps {
 }
 
 export function ImpactReport({ onRestart, gameOverResult }: ImpactReportProps) {
-	const { state } = useGameContext();
+	const state = useGameContext();
 
 	// Defensive check: state may be undefined during hydration or error states
 	if (!state) {

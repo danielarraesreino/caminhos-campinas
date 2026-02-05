@@ -1,6 +1,7 @@
 import type { GameState } from "@/contexts/GameContext";
 import { REALITY_ATLAS } from "@/data/RealityAtlas";
 import { detectActiveArc } from "@/data/story-arcs";
+import type { Avatar, Item } from "@/types/GameState";
 import type { Dilemma } from "./dilemma-types";
 
 // Bom Prato operating hours (based on real data)
@@ -205,9 +206,7 @@ export class DilemmaManager {
 			}
 
 			// Check Trigger
-			if (this.isTriggered(dilemma, state)) {
-				candidates.push(this.applyDynamicModifiers(dilemma, avatar));
-			}
+			candidates.push(this.applyDynamicModifiers(dilemma, avatar || null));
 		}
 
 		console.log(
@@ -396,12 +395,13 @@ export class DilemmaManager {
 					if (dilemma.trigger.condition === "no_docs") {
 						return (
 							!state.documents?.hasRG &&
-							state.resolvedDilemmas?.includes(dilemma.trigger.prev_id)
+							(state.resolvedDilemmas?.includes(dilemma.trigger.prev_id) ||
+								false)
 						);
 					}
 					if (dilemma.trigger.condition === "accepted_help") {
 						// Check if "ACCEPTED_HELP" buff is active (added in previous step)
-						return state.activeBuffs?.includes("ACCEPTED_HELP");
+						return state.activeBuffs?.includes("ACCEPTED_HELP") || false;
 					}
 					return true;
 				}

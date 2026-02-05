@@ -60,7 +60,7 @@ export function GameChat({
 	}, []);
 
 	// biome-ignore lint/suspicious/noExplicitAny: AI SDK types are complex
-	const { messages, setMessages, isLoading, append, reload } = useChat({
+	const { messages, setMessages, isLoading, append } = useChat({
 		api: "/api/chat",
 		initialMessages: initialMessages || [],
 		onError: (err: any) => {
