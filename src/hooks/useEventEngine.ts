@@ -134,11 +134,11 @@ export function useEventEngine() {
 			}
 
 			if (effectToApply.addiction_risk) {
-				modifyStat("addiction" as any, effectToApply.addiction_risk);
+				modifyStat("addiction", effectToApply.addiction_risk);
 			}
 
 			if (effectToApply.trust_state) {
-				modifyStat("trust" as any, effectToApply.trust_state);
+				modifyStat("trust", effectToApply.trust_state);
 			}
 
 			if (effectToApply.cycle_repeat) {
@@ -175,8 +175,7 @@ export function useEventEngine() {
 			if (option.pduAction) {
 				const { type, value } = option.pduAction;
 				if (type === "INIT") {
-					// biome-ignore lint/suspicious/noExplicitAny: PDU value type
-					initPDU(value as any);
+					initPDU(value as PDUObjective);
 				} else if (type === "NEXT_STAGE") {
 					updatePduStage(value);
 				} else if (type === "COMPLETE_STAGE") {

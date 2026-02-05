@@ -1,6 +1,5 @@
 "use client";
 import { useEffect } from "react";
-import { useGameContext } from "@/contexts/GameContext";
 import partnersData from "@/data/partners.json";
 
 export default function HubPage() {

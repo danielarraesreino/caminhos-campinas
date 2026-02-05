@@ -70,7 +70,7 @@ export function GameChat({
 		onFinish: (response: any) => {
 			setIsThinking(false);
 			// The content might be in response.message.content or just response.content
-			// depending on the version of AI SDK. 
+			// depending on the version of AI SDK.
 			const content = response?.message?.content || response?.content;
 			if (content) {
 				speak(content);
@@ -198,9 +198,11 @@ export function GameChat({
 						content: text,
 					};
 					setMessages((prev: any[]) => [...prev, userMsg]);
-					console.warn("[GameChat] append missing, using manual message update");
+					console.warn(
+						"[GameChat] append missing, using manual message update",
+					);
 
-					// If we can't use append, the user is stuck. 
+					// If we can't use append, the user is stuck.
 					// Try to call the API directly or just show an error.
 					setIsThinking(false);
 				}
@@ -209,16 +211,7 @@ export function GameChat({
 				setIsThinking(false);
 			}
 		},
-		[
-			append,
-			userLocation,
-			onDilemmaTriggered,
-			gameState,
-			setMessages,
-			speak,
-			append,
-			reload,
-		],
+		[append, userLocation, onDilemmaTriggered, gameState, setMessages, speak],
 	);
 
 	const QuickActionBtn = ({ icon: Icon, label, color, action }: any) => (
@@ -322,10 +315,11 @@ export function GameChat({
 						onMouseUp={() => stopListening()}
 						onTouchStart={() => startListening()}
 						onTouchEnd={() => stopListening()}
-						className={`flex-1 h-28 rounded-3xl flex flex-col items-center justify-center gap-1 transition-all active:scale-95 shadow-xl border-4 ${isListening
-							? "bg-red-600 border-red-400 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
-							: "bg-zinc-800 border-zinc-700"
-							}`}
+						className={`flex-1 h-28 rounded-3xl flex flex-col items-center justify-center gap-1 transition-all active:scale-95 shadow-xl border-4 ${
+							isListening
+								? "bg-red-600 border-red-400 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
+								: "bg-zinc-800 border-zinc-700"
+						}`}
 					>
 						{isListening ? (
 							<>

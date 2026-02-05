@@ -8,6 +8,7 @@ interface UseNativeSpeechOptions {
 }
 
 // 🔒 SINGLETON: Global Speech Recognition instance
+// biome-ignore lint/suspicious/noExplicitAny: Web Speech API instance
 let globalRecognitionInstance: any = null;
 
 function getSpeechRecognitionInstance() {
@@ -86,7 +87,7 @@ export function useNativeSpeech({
 			if (recognitionRef.current) {
 				try {
 					recognitionRef.current.stop();
-				} catch (e) {
+				} catch (_e) {
 					// Ignore if already stopped
 				}
 			}
@@ -130,7 +131,7 @@ export function useNativeSpeech({
 		if (recognitionRef.current) {
 			try {
 				recognitionRef.current.stop();
-			} catch (e) {
+			} catch (_e) {
 				// Ignore if already stopped
 			}
 			setIsListening(false);

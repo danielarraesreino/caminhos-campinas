@@ -25,7 +25,7 @@ export function SyncButton() {
 				try {
 					const parsed = JSON.parse(telemetryStored);
 					if (Array.isArray(parsed)) telemetryCount = parsed.length;
-				} catch (e) {}
+				} catch (_e) {}
 			}
 
 			// Check suggestions
@@ -35,7 +35,7 @@ export function SyncButton() {
 				try {
 					const parsed = JSON.parse(suggestionsStored);
 					if (Array.isArray(parsed)) suggestionsCount = parsed.length;
-				} catch (e) {}
+				} catch (_e) {}
 			}
 
 			setHasData(telemetryCount > 0 || suggestionsCount > 0);

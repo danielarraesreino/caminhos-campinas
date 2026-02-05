@@ -7,7 +7,6 @@ export function EffectsOverlay() {
 	const { activeBuffs } = useGameContext();
 
 	// Check if SEM_BATERIA buff is active
-	// biome-ignore lint/complexity/useOptionalChain: activeBuffs should be array but being safe
 	const isBatteryDead = activeBuffs?.includes("SEM_BATERIA");
 
 	if (!isBatteryDead) return null;

@@ -66,6 +66,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			timeInLocation: 0,
 		};
 
+		// biome-ignore lint/suspicious/noExplicitAny: Test mock
 		const dilemma = manager.findTriggeredDilemma(stateMock as any);
 
 		expect(dilemma?.id).toBe("dilemma_male");
@@ -82,6 +83,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			day: 2,
 		};
 
+		// biome-ignore lint/suspicious/noExplicitAny: Test mock
 		const dilemma1 = manager.findTriggeredDilemma(stateNoItem as any);
 		expect(dilemma1?.id).toBe("dilemma_male");
 
@@ -106,6 +108,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 		// Resolve male so item one can pick
 		manager.updateResolved(["dilemma_male"]);
 
+		// biome-ignore lint/suspicious/noExplicitAny: Test mock
 		const dilemma2 = manager.findTriggeredDilemma(stateWithItem as any);
 		expect(dilemma2?.id).toBe("dilemma_item");
 	});
@@ -145,6 +148,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			day: 2,
 		};
 
+		// biome-ignore lint/suspicious/noExplicitAny: Test mock
 		const picked = directorManager.findTriggeredDilemma(criticalState as any);
 		expect(picked?.id).toBe("high_intensity_crisis");
 	});
@@ -180,6 +184,7 @@ describe("DilemmaManager Deterministic Logic", () => {
 			day: 2,
 		};
 
+		// biome-ignore lint/suspicious/noExplicitAny: Mocking state for test
 		const picked = chainManager.findTriggeredDilemma(criticalState as any);
 		expect(picked?.id).toBe("chain_step");
 	});

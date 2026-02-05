@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/drawer";
 import { useGameContext } from "@/contexts/GameContext";
 import { useServices } from "@/contexts/ServicesContext";
-import { useDenialEvents } from "@/hooks/useDenialEvents";
 import { useODSMetrics } from "@/hooks/useODSMetrics";
 
 // import servicesData from "@/data/services-campinas.json"; // Removed direct import
@@ -58,19 +57,19 @@ function calculateDistance(
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
 		Math.cos((lat1 * Math.PI) / 180) *
-			Math.cos((lat2 * Math.PI) / 180) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2);
+		Math.cos((lat2 * Math.PI) / 180) *
+		Math.sin(dLon / 2) *
+		Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	return R * c; // in km
 }
 
 export function NearbyList() {
-	const { userPosition, money, documents, modifyStat, addBuff, addMoney } =
-		useGameContext();
+	// Subscribing to game state
+	const { userPosition, money, documents, modifyStat, addBuff, addMoney } = useGameContext();
 	const { services: contextServices } = useServices();
 	const { trackServiceAccess } = useODSMetrics();
-	const { addEvent: addDenialEvent } = useDenialEvents();
+	// const { addEvent: addDenialEvent } = useDenialEvents();
 
 	const services = useMemo(() => {
 		if (!contextServices) return [];
@@ -83,20 +82,23 @@ export function NearbyList() {
 		}
 
 		return contextServices
-			.map((s: any) => {
+			.map((s: Service) => {
 				const hasCoords =
 					s.coords && Array.isArray(s.coords) && s.coords.length === 2;
 				const dist = hasCoords
 					? calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							s.coords[0],
-							s.coords[1],
-						)
+						userPosition[0],
+						userPosition[1],
+						s.coords[0],
+						s.coords[1],
+					)
 					: Number.POSITIVE_INFINITY;
 				return { ...s, distance: dist };
 			})
-			.sort((a: any, b: any) => (a.distance || 0) - (b.distance || 0));
+			.sort(
+				(a: { distance?: number }, b: { distance?: number }) =>
+					(a.distance || 0) - (b.distance || 0),
+			);
 	}, [userPosition, contextServices]);
 
 	const checkAvailability = (service: Service) => {
@@ -227,11 +229,10 @@ export function NearbyList() {
 							<div
 								key={service.id}
 								className={`w-full rounded-xl border p-4 shadow-sm transition-all
-                                ${
-																	allowed
-																		? "bg-slate-900/50 border-slate-800 text-slate-100"
-																		: "bg-slate-950/30 border-slate-800/50 text-slate-500 grayscale opacity-80"
-																}`}
+                                ${allowed
+										? "bg-slate-900/50 border-slate-800 text-slate-100"
+										: "bg-slate-950/30 border-slate-800/50 text-slate-500 grayscale opacity-80"
+									}`}
 							>
 								<div className="flex justify-between items-start mb-2">
 									<div>
@@ -267,11 +268,10 @@ export function NearbyList() {
 										onClick={() => handleUseService(service)}
 										disabled={!allowed}
 										className={`flex-1 h-10 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wide transition-all active:scale-95
-                                        ${
-																					allowed
-																						? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20"
-																						: "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
-																				}`}
+                                        ${allowed
+												? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20"
+												: "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
+											}`}
 									>
 										{allowed ? "Utilizar" : "Bloqueado"}
 									</button>

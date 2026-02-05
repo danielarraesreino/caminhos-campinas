@@ -167,6 +167,7 @@ export default function HubCadastroPage() {
 		};
 
 		try {
+			// biome-ignore lint/suspicious/noExplicitAny: Mocking partial data
 			const result = await hubService.registerPartner(partnerData as any);
 			console.log("Success:", result);
 			setSuccess(true);
@@ -179,6 +180,7 @@ export default function HubCadastroPage() {
 				type: "ONG" as const,
 				address: p.address,
 				whatsapp: (p as any).phone || "",
+				// biome-ignore lint/suspicious/noExplicitAny: Cast for legacy partner data
 				services: p.services as any,
 				odsLinks: [],
 				operatingHours: "",

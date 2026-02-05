@@ -17,6 +17,7 @@ const MapCore = dynamic(() => import("./MapCore"), {
 
 // Define a custom type guard ensuring coords is [number, number]
 const hasValidCoords = (
+	// biome-ignore lint/suspicious/noExplicitAny: External data validation
 	s: any,
 ): s is {
 	coords: [number, number];

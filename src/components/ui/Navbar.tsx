@@ -148,8 +148,15 @@ export function Navbar() {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex items-center justify-between h-16">
 					{/* 1. BRANDING */}
-					<Link href="/" className="flex items-center gap-3 group shrink-0" aria-label="Voltar para a página inicial do Caminhos Campinas">
-						<div className="w-9 h-9 bg-zinc-900 border border-zinc-700/50 group-hover:border-yellow-500/50 rounded-xl flex items-center justify-center font-black text-white transition-all shadow-2xl" aria-hidden="true">
+					<Link
+						href="/"
+						className="flex items-center gap-3 group shrink-0"
+						aria-label="Voltar para a página inicial do Caminhos Campinas"
+					>
+						<div
+							className="w-9 h-9 bg-zinc-900 border border-zinc-700/50 group-hover:border-yellow-500/50 rounded-xl flex items-center justify-center font-black text-white transition-all shadow-2xl"
+							aria-hidden="true"
+						>
 							CC
 						</div>
 						<div className="flex flex-col">
@@ -236,6 +243,7 @@ export function Navbar() {
 									</Link>
 								))}
 								<button
+									type="button"
 									onClick={async () => {
 										const { telemetry } = await import(
 											"@/services/TelemetryService"
@@ -285,63 +293,62 @@ export function Navbar() {
 			</div>
 
 			{/* 4. MOBILE MENU (Drawer) */}
-			{
-				isOpen && (
-					<div className="lg:hidden bg-black border-t border-zinc-900 h-screen overflow-y-auto pb-32 animate-in slide-in-from-top-2">
-						<div className="px-6 py-8 space-y-8">
-							<Link
-								href="/jogar"
-								onClick={() => setIsOpen(false)}
-								className="block"
-							>
-								<Button className="w-full bg-yellow-500 hover:bg-yellow-400 text-black py-7 text-lg font-black uppercase tracking-[0.2em] rounded-2xl">
-									Iniciar Intervenção
-								</Button>
-							</Link>
+			{isOpen && (
+				<div className="lg:hidden bg-black border-t border-zinc-900 h-screen overflow-y-auto pb-32 animate-in slide-in-from-top-2">
+					<div className="px-6 py-8 space-y-8">
+						<Link
+							href="/jogar"
+							onClick={() => setIsOpen(false)}
+							className="block"
+						>
+							<Button className="w-full bg-yellow-500 hover:bg-yellow-400 text-black py-7 text-lg font-black uppercase tracking-[0.2em] rounded-2xl">
+								Iniciar Intervenção
+							</Button>
+						</Link>
 
-							{sections.map((section) => (
-								<div key={section.id} className="space-y-3">
-									<p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 px-2">
-										{section.label}
-									</p>
-									<div className="grid grid-cols-1 gap-1">
-										{section.links.map((link) => (
-											<Link
-												key={link.href}
-												href={link.href}
-												onClick={() => setIsOpen(false)}
-												className={`flex items-center gap-4 px-4 py-4 rounded-2xl text-base font-bold transition-all ${link.color
+						{sections.map((section) => (
+							<div key={section.id} className="space-y-3">
+								<p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 px-2">
+									{section.label}
+								</p>
+								<div className="grid grid-cols-1 gap-1">
+									{section.links.map((link) => (
+										<Link
+											key={link.href}
+											href={link.href}
+											onClick={() => setIsOpen(false)}
+											className={`flex items-center gap-4 px-4 py-4 rounded-2xl text-base font-bold transition-all ${
+												link.color
 													? "bg-yellow-500/5 text-yellow-500 border border-yellow-500/10"
 													: "text-zinc-300 bg-zinc-900/40 border border-zinc-800/50"
-													}`}
-											>
-												<div className="p-2 bg-black rounded-lg border border-zinc-800">
-													{link.icon}
-												</div>
-												{link.label}
-											</Link>
-										))}
-									</div>
+											}`}
+										>
+											<div className="p-2 bg-black rounded-lg border border-zinc-800">
+												{link.icon}
+											</div>
+											{link.label}
+										</Link>
+									))}
 								</div>
-							))}
+							</div>
+						))}
 
-							<div className="pt-4 space-y-4">
-								<Link href="/apoie" onClick={() => setIsOpen(false)}>
-									<Button
-										variant="outline"
-										className="w-full border-zinc-800 py-6 text-zinc-400 text-sm font-black uppercase tracking-widest"
-									>
-										Apoie a Causa
-									</Button>
-								</Link>
-								<div className="flex justify-center">
-									<SyncButton />
-								</div>
+						<div className="pt-4 space-y-4">
+							<Link href="/apoie" onClick={() => setIsOpen(false)}>
+								<Button
+									variant="outline"
+									className="w-full border-zinc-800 py-6 text-zinc-400 text-sm font-black uppercase tracking-widest"
+								>
+									Apoie a Causa
+								</Button>
+							</Link>
+							<div className="flex justify-center">
+								<SyncButton />
 							</div>
 						</div>
 					</div>
-				)
-			}
-		</nav >
+				</div>
+			)}
+		</nav>
 	);
 }

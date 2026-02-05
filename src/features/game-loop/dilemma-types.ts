@@ -105,7 +105,15 @@ export type DilemmaAspect =
 	| "HYGIENE"
 	| "WORK"
 	| "FAMILY"
-	| "SOCIAL";
+	| "SOCIAL"
+	| "SHELTER"
+	| "BUREAUCRACY"
+	| "LEISURE"
+	| "MENTAL"
+	| "ETHICS"
+	| "INFO"
+	| "POLITICS"
+	| "TRANSPORT";
 
 export interface LegalReference {
 	law: string; // e.g., "Decreto 7.053/2009"
@@ -123,7 +131,7 @@ export interface Dilemma {
 	title: string;
 	description: string;
 	aspect?: DilemmaAspect; // Optional for now to avoid breaking existing data immediately
-	intensity?: "LOW" | "HIGH";
+	intensity?: "LOW" | "MEDIUM" | "HIGH";
 	conditions?: DilemmaConditions;
 	trigger: {
 		type: TriggerType;

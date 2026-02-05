@@ -1,6 +1,6 @@
 import type { GameState } from "@/contexts/GameContext";
 import { REALITY_ATLAS } from "@/data/RealityAtlas";
-import { detectActiveArc, STORY_ARCS } from "@/data/story-arcs";
+import { detectActiveArc } from "@/data/story-arcs";
 import type { Dilemma } from "./dilemma-types";
 
 // Bom Prato operating hours (based on real data)
@@ -310,10 +310,13 @@ export class DilemmaManager {
 		return selected;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: avatar type legacy
-	private applyDynamicModifiers(dilemma: Dilemma, avatar: any): Dilemma {
+	// biome-ignore lint/suspicious/noExplicitAny: Dilemma data contains any in options effects
+	private applyDynamicModifiers(
+		dilemma: Dilemma,
+		avatar: Avatar | null,
+	): Dilemma {
 		// Clone to avoid mutating the original dilemma data
-		const modified = JSON.parse(JSON.stringify(dilemma));
+		const modified: Dilemma = JSON.parse(JSON.stringify(dilemma));
 
 		for (const option of modified.options) {
 			if (option.risk !== undefined) {
@@ -345,18 +348,12 @@ export class DilemmaManager {
 		return modified;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: state type legacy
-	private isTriggered(dilemma: Dilemma, state: any): boolean {
+	private isTriggered(dilemma: Dilemma, state: Partial<GameState>): boolean {
 		if (!dilemma.trigger) return false;
 		const { type, value, statusCondition } = dilemma.trigger;
-		const {
-			hunger,
-			hygiene,
-			socialStigma,
-			userPosition,
-			timeInLocation,
-			phoneBattery,
-		} = state;
+		const { hunger, hygiene, socialStigma, userPosition, phoneBattery } = state;
+
+		// Note: timeInLocation is handled by the caller or added to state if needed
 
 		switch (type) {
 			case "RANDOM":
@@ -409,8 +406,9 @@ export class DilemmaManager {
 					return true;
 				}
 				return false;
-			case "LOCATION_IDLE":
-				// ... existing logic ...
+			case "LOCATION_IDLE": {
+				// biome-ignore lint/suspicious/noExplicitAny: dynamic state access
+				const timeInLoc = (state as any).timeInLocation || 0;
 				// NEW: Check dynamic conditions
 				if (
 					dilemma.trigger.condition &&
@@ -423,7 +421,7 @@ export class DilemmaManager {
 					}
 				}
 
-				if (timeInLocation >= (value as number)) {
+				if (timeInLoc >= (value as number)) {
 					// Logic copied from view...
 					if (dilemma.location_trigger && userPosition) {
 						// re-using calc
@@ -447,6 +445,7 @@ export class DilemmaManager {
 					return true;
 				}
 				break;
+			}
 			case "CHAIN":
 				return false; // Chains are triggered manually via nextDilemmaId or events
 			case "STATUS":
@@ -482,12 +481,6 @@ export class DilemmaManager {
 				}
 
 				// Check if location matches (value = LOCATION_ID)
-				// For now, simple string matching logic or reusing the coordinate calculation if mapped
-				// The new JSON uses "value": "BOM_PRATO". We need to map this to coordinates or check distance if available.
-				// Assuming simplified check for now or basic distance check vs userPosition if we map IDs.
-				// Since we don't have a robust ID->Coord map inside Trigger yet, let's assume Director handles location via coordinates
-				// separately or we use the 'value' as a key in REALITY_ATLAS.
-
 				if (typeof value === "string" && value === "BOM_PRATO") {
 					// Hardcoded location check for Arc 2 MVP
 					// Bom Prato Centro aprox coords
@@ -593,8 +586,10 @@ export class DilemmaManager {
 	}
 
 	// Safe evaluator for condition strings
-	// biome-ignore lint/suspicious/noExplicitAny: state type legacy
-	private checkConditionExpression(expression: string, state: any): boolean {
+	private checkConditionExpression(
+		expression: string,
+		state: Partial<GameState>,
+	): boolean {
 		try {
 			// Supported: "A && B", "!A", "A === 'val'", "A < 10"
 
@@ -606,7 +601,6 @@ export class DilemmaManager {
 
 			let target = expression.trim();
 			let operator = "";
-			const _compareValue: any = null;
 
 			// 1. Identify Operator
 			if (target.includes(" === ")) operator = "===";
@@ -656,8 +650,10 @@ export class DilemmaManager {
 	}
 
 	// Helper to resolve "state.foo.bar" or "string" or 10
-	// biome-ignore lint/suspicious/noExplicitAny: value resolution
-	private resolveValue(pathOrValue: string, state: any): any {
+	private resolveValue(
+		pathOrValue: string,
+		state: Partial<GameState>,
+	): string | number | boolean | undefined {
 		// String literal
 		if (
 			(pathOrValue.startsWith("'") && pathOrValue.endsWith("'")) ||
@@ -678,7 +674,8 @@ export class DilemmaManager {
 		// State Path
 		if (pathOrValue.startsWith("state.")) {
 			const parts = pathOrValue.replace("state.", "").split(".");
-			let value = state;
+			// biome-ignore lint/suspicious/noExplicitAny: dynamic traversal
+			let value: any = state;
 			for (const part of parts) {
 				if (value === undefined || value === null) return undefined;
 				value = value[part];
@@ -689,13 +686,14 @@ export class DilemmaManager {
 		return undefined;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: state type legacy
-	private checkConditions(dilemma: Dilemma, state: any): boolean {
+	private checkConditions(
+		dilemma: Dilemma,
+		state: Partial<GameState>,
+	): boolean {
 		if (!dilemma.conditions) return true;
 
 		const { gender } = state.avatar || {};
 		const inventory = state.inventory || [];
-		const _resolvedIds = this.resolvedIds || new Set();
 
 		// 1. Gender Check
 		if (dilemma.conditions.gender) {
@@ -709,7 +707,7 @@ export class DilemmaManager {
 		if (dilemma.conditions.requiredItem) {
 			const { requiredItem } = dilemma.conditions;
 			const hasInventoryItem = inventory.some(
-				(i: any) => i.id === requiredItem,
+				(i: Item) => i.id === requiredItem,
 			);
 
 			// Check WorkTool as well (User might name it "carrinho")

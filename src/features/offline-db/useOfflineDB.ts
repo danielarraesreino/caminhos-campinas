@@ -21,6 +21,7 @@ export const useOfflineDB = (_collection?: string) => {
 	}, []);
 
 	// Helper for easy saving
+	// biome-ignore lint/suspicious/noExplicitAny: Generic document save
 	const saveLocally = async (doc: any) => {
 		if (!db) return;
 		try {

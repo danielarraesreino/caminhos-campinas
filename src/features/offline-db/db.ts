@@ -2,7 +2,8 @@ import { initDBWithRetry, monitorDBHealth } from "./db-health";
 
 let dbInstance: PouchDB.Database | null =
 	typeof window !== "undefined"
-		? (window as any).__POUCH_DB_INSTANCE__ || null
+		? // biome-ignore lint/suspicious/noExplicitAny: Debug hook
+			(window as any).__POUCH_DB_INSTANCE__ || null
 		: null;
 
 async function initPouchDB(): Promise<PouchDB.Database | null> {
@@ -18,9 +19,11 @@ async function initPouchDB(): Promise<PouchDB.Database | null> {
 
 	// Explicitly load modern IndexedDB adapter first
 	// This prevents fallback to legacy Level adapters (leveldown, encoding-down)
+	// biome-ignore lint/suspicious/noExplicitAny: internal flag
 	if (!(PouchDB as any).__PLUGINS_LOADED__) {
 		PouchDB.plugin(PouchDBIndexedDB);
 		PouchDB.plugin(PouchDBFind);
+		// biome-ignore lint/suspicious/noExplicitAny: internal flag
 		(PouchDB as any).__PLUGINS_LOADED__ = true;
 	}
 
@@ -30,6 +33,7 @@ async function initPouchDB(): Promise<PouchDB.Database | null> {
 	});
 
 	if (typeof window !== "undefined") {
+		// biome-ignore lint/suspicious/noExplicitAny: debug hook
 		(window as any).__POUCH_DB_INSTANCE__ = db;
 	}
 

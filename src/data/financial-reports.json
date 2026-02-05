@@ -1,0 +1,34 @@
+{
+	"reports": [
+		{
+			"month": "2026-02",
+			"expenses": [
+				{
+					"category": "Infraestrutura",
+					"description": "Servidores Vercel/Railway",
+					"value": 150.0
+				},
+				{
+					"category": "Marketing",
+					"description": "Impulsionamento Instagram",
+					"value": 50.0
+				},
+				{
+					"category": "Administrativo",
+					"description": "Registro de Domínio",
+					"value": 80.0
+				}
+			],
+			"income": 0,
+			"balance": -280.0,
+			"status": "Em Aberto"
+		},
+		{
+			"month": "2026-01",
+			"expenses": [],
+			"income": 0,
+			"balance": 0,
+			"status": "Sem Movimentação"
+		}
+	]
+}

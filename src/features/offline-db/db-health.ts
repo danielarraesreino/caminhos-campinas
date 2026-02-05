@@ -73,8 +73,10 @@ export function getDBHealth(): DBHealthStatus {
  * Initialize IndexedDB with retry logic for AbortError
  */
 export async function initDBWithRetry(
+	// biome-ignore lint/suspicious/noExplicitAny: Generic init function
 	initFunction: () => Promise<any>,
 	maxRetries = 3,
+	// biome-ignore lint/suspicious/noExplicitAny: Generic init function
 ): Promise<any> {
 	// SSR guard
 	if (typeof window === "undefined") {

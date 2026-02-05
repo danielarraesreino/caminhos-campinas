@@ -78,7 +78,7 @@ export function LocationDetailsDrawer({
 										<div className="flex flex-wrap gap-3">
 											{res.impact.map((imp, idx) => (
 												<div
-													key={idx}
+													key={`${res.id}-${idx}-${imp.stat}`}
 													className="flex items-center gap-1.5 text-sm bg-zinc-950 border border-zinc-800 px-2 py-1 rounded"
 												>
 													{imp.stat === "hunger" && (

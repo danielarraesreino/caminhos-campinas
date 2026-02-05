@@ -5,6 +5,7 @@ import {
 	Battery,
 	Brain,
 	Clock,
+	Gamepad2,
 	MapPin,
 	Megaphone,
 	Mic,
@@ -16,7 +17,6 @@ import {
 	Wifi,
 	WifiOff,
 } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
@@ -81,7 +81,6 @@ export function GameHUD({
 		sanity,
 		money,
 		time,
-		day,
 		socialStigma,
 		phoneBattery,
 		pdu,
@@ -107,10 +106,7 @@ export function GameHUD({
 			)}
 
 			{/* TOP BAR - COMPACT HUD */}
-			<header
-				className="fixed top-0 left-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-3 py-2 flex items-center justify-between text-xs shadow-xl pointer-events-auto transition-all duration-300"
-				aria-label="Barra de Status do Jogo"
-			>
+			<header className="fixed top-0 left-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-3 py-2 flex items-center justify-between text-xs shadow-xl pointer-events-auto transition-all duration-300">
 				{/* LEFT: VITAL SIGNS */}
 				<div className="flex items-center gap-3">
 					<InteractiveStatus
@@ -142,6 +138,33 @@ export function GameHUD({
 					/>
 				</div>
 
+				{/* CENTER: DEMO MODE INDICATOR */}
+				{process.env.NODE_ENV !== "production" && (
+					<div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-gradient-to-r from-purple-900/80 to-pink-900/80 px-3 py-1 rounded-full border border-purple-500/50 shadow-lg shadow-purple-900/50">
+						<Gamepad2 className="w-3.5 h-3.5 text-purple-300" />
+						<span className="text-purple-200 font-bold text-[10px] uppercase tracking-wider">
+							Modo Demo
+						</span>
+						<div className="group relative">
+							<button
+								type="button"
+								className="text-purple-300 hover:text-purple-100 transition-colors"
+								aria-label="Informações sobre Modo Demo"
+							>
+								<span className="text-xs">ℹ️</span>
+							</button>
+							<div className="hidden group-hover:block absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 border border-purple-500/50 rounded-lg p-3 shadow-xl z-50">
+								<p className="text-xs text-slate-300 leading-relaxed">
+									<strong className="text-purple-300">Modo Demo Ativo:</strong>
+									<br />• Confisco desativado
+									<br />• Decay de sanidade reduzido em 50%
+									<br />• Tempo de jogo mais lento (30s/tick)
+								</p>
+							</div>
+						</div>
+					</div>
+				)}
+
 				{/* RIGHT: RESOURCES & TIME */}
 				<div className="flex items-center gap-3 font-mono">
 					<div
@@ -171,10 +194,11 @@ export function GameHUD({
 						<button
 							type="button"
 							onClick={handleToggleMute}
-							className={`ml-1 p-1 rounded-md transition-all ${isMuted
+							className={`ml-1 p-1 rounded-md transition-all ${
+								isMuted
 									? "text-red-400 hover:bg-red-900/30"
 									: "text-emerald-400 hover:bg-emerald-900/30"
-								}`}
+							}`}
 							aria-label={isMuted ? "Ativar som" : "Desativar som"}
 						>
 							{isMuted ? (
@@ -251,7 +275,7 @@ export function GameHUD({
 	);
 }
 
-function PDUWidget({ pdu }: { pdu: any }) {
+function PDUWidget({ pdu }: { pdu: PDUState }) {
 	if (!pdu?.isActive || !pdu?.objective) return null;
 
 	// Simple Progress Calculation

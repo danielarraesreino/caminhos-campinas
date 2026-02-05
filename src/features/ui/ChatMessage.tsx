@@ -25,8 +25,10 @@ function MessageContent({ content }: { content: string }) {
 				);
 				if (matchedTerm) {
 					return (
-						// biome-ignore lint/suspicious/noArrayIndexKey: parts index is stable for static text
-						<GlossaryTooltip key={`${i}-${matchedTerm}`} term={matchedTerm}>
+						<GlossaryTooltip
+							key={`${i}-${part}-${matchedTerm}`}
+							term={matchedTerm}
+						>
 							{part}
 						</GlossaryTooltip>
 					);

@@ -20,7 +20,8 @@ export function ActionInput({
 }: ActionInputProps) {
 	const [inputValue, setInputValue] = useState("");
 	const [isListening, setIsListening] = useState(false);
-	const recognitionRef = useRef<any>(null); // biome-ignore lint/suspicious/noExplicitAny: Web Speech API types vary
+	// biome-ignore lint/suspicious/noExplicitAny: Web Speech API types vary
+	const recognitionRef = useRef<any>(null);
 	const audioChunks = useRef<BlobPart[]>([]);
 	const mediaRecorder = useRef<MediaRecorder | null>(null);
 
@@ -35,7 +36,9 @@ export function ActionInput({
 	useEffect(() => {
 		if (typeof window !== "undefined") {
 			const SpeechRecognition =
+				// biome-ignore lint/suspicious/noExplicitAny: Web Speech API
 				(window as any).SpeechRecognition ||
+				// biome-ignore lint/suspicious/noExplicitAny: Web Speech API
 				(window as any).webkitSpeechRecognition;
 			if (SpeechRecognition) {
 				recognitionRef.current = new SpeechRecognition();
@@ -43,6 +46,7 @@ export function ActionInput({
 				recognitionRef.current.lang = "pt-BR";
 				recognitionRef.current.interimResults = false;
 
+				// biome-ignore lint/suspicious/noExplicitAny: Speech event
 				recognitionRef.current.onresult = (event: any) => {
 					const transcript = event.results[0][0].transcript;
 					setInputValue(transcript);

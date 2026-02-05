@@ -92,6 +92,7 @@ export function HiddenDataToggle() {
 						</h4>
 						<ul className="text-xs text-slate-300 space-y-1">
 							{methodologyCritique.issues.map((issue, i) => (
+								// biome-ignore lint/suspicious/noArrayIndexKey: Static critique list
 								<li key={i} className="flex gap-2">
 									<span className="text-red-400">✗</span>
 									{issue}

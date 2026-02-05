@@ -13,13 +13,55 @@ const IDLE_THRESHOLD = 3;
 
 const getSanityDecayMultiplier = (stigma: number) => 1 + stigma / 100;
 
-// [DEMO_MODE] Flag for GovChallenge
-const DEMO_MODE = true;
+/**
+ * DEMO_MODE Configuration
+ *
+ * @description
+ * Controls whether the game runs in demonstration mode with adjusted mechanics
+ * for showcasing and testing purposes. This mode is designed for presentations,
+ * demos, and initial user experiences where harsh game mechanics might be
+ * frustrating or counterproductive.
+ *
+ * @effects When DEMO_MODE is enabled (true):
+ *
+ * 1. **Confiscation Disabled**
+ *    - "O Rapa" (municipal confiscation) chance reduced from 2% to 0%
+ *    - Players won't lose their work tools unexpectedly
+ *    - Prevents frustration during demos and first-time gameplay
+ *
+ * 2. **Reduced Sanity Decay**
+ *    - Sanity decay rate reduced by 50%
+ *    - Makes the game more forgiving for learning mechanics
+ *    - Allows players to explore without immediate mental health crisis
+ *
+ * 3. **Slower Game Loop**
+ *    - Game tick interval: 30 seconds (vs 10 seconds in production)
+ *    - Gives players more time to read and understand events
+ *    - Reduces pressure during demonstrations
+ *
+ * @production
+ * For public release, set DEMO_MODE = false to enable full simulation realism.
+ * The realistic mechanics are crucial for the educational impact of the game.
+ *
+ * @see https://github.com/your-repo/docs/demo-mode.md for full documentation
+ */
+const DEMO_MODE = false;
+
+/**
+ * Confiscation Event Probability
+ *
+ * Determines the chance of "O Rapa" (municipal confiscation) occurring.
+ * In DEMO_MODE, this is disabled to prevent frustration.
+ * In production, 2% chance per game tick represents realistic risk.
+ */
+const getConfiscationChance = () => {
+	// [DEMO_MODE] Disable 'O Rapa' (confiscation) to avoid frustration
+	return DEMO_MODE ? 0 : 0.02;
+};
 
 // biome-ignore lint/suspicious/noExplicitAny: legacy workTool type
 const processRandomEvents = (state: { dignity: number; workTool: any }) => {
-	// [DEMO_MODE] Disable 'O Rapa' (confiscation) to avoid frustration
-	const chance = DEMO_MODE ? 0 : 0.02;
+	const chance = getConfiscationChance();
 	if (Math.random() < chance) {
 		return {
 			workTool: { ...state.workTool, isConfiscated: true },

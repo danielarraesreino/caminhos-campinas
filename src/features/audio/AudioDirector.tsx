@@ -1,15 +1,16 @@
 "use client";
 
 import { Mic, SkipForward, Volume2, VolumeX } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { useModalQueue } from "@/contexts/ModalQueueContext";
 import { detectActiveArc } from "@/data/story-arcs";
+import type { Dilemma } from "@/features/game-loop/dilemma-types";
 
 export function AudioDirector() {
 	const { setAudioPlaying } = useModalQueue();
 	const { activeDilemmaId, hasHydrated } = useGameContext();
-	const [activeDilemma, setActiveDilemma] = useState<any>(null);
+	const [activeDilemma, setActiveDilemma] = useState<Dilemma | null>(null);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isMuted, setIsMuted] = useState(false);
 	const [audioProgress, setAudioProgress] = useState(0);
@@ -17,6 +18,70 @@ export function AudioDirector() {
 	// Synthesizer ref
 	const synth = useRef<SpeechSynthesis | null>(null);
 	const utterance = useRef<SpeechSynthesisUtterance | null>(null);
+
+	const cancelSpeech = useCallback(() => {
+		if (synth.current) {
+			synth.current.cancel();
+			setIsPlaying(false);
+			setAudioPlaying(false);
+			setAudioProgress(0);
+		}
+	}, [setAudioPlaying]);
+
+	const playNarration = useCallback(
+		(text: string, _voiceName: string | null) => {
+			if (!synth.current || isMuted) return;
+
+			cancelSpeech();
+
+			// Short delay before starting
+			setTimeout(() => {
+				const u = new SpeechSynthesisUtterance(text);
+				utterance.current = u;
+				u.lang = "pt-BR";
+				u.rate = 1.05; // Slightly faster
+				u.pitch = 1.0;
+
+				u.onstart = () => {
+					setIsPlaying(true);
+					setAudioPlaying(true);
+					setAudioProgress(0);
+				};
+
+				u.onerror = (e) => {
+					console.warn("Speech error:", e);
+					setIsPlaying(false);
+					setAudioPlaying(false);
+				};
+
+				// Fake progress simulation
+				const estimatedDuration = (text.length / 15) * 1000;
+				const startTime = Date.now();
+
+				const progressInterval = setInterval(() => {
+					if (!synth.current?.speaking) {
+						clearInterval(progressInterval);
+						return;
+					}
+					const elapsed = Date.now() - startTime;
+					const p = Math.min(99, (elapsed / estimatedDuration) * 100);
+					setAudioProgress(p);
+				}, 100);
+
+				u.onend = () => {
+					clearInterval(progressInterval);
+					setIsPlaying(false);
+					setAudioPlaying(false);
+					setAudioProgress(100);
+				};
+
+				if (synth.current) {
+					synth.current.speak(u);
+				}
+			}, 500);
+		},
+		[isMuted, cancelSpeech, setAudioPlaying],
+	);
 
 	// Load dilemma data when ID changes
 	useEffect(() => {
@@ -30,15 +95,15 @@ export function AudioDirector() {
 			// Dynamic import or require to get dilemma data
 			const allDilemmas =
 				require("@/features/game-loop/dilemmas").GAME_DILEMMAS;
-			const found = allDilemmas.find((d: any) => d.id === activeDilemmaId);
+			const found = allDilemmas.find((d: Dilemma) => d.id === activeDilemmaId);
 			if (found) {
 				setActiveDilemma(found);
-				playNarration(found.text, found.narrator || null);
+				playNarration(found.text || found.description, found.audioId || null);
 			}
 		} catch (e) {
 			console.error("Failed to load dilemma for audio:", e);
 		}
-	}, [activeDilemmaId, hasHydrated]);
+	}, [activeDilemmaId, hasHydrated, cancelSpeech, playNarration]);
 
 	// Detect active Story Arc
 	const activeArc = detectActiveArc(activeDilemmaId);
@@ -53,68 +118,7 @@ export function AudioDirector() {
 		return () => {
 			cancelSpeech();
 		};
-	}, []);
-
-	const cancelSpeech = () => {
-		if (synth.current) {
-			synth.current.cancel();
-			setIsPlaying(false);
-			setAudioPlaying(false);
-			setAudioProgress(0);
-		}
-	};
-
-	const playNarration = (text: string, voiceName: string | null) => {
-		if (!synth.current || isMuted) return;
-
-		cancelSpeech();
-
-		// Short delay before starting
-		setTimeout(() => {
-			const u = new SpeechSynthesisUtterance(text);
-			utterance.current = u;
-			u.lang = "pt-BR";
-			u.rate = 1.05; // Slightly faster
-			u.pitch = 1.0;
-
-			u.onstart = () => {
-				setIsPlaying(true);
-				setAudioPlaying(true);
-				setAudioProgress(0);
-			};
-
-			u.onerror = (e) => {
-				console.warn("Speech error:", e);
-				setIsPlaying(false);
-				setAudioPlaying(false);
-			};
-
-			// Fake progress simulation
-			const estimatedDuration = (text.length / 15) * 1000;
-			const startTime = Date.now();
-
-			const progressInterval = setInterval(() => {
-				if (!synth.current?.speaking) {
-					clearInterval(progressInterval);
-					return;
-				}
-				const elapsed = Date.now() - startTime;
-				const p = Math.min(99, (elapsed / estimatedDuration) * 100);
-				setAudioProgress(p);
-			}, 100);
-
-			u.onend = () => {
-				clearInterval(progressInterval);
-				setIsPlaying(false);
-				setAudioPlaying(false);
-				setAudioProgress(100);
-			};
-
-			if (synth.current) {
-				synth.current.speak(u);
-			}
-		}, 500);
-	};
+	}, [cancelSpeech]);
 
 	const handleSkip = () => {
 		cancelSpeech();

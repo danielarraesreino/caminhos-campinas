@@ -22,10 +22,7 @@ export default function JornalPage() {
 				<div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/90 to-black" />
 			</div>
 			<div className="max-w-4xl mx-auto space-y-8 p-6 pt-24 relative z-10">
-				<header
-					className="flex items-center gap-4 border-b border-slate-800 pb-6"
-					aria-label="Cabeçalho do Jornal"
-				>
+				<header className="flex items-center gap-4 border-b border-slate-800 pb-6">
 					<Link
 						href="/"
 						className="p-2 hover:bg-slate-900 rounded-full transition-colors group"

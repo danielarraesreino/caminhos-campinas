@@ -1,10 +1,9 @@
 "use client";
 
-import { Check, Lock, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Check, ThumbsDown, ThumbsUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 
 // Mocking data fetch for simplicity in this prototype phase
 const MOCK_DILEMMA = {

@@ -305,8 +305,39 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
 // --- Context & Provider ---
 
-// biome-ignore lint/suspicious/noExplicitAny: Legacy context structure
-const GameContext = createContext<any>(undefined);
+export interface GameContextType extends GameState {
+	dispatch: React.Dispatch<GameAction>;
+	modifyStat: (stat: keyof GameState, amount: number) => void;
+	addMoney: (amount: number) => void;
+	advanceTime: (hours: number) => void;
+	markDilemmaResolved: (dilemmaId: string) => void;
+	setActiveDilemma: (dilemmaId: string | null) => void;
+	setAtShelter: (isAtShelter: boolean) => void;
+	setWorkTool: (tool: GameState["workTool"]) => void;
+	addBuff: (buff: string) => void;
+	removeBuff: (buff: string) => void;
+	addToInventory: (itemOrId: Item | string) => void;
+	removeFromInventory: (itemId: string) => void;
+	setAvatar: (avatar: Avatar) => void;
+	setPaused: (value: boolean) => void;
+	setUserPosition: (position: [number, number] | null) => void;
+	eat: (amount: number) => void;
+	sleep: (isSafe: boolean) => Promise<void>;
+	work: (hours: number) => void;
+	consumeBattery: (amount: number) => void;
+	resetGame: () => Promise<void>;
+	initPDU: (objective: PDUObjective) => void;
+	updatePduStage: (stageId: string) => void;
+	completePduStage: (stageId: string) => void;
+	updateDocuments: (updates: Partial<GameState["documents"]>) => void;
+	setEmployedFormal: (isEmployed: boolean) => void;
+	logEvent: (event: GameEvent) => void;
+	setFlag: (key: string, value: boolean) => void;
+	registerOccurrence: (text: string) => void;
+	setTutorialActive: (isActive: boolean) => void;
+}
+
+const GameContext = createContext<GameContextType | undefined>(undefined);
 const DOC_ID = "game_state_v1";
 
 const GAME_VERSION = "1.1"; // Census 2024 Refactor & Fixes
@@ -371,8 +402,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 					type: "SET_STATE",
 					payload: { ...savedData, hasHydrated: true } as GameState,
 				});
-			} catch (err: any) {
-				if (err.status === 404) {
+			} catch (err) {
+				const error = err as { status?: number };
+				if (error.status === 404) {
 					console.log("ℹ️ New Game (No saved state found)");
 				} else {
 					console.error("❌ Error loading state:", err);
@@ -454,7 +486,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				// 2. Force Persistence immediately
 				if (db) {
 					try {
-						let doc: any = {};
+						let doc: Partial<SavedGameState> = {};
 						try {
 							doc = await db.get(DOC_ID);
 						} catch (_e) {
@@ -604,8 +636,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 	const updatePduStage = useCallback((stageId: string) => {
 		dispatch({ type: "UPDATE_PDU_STAGE", payload: { stageId } });
 	}, []);
-
-
 
 	const completePduStage = useCallback((stageId: string) => {
 		dispatch({ type: "COMPLETE_PDU_STAGE", payload: { stageId } });

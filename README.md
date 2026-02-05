@@ -153,7 +153,53 @@ npm run build        # Cria build de produção
 npm run start        # Inicia servidor de produção
 npm run lint         # Executa linter (Biome)
 npm run format       # Formata código com Biome
+npm run test:e2e     # Executa testes E2E com Playwright
 ```
+
+## 🎮 DEMO_MODE
+
+O projeto inclui um **DEMO_MODE** que ajusta as mecânicas do jogo para demonstrações e testes.
+
+### O que é?
+
+`DEMO_MODE` é uma configuração em `src/features/game-loop/useGameLoop.ts` que torna o jogo menos punitivo e mais lento, ideal para:
+- 🎤 Apresentações e demos
+- 🧪 Testes e desenvolvimento
+- 👶 Primeiras experiências de jogadores
+
+### Efeitos Quando Ativado
+
+| Mecânica | Produção | Demo Mode |
+|----------|----------|-----------|
+| **Confisco ("O Rapa")** | 2% chance | 0% (desativado) |
+| **Decay de Sanidade** | 100% | 50% (reduzido) |
+| **Game Loop Tick** | 10 segundos | 30 segundos |
+
+### Como Identificar
+
+Quando ativo, um badge roxo aparece no topo da tela do jogo:
+
+```
+🎮 Modo Demo ℹ️
+```
+
+Passe o mouse sobre o badge para ver os detalhes.
+
+### Configuração
+
+Para alterar o modo, edite `src/features/game-loop/useGameLoop.ts`:
+
+```typescript
+// Para demonstrações e testes
+const DEMO_MODE = true;
+
+// Para produção (simulação realista)
+const DEMO_MODE = false;
+```
+
+> **⚠️ Importante**: Para lançamento público, defina `DEMO_MODE = false`. A simulação realista é crucial para o impacto educacional do jogo.
+
+📖 **Documentação completa**: [/sobre/demo-mode](/sobre/demo-mode)
 
 ## 🎯 Objetivos de Aprendizagem
 

@@ -2,9 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import type { Dilemma } from "@/features/game-loop/dilemma-types";
+import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";
 
 export function GameEffectsLayer() {
-	const { health, sanity, activeDilemmaId } = useGameContext();
+	// Subscribing to game state
+	const { health, sanity, phoneBattery, activeDilemmaId, activeBuffs } =
+		useGameContext();
 	const [isLowPowerMode, setIsLowPowerMode] = useState(false);
 
 	// Detect low power devices or user preference (simplified)
@@ -27,10 +31,11 @@ export function GameEffectsLayer() {
 	// In a real optimized app, context should pass the object.
 	// For now, we import the static list.
 	const activeDilemma = activeDilemmaId
-		? require("@/features/game-loop/dilemmas").GAME_DILEMMAS.find(
-				(d: any) => d.id === activeDilemmaId,
-			)
+		? GAME_DILEMMAS.find((d: Dilemma) => d.id === activeDilemmaId)
 		: null;
+
+	// Check if SEM_BATERIA buff is active
+	const _isBatteryDead = activeBuffs?.includes("SEM_BATERIA");
 
 	// Thresholds & Triggers
 	const isLowHealth = health < 30;

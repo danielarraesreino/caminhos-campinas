@@ -15,7 +15,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 		Credentials({
 			name: "Anonymous",
 			credentials: {},
-			async authorize(_credentials: any) {
+			async authorize(_credentials: Record<string, string> | undefined) {
 				// Return a mock user for anonymous access
 				return {
 					id: "anonymous",

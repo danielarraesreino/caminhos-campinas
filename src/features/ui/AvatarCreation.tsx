@@ -140,7 +140,10 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 		try {
 			const prompt = `A photo of a ${formData.ageRange} ${formData.gender} person, ${formData.ethnicity} ethnicity, living on the streets of Brazil, realistic, documentary style, natural light.`;
 			const imageUrl = await generateAIPortrait(prompt);
-			console.log("[AvatarCreation] AI Generation success, image size:", imageUrl?.length);
+			console.log(
+				"[AvatarCreation] AI Generation success, image size:",
+				imageUrl?.length,
+			);
 			setUploadedImage(imageUrl);
 			updateField("avatarImage", imageUrl);
 			showToast("Retrato gerado com sucesso!", "success");

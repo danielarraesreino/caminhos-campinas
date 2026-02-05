@@ -54,6 +54,7 @@ export function ProjectRegistrationForm() {
 				category: AREA_TO_CATEGORY[formData.area] || "ALIMENTACAO",
 			};
 
+			// biome-ignore lint/suspicious/noExplicitAny: Partial partner data for registration
 			const result = await hubService.registerPartner(newPartnerData as any);
 
 			console.log("✅ Parceiro cadastrado:", result.id);

@@ -1,5 +1,5 @@
-import { test as base, type Page, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { test as base, expect, type Page } from "@playwright/test";
 
 // Define the type for our custom fixtures
 type MyFixtures = {
@@ -15,6 +15,9 @@ export const test = base.extend<MyFixtures>({
 				const text = msg.text();
 				if (text.includes("404 (Not Found)")) return;
 				if (text.includes("GeolocationPositionError")) return;
+				// [FIX] Allow AuthJS errors in test environment (no auth configured)
+				if (text.includes("ClientFetchError") && text.includes("authjs.dev"))
+					return;
 				if (text.includes("SpeechSynthesis Error")) {
 					throw new Error(`🛑 CRITICAL AUDIO FAILURE: "${text}"`);
 				}

@@ -21,7 +21,7 @@ export function useODSTracker() {
 		async (
 			actionName: string,
 			odsTarget: string,
-			metadata: Record<string, any> = {},
+			metadata: Record<string, unknown> = {},
 		) => {
 			await telemetryService.track(
 				TelemetryAction.ODS_METRIC,

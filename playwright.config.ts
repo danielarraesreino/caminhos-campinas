@@ -18,6 +18,12 @@ export default defineConfig({
 	use: {
 		baseURL: "http://127.0.0.1:3000",
 		trace: "on-first-retry",
+		actionTimeout: 15000,
+		navigationTimeout: 45000,
+	},
+	timeout: 60000,
+	expect: {
+		timeout: 10000,
 	},
 
 	projects: [

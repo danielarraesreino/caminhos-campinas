@@ -1,11 +1,12 @@
 "use client";
 
-import { Download, Heart, Users, Wallet } from "lucide-react";
+import { Clock, Download, FileText, Heart, Users, Wallet } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { AudioReader } from "@/components/ui/AudioReader";
 
 import FINANCIAL_DATA from "@/data/financial-goals.json";
+import FINANCIAL_REPORTS from "@/data/financial-reports.json";
 
 const ICON_MAP = {
 	Users,
@@ -14,6 +15,17 @@ const ICON_MAP = {
 };
 
 const _MOCK_FINANCIAL_DATA = FINANCIAL_DATA.breakdown;
+
+interface FinancialReport {
+	month: string;
+	expenses: { category: string; description: string; value: number }[];
+	income: number;
+	balance: number;
+	status: string;
+	pdf_url?: string | null;
+}
+
+const REPORTS_DATA = FINANCIAL_REPORTS.reports as unknown as FinancialReport[];
 
 const MOCK_PILOT_TARGETS = FINANCIAL_DATA.pilot_targets.map((target) => ({
 	...target,
@@ -153,25 +165,150 @@ export default function TransparenciaPage() {
 					))}
 				</section>
 
-				{/* Documents Section */}
-				<section className="bg-gradient-to-br from-slate-900/90 to-black border border-slate-800 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 opacity-80 grayscale hover:grayscale-0 transition-all cursor-not-allowed">
-					<div className="space-y-2">
-						<h3 className="text-xl font-bold text-white">
-							Prestação de Contas (Em Breve)
-						</h3>
-						<p className="text-slate-300 text-sm max-w-lg">
-							Assim que o projeto for iniciado, todos os comprovantes e
-							planilhas serão publicados aqui mensalmente.
-						</p>
+				{/* Documents Section - Prestação de Contas */}
+				<section className="space-y-6">
+					<div className="flex items-center gap-3 mb-6">
+						<div className="bg-emerald-900/30 p-3 rounded-xl border border-emerald-800">
+							<FileText className="text-emerald-400" size={24} />
+						</div>
+						<div>
+							<h3 className="text-2xl font-bold text-white">
+								Prestação de Contas
+							</h3>
+							<p className="text-slate-400 text-sm">
+								Relatórios financeiros mensais detalhados
+							</p>
+						</div>
 					</div>
-					<button
-						type="button"
-						disabled
-						className="flex items-center gap-2 bg-slate-800 text-slate-400 px-6 py-3 rounded-full font-bold cursor-not-allowed border border-slate-700"
-					>
-						<Download size={18} />
-						Aguardando Início
-					</button>
+
+					<div className="grid gap-4">
+						{REPORTS_DATA.map((report) => (
+							<div
+								key={report.month}
+								className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 hover:border-slate-700 transition-all group"
+							>
+								<div className="flex flex-col md:flex-row justify-between gap-6">
+									{/* Header */}
+									<div className="flex items-start gap-4 min-w-[200px]">
+										<div className="bg-slate-800 p-3 rounded-lg">
+											<span className="text-xs font-bold text-slate-400 uppercase block mb-1">
+												Mês de Referência
+											</span>
+											<span className="text-xl font-mono font-bold text-white">
+												{new Date(`${report.month}-02`).toLocaleDateString(
+													"pt-BR",
+													{ month: "long", year: "numeric" },
+												)}
+											</span>
+										</div>
+										<div
+											className={`px-3 py-1 rounded-full text-xs font-bold border ${report.status === "Em Aberto" ? "bg-yellow-900/30 text-yellow-500 border-yellow-800" : "bg-emerald-900/30 text-emerald-500 border-emerald-800"}`}
+										>
+											{report.status}
+										</div>
+									</div>
+
+									{/* Stats */}
+									<div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4">
+										<div>
+											<span className="text-xs text-slate-500 uppercase block">
+												Entradas
+											</span>
+											<span className="text-emerald-400 font-mono font-bold">
+												{new Intl.NumberFormat("pt-BR", {
+													style: "currency",
+													currency: "BRL",
+												}).format(report.income)}
+											</span>
+										</div>
+										<div>
+											<span className="text-xs text-slate-500 uppercase block">
+												Saídas
+											</span>
+											<span className="text-red-400 font-mono font-bold">
+												{new Intl.NumberFormat("pt-BR", {
+													style: "currency",
+													currency: "BRL",
+												}).format(
+													report.expenses.reduce((acc, e) => acc + e.value, 0),
+												)}
+											</span>
+										</div>
+										<div>
+											<span className="text-xs text-slate-500 uppercase block">
+												Balanço
+											</span>
+											<span
+												className={`font-mono font-bold ${report.balance >= 0 ? "text-blue-400" : "text-red-400"}`}
+											>
+												{new Intl.NumberFormat("pt-BR", {
+													style: "currency",
+													currency: "BRL",
+												}).format(report.balance)}
+											</span>
+										</div>
+									</div>
+
+									{/* Action */}
+									<div className="flex items-center">
+										{report.pdf_url ? (
+											<a
+												href={report.pdf_url}
+												target="_blank"
+												rel="noreferrer"
+												className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg font-medium transition-colors border border-slate-700 hover:border-slate-600"
+											>
+												<Download size={16} />
+												Baixar PDF
+											</a>
+										) : (
+											<button
+												type="button"
+												disabled
+												className="flex items-center gap-2 text-slate-500 cursor-not-allowed px-4 py-2"
+											>
+												<Clock size={16} />
+												Processando
+											</button>
+										)}
+									</div>
+								</div>
+
+								{/* Expenses Breakdown (if any) */}
+								{report.expenses.length > 0 && (
+									<div className="mt-6 pt-6 border-t border-slate-800/50">
+										<h4 className="text-sm font-bold text-slate-400 mb-3 uppercase tracking-wider">
+											Detalhamento de Despesas
+										</h4>
+										<div className="space-y-2">
+											{report.expenses.map((expense, idx) => (
+												<div
+													// biome-ignore lint/suspicious/noArrayIndexKey: Static mock data
+													key={idx}
+													className="flex justify-between items-center text-sm p-2 hover:bg-slate-800/30 rounded transition-colors"
+												>
+													<div className="flex items-center gap-3">
+														<span className="text-slate-300">
+															{expense.description}
+														</span>
+														<span className="text-xs text-slate-500 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+															{expense.category}
+														</span>
+													</div>
+													<span className="font-mono text-slate-200">
+														{new Intl.NumberFormat("pt-BR", {
+															style: "currency",
+															currency: "BRL",
+														}).format(expense.value)}
+													</span>
+												</div>
+											))}
+										</div>
+									</div>
+								)}
+							</div>
+						))}
+					</div>
 				</section>
 			</div>
 		</main>

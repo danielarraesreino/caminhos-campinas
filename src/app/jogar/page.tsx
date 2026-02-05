@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { useModalQueue } from "@/contexts/ModalQueueContext";
 import { AudioDirector } from "@/features/audio/AudioDirector";
 import { ImpactReport } from "@/features/dashboard/ImpactReport";
 import {
@@ -40,7 +39,6 @@ export default function GamePage() {
 	const [showTutorial, setShowTutorial] = useState(false);
 
 	// [FIX] Move hooks to the top level to avoid Rules of Hooks violations (Previous render vs Next render)
-	const { audioPlaying } = useModalQueue();
 
 	useEffect(() => {
 		// Check if tutorial was seen
@@ -54,7 +52,6 @@ export default function GamePage() {
 	// Unpause when tutorial closes (only if no dilemma is active)
 	useEffect(() => {
 		// [FIX] Guard against redundant updates to prevent infinite loops
-		const shouldBePaused = showTutorial;
 
 		if (showTutorial && !gameState.isPaused) {
 			gameState.setPaused(true);

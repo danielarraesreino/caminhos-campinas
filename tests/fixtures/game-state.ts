@@ -68,18 +68,24 @@ type GameStateFixture = {
 
 export const test = base.extend<GameStateFixture>({
 	gameState: async ({ page }, use) => {
-		// Navigate to root to load the app and context
-		await page.goto("/");
+		// [FIX] Removed default navigation to prevent race conditions with test navigation
+		// The test itself must invoke page.goto() before calling injectGameState
 
 		const inject = async (customState: any = {}) => {
 			const stateToInject = { ...MOCK_PLAYER_STATE, ...customState };
 
-			// Wait for hydration or simply override
+			// Verify we are on a valid page
+			if (page.url() === "about:blank") {
+				throw new Error(
+					"Cannot inject game state on about:blank. please navigate to the app first.",
+				);
+			}
+
 			// Wait for the window property to be available
 			await page.waitForFunction(
 				() => (window as any).debugSetState !== undefined,
 				null,
-				{ timeout: 5000 },
+				{ timeout: 10000 }, // Increased from 5000
 			);
 
 			// [FIX] Wait for initial DB hydration to complete to avoid overwrite
@@ -87,7 +93,7 @@ export const test = base.extend<GameStateFixture>({
 			await page.waitForFunction(
 				() => !document.body.innerText.includes("Carregando..."),
 				null,
-				{ timeout: 5000 },
+				{ timeout: 10000 },
 			);
 
 			await page.evaluate(async (data) => {

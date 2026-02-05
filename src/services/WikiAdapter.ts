@@ -170,6 +170,7 @@ export function mergeServices(
 
 		if (matchingLocal) {
 			// Enrich existing local service with Wikidata ID
+			// biome-ignore lint/style/noNonNullAssertion: Guaranteed by check
 			const existing = merged.get(matchingLocal.id)!;
 			merged.set(matchingLocal.id, {
 				...existing,

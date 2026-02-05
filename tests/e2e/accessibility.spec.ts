@@ -1,19 +1,30 @@
 import { test } from "./fixtures";
 
+const routes = [
+	"/",
+	"/jogar",
+	"/impacto",
+	"/jornal",
+	"/transparencia",
+	"/auditoria",
+	"/auditoria/validar",
+	"/sobre",
+	"/sobre/demo-mode",
+	"/curso",
+	"/apoie",
+	"/login",
+	"/parceiros",
+	"/parcerias",
+	"/sugerir",
+	"/recursos",
+];
+
 test.describe("Accessibility Audit (WCAG AA)", () => {
-	test("Landing Page should have no violations", async ({ checkAccessibility }) => {
-		await checkAccessibility("/");
-	});
-
-	test("Game Page should have no violations", async ({ checkAccessibility }) => {
-		await checkAccessibility("/jogar");
-	});
-
-	test("Impact Dashboard should have no violations", async ({ checkAccessibility }) => {
-		await checkAccessibility("/impacto");
-	});
-
-	test("News (Jornal) should have no violations", async ({ checkAccessibility }) => {
-		await checkAccessibility("/jornal");
-	});
+	for (const route of routes) {
+		test(`Route ${route} should have no violations`, async ({
+			checkAccessibility,
+		}) => {
+			await checkAccessibility(route);
+		});
+	}
 });

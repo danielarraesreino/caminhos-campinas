@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import type { Dilemma } from "@/features/game-loop/dilemma-types";
 import { cn } from "@/lib/utils";
 
 export function EffectsLayer() {
@@ -10,10 +11,9 @@ export function EffectsLayer() {
 	const batteryLow = phoneBattery < 20;
 
 	// Look up active dilemma for immediate sensory feedback
-	// We use require to avoid circular dependencies if any, and to dynamically load the data
 	const activeDilemma = activeDilemmaId
 		? require("@/features/game-loop/dilemmas").GAME_DILEMMAS.find(
-				(d: any) => d.id === activeDilemmaId,
+				(d: Dilemma) => d.id === activeDilemmaId,
 			)
 		: null;
 
@@ -77,7 +77,7 @@ export function EffectsLayer() {
 			{batteryLow && (
 				<div className="absolute inset-0 bg-yellow-900/5 animate-pulse flex items-start justify-end p-20">
 					<div className="text-yellow-500/50 text-[8px] font-mono uppercase tracking-tighter">
-						Energy Critical // System Throttled
+						Energy Critical {/* System Throttled */}
 					</div>
 				</div>
 			)}

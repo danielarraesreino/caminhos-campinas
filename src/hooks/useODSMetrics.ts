@@ -17,7 +17,11 @@ export enum ODS {
 
 export function useODSMetrics() {
 	const trackODS = useCallback(
-		async (ods: ODS, meta: string, details: Record<string, any> = {}) => {
+		async (
+			ods: string,
+			meta: string,
+			details: Record<string, unknown> = {},
+		) => {
 			await telemetryService.track(TelemetryAction.ODS_METRIC, {
 				ods,
 				meta,

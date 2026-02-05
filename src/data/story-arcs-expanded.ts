@@ -184,10 +184,8 @@ export function checkCrossArcUnlock(
 ): string[] {
 	const unlockedDilemmas: string[] = [];
 
-	const dignidadeWeight =
-		playerProgress["caminho_dignidade"]?.thematicWeight || 0;
-	const economiaWeight =
-		playerProgress["economia_solidaria"]?.thematicWeight || 0;
+	const dignidadeWeight = playerProgress.caminho_dignidade?.thematicWeight || 0;
+	const economiaWeight = playerProgress.economia_solidaria?.thematicWeight || 0;
 
 	// Unlock advanced territory dilemmas if player has high dignity + economy
 	if (dignidadeWeight >= 60 && economiaWeight >= 60) {

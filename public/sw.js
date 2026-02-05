@@ -87,7 +87,10 @@ self.addEventListener("fetch", (event) => {
 						return networkResponse;
 					})
 					.catch(() => {
-						console.warn("[SW] DiceBear avatar failed to load (offline):", url.pathname);
+						console.warn(
+							"[SW] DiceBear avatar failed to load (offline):",
+							url.pathname,
+						);
 						// Retorna resposta vazia em caso de falha
 						return new Response(null, {
 							status: 503,

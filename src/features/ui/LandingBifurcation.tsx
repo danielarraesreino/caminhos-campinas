@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronRight, Gamepad2, MapPin, Zap } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 
 type JourneyType = "simulation" | "survival" | null;

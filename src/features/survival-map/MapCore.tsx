@@ -144,6 +144,7 @@ interface MapCoreProps {
 	denialPoints?: DenialPoint[];
 	showDenials?: boolean;
 	onTravel?: (lat: number, lng: number) => void;
+	// biome-ignore lint/suspicious/noExplicitAny: Generic resource interaction
 	onResourceInteract?: (res: any) => void;
 }
 
@@ -183,7 +184,7 @@ const MapCore = memo(function MapCore({
 
 					return (
 						<CircleMarker
-							key={`denial-${idx}`}
+							key={`denial-${point.coords[0]}-${point.coords[1]}-${idx}`}
 							center={point.coords}
 							radius={radius}
 							pathOptions={{

@@ -64,7 +64,7 @@ export function ImpactInfographics() {
 		if (navigator.share) {
 			try {
 				await navigator.share({ title, text, url: window.location.href });
-			} catch (e) {
+			} catch (_e) {
 				console.log("Share cancelled");
 			}
 		} else {
@@ -133,6 +133,7 @@ export function ImpactInfographics() {
 							/>
 							<Bar dataKey="value" radius={[0, 4, 4, 0]}>
 								{costData.map((entry, index) => (
+									// biome-ignore lint/suspicious/noArrayIndexKey: Static colors
 									<Cell key={`cell-${index}`} fill={entry.color} />
 								))}
 							</Bar>
@@ -184,10 +185,11 @@ export function ImpactInfographics() {
 								outerRadius={70}
 								paddingAngle={3}
 								dataKey="value"
-								label={({ name, value }) => `${value}%`}
+								label={({ value }) => `${value}%`}
 								labelLine={false}
 							>
 								{workData.map((entry, index) => (
+									// biome-ignore lint/suspicious/noArrayIndexKey: Static colors
 									<Cell key={`cell-${index}`} fill={entry.color} />
 								))}
 							</Pie>
@@ -259,6 +261,7 @@ export function ImpactInfographics() {
 							/>
 							<Bar dataKey="value" radius={[0, 4, 4, 0]}>
 								{causeData.map((entry, index) => (
+									// biome-ignore lint/suspicious/noArrayIndexKey: Static colors
 									<Cell key={`cell-${index}`} fill={entry.color} />
 								))}
 							</Bar>

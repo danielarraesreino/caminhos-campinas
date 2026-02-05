@@ -10,6 +10,7 @@ export interface TelemetryEvent {
 	id: string;
 	type: TelemetryEventType;
 	timestamp: string; // ISO String
+	// biome-ignore lint/suspicious/noExplicitAny: Generic payload
 	data: Record<string, any>;
 	odsTag?: string; // ODS 1, 2, 8, etc.
 }
@@ -58,6 +59,7 @@ class TelemetryService {
 
 	public track(
 		type: TelemetryEventType,
+		// biome-ignore lint/suspicious/noExplicitAny: Generic payload
 		data: Record<string, any> = {},
 		odsTag?: string,
 	) {
