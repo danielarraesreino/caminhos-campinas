@@ -183,7 +183,9 @@ export function Navbar() {
 							<div key={section.id} className="relative group">
 								<button
 									type="button"
-									className="flex items-center gap-2 text-zinc-400 hover:text-white px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
+									aria-label={`Menu ${section.label}`}
+									aria-expanded="false"
+									className="flex items-center gap-2 text-zinc-400 hover:text-white px-3 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
 								>
 									{section.label}
 									<ChevronDown className="w-3 h-3 opacity-50 group-hover:rotate-180 transition-transform" />
@@ -317,11 +319,10 @@ export function Navbar() {
 											key={link.href}
 											href={link.href}
 											onClick={() => setIsOpen(false)}
-											className={`flex items-center gap-4 px-4 py-4 rounded-2xl text-base font-bold transition-all ${
-												link.color
+											className={`flex items-center gap-4 px-4 py-4 rounded-2xl text-base font-bold transition-all ${link.color
 													? "bg-yellow-500/5 text-yellow-500 border border-yellow-500/10"
 													: "text-zinc-300 bg-zinc-900/40 border border-zinc-800/50"
-											}`}
+												}`}
 										>
 											<div className="p-2 bg-black rounded-lg border border-zinc-800">
 												{link.icon}

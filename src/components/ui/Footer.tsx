@@ -7,9 +7,9 @@ export function Footer() {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex flex-col md:flex-row justify-between items-center gap-8">
 					<div className="text-center md:text-left">
-						<h4 className="text-white text-lg font-bold mb-2">
+						<h2 className="text-white text-lg font-bold mb-2">
 							Caminhos Campinas
-						</h4>
+						</h2>
 						<p className="text-sm max-w-xs">
 							Uma iniciativa para transformar a realidade das ruas através da
 							tecnologia social.
@@ -20,28 +20,32 @@ export function Footer() {
 						<span className="text-sm font-bold text-slate-200 mb-4 uppercase tracking-wider">
 							Institucional & Impacto
 						</span>
-						<nav className="flex flex-col gap-2 text-sm">
+						<nav className="flex flex-col gap-1 text-sm">
 							<a
 								href="/parceiros"
-								className="text-slate-300 hover:text-blue-400 transition-colors"
+								className="text-slate-300 hover:text-blue-400 transition-colors py-1.5"
+								aria-label="Para Empresas (ESG)"
 							>
 								Para Empresas (ESG)
 							</a>
 							<a
 								href="/curso"
-								className="text-slate-300 hover:text-yellow-400 transition-colors"
+								className="text-slate-300 hover:text-yellow-400 transition-colors py-1.5"
+								aria-label="Curso Agilizadores"
 							>
 								Curso Agilizadores
 							</a>
 							<a
 								href="/transparencia"
-								className="text-slate-300 hover:text-emerald-400 transition-colors"
+								className="text-slate-300 hover:text-emerald-400 transition-colors py-1.5"
+								aria-label="Portal da Transparência"
 							>
 								Portal da Transparência
 							</a>
 							<a
 								href="/auditoria/validar"
-								className="text-slate-300 hover:text-red-400 transition-colors text-xs mt-2"
+								className="text-slate-300 hover:text-red-400 transition-colors text-xs mt-2 py-2 block"
+								aria-label="Área Técnica (Acesso Restrito)"
 							>
 								Área Técnica (Restrito)
 							</a>
@@ -56,10 +60,11 @@ export function Footer() {
 							href="https://www.instagram.com/coletivoaruatemvoz"
 							target="_blank"
 							rel="noopener noreferrer"
-							className="flex items-center gap-2 text-white hover:text-pink-500 transition-colors bg-slate-800 px-4 py-2 rounded-full"
+							className="flex items-center gap-2 text-white hover:text-pink-500 transition-colors bg-slate-800 px-4 py-3 rounded-full"
+							aria-label="Siga o Coletivo A Rua Tem Voz no Instagram"
 						>
-							<Instagram className="h-5 w-5" />
-							@COLETIVOARUATEMVOZ
+							<Instagram className="h-5 w-5" aria-hidden="true" />
+							<span className="font-bold">@COLETIVOARUATEMVOZ</span>
 						</a>
 					</div>
 				</div>

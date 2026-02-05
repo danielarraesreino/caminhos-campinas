@@ -10,6 +10,19 @@ const StoryCreateSchema = z.object({
 	source: z.string().default("web-direct"),
 });
 
+export async function GET() {
+	try {
+		const stories = await prisma.communityStory.findMany({
+			orderBy: { createdAt: "desc" },
+			take: 50,
+		});
+		return NextResponse.json(stories);
+	} catch (error) {
+		console.error("Error fetching stories:", error);
+		return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+	}
+}
+
 export async function POST(request: Request) {
 	try {
 		const body = await request.json();
