@@ -29,7 +29,9 @@
 			}
 		],
 		"source_fact": "Bom Prato Campinas serve mais de 2 mil refeições diárias a R$ 1,00.",
-		"ods": ["ODS 2"]
+		"ods": [
+			"ODS 2"
+		]
 	},
 	{
 		"id": "enquadro_gcm_centro",
@@ -85,14 +87,19 @@
 					"workToolUpdate": {
 						"isConfiscated": true
 					},
-					"inventoryRemove": ["cobertor"],
+					"inventoryRemove": [
+						"cobertor"
+					],
 					"sanity": -40
 				},
 				"consequence_failure": "Violência Gratuita. Eles chutam suas coisas, tomam seu cobertor e ameaçam te levar. 'Anotado seu nome'."
 			}
 		],
 		"source_fact": "Violência Institucional: 51,1% das agressões relatadas partem de agentes de segurança pública (GM/PM).",
-		"ods": ["ODS 16", "ODS 10"]
+		"ods": [
+			"ODS 16",
+			"ODS 10"
+		]
 	},
 	{
 		"id": "tuberculose_risco_latente",
@@ -108,7 +115,10 @@
 		},
 		"aspect": "HEALTH",
 		"intensity": "HIGH",
-		"tags": ["saúde", "risco_biológico"],
+		"tags": [
+			"saúde",
+			"risco_biológico"
+		],
 		"options": [
 			{
 				"label": "Buscar Consultório na Rua",
@@ -130,7 +140,9 @@
 			}
 		],
 		"source_fact": "Risco Biológico: A chance de Tuberculose na PopRua é 56 vezes maior do que na população geral.",
-		"ods": ["ODS 3"]
+		"ods": [
+			"ODS 3"
+		]
 	},
 	{
 		"id": "pobreza_menstrual_rua",
@@ -143,11 +155,19 @@
 		},
 		"aspect": "HYGIENE",
 		"intensity": "HIGH",
-		"tags": ["saúde", "feminino", "segurança_noturna"],
+		"tags": [
+			"saúde",
+			"feminino",
+			"segurança_noturna"
+		],
 		"conditions": {
 			"gender": "feminino"
 		},
-		"requiredGender": ["feminino", "nao-binario", "trans"],
+		"requiredGender": [
+			"feminino",
+			"nao-binario",
+			"trans"
+		],
 		"options": [
 			{
 				"label": "Usar pano (Risco de infecção)",
@@ -174,7 +194,10 @@
 			}
 		],
 		"source_fact": "A pobreza menstrual afeta 1 em cada 4 jovens no Brasil (ONU Brasil). Isso viola o ODS 3.",
-		"ods": ["ODS 3", "ODS 5"]
+		"ods": [
+			"ODS 3",
+			"ODS 5"
+		]
 	},
 	{
 		"id": "cachorro_abrigo",
@@ -219,7 +242,9 @@
 			}
 		],
 		"source_fact": "Muitos abrigos em Campinas ainda não possuem canis, forçando a escolha entre teto e pet.",
-		"ods": ["ODS 11"]
+		"ods": [
+			"ODS 11"
+		]
 	},
 	{
 		"id": "chuva_papelao_doenca",
@@ -229,7 +254,11 @@
 			"type": "RANDOM",
 			"value": 0.1
 		},
-		"tags": ["chuva", "frio", "clima"],
+		"tags": [
+			"chuva",
+			"frio",
+			"clima"
+		],
 		"options": [
 			{
 				"label": "Proteger o Papelão",
@@ -251,7 +280,9 @@
 			}
 		],
 		"source_fact": "Doenças respiratórias são a maior causa de internação da PopRua no inverno paulista.",
-		"ods": ["ODS 3"]
+		"ods": [
+			"ODS 3"
+		]
 	},
 	{
 		"id": "aporofobia_campinas_nobre",
@@ -293,7 +324,9 @@
 			}
 		],
 		"source_fact": "Aporofobia: O termo descreve a aversão a pobres, crime comum em áreas de alta renda.",
-		"ods": ["ODS 10"]
+		"ods": [
+			"ODS 10"
+		]
 	},
 	{
 		"id": "trabalho_escravizado_bico",
@@ -303,7 +336,12 @@
 			"type": "RANDOM",
 			"value": 0.05
 		},
-		"tags": ["segurança_noturna", "trabalho", "bico", "dinheiro"],
+		"tags": [
+			"segurança_noturna",
+			"trabalho",
+			"bico",
+			"dinheiro"
+		],
 		"options": [
 			{
 				"label": "Aceitar pelo dinheiro",
@@ -330,7 +368,9 @@
 			}
 		],
 		"source_fact": "O trabalho análogo à escravidão urbana atinge frequentemente pessoas em extrema vulnerabilidade.",
-		"ods": ["ODS 8"]
+		"ods": [
+			"ODS 8"
+		]
 	},
 	{
 		"id": "fianca_amigo_preso",
@@ -340,7 +380,9 @@
 			"type": "RANDOM",
 			"value": 0.03
 		},
-		"tags": ["institucional"],
+		"tags": [
+			"institucional"
+		],
 		"options": [
 			{
 				"label": "Ajudar o amigo",
@@ -363,7 +405,9 @@
 			}
 		],
 		"source_fact": "Redes de apoio informal entre pessoas de rua são a principal barreira contra a depressão severa.",
-		"ods": ["ODS 16"]
+		"ods": [
+			"ODS 16"
+		]
 	},
 	{
 		"id": "arquitetura_hostil_denuncia",
@@ -399,7 +443,9 @@
 			}
 		],
 		"source_fact": "Lei Federal 14.489/22 proíbe o uso de técnicas construtivas hostis em espaços públicos.",
-		"ods": ["ODS 11"]
+		"ods": [
+			"ODS 11"
+		]
 	},
 	{
 		"id": "documento_perdido_chuva",
@@ -431,7 +477,10 @@
 			}
 		],
 		"source_fact": "A falta de documentação básica impede o acesso a 90% dos programas sociais no Brasil.",
-		"ods": ["ODS 16", "ODS 1"]
+		"ods": [
+			"ODS 16",
+			"ODS 1"
+		]
 	},
 	{
 		"id": "burocracia_fome_cras",
@@ -441,7 +490,10 @@
 			"type": "HUNGER_LOW",
 			"value": 20
 		},
-		"tags": ["institucional", "fome"],
+		"tags": [
+			"institucional",
+			"fome"
+		],
 		"options": [
 			{
 				"label": "Ir ao CRAS (Atualizar Cadastro)",
@@ -473,7 +525,10 @@
 			}
 		],
 		"source_fact": "A exigência de endereço fixo para o CadÚnico é uma barreira invisível que viola o ODS 2.",
-		"ods": ["ODS 1", "ODS 2"]
+		"ods": [
+			"ODS 1",
+			"ODS 2"
+		]
 	},
 	{
 		"id": "saude_mental_vinculo",
@@ -487,7 +542,10 @@
 				"sanity": 30
 			}
 		},
-		"tags": ["saúde_mental", "comunicação"],
+		"tags": [
+			"saúde_mental",
+			"comunicação"
+		],
 		"options": [
 			{
 				"label": "Tentar ligar para a família",
@@ -517,7 +575,9 @@
 			}
 		],
 		"source_fact": "71,5% das pessoas em situação de rua citam rompimento de vínculos como causa principal (IPEA).",
-		"ods": ["ODS 3"]
+		"ods": [
+			"ODS 3"
+		]
 	},
 	{
 		"id": "tentativa_abrigo_samim",
@@ -533,7 +593,11 @@
 				"radius": 50
 			}
 		},
-		"tags": ["institucional", "abrigo", "restrição_agência"],
+		"tags": [
+			"institucional",
+			"abrigo",
+			"restrição_agência"
+		],
 		"options": [
 			{
 				"label": "Garantir o Teto (Entrar agora)",
@@ -565,7 +629,10 @@
 			}
 		],
 		"source_fact": "Apenas 16,5% da PopRua de Campinas consegue acolhimento (Censo 2024). A barreira de horário (19h) é uma das maiores formas de controle e restrição de agência.",
-		"ods": ["ODS 11", "ODS 1"]
+		"ods": [
+			"ODS 11",
+			"ODS 1"
+		]
 	},
 	{
 		"id": "chain_bagageiro_01_start",
@@ -597,7 +664,10 @@
 			}
 		],
 		"source_fact": "A sincronia perversa entre horários de equipamentos públicos (Bagageiro 17h vs Abrigo 19h) inviabiliza a logística de sobrevivência autônoma.",
-		"ods": ["ODS 11", "ODS 16"]
+		"ods": [
+			"ODS 11",
+			"ODS 16"
+		]
 	},
 	{
 		"id": "chain_health_03_pharmacy",
@@ -626,7 +696,10 @@
 			"type": "START_SCENARIO",
 			"value": 0.05
 		},
-		"tags": ["institucional", "prisioneiro"],
+		"tags": [
+			"institucional",
+			"prisioneiro"
+		],
 		"options": [
 			{
 				"label": "Ir para a casa da mãe",
@@ -654,7 +727,10 @@
 			}
 		],
 		"source_fact": "Ciclo Prisional: 41% da população de rua já esteve presa. A rua é muitas vezes o único destino pós-cárcere.",
-		"ods": ["ODS 16", "ODS 10"]
+		"ods": [
+			"ODS 16",
+			"ODS 10"
+		]
 	},
 	{
 		"id": "mendicancia_vs_trabalho",
@@ -685,7 +761,9 @@
 			}
 		],
 		"source_fact": "Economia Real: 70,9% da PopRua exerce atividade remunerada. A mendicância é fonte de renda para apenas 15,7%.",
-		"ods": ["ODS 8"]
+		"ods": [
+			"ODS 8"
+		]
 	},
 	{
 		"id": "pdu_intro_trigger",
@@ -697,7 +775,10 @@
 			"value": 1,
 			"locationId": "centro_pop_i"
 		},
-		"tags": ["institucional", "pdu"],
+		"tags": [
+			"institucional",
+			"pdu"
+		],
 		"options": [
 			{
 				"label": "Aceitar: Quero trabalhar",
@@ -988,7 +1069,10 @@
 			"type": "RANDOM",
 			"value": 0.05
 		},
-		"tags": ["historico", "drogas"],
+		"tags": [
+			"historico",
+			"drogas"
+		],
 		"options": [
 			{
 				"label": "Aceitar a 'Amostra'",
@@ -1019,7 +1103,10 @@
 			"type": "SOCIAL_STIGMA_HIGH",
 			"value": 80
 		},
-		"tags": ["historico", "violencia"],
+		"tags": [
+			"historico",
+			"violencia"
+		],
 		"options": [
 			{
 				"label": "Fugir para o Centro",
@@ -1050,7 +1137,10 @@
 			"type": "RANDOM",
 			"value": 0.08
 		},
-		"tags": ["vinculo", "arte"],
+		"tags": [
+			"vinculo",
+			"arte"
+		],
 		"options": [
 			{
 				"label": "Participar da Rima",
@@ -1125,7 +1215,9 @@
 					"workToolUpdate": {
 						"isConfiscated": true
 					},
-					"inventoryRemove": ["carroca"]
+					"inventoryRemove": [
+						"carroca"
+					]
 				}
 			},
 			{
@@ -1185,7 +1277,9 @@
 		"title": "A Fome tem Burocracia",
 		"description": "Você está faminto. O Bom Prato serve almoço a R$ 1,00. Você tem a moeda, mas perdeu o RG no 'Rapa'. O funcionário na porta é irredutível: 'Sem documento ou cadastro biométrico, não entra'. A burocracia estatal te nega o direito biológico de comer.",
 		"source_fact": "Acesso ao Bom Prato exige identificação. A perda de documentos durante ações de zeladoria bloqueia acesso a direitos básicos (ODS 2).",
-		"tags": ["fome"],
+		"tags": [
+			"fome"
+		],
 		"trigger": {
 			"type": "CHAIN_STEP",
 			"value": 0,
@@ -1681,7 +1775,11 @@
 		},
 		"aspect": "WORK",
 		"intensity": "HIGH",
-		"tags": ["violência_institucional", "trabalho", "segurança"],
+		"tags": [
+			"violência_institucional",
+			"trabalho",
+			"segurança"
+		],
 		"options": [
 			{
 				"label": "Argumentar (Lei 14.489)",
@@ -1742,7 +1840,10 @@
 			}
 		],
 		"source_fact": "Apesar de leis federais, a apreensão de instrumentos de trabalho (carroças) ainda é relatada em ações de zeladoria urbana.",
-		"ods": ["ODS 8", "ODS 16"]
+		"ods": [
+			"ODS 8",
+			"ODS 16"
+		]
 	},
 	{
 		"id": "arco2_barrier_bomprato",
@@ -2671,7 +2772,7 @@
 					"money": 30,
 					"dignity": -10
 				},
-				"nextDilemmaId": "fim_ciclo_ativista"
+				"nextDilemmaId": "RESTART_GAME"
 			},
 			{
 				"label": "Vender como 'Produto'",
@@ -2681,7 +2782,7 @@
 					"money": 15,
 					"sanity": 20
 				},
-				"nextDilemmaId": "fim_ciclo_ativista"
+				"nextDilemmaId": "RESTART_GAME"
 			}
 		],
 		"source_fact": "Baseado em: 'A Rua Tem Voz' - A venda do jornal por 3 reais e a quebra de estigma. [Source 907]"
@@ -2696,7 +2797,13 @@
 		},
 		"aspect": "SOCIAL",
 		"intensity": "HIGH",
-		"tags": ["censo", "invisibilidade", "cidadania", "ods16", "subnotificacao"],
+		"tags": [
+			"censo",
+			"invisibilidade",
+			"cidadania",
+			"ods16",
+			"subnotificacao"
+		],
 		"options": [
 			{
 				"label": "Responder ao Censo",
@@ -2718,7 +2825,10 @@
 			}
 		],
 		"source_fact": "Oficialmente são 1.557 pessoas (2024), mas ONGs estimam o dobro. O medo da perda da guarda dos filhos ou prisão gera subnotificação.",
-		"ods": ["ODS 1", "ODS 16"]
+		"ods": [
+			"ODS 1",
+			"ODS 16"
+		]
 	},
 	{
 		"id": "diagnostico_viciado",
@@ -2772,7 +2882,10 @@
 			}
 		],
 		"source_fact": "A metodologia de coleta mistura substâncias lícitas e ilícitas na mesma categoria, inflando dados de dependência para justificar internações em Comunidades Terapêuticas (R$ 1.350/mês) em vez de moradia (Housing First).",
-		"ods": ["ODS 3", "ODS 16"]
+		"ods": [
+			"ODS 3",
+			"ODS 16"
+		]
 	},
 	{
 		"id": "relogio_acolhida",
@@ -2784,7 +2897,11 @@
 		},
 		"aspect": "SHELTER",
 		"intensity": "HIGH",
-		"tags": ["temporal", "abrigo", "chuva"],
+		"tags": [
+			"temporal",
+			"abrigo",
+			"chuva"
+		],
 		"options": [
 			{
 				"label": "Arriscar a fila do Albergue",
@@ -2813,7 +2930,9 @@
 			}
 		],
 		"source_fact": "Capacidade vs Demanda: Campinas tem 1.300 pessoas para apenas 362 vagas. A chance matemática de acolhimento é de apenas 27%.",
-		"ods": ["ODS 11"]
+		"ods": [
+			"ODS 11"
+		]
 	},
 	{
 		"id": "espaco_negado_arquitetura",
@@ -2825,7 +2944,10 @@
 		},
 		"aspect": "REST",
 		"intensity": "MEDIUM",
-		"tags": ["arquitetura_hostil", "lei_padre_julio"],
+		"tags": [
+			"arquitetura_hostil",
+			"lei_padre_julio"
+		],
 		"options": [
 			{
 				"label": "Tentar dormir sentado",
@@ -2850,6 +2972,9 @@
 			}
 		],
 		"source_fact": "A Lei Padre Júlio Lancellotti (14.489/2022) proíbe técnicas construtivas hostis, mas bancos com divisórias persistem em Campinas como forma de exclusão invisível.",
-		"ods": ["ODS 10", "ODS 11"]
+		"ods": [
+			"ODS 10",
+			"ODS 11"
+		]
 	}
 ]
