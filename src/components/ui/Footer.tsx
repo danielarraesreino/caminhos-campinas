@@ -3,7 +3,7 @@ import NextImage from "next/image";
 
 export function Footer() {
 	return (
-		<footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+		<footer className="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex flex-col md:flex-row justify-between items-center gap-8">
 					<div className="text-center md:text-left">
@@ -41,7 +41,7 @@ export function Footer() {
 							</a>
 							<a
 								href="/auditoria/validar"
-								className="text-slate-400 hover:text-red-400 transition-colors text-xs mt-2"
+								className="text-slate-300 hover:text-red-400 transition-colors text-xs mt-2"
 							>
 								Área Técnica (Restrito)
 							</a>
@@ -49,7 +49,7 @@ export function Footer() {
 					</div>
 
 					<div className="flex flex-col items-center">
-						<span className="text-sm font-medium text-slate-400 mb-2">
+						<span className="text-sm font-medium text-slate-300 mb-2">
 							Siga o Coletivo
 						</span>
 						<a
@@ -84,7 +84,7 @@ export function Footer() {
 							<p className="text-slate-300 font-bold group-hover:text-white transition-colors">
 								Desenvolvido por Daniel (Japa/Oclinhos)
 							</p>
-							<p className="text-slate-400 text-[10px] uppercase tracking-wider group-hover:text-blue-400 transition-colors">
+							<p className="text-slate-300 text-[10px] uppercase tracking-wider group-hover:text-blue-400 transition-colors">
 								Vibe Coding &boxvh; Inovação Social
 							</p>
 						</div>

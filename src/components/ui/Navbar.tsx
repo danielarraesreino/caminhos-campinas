@@ -148,12 +148,12 @@ export function Navbar() {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex items-center justify-between h-16">
 					{/* 1. BRANDING */}
-					<Link href="/" className="flex items-center gap-3 group shrink-0">
-						<div className="w-9 h-9 bg-zinc-900 border border-zinc-700/50 group-hover:border-yellow-500/50 rounded-xl flex items-center justify-center font-black text-white transition-all shadow-2xl">
+					<Link href="/" className="flex items-center gap-3 group shrink-0" aria-label="Voltar para a página inicial do Caminhos Campinas">
+						<div className="w-9 h-9 bg-zinc-900 border border-zinc-700/50 group-hover:border-yellow-500/50 rounded-xl flex items-center justify-center font-black text-white transition-all shadow-2xl" aria-hidden="true">
 							CC
 						</div>
 						<div className="flex flex-col">
-							<span className="font-black text-xs uppercase tracking-[0.3em] text-zinc-500 leading-none group-hover:text-zinc-300 transition-colors">
+							<span className="font-black text-xs uppercase tracking-[0.3em] text-zinc-400 leading-none group-hover:text-zinc-200 transition-colors">
 								Caminhos
 							</span>
 							<span className="font-black text-lg uppercase tracking-tighter text-white leading-none">
@@ -165,7 +165,7 @@ export function Navbar() {
 					{/* 2. DESKTOP MENU */}
 					<div className="hidden lg:flex items-center gap-2">
 						<Link href="/jogar">
-							<Button className="bg-yellow-500 hover:bg-yellow-400 text-black font-black uppercase tracking-widest text-[10px] h-9 px-6 rounded-xl mr-4 shadow-[0_0_20px_rgba(234,179,8,0.2)]">
+							<Button className="bg-yellow-600 hover:bg-yellow-500 text-black font-black uppercase tracking-widest text-[10px] h-10 px-8 rounded-xl mr-4 shadow-[0_0_20px_rgba(234,179,8,0.2)]">
 								Intervir
 							</Button>
 						</Link>
@@ -216,12 +216,13 @@ export function Navbar() {
 							<Button
 								variant="ghost"
 								size="icon"
-								className="text-zinc-500 hover:text-yellow-500 hover:bg-zinc-900 rounded-xl"
+								className="text-zinc-400 hover:text-yellow-500 hover:bg-zinc-900 rounded-xl h-10 w-10"
+								aria-label="Configurações e Centro de Controle"
 							>
 								<Settings className="w-4 h-4" />
 							</Button>
 							<div className="absolute top-full right-0 mt-1 w-64 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-								<div className="px-4 py-2 text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] border-b border-zinc-900 mb-1">
+								<div className="px-4 py-2 text-[9px] font-black text-zinc-400 uppercase tracking-[0.2em] border-b border-zinc-900 mb-1">
 									Centro de Controle (Lab)
 								</div>
 								{devLinks.map((link) => (
@@ -271,6 +272,7 @@ export function Navbar() {
 							type="button"
 							onClick={() => setIsOpen(!isOpen)}
 							className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white"
+							aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
 						>
 							{isOpen ? (
 								<X className="w-6 h-6" />
@@ -299,7 +301,7 @@ export function Navbar() {
 
 							{sections.map((section) => (
 								<div key={section.id} className="space-y-3">
-									<p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 px-2">
+									<p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 px-2">
 										{section.label}
 									</p>
 									<div className="grid grid-cols-1 gap-1">
