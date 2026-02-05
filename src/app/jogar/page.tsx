@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { useModalQueue } from "@/contexts/ModalQueueContext";
 import { AudioDirector } from "@/features/audio/AudioDirector";
 import { ImpactReport } from "@/features/dashboard/ImpactReport";
-import { useModalQueue } from "@/contexts/ModalQueueContext";
 import {
 	checkGameOver,
 	type GameOverResult,
@@ -160,7 +160,10 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 
 	return (
 		// MUDANÇA 1: h-[100dvh] garante que cabe na tela real do celular sem scroll
-		<main className="relative w-full h-[100dvh] bg-slate-900 overflow-hidden" aria-label="Ambiente de Jogo">
+		<main
+			className="relative w-full h-[100dvh] bg-slate-900 overflow-hidden"
+			aria-label="Ambiente de Jogo"
+		>
 			<h1 className="sr-only">Caminhos Campinas - Jornada de Sobrevivência</h1>
 			<OnboardingTutorial
 				isOpen={showTutorial}

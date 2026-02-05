@@ -442,11 +442,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			};
 
 			// biome-ignore lint/suspicious/noExplicitAny: debug global
-			(window as any).debugSetState = async (newState: GameState) => {
+			(window as any).debugSetState = async (newState: Partial<GameState>) => {
 				console.log("🧪 Injecting Debug State:", newState);
 
 				// 1. Update React State
-				dispatch({ type: "SET_STATE", payload: newState });
+				dispatch({
+					type: "SET_STATE",
+					payload: { ...state, ...newState } as GameState,
+				});
 
 				// 2. Force Persistence immediately
 				if (db) {
@@ -460,6 +463,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
 						await db.put({
 							...doc,
+							...state,
 							...newState,
 							version: GAME_VERSION,
 							_id: DOC_ID,
@@ -471,7 +475,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				}
 			};
 		}
-	}, [state.phoneBattery, db]);
+	}, [db, state]);
 
 	// --- Helpers ---
 
@@ -601,15 +605,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		dispatch({ type: "UPDATE_PDU_STAGE", payload: { stageId } });
 	}, []);
 
-	// [TESTING] Expose state injection for E2E tests
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			(window as any).debugSetState = (newState: Partial<GameState>) => {
-				console.log("[DEBUG] Injecting GameState:", newState);
-				dispatch({ type: "SET_STATE", payload: { ...state, ...newState } as GameState });
-			};
-		}
-	}, [state]);
+
 
 	const completePduStage = useCallback((stageId: string) => {
 		dispatch({ type: "COMPLETE_PDU_STAGE", payload: { stageId } });

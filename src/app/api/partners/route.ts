@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 
 // 🛡️ Input Validation Schema
@@ -10,7 +10,10 @@ const PartnerCreateSchema = z.object({
 	}),
 	whatsapp: z
 		.string()
-		.regex(/^\+?[1-9]\d{9,14}$/, "Número de WhatsApp inválido (mínimo 10 dígitos)")
+		.regex(
+			/^\+?[1-9]\d{9,14}$/,
+			"Número de WhatsApp inválido (mínimo 10 dígitos)",
+		)
 		.optional()
 		.or(z.literal("").transform(() => undefined)),
 	description: z

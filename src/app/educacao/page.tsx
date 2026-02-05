@@ -7,13 +7,14 @@ import {
 	ShieldAlert,
 	Wallet,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
+import { AudioReader } from "@/components/ui/AudioReader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-
 import { useGameContext } from "@/contexts/GameContext";
-import { useEffect } from "react";
 
 export default function EducationPage() {
 	const { pdu, completePduStage } = useGameContext();
@@ -26,73 +27,88 @@ export default function EducationPage() {
 	}, [pdu.isActive, pdu.objective, completePduStage]);
 
 	return (
-		<div className="min-h-screen bg-slate-50">
-			<div className="bg-blue-900 text-white pb-20 pt-8 px-6 rounded-b-[40px] shadow-2xl relative overflow-hidden">
-				{/* Decorative */}
-				<div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -mr-16 -mt-16" />
+		<div className="min-h-screen bg-black text-white selection:bg-yellow-500/30">
+			{/* Realismo Sóbrio Header */}
+			<div className="relative h-72 md:h-80 w-full overflow-hidden border-b border-zinc-800">
+				<Image
+					src="/images/sobrio/landing.png" // Reusing the landing image for thematic consistency
+					alt="Fundo Educação"
+					fill
+					className="object-cover opacity-30 grayscale"
+					priority
+				/>
+				<div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
 
-				<header className="flex items-center gap-4 mb-8 relative z-10">
-					<Link href="/">
-						<Button
-							variant="ghost"
-							size="icon"
-							className="text-blue-100 hover:bg-blue-800 hover:text-white rounded-full"
-						>
-							<ArrowLeft className="w-6 h-6" />
-						</Button>
-					</Link>
-					<h1 className="text-xl font-bold tracking-tight">
-						Formação & Autonomia
-					</h1>
-				</header>
+				<div className="relative z-10 container mx-auto px-6 pt-8 h-full flex flex-col">
+					<header className="flex items-center gap-4 mb-12">
+						<Link href="/">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="text-zinc-400 hover:bg-zinc-800 hover:text-white rounded-full border border-zinc-700/50"
+							>
+								<ArrowLeft className="w-5 h-5" />
+							</Button>
+						</Link>
+						<span className="text-xs font-mono uppercase tracking-[0.3em] text-zinc-500">
+							Educação & Autonomia
+						</span>
+					</header>
 
-				<div className="space-y-2 relative z-10">
-					<Badge className="bg-blue-500/30 text-blue-100 hover:bg-blue-500/30 border-blue-400/20">
-						Módulo Piloto 2024
-					</Badge>
-					<h2 className="text-3xl font-black leading-tight">
-						De Sobrevivente
-						<br />a Educador.
-					</h2>
-					<p className="text-blue-200 mt-2 max-w-sm">
-						Conhecimento é a única coisa que não podem tirar de você. Aprenda
-						seus direitos e proteja sua comunidade.
-					</p>
+					<div className="mt-auto pb-10">
+						<Badge className="mb-4 bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500/20 px-3 py-1 text-[10px] font-mono">
+							SABER É PODER
+						</Badge>
+						<h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9]">
+							De Sobrevivente
+							<br />
+							<span className="text-yellow-400">a Educador.</span>
+						</h1>
+					</div>
 				</div>
 			</div>
 
-			<main className="max-w-2xl mx-auto px-6 -mt-10 space-y-6 pb-10">
-				<Link href="/curso">
+			<main className="container mx-auto px-6 -mt-10 space-y-6 pb-24 relative z-20">
+				<div className="max-w-4xl mx-auto space-y-4">
+					<Link href="/curso">
+						<ModuleCard
+							icon={<ShieldAlert className="w-7 h-7 text-yellow-500" />}
+							title="Direitos e Abordagem"
+							desc="Saiba seus direitos durante abordagens. O que é legal, o que é abuso e como proteger seus pertences."
+							status="Disponível"
+							accent="yellow"
+						/>
+					</Link>
+
 					<ModuleCard
-						icon={<ShieldAlert className="w-8 h-8 text-amber-600" />}
-						title="Direitos Humanos e Abordagem"
-						desc="Como se portar numa abordagem policial (O que é legal/ilegal). O direito de ir e vir e a posse de pertences. (Clique para iniciar)"
+						icon={<BookOpen className="w-7 h-7 text-zinc-400" />}
+						title="Redução de Danos"
+						desc="Prevenção e saúde sem julgamentos. Como acessar o Consultório na Rua e o suporte da rede SAMIM."
 						status="Disponível"
-						color="amber"
+						accent="zinc"
 					/>
-				</Link>
 
-				<ModuleCard
-					icon={<BookOpen className="w-8 h-8 text-emerald-600" />}
-					title="Redução de Danos"
-					desc="Uso seguro de substâncias, prevenção de ISTs e como acessar o Consultório na Rua sem medo de internação."
-					status="Disponível"
-					color="emerald"
-				/>
+					<ModuleCard
+						icon={<Wallet className="w-7 h-7 text-zinc-600" />}
+						title="Acesso à Renda"
+						desc="Bolsa Família e BPC para pessoas sem endereço fixo. Documentação e declarações necessárias."
+						status="Em Breve"
+						accent="zinc"
+						disabled
+					/>
 
-				<ModuleCard
-					icon={<Wallet className="w-8 h-8 text-purple-600" />}
-					title="Acesso à Renda"
-					desc="Como acessar o Bolsa Família e BPC mesmo sem endereço fixo (Declaração de Pessoas em Situação de Rua)."
-					status="Em Breve"
-					color="purple"
-					disabled
-				/>
-
-				<div className="pt-8 text-center">
-					<Button variant="outline" className="gap-2">
-						<GraduationCap className="w-4 h-4" /> Ver Certificados Disponíveis
-					</Button>
+					<div className="pt-8 flex flex-col items-center gap-4">
+						<p className="text-zinc-500 text-xs font-medium max-w-sm text-center italic">
+							"Conhecimento é a única ferramenta de soberania que ninguém pode
+							confiscar."
+						</p>
+						<Button
+							variant="outline"
+							className="gap-2 border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:text-white hover:bg-zinc-800 h-11 px-8 rounded-xl font-bold uppercase tracking-widest text-[10px]"
+						>
+							<GraduationCap className="w-4 h-4" /> Ver Certificados
+						</Button>
+					</div>
 				</div>
 			</main>
 		</div>
@@ -104,60 +120,66 @@ interface ModuleCardProps {
 	title: string;
 	desc: string;
 	status: string;
-	color: string;
+	accent: "yellow" | "zinc";
 	disabled?: boolean;
 }
-
-import { AudioReader } from "@/components/ui/AudioReader";
 
 function ModuleCard({
 	icon,
 	title,
 	desc,
 	status,
-	color,
+	accent,
 	disabled,
 }: ModuleCardProps) {
-	const bgColors: Record<string, string> = {
-		amber: "bg-amber-50 group-hover:bg-amber-100 border-amber-100",
-		emerald: "bg-emerald-50 group-hover:bg-emerald-100 border-emerald-100",
-		purple: "bg-purple-50 group-hover:bg-purple-100 border-purple-100",
-	};
-
-	const textColors: Record<string, string> = {
-		amber: "text-amber-900",
-		emerald: "text-emerald-900",
-		purple: "text-purple-900",
-	};
-
 	return (
 		<Card
-			className={`p-6 border-2 transition-all group cursor-pointer ${disabled ? "opacity-60 grayscale cursor-not-allowed" : "hover:scale-[1.02] shadow-lg hover:shadow-xl"} ${bgColors[color]}`}
+			className={`group relative overflow-hidden bg-zinc-900/40 border p-1 rounded-2xl transition-all duration-300 ${
+				disabled
+					? "border-zinc-800 opacity-50 grayscale"
+					: "border-zinc-800 hover:border-yellow-500/50 hover:bg-zinc-900/60 shadow-2xl"
+			}`}
 		>
-			<div className="flex items-start gap-4">
+			<div className="p-5 flex items-start gap-4">
 				<div
-					className={`p-3 bg-white rounded-2xl shadow-sm ${disabled ? "" : "group-hover:rotate-6 transition-transform"}`}
+					className={`shrink-0 p-3 rounded-xl bg-zinc-950 border border-zinc-800 group-hover:scale-110 transition-transform duration-300 ${accent === "yellow" ? "shadow-[0_0_15px_rgba(234,179,8,0.1)]" : ""}`}
 				>
 					{icon}
 				</div>
-				<div className="space-y-2 flex-1">
-					<div className="flex justify-between items-center">
-						<h3 className={`font-black text-lg ${textColors[color]}`}>
+				<div className="flex-1 space-y-3">
+					<div className="flex justify-between items-start">
+						<h3
+							className={`font-black text-lg uppercase tracking-tight leading-none ${accent === "yellow" ? "text-zinc-100" : "text-zinc-400"}`}
+						>
 							{title}
 						</h3>
 						<Badge
-							variant={disabled ? "outline" : "default"}
-							className={disabled ? "" : "bg-blue-600"}
+							variant="outline"
+							className={`text-[9px] font-mono px-2 py-0 border-zinc-700/50 ${
+								disabled
+									? "bg-transparent text-zinc-600"
+									: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+							}`}
 						>
 							{status}
 						</Badge>
 					</div>
-					<p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
-					<div className="pt-2">
-						<AudioReader text={desc} className="bg-white/50" />
+					<p className="text-zinc-400 text-sm leading-snug pr-4">{desc}</p>
+
+					<div className="pt-1">
+						<AudioReader
+							text={`${title}. ${desc}`}
+							className="h-8 bg-zinc-950/50 border-zinc-800/50 text-zinc-500"
+						/>
 					</div>
 				</div>
 			</div>
+
+			{!disabled && (
+				<div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+					<div className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
+				</div>
+			)}
 		</Card>
 	);
 }

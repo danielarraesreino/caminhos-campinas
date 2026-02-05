@@ -11,6 +11,7 @@ import {
 	DialogHeader,
 } from "@/components/ui/dialog";
 import { InteractiveText } from "@/components/ui/InteractiveText";
+import { useModalQueue } from "@/contexts/ModalQueueContext";
 import type {
 	Dilemma,
 	DilemmaOption,
@@ -20,7 +21,6 @@ import { useHaptics } from "@/hooks/useHaptics";
 import { useImpactLogger } from "@/hooks/useImpactLogger";
 import { useODSTracker } from "@/hooks/useODSTracker";
 import { getWikipediaUrl } from "@/services/WikiAdapter";
-import { useModalQueue } from "@/contexts/ModalQueueContext";
 
 interface DilemmaModalProps {
 	dilemma: Dilemma | null;
@@ -219,10 +219,11 @@ export function DilemmaModal({
 					<button
 						type="button"
 						onClick={toggleSpeech}
-						className={`p-1.5 rounded transition-colors border ${isSpeaking
-							? "bg-blue-900/50 border-blue-500 text-blue-400"
-							: "bg-slate-900/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-							}`}
+						className={`p-1.5 rounded transition-colors border ${
+							isSpeaking
+								? "bg-blue-900/50 border-blue-500 text-blue-400"
+								: "bg-slate-900/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+						}`}
 						aria-label="Ler texto em voz alta"
 						title="Ouvir Dilema"
 					>

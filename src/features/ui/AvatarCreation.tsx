@@ -4,10 +4,13 @@ import {
 	ArrowLeft,
 	ArrowRight,
 	Camera,
+	CheckCircle2,
 	Info,
+	Loader2,
 	Shield,
 	Sparkles,
 	Target,
+	Upload,
 	User,
 } from "lucide-react";
 import Image from "next/image";
@@ -15,6 +18,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { type Avatar, useGameContext } from "@/contexts/GameContext";
+import { useToast } from "@/contexts/ToastContext";
 
 interface AvatarCreationProps {
 	onComplete: () => void;
@@ -40,14 +44,41 @@ const AVATAR_OPTIONS = [
 	},
 ];
 
-// Placeholder for Vercel AI SDK generation function
-async function generateAIPortrait(prompt: string) {
-	console.log("Generating unique portrait for:", prompt);
-	// implementation: await fetch('/api/generate-avatar', { body: { prompt } })
+// Hugging Face AI Image Generation
+async function generateAIPortrait(prompt: string): Promise<string> {
+	try {
+		const response = await fetch(
+			"https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${process.env.NEXT_PUBLIC_HF_TOKEN || ""}`,
+				},
+				body: JSON.stringify({ inputs: prompt }),
+			},
+		);
+
+		if (!response.ok) {
+			throw new Error("AI generation failed");
+		}
+
+		const blob = await response.blob();
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.onloadend = () => resolve(reader.result as string);
+			reader.onerror = reject;
+			reader.readAsDataURL(blob);
+		});
+	} catch (error) {
+		console.error("AI generation error:", error);
+		throw error;
+	}
 }
 
 export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 	const { setAvatar, resetGame } = useGameContext();
+	const { showToast } = useToast();
 	const [step, setStep] = useState(1);
 	const [formData, setFormData] = useState<Avatar>({
 		name: "",
@@ -60,8 +91,11 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 	});
 
 	const [isSaving, setIsSaving] = useState(false);
+	const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+	const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
 	const handleNext = async () => {
+		console.log("[AvatarCreation] Moving from step", step);
 		if (step < 5) {
 			setStep(step + 1);
 		} else {
@@ -86,6 +120,37 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 
 	const updateField = (field: keyof Avatar, value: string) => {
 		setFormData((prev) => ({ ...prev, [field]: value }));
+	};
+
+	const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setUploadedImage(reader.result as string);
+				updateField("avatarImage", reader.result as string);
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+
+	const handleGenerateAIImage = async () => {
+		console.log("[AvatarCreation] Starting AI Generation...");
+		setIsGeneratingAI(true);
+		try {
+			const prompt = `A photo of a ${formData.ageRange} ${formData.gender} person, ${formData.ethnicity} ethnicity, living on the streets of Brazil, realistic, documentary style, natural light.`;
+			const imageUrl = await generateAIPortrait(prompt);
+			console.log("[AvatarCreation] AI Generation success, image size:", imageUrl?.length);
+			setUploadedImage(imageUrl);
+			updateField("avatarImage", imageUrl);
+			showToast("Retrato gerado com sucesso!", "success");
+		} catch (error) {
+			console.error("[AvatarCreation] Failed to generate AI image:", error);
+			showToast("Erro ao gerar imagem. Tente novamente.", "error");
+		} finally {
+			console.log("[AvatarCreation] AI Generation finished");
+			setIsGeneratingAI(false);
+		}
 	};
 
 	return (
@@ -133,6 +198,11 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								value={formData.name}
 								onChange={(e) => updateField("name", e.target.value)}
 								placeholder="Ex: Zé do Pátio, Maria da Praça..."
+								onKeyDown={(e) => {
+									if (e.key === "Enter" && formData.name?.trim()) {
+										handleNext();
+									}
+								}}
 								className="bg-slate-800/50 border-slate-700 text-white h-14 text-xl font-bold focus:ring-blue-500 rounded-2xl placeholder:text-slate-600"
 							/>
 						</div>
@@ -189,13 +259,13 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								Selecione uma Imagem de Identidade
 							</span>
 						</div>
-						<div className="grid grid-cols-2 gap-8">
+						<div className="grid grid-cols-2 md:grid-cols-3 gap-6">
 							{AVATAR_OPTIONS.map((opt) => (
 								<button
 									type="button"
 									key={opt.id}
 									onClick={() => updateField("avatarImage", opt.image)}
-									className={`relative aspect-square rounded-3xl overflow-hidden border-4 transition-all duration-300 group
+									className={`relative aspect-square rounded-2xl overflow-hidden border-4 transition-all duration-300 group
 										${formData.avatarImage === opt.image ? "border-blue-500 scale-105 shadow-[0_0_40px_rgba(59,130,246,0.3)]" : "border-slate-800 hover:border-slate-600"}
 									`}
 								>
@@ -204,32 +274,72 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 										alt={opt.label}
 										fill
 										sizes="(max-width: 768px) 100vw, 33vw"
-										className={`object-cover ${formData.avatarImage === opt.id ? "opacity-100" : "opacity-80 hover:opacity-100"} transition-opacity grayscale hover:grayscale-0`}
-										onError={(_e) => {
-											console.warn("Avatar load failed", opt.image);
-										}}
+										className={`object-cover ${formData.avatarImage === opt.image ? "opacity-100" : "opacity-80 hover:opacity-100"} transition-opacity grayscale hover:grayscale-0`}
 									/>
 									<div
-										className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent transition-transform
+										className={`absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent transition-transform
 										${formData.avatarImage === opt.image ? "translate-y-0" : "translate-y-full group-hover:translate-y-0"}
 									`}
 									>
-										<span className="text-white font-black text-xs uppercase tracking-tighter">
+										<span className="text-white font-black text-[10px] uppercase tracking-tighter">
 											{opt.label}
 										</span>
 									</div>
 								</button>
 							))}
 
+							{/* CUSTOM UPLOAD PREVIEW */}
+							{uploadedImage && (
+								<button
+									type="button"
+									onClick={() => updateField("avatarImage", uploadedImage)}
+									className={`relative aspect-square rounded-2xl overflow-hidden border-4 transition-all duration-300 group
+										${formData.avatarImage === uploadedImage ? "border-blue-500 scale-105 shadow-[0_0_40px_rgba(59,130,246,0.3)]" : "border-slate-800 hover:border-slate-600"}
+									`}
+								>
+									<Image
+										src={uploadedImage}
+										alt="Upload"
+										fill
+										sizes="(max-width: 768px) 100vw, 33vw"
+										className="object-cover"
+									/>
+									<div className="absolute top-2 right-2 bg-blue-500 rounded-full p-1 drop-shadow-lg">
+										<CheckCircle2 size={12} className="text-white" />
+									</div>
+								</button>
+							)}
+
+							{/* UPLOAD BUTTON */}
+							<label className="relative aspect-square rounded-2xl overflow-hidden border-2 border-dashed border-slate-700 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 transition-colors bg-slate-900/40 cursor-pointer">
+								<input
+									type="file"
+									accept="image/*"
+									className="hidden"
+									onChange={handleImageUpload}
+								/>
+								<Upload className="w-6 h-6 text-slate-500 group-hover:text-blue-400 transition-colors" />
+								<span className="text-[10px] font-bold text-slate-500 group-hover:text-blue-400 uppercase text-center px-2">
+									Carregar Foto
+								</span>
+							</label>
+
 							{/* AI GENERATION BUTTON */}
 							<button
 								type="button"
-								disabled
-								className="relative aspect-square rounded-3xl overflow-hidden border-2 border-dashed border-slate-700 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 transition-colors bg-slate-900/50"
+								onClick={handleGenerateAIImage}
+								disabled={isGeneratingAI}
+								className={`relative aspect-square rounded-2xl overflow-hidden border-2 border-dashed border-slate-700 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 transition-colors bg-slate-900/40
+									${isGeneratingAI ? "cursor-wait opacity-80" : "cursor-pointer"}
+								`}
 							>
-								<Sparkles className="w-8 h-8 text-slate-600 group-hover:text-blue-400 transition-colors" />
-								<span className="text-xs font-bold text-slate-500 group-hover:text-blue-400 uppercase text-center px-4">
-									Gerar com IA (Em Breve)
+								{isGeneratingAI ? (
+									<Loader2 className="w-6 h-6 text-blue-400 animate-spin" />
+								) : (
+									<Sparkles className="w-6 h-6 text-slate-500 group-hover:text-blue-400 transition-colors" />
+								)}
+								<span className="text-[10px] font-bold text-slate-500 group-hover:text-blue-400 uppercase text-center px-2">
+									{isGeneratingAI ? "Gerando..." : "Criar com IA"}
 								</span>
 							</button>
 						</div>
@@ -384,15 +494,15 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 				</Button>
 				<Button
 					onClick={handleNext}
-					disabled={(step === 1 && !formData.name) || isSaving}
-					className="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest h-14 rounded-2xl transition-all shadow-xl shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+					disabled={(step === 1 && !formData.name?.trim()) || isSaving}
+					className="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest h-14 rounded-2xl transition-all shadow-xl shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed group"
 				>
 					{isSaving
 						? "Salvando..."
 						: step === 5
 							? "Iniciar Jornada"
 							: "Próximo Passo"}{" "}
-					<ArrowRight className="h-4 w-4 ml-2" />
+					<ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
 				</Button>
 			</div>
 		</div>

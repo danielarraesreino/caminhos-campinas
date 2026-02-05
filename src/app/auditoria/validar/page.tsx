@@ -1,9 +1,9 @@
 "use client";
 
-import { Check, ThumbsDown, ThumbsUp, Lock } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { Check, Lock, ThumbsDown, ThumbsUp } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 // Mocking data fetch for simplicity in this prototype phase
@@ -31,7 +31,11 @@ export default function ValidacaoAuditPage() {
 	}, [status, router]);
 
 	if (status === "loading") {
-		return <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">Verificando credenciais...</div>;
+		return (
+			<div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+				Verificando credenciais...
+			</div>
+		);
 	}
 
 	if (!session) {

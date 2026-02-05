@@ -34,7 +34,10 @@ export default function ApoiePage() {
 					<p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto">
 						Este projeto opera sob a lógica de{" "}
 						<strong className="text-green-400">Economia Solidária</strong> e{" "}
-						<strong className="text-blue-400">Responsabilidade Institucional</strong>.
+						<strong className="text-blue-400">
+							Responsabilidade Institucional
+						</strong>
+						.
 					</p>
 				</div>
 
@@ -49,7 +52,9 @@ export default function ApoiePage() {
 								<CardTitle className="text-2xl font-bold text-white">
 									Fundo Institucional
 								</CardTitle>
-								<CardDescription className="text-slate-400">Quem Recebe?</CardDescription>
+								<CardDescription className="text-slate-400">
+									Quem Recebe?
+								</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
@@ -73,7 +78,11 @@ export default function ApoiePage() {
 								<span>Arrecadado: R$ 0,00</span>
 								<span>Meta Piloto: R$ 13.970,00</span>
 							</div>
-							<Progress value={0} className="h-3 bg-slate-800" indicatorClassName="bg-green-500" />
+							<Progress
+								value={0}
+								className="h-3 bg-slate-800"
+								indicatorClassName="bg-green-500"
+							/>
 						</div>
 
 						<div className="p-4 bg-slate-900 rounded-lg text-sm text-slate-300 border border-slate-800">
@@ -100,7 +109,9 @@ export default function ApoiePage() {
 								<CardTitle className="text-xl font-bold text-white">
 									Economia Solidária
 								</CardTitle>
-								<CardDescription className="text-slate-400">Como o projeto existe hoje?</CardDescription>
+								<CardDescription className="text-slate-400">
+									Como o projeto existe hoje?
+								</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
@@ -109,8 +120,9 @@ export default function ApoiePage() {
 							<Info className="text-blue-400 shrink-0 mt-1" size={20} />
 							<p className="text-slate-300 leading-relaxed">
 								Os palestrantes e profissionais técnicos deste projeto
-								(Programadores, Psicólogos) <strong className="text-white">doaram seus cachês</strong>.
-								O valor de mercado dessas horas de trabalho será convertido em
+								(Programadores, Psicólogos){" "}
+								<strong className="text-white">doaram seus cachês</strong>. O
+								valor de mercado dessas horas de trabalho será convertido em
 								"Crédito Social" para financiar diretamente a alimentação e o
 								transporte da primeira turma de alunos assim que o fundo estiver
 								operacional.

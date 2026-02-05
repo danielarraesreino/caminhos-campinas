@@ -1,20 +1,23 @@
-"use client";
-
 import {
 	BarChart,
+	BookOpen,
+	ChevronDown,
+	Database,
 	Gamepad,
 	HeartHandshake,
 	MapPin,
 	Menu,
 	Newspaper,
+	Search,
+	Settings,
+	ShieldAlert,
+	Users,
 	Wifi,
 	WifiOff,
 	X,
 } from "lucide-react";
 import Link from "next/link";
-
 import { useEffect, useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { SyncButton } from "@/components/ui/SyncButton";
 
@@ -36,114 +39,218 @@ export function Navbar() {
 		}
 	}, []);
 
-	// Navigation groups for separate personas
-	const primaryLinks = [
+	// Navigation groups based on the 4 proposed pillars
+	const sections = [
 		{
-			href: "/jogar",
-			label: "Jogar",
-			icon: <Gamepad className="w-4 h-4" />,
+			id: "survival",
+			label: "Sobrevivência",
+			icon: <ShieldAlert className="w-4 h-4" />,
+			links: [
+				{
+					href: "/recursos",
+					label: "Guia de Rua",
+					icon: <MapPin className="w-4 h-4" />,
+					color: "text-yellow-400",
+				},
+				{
+					href: "/educacao",
+					label: "Educação",
+					icon: <BookOpen className="w-4 h-4" />,
+				},
+				{
+					href: "/cofre",
+					label: "Meu Cofre",
+					icon: <Database className="w-4 h-4" />,
+				},
+			],
 		},
 		{
-			href: "/hub",
-			label: "Rede de Apoio",
-			icon: <HeartHandshake className="w-4 h-4" />,
-		},
-
-		{
-			href: "/impacto",
-			label: "Impacto",
+			id: "audit",
+			label: "Auditoria",
 			icon: <BarChart className="w-4 h-4" />,
+			links: [
+				{
+					href: "/transparencia",
+					label: "Transparência",
+					icon: <Search className="w-4 h-4" />,
+				},
+				{
+					href: "/impacto",
+					label: "O Abismo",
+					icon: <BarChart className="w-4 h-4" />,
+				},
+			],
 		},
 		{
-			href: "/jornal",
-			label: "Jornal",
+			id: "voice",
+			label: "Voz & Ação",
 			icon: <Newspaper className="w-4 h-4" />,
+			links: [
+				{
+					href: "/jornal",
+					label: "Jornal da Rua",
+					icon: <Newspaper className="w-4 h-4" />,
+				},
+				{
+					href: "/sugerir",
+					label: "Sugerir História",
+					icon: <Users className="w-4 h-4" />,
+				},
+			],
 		},
-	];
-
-	const utilityLinks = [
 		{
-			href: "/recursos",
-			label: "Guia de Rua",
-			icon: <MapPin className="w-4 h-4" />,
-			className: "text-yellow-400 hover:text-yellow-300 font-bold", // Visual distinction for survival tools
+			id: "network",
+			label: "Rede",
+			icon: <HeartHandshake className="w-4 h-4" />,
+			links: [
+				{
+					href: "/hub",
+					label: "Parceiros",
+					icon: <HeartHandshake className="w-4 h-4" />,
+				},
+				{
+					href: "/curso",
+					label: "Formação",
+					icon: <Gamepad className="w-4 h-4" />,
+				},
+			],
 		},
 	];
 
-	// Hide Navbar on Game Page only (immersive mode)
-	// const pathname = usePathname();
-	// if (pathname === "/jogar") return null;
+	const devLinks = [
+		{
+			href: "/test-features",
+			label: "Validation Lab",
+			icon: <Settings className="w-3 h-3" />,
+		},
+		{
+			href: "/auditoria/validar",
+			label: "Validar Dados",
+			icon: <ShieldAlert className="w-3 h-3" />,
+		},
+		{
+			href: "/jornal/submeter",
+			label: "CMS Jornal",
+			icon: <Newspaper className="w-3 h-3" />,
+		},
+		{
+			href: "/hub/cadastro",
+			label: "Cadastro ONG",
+			icon: <HeartHandshake className="w-3 h-3" />,
+		},
+	];
 
 	return (
-		<nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-900" aria-label="Navegação Principal">
+		<nav
+			className="fixed top-0 left-0 right-0 z-[100] bg-black/90 backdrop-blur-xl border-b border-zinc-800/50"
+			aria-label="Navegação Principal"
+		>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex items-center justify-between h-16">
 					{/* 1. BRANDING */}
-					<Link href="/" className="flex items-center gap-2 group">
-						<div className="w-8 h-8 bg-blue-600 group-hover:bg-blue-500 rounded-lg flex items-center justify-center font-bold text-white transition-colors">
-							C
+					<Link href="/" className="flex items-center gap-3 group shrink-0">
+						<div className="w-9 h-9 bg-zinc-900 border border-zinc-700/50 group-hover:border-yellow-500/50 rounded-xl flex items-center justify-center font-black text-white transition-all shadow-2xl">
+							CC
 						</div>
-						<span className="font-bold text-xl tracking-tight text-white transition-colors">
-							Caminhos{" "}
-							<span className="text-blue-500 group-hover:text-blue-400">
+						<div className="flex flex-col">
+							<span className="font-black text-xs uppercase tracking-[0.3em] text-zinc-500 leading-none group-hover:text-zinc-300 transition-colors">
+								Caminhos
+							</span>
+							<span className="font-black text-lg uppercase tracking-tighter text-white leading-none">
 								Campinas
 							</span>
-						</span>
+						</div>
 					</Link>
 
-					{/* 2. DESKTOP MENU (Bifurcated) */}
-					{/* Changed md:flex to lg:flex to avoid overflow on medium screens */}
-					<div className="hidden lg:flex items-center gap-6">
-						{/* Group A: Empathy & Data */}
-						<div className="flex items-center space-x-1 border-r border-zinc-800 pr-6">
-							<Link
-								href="/"
-								className="text-zinc-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-							>
-								Início
-							</Link>
-							{primaryLinks.map((link) => (
-								<Link
-									key={link.href}
-									href={link.href}
-									className="flex items-center gap-2 text-zinc-300 hover:text-white hover:bg-zinc-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-								>
-									{link.icon}
-									{link.label}
-								</Link>
-							))}
-						</div>
-
-						{/* Group B: Survival Utility (Highlighted) */}
-						{utilityLinks.map((link) => (
-							<Link
-								key={link.href}
-								href={link.href}
-								className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm border border-yellow-500/20 bg-yellow-500/10 hover:bg-yellow-500/20 transition-all ${link.className}`}
-							>
-								{link.icon}
-								{link.label}
-							</Link>
-						))}
-
-						{/* CTA */}
-						<Link href="/apoie">
-							<Button
-								variant="default"
-								className="bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
-							>
-								<span className="hidden xl:inline">Apoie Agora</span>
-								<span className="xl:hidden">Apoiar</span>
+					{/* 2. DESKTOP MENU */}
+					<div className="hidden lg:flex items-center gap-2">
+						<Link href="/jogar">
+							<Button className="bg-yellow-500 hover:bg-yellow-400 text-black font-black uppercase tracking-widest text-[10px] h-9 px-6 rounded-xl mr-4 shadow-[0_0_20px_rgba(234,179,8,0.2)]">
+								Intervir
 							</Button>
 						</Link>
 
-						{/* DATA SYNC */}
+						<div className="h-6 w-px bg-zinc-800 mx-2" />
+
+						{sections.slice(0, 3).map((section) => (
+							<div key={section.id} className="relative group">
+								<button
+									type="button"
+									className="flex items-center gap-2 text-zinc-400 hover:text-white px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
+								>
+									{section.label}
+									<ChevronDown className="w-3 h-3 opacity-50 group-hover:rotate-180 transition-transform" />
+								</button>
+								<div className="absolute top-full left-0 mt-1 w-56 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+									{section.links.map((link) => (
+										<Link
+											key={link.href}
+											href={link.href}
+											className={`flex items-center gap-3 px-4 py-2.5 text-xs font-bold ${link.color || "text-zinc-400"} hover:bg-zinc-900 hover:text-white transition-colors`}
+										>
+											{link.icon}
+											{link.label}
+										</Link>
+									))}
+								</div>
+							</div>
+						))}
+
+						<div className="h-10 w-px bg-zinc-800 mx-4" />
+
+						{/* REDE CTA */}
+						<Link href="/hub">
+							<Button
+								variant="ghost"
+								size="sm"
+								className="text-zinc-400 hover:text-white uppercase tracking-widest text-[9px] font-bold gap-2"
+							>
+								<HeartHandshake className="w-4 h-4" /> Rede
+							</Button>
+						</Link>
+
 						<SyncButton />
 
-						{/* OFFLINE INDICATOR */}
+						{/* CONTROLE DROP DOWN */}
+						<div className="relative group">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="text-zinc-500 hover:text-yellow-500 hover:bg-zinc-900 rounded-xl"
+							>
+								<Settings className="w-4 h-4" />
+							</Button>
+							<div className="absolute top-full right-0 mt-1 w-64 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+								<div className="px-4 py-2 text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] border-b border-zinc-900 mb-1">
+									Centro de Controle (Lab)
+								</div>
+								{devLinks.map((link) => (
+									<Link
+										key={link.href}
+										href={link.href}
+										className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-zinc-400 hover:bg-zinc-900 hover:text-white transition-colors"
+									>
+										{link.icon}
+										{link.label}
+									</Link>
+								))}
+								<button
+									onClick={async () => {
+										const { telemetry } = await import(
+											"@/services/TelemetryService"
+										);
+										telemetry.exportTelemetryToJson();
+									}}
+									className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-black text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors border-t border-zinc-900 mt-1"
+								>
+									<Database className="w-4 h-4" /> Export (.json)
+								</button>
+							</div>
+						</div>
+
+						{/* STATUS INDICATOR */}
 						<div
-							title={isOnline ? "Você está Online" : "Modo Offline Ativo"}
-							className={`flex items-center justify-center p-2 rounded-full transition-colors ${isOnline ? "text-green-500/50" : "bg-red-500/20 text-red-400 border border-red-500/30"}`}
+							className={`ml-2 p-2 rounded-xl transition-colors ${isOnline ? "text-green-500/30" : "bg-red-500/10 text-red-500 border border-red-500/20"}`}
 						>
 							{isOnline ? (
 								<Wifi className="w-4 h-4" />
@@ -151,70 +258,24 @@ export function Navbar() {
 								<WifiOff className="w-4 h-4 animate-pulse" />
 							)}
 						</div>
-
-						<div className="relative group">
-							<button className="flex items-center gap-1 text-zinc-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors border border-zinc-800 hover:border-zinc-700">
-								Páginas (Dev)
-							</button>
-							<div className="absolute right-0 top-full mt-2 w-56 bg-zinc-950 border border-zinc-800 rounded-md shadow-xl py-2 hidden group-hover:block">
-								<div className="px-3 py-1 text-xs font-bold text-zinc-500 uppercase tracking-widest">
-									Orfãs & Utilitários
-								</div>
-								<Link href="/hub/cadastro" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
-									Cadastro ONG (/hub/cadastro)
-								</Link>
-								<Link href="/educacao" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
-									Educação (/educacao)
-								</Link>
-								<Link href="/curso" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
-									Curso (/curso)
-								</Link>
-								<Link href="/parceiros" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
-									Parceiros ESG (/parceiros)
-								</Link>
-								<Link href="/auditoria/validar" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
-									Auditoria (/auditoria/validar)
-								</Link>
-								<Link href="/sugerir" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
-									Sugerir (/sugerir)
-								</Link>
-								<Link href="/test-features" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white">
-									Test Features (/test-features)
-								</Link>
-								<button
-									onClick={async () => {
-										const { telemetry } = await import("@/services/TelemetryService");
-										telemetry.exportTelemetryToJson();
-									}}
-									className="text-left w-full px-4 py-2 text-sm text-red-400 hover:bg-zinc-900 hover:text-red-300 font-mono border-t border-dashed border-zinc-800"
-								>
-									[DEV] Exportar Telemetria
-								</button>
-							</div>
-						</div>
 					</div>
 
 					{/* 3. MOBILE MENU BUTTON */}
-					<div className="-mr-2 flex lg:hidden">
-						<div className="mr-4 flex lg:hidden items-center">
-							{!isOnline && (
-								<div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-900/30 border border-red-500/30 text-red-200 text-xs font-bold animate-pulse">
-									<WifiOff className="w-3 h-3" />
-									<span className="sr-only">Offline</span>
-								</div>
-							)}
-						</div>
+					<div className="flex lg:hidden items-center gap-4">
+						{!isOnline && (
+							<div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest">
+								Offline
+							</div>
+						)}
 						<button
 							type="button"
 							onClick={() => setIsOpen(!isOpen)}
-							className="inline-flex items-center justify-center p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800"
-							aria-expanded={isOpen ? "true" : "false"}
+							className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white"
 						>
-							<span className="sr-only">Abrir menu principal</span>
 							{isOpen ? (
-								<X className="h-6 w-6" />
+								<X className="w-6 h-6" />
 							) : (
-								<Menu className="h-6 w-6" />
+								<Menu className="w-6 h-6" />
 							)}
 						</button>
 					</div>
@@ -222,64 +283,63 @@ export function Navbar() {
 			</div>
 
 			{/* 4. MOBILE MENU (Drawer) */}
-			{isOpen && (
-				<div className="lg:hidden bg-zinc-950 border-b border-zinc-800 animate-in slide-in-from-top-2">
-					<div className="px-4 pt-2 pb-6 space-y-4">
-						{/* Mobile Group A */}
-						<div className="space-y-1">
-							<p className="text-xs uppercase tracking-widest text-zinc-600 font-bold px-3 py-2">
-								Explorar
-							</p>
+			{
+				isOpen && (
+					<div className="lg:hidden bg-black border-t border-zinc-900 h-screen overflow-y-auto pb-32 animate-in slide-in-from-top-2">
+						<div className="px-6 py-8 space-y-8">
 							<Link
-								href="/"
+								href="/jogar"
 								onClick={() => setIsOpen(false)}
-								className="block px-3 py-3 rounded-md text-base font-medium text-zinc-300 hover:text-white hover:bg-zinc-900"
+								className="block"
 							>
-								Início
-							</Link>
-							{primaryLinks.map((link) => (
-								<Link
-									key={link.href}
-									href={link.href}
-									onClick={() => setIsOpen(false)}
-									className="flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium text-zinc-300 hover:text-white hover:bg-zinc-900"
-								>
-									{link.icon}
-									{link.label}
-								</Link>
-							))}
-						</div>
-
-						<div className="border-t border-zinc-800 my-2"></div>
-
-						{/* Mobile Group B: Utility */}
-						<div className="space-y-1">
-							<p className="text-xs uppercase tracking-widest text-yellow-600 font-bold px-3 py-2">
-								Utilidade Pública
-							</p>
-							{utilityLinks.map((link) => (
-								<Link
-									key={link.href}
-									href={link.href}
-									onClick={() => setIsOpen(false)}
-									className={`flex items-center gap-3 px-3 py-3 rounded-md text-base bg-yellow-950/20 border border-yellow-900/30 ${link.className}`}
-								>
-									{link.icon}
-									{link.label}
-								</Link>
-							))}
-						</div>
-
-						<div className="pt-2">
-							<Link href="/apoie" onClick={() => setIsOpen(false)}>
-								<Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg font-bold">
-									Apoie a Causa
+								<Button className="w-full bg-yellow-500 hover:bg-yellow-400 text-black py-7 text-lg font-black uppercase tracking-[0.2em] rounded-2xl">
+									Iniciar Intervenção
 								</Button>
 							</Link>
+
+							{sections.map((section) => (
+								<div key={section.id} className="space-y-3">
+									<p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 px-2">
+										{section.label}
+									</p>
+									<div className="grid grid-cols-1 gap-1">
+										{section.links.map((link) => (
+											<Link
+												key={link.href}
+												href={link.href}
+												onClick={() => setIsOpen(false)}
+												className={`flex items-center gap-4 px-4 py-4 rounded-2xl text-base font-bold transition-all ${link.color
+													? "bg-yellow-500/5 text-yellow-500 border border-yellow-500/10"
+													: "text-zinc-300 bg-zinc-900/40 border border-zinc-800/50"
+													}`}
+											>
+												<div className="p-2 bg-black rounded-lg border border-zinc-800">
+													{link.icon}
+												</div>
+												{link.label}
+											</Link>
+										))}
+									</div>
+								</div>
+							))}
+
+							<div className="pt-4 space-y-4">
+								<Link href="/apoie" onClick={() => setIsOpen(false)}>
+									<Button
+										variant="outline"
+										className="w-full border-zinc-800 py-6 text-zinc-400 text-sm font-black uppercase tracking-widest"
+									>
+										Apoie a Causa
+									</Button>
+								</Link>
+								<div className="flex justify-center">
+									<SyncButton />
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-			)}
-		</nav>
+				)
+			}
+		</nav >
 	);
 }

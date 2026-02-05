@@ -21,8 +21,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
-import { InteractiveStatus } from "./InteractiveStatus";
 import { CofreDrawer } from "./CofreDrawer";
+import { InteractiveStatus } from "./InteractiveStatus";
 
 export function GameHUD({
 	onToggleChat,
@@ -109,7 +109,6 @@ export function GameHUD({
 			{/* TOP BAR - COMPACT HUD */}
 			<header
 				className="fixed top-0 left-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-3 py-2 flex items-center justify-between text-xs shadow-xl pointer-events-auto transition-all duration-300"
-				role="banner"
 				aria-label="Barra de Status do Jogo"
 			>
 				{/* LEFT: VITAL SIGNS */}
@@ -145,7 +144,10 @@ export function GameHUD({
 
 				{/* RIGHT: RESOURCES & TIME */}
 				<div className="flex items-center gap-3 font-mono">
-					<div data-testid="hud-time" className="flex items-center gap-1.5 bg-slate-900/50 px-2 py-1 rounded-md border border-slate-800">
+					<div
+						data-testid="hud-time"
+						className="flex items-center gap-1.5 bg-slate-900/50 px-2 py-1 rounded-md border border-slate-800"
+					>
 						<Clock className="w-3.5 h-3.5 text-blue-400" />
 						<span className="text-white font-bold">
 							{time.toString().padStart(2, "0")}:00
@@ -170,8 +172,8 @@ export function GameHUD({
 							type="button"
 							onClick={handleToggleMute}
 							className={`ml-1 p-1 rounded-md transition-all ${isMuted
-								? "text-red-400 hover:bg-red-900/30"
-								: "text-emerald-400 hover:bg-emerald-900/30"
+									? "text-red-400 hover:bg-red-900/30"
+									: "text-emerald-400 hover:bg-emerald-900/30"
 								}`}
 							aria-label={isMuted ? "Ativar som" : "Desativar som"}
 						>
@@ -231,7 +233,10 @@ export function GameHUD({
 					<Shield className="h-5 w-5 text-blue-400" />
 				</Button>
 
-				<CofreDrawer isOpen={isCofreOpen} onClose={() => setIsCofreOpen(false)} />
+				<CofreDrawer
+					isOpen={isCofreOpen}
+					onClose={() => setIsCofreOpen(false)}
+				/>
 
 				<Button
 					size="icon"

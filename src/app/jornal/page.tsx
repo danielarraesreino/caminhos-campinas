@@ -1,10 +1,10 @@
 "use client";
 
 import { ArrowLeft, User } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
-import posts from "@/data/journal-posts.json";
+import Link from "next/link";
 import { AudioReader } from "@/components/ui/AudioReader";
+import posts from "@/data/journal-posts.json";
 
 export default function JornalPage() {
 	return (
@@ -24,7 +24,6 @@ export default function JornalPage() {
 			<div className="max-w-4xl mx-auto space-y-8 p-6 pt-24 relative z-10">
 				<header
 					className="flex items-center gap-4 border-b border-slate-800 pb-6"
-					role="banner"
 					aria-label="Cabeçalho do Jornal"
 				>
 					<Link
@@ -56,9 +55,14 @@ export default function JornalPage() {
 										<span className="text-xs font-bold text-blue-300 uppercase tracking-widest bg-blue-900/30 px-2 py-1 rounded">
 											{post.category}
 										</span>
-										<AudioReader text={`${post?.title || ""}. ${post?.content || ""}`} />
+										<AudioReader
+											text={`${post?.title || ""}. ${post?.content || ""}`}
+										/>
 									</div>
-									<time className="text-xs text-slate-300 font-mono" dateTime={post.date}>
+									<time
+										className="text-xs text-slate-300 font-mono"
+										dateTime={post.date}
+									>
 										{post.date}
 									</time>
 								</div>
@@ -67,7 +71,9 @@ export default function JornalPage() {
 								</h2>
 							</header>
 							<section>
-								<p className="text-slate-200 leading-relaxed font-medium">{post.content}</p>
+								<p className="text-slate-200 leading-relaxed font-medium">
+									{post.content}
+								</p>
 								<footer className="mt-6 pt-4 border-t border-slate-800 flex items-center gap-3">
 									<div className="w-8 h-8 rounded-full bg-blue-900/50 flex items-center justify-center border border-blue-500/30">
 										<User className="w-4 h-4 text-blue-300" />

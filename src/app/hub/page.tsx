@@ -1,7 +1,7 @@
 "use client";
-import partnersData from "@/data/partners.json";
-import { useGameContext } from "@/contexts/GameContext";
 import { useEffect } from "react";
+import { useGameContext } from "@/contexts/GameContext";
+import partnersData from "@/data/partners.json";
 
 export default function HubPage() {
 	// const { pdu, initPDU } = useGameContext(); // optimization: unused

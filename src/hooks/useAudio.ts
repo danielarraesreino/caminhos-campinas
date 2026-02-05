@@ -107,7 +107,7 @@ export function useAudio() {
 	const playSfx = useCallback((trackId: AudioTrackId, volume = 1.0) => {
 		const audio = new Audio(`/sounds/${trackId}.wav`);
 		audio.volume = Math.min(volume, 1);
-		audio.play().catch(() => { }); // Fire and forget
+		audio.play().catch(() => {}); // Fire and forget
 	}, []);
 
 	// Cleanup on unmount

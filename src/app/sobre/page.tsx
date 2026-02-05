@@ -1,10 +1,10 @@
 "use client";
 
 import { ArrowLeft, BookOpen, FileText, Target, Users } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
-import { EcoButton } from "@/components/ui/EcoButton";
+import Link from "next/link";
 import { AudioReader } from "@/components/ui/AudioReader";
+import { EcoButton } from "@/components/ui/EcoButton";
 import SOURCES_DATA from "@/data/sources.json";
 
 export default function SobrePage() {

@@ -63,7 +63,8 @@ export const PDU_QUESTS: Record<PDUObjective, PDUChain> = {
 			{
 				id: "visitar_educacao",
 				title: "Explorar Educação",
-				description: "Acesse o portal de educação para ver oportunidades de estudo.",
+				description:
+					"Acesse o portal de educação para ver oportunidades de estudo.",
 				requiredAction: "INTERACTION",
 				target: "view_education_portal",
 				nextStepId: "concluir_curso_direitos",
@@ -80,7 +81,8 @@ export const PDU_QUESTS: Record<PDUObjective, PDUChain> = {
 			{
 				id: "visitar_cursos_profissionalizantes",
 				title: "Cursos Profissionalizantes",
-				description: "Conheça as opções de cursos para qualificação profissional.",
+				description:
+					"Conheça as opções de cursos para qualificação profissional.",
 				requiredAction: "INTERACTION",
 				target: "view_courses_list",
 				nextStepId: "matricula_eja",
@@ -184,7 +186,8 @@ export const PDU_QUESTS: Record<PDUObjective, PDUChain> = {
 			{
 				id: "respeito_horario",
 				title: "Horário de Entrada",
-				description: "Chegue no Abrigo/SAMIM antes das 19h por 3 dias seguidos.",
+				description:
+					"Chegue no Abrigo/SAMIM antes das 19h por 3 dias seguidos.",
 				requiredAction: "STAT",
 				target: 3, // Custom counter needed logic side
 			},

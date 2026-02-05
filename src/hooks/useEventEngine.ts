@@ -53,7 +53,9 @@ export function useEventEngine() {
 		(dilemmaId: string) => {
 			const now = Date.now();
 			if (now - lastTriggerRef.current < 2000) {
-				console.warn(`[EventEngine] Throttled dilemma '${dilemmaId}' (too fast)`);
+				console.warn(
+					`[EventEngine] Throttled dilemma '${dilemmaId}' (too fast)`,
+				);
 				return;
 			}
 			lastTriggerRef.current = now;

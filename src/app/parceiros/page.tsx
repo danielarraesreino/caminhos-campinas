@@ -7,8 +7,8 @@ import {
 	ShieldCheck,
 	TrendingUp,
 } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ParceirosPage() {
 	return (
@@ -67,12 +67,15 @@ export default function ParceirosPage() {
 								<span className="text-blue-500">dados auditáveis.</span>
 							</h1>
 							<p className="text-lg text-slate-300 leading-relaxed max-w-lg">
-								Sua empresa precisa reportar contribuições para os ODS (Objetivos
-								de Desenvolvimento Sustentável)? Nós geramos métricas reais de
-								impacto para os ODS 1, 2 e 11.
+								Sua empresa precisa reportar contribuições para os ODS
+								(Objetivos de Desenvolvimento Sustentável)? Nós geramos métricas
+								reais de impacto para os ODS 1, 2 e 11.
 							</p>
 							<div className="flex flex-col sm:flex-row gap-4 pt-4">
-								<Link href="mailto:contato@caminhoscampinas.org" className="w-full sm:w-auto">
+								<Link
+									href="mailto:contato@caminhoscampinas.org"
+									className="w-full sm:w-auto"
+								>
 									<button
 										type="button"
 										className="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-900/40 active:scale-95 w-full"
@@ -119,7 +122,9 @@ export default function ParceirosPage() {
 										</div>
 										<span className="text-emerald-400 font-bold">+400%</span>
 									</div>
-									<div className="text-2xl font-bold text-white">R$ 45.000 / mês</div>
+									<div className="text-2xl font-bold text-white">
+										R$ 45.000 / mês
+									</div>
 									<div className="text-xs text-slate-500 mt-1">
 										Economia gerada para o setor público
 									</div>
@@ -158,7 +163,9 @@ export default function ParceirosPage() {
 									<h3 className="text-xl font-bold text-white mb-3">
 										{feature.title}
 									</h3>
-									<p className="text-slate-400 leading-relaxed">{feature.desc}</p>
+									<p className="text-slate-400 leading-relaxed">
+										{feature.desc}
+									</p>
 								</div>
 							))}
 						</div>
@@ -171,14 +178,17 @@ export default function ParceirosPage() {
 						<div className="relative z-10 max-w-4xl mx-auto text-center">
 							<h2 className="text-4xl font-bold mb-6">Adote uma Tecnologia</h2>
 							<p className="text-lg text-slate-300 mb-12">
-								Escolha qual funcionalidade sua empresa quer apadrinhar e receba o
-								selo <strong className="text-white">Empresa Amiga da Rua</strong>.
+								Escolha qual funcionalidade sua empresa quer apadrinhar e receba
+								o selo{" "}
+								<strong className="text-white">Empresa Amiga da Rua</strong>.
 							</p>
 
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
 								<div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 p-8 rounded-2xl hover:bg-slate-800 transition-colors cursor-pointer group">
 									<div className="flex justify-between items-start mb-4">
-										<h3 className="text-2xl font-bold text-white">Cota Server</h3>
+										<h3 className="text-2xl font-bold text-white">
+											Cota Server
+										</h3>
 										<span className="bg-blue-900/50 border border-blue-500/30 text-blue-300 text-xs font-bold px-2 py-1 rounded">
 											R$ 200/mês
 										</span>
@@ -203,7 +213,9 @@ export default function ParceirosPage() {
 
 								<div className="bg-gradient-to-br from-blue-900/80 to-indigo-900/80 border border-blue-500/30 p-8 rounded-2xl transform md:-translate-y-4 shadow-2xl shadow-blue-900/20">
 									<div className="flex justify-between items-start mb-4">
-										<h3 className="text-2xl font-bold text-white">Cota Mantenedor</h3>
+										<h3 className="text-2xl font-bold text-white">
+											Cota Mantenedor
+										</h3>
 										<span className="bg-white/10 text-white text-xs font-bold px-2 py-1 rounded border border-white/20">
 											Sob Consulta
 										</span>

@@ -63,7 +63,10 @@ export default function ImpactPage() {
 	}, [data]);
 
 	return (
-		<main className="min-h-screen bg-black text-white p-8 pt-24 relative overflow-hidden" aria-label="Painel de Impacto Social">
+		<main
+			className="min-h-screen bg-black text-white p-8 pt-24 relative overflow-hidden"
+			aria-label="Painel de Impacto Social"
+		>
 			{/* Background Image - Realismo Sóbrio */}
 			<div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
 				<Image
@@ -90,7 +93,10 @@ export default function ImpactPage() {
 					{/* ALERTA DE EMERGÊNCIA */}
 					<div className="mb-12 bg-red-950/50 border-2 border-red-500 p-6 rounded-2xl flex items-center gap-6 animate-pulse">
 						<div className="bg-red-500 p-4 rounded-full shadow-lg shadow-red-500/50">
-							<AlertTriangle className="w-8 h-8 text-white" aria-label="Alerta de emergência" />
+							<AlertTriangle
+								className="w-8 h-8 text-white"
+								aria-label="Alerta de emergência"
+							/>
 						</div>
 						<div>
 							<h2 className="text-2xl font-black uppercase tracking-tighter text-white">
@@ -288,14 +294,15 @@ export default function ImpactPage() {
 								<span className="text-purple-400 font-bold">
 									ALERTA SANITÁRIO:
 								</span>
-								{stats.sanitationCrisis}% da população simulada foi forçada a usar
-								a rua para necessidades fisiológicas hoje, devido a barreiras em
-								comércios e falta de banheiros públicos 24h.
+								{stats.sanitationCrisis}% da população simulada foi forçada a
+								usar a rua para necessidades fisiológicas hoje, devido a
+								barreiras em comércios e falta de banheiros públicos 24h.
 							</li>
 							<li className="flex gap-3">
-								<span className="text-red-500 font-bold">CRÍTICO:</span>O sistema
-								detectou que a "Barreira do RG" impede 19% da população de acessar
-								o Bom Prato (exige cadastro/documento em alguns casos).
+								<span className="text-red-500 font-bold">CRÍTICO:</span>O
+								sistema detectou que a "Barreira do RG" impede 19% da população
+								de acessar o Bom Prato (exige cadastro/documento em alguns
+								casos).
 							</li>
 							<li className="flex gap-3">
 								<span className="text-green-500 font-bold">OPORTUNIDADE:</span>O
@@ -377,7 +384,9 @@ export default function ImpactPage() {
 								<div className="relative pt-2">
 									<div className="flex justify-between text-xs uppercase tracking-widest font-bold mb-2">
 										{/* slate-300 -> slate-200 */}
-										<span className="text-slate-200">Tem Celular, Sem Dados</span>
+										<span className="text-slate-200">
+											Tem Celular, Sem Dados
+										</span>
 										<span className="text-white">
 											{CENSUS_REALITY.digitalExclusion.noData}%
 										</span>
@@ -542,7 +551,10 @@ function KpiCard({
 						{value}
 					</p>
 				</div>
-				<div className="p-3 bg-slate-800 border border-slate-600 rounded-full" aria-hidden="true">
+				<div
+					className="p-3 bg-slate-800 border border-slate-600 rounded-full"
+					aria-hidden="true"
+				>
 					{icon}
 				</div>
 			</div>

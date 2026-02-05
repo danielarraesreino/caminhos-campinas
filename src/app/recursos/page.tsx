@@ -14,7 +14,7 @@ import {
 	ShowerHead,
 	Utensils,
 } from "lucide-react"; // Updated icons for survival needs
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AudioReader } from "@/components/ui/AudioReader";
 import { useGameContext } from "@/contexts/GameContext";
 import {
@@ -22,6 +22,7 @@ import {
 	type ServiceType,
 	useServices,
 } from "@/contexts/ServicesContext";
+import { VoiceInput } from "@/features/ui/VoiceInput";
 
 function ServiceCard({ service }: { service: ServiceLocation }) {
 	const { documents, modifyStat } = useGameContext();
@@ -285,6 +286,7 @@ export default function ResourcesPage() {
 		"all",
 	);
 	const [isOffline, setIsOffline] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
 
 	// Maslow Categories for Quick Access
 	// Maslow Categories for Quick Access
@@ -344,11 +346,87 @@ export default function ResourcesPage() {
 		};
 	}, []);
 
-	// Filter Logic
-	const displayedServices =
-		activeCategory === "all"
-			? services
-			: filterServices(activeCategory as ServiceType);
+	// Filter Logic with Search (Fully contained for reliability)
+	const displayedServices = useMemo(() => {
+		let filtered = [...(services || [])];
+
+		// 1. Filter by category
+		if (activeCategory !== "all") {
+			filtered = filtered.filter((s) => {
+				const isExactMatch = s.type === activeCategory;
+				if (isExactMatch) return true;
+
+				// Cross-category checks based on effects (parity with ServicesContext)
+				if (activeCategory === "ALIMENTACAO" && (s.effects?.hunger || 0) > 0)
+					return true;
+				if (activeCategory === "SAUDE" && (s.effects?.health || 0) > 0)
+					return true;
+				if (
+					activeCategory === "ABRIGO" &&
+					(s.effects?.energy || 0) > 0 &&
+					s.type !== "ABRIGO"
+				)
+					return true;
+
+				return false;
+			});
+		}
+
+		// 2. Filter by search query
+		if (searchQuery.trim()) {
+			const query = searchQuery.toLowerCase().trim();
+			filtered = filtered.filter((s) => {
+				const name = s.name?.toLowerCase() || "";
+				const address = s.address?.toLowerCase() || "";
+				const category = s.category?.toLowerCase() || "";
+				// Safely check tags if they exist in the raw data
+				const tags = Array.isArray((s as any).tags)
+					? (s as any).tags.join(" ").toLowerCase()
+					: "";
+
+				return (
+					name.includes(query) ||
+					address.includes(query) ||
+					category.includes(query) ||
+					tags.includes(query)
+				);
+			});
+		}
+
+		return filtered;
+	}, [services, activeCategory, searchQuery]);
+
+	// Dynamic Audio Description
+	const audioDescription = useMemo(() => {
+		if (searchQuery.trim()) {
+			const count = displayedServices.length;
+			if (count === 0) {
+				return `Nenhum resultado encontrado para: ${searchQuery}`;
+			}
+			const names = displayedServices
+				.slice(0, 3)
+				.map((s) => s.name)
+				.join(", ");
+			return `${count} resultado${count > 1 ? "s" : ""} para ${searchQuery}: ${names}${count > 3 ? ` e mais ${count - 3}` : ""}`;
+		}
+
+		if (activeCategory === "all") {
+			return "Guia de Rua. Recursos de sobrevivência e apoio em Campinas. Alimentação, saúde, higiene, abrigo e documentos.";
+		}
+
+		const categoryName =
+			categories.find((c) => c.type === activeCategory)?.label ||
+			activeCategory;
+		const count = displayedServices.length;
+		if (count === 0) {
+			return `Nenhum serviço de ${categoryName} encontrado.`;
+		}
+		const names = displayedServices
+			.slice(0, 3)
+			.map((s) => s.name)
+			.join(", ");
+		return `${categoryName}. ${count} local${count > 1 ? "is" : ""} encontrado${count > 1 ? "s" : ""}: ${names}${count > 3 ? ` e mais ${count - 3}` : ""}`;
+	}, [activeCategory, displayedServices, searchQuery, categories]);
 
 	return (
 		<div className="min-h-screen bg-black font-sans text-white pb-24 pt-4 px-4">
@@ -371,7 +449,6 @@ export default function ResourcesPage() {
 								</span>
 							)}
 						</p>
-						<AudioReader text="Guia de Rua. Recursos de sobrevivência e apoio em Campinas. Alimentação, saúde, higiene, abrigo e documentos." />
 					</div>
 				</div>
 				<button
@@ -385,6 +462,28 @@ export default function ResourcesPage() {
 					/>
 				</button>
 			</header>
+			<div className="sticky top-0 z-30 -mx-4 px-4 py-4 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800 mb-6 shadow-xl">
+				{/* [NEW] Search Bar with Voice Input */}
+				<div className="flex gap-2 mb-4">
+					<div className="flex-1 relative">
+						<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+						<input
+							type="text"
+							placeholder="Buscar serviços..."
+							value={searchQuery}
+							onChange={(e) => setSearchQuery(e.target.value)}
+							className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-10 pr-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-yellow-500/50"
+						/>
+					</div>
+					<VoiceInput
+						onTranscription={(text) => setSearchQuery(text)}
+						disabled={false}
+					/>
+				</div>
+
+				{/* [NEW] Dynamic Audio Reader */}
+				<AudioReader text={audioDescription} />
+			</div>
 
 			{/* Maslow Buttons (Big Targets) */}
 			<div className="grid grid-cols-2 gap-3 mb-8">

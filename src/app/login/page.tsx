@@ -1,8 +1,8 @@
 "use client";
 
 import { ArrowLeft, ShieldCheck } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,8 @@ export default function LoginPage() {
 						Acesso ao Cofre & Curadoria
 					</h1>
 					<p className="text-slate-400 text-lg leading-relaxed">
-						Proteja seus documentos no Cofre Digital ou colabore validando a realidade do jogo.
+						Proteja seus documentos no Cofre Digital ou colabore validando a
+						realidade do jogo.
 					</p>
 				</div>
 

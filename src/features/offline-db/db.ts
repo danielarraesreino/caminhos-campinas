@@ -1,6 +1,9 @@
 import { initDBWithRetry, monitorDBHealth } from "./db-health";
 
-let dbInstance: PouchDB.Database | null = null;
+let dbInstance: PouchDB.Database | null =
+	typeof window !== "undefined"
+		? (window as any).__POUCH_DB_INSTANCE__ || null
+		: null;
 
 async function initPouchDB(): Promise<PouchDB.Database | null> {
 	// Dynamic import to prevent SSR module evaluation
@@ -15,17 +18,22 @@ async function initPouchDB(): Promise<PouchDB.Database | null> {
 
 	// Explicitly load modern IndexedDB adapter first
 	// This prevents fallback to legacy Level adapters (leveldown, encoding-down)
-	PouchDB.plugin(PouchDBIndexedDB);
-	PouchDB.plugin(PouchDBFind);
+	if (!(PouchDB as any).__PLUGINS_LOADED__) {
+		PouchDB.plugin(PouchDBIndexedDB);
+		PouchDB.plugin(PouchDBFind);
+		(PouchDB as any).__PLUGINS_LOADED__ = true;
+	}
 
 	const db = new PouchDB("pop_rua_game_db", {
 		auto_compaction: true,
 		adapter: "indexeddb", // Explicit modern adapter (not 'idb' legacy alias)
 	});
 
-	console.log(
-		"✅ PouchDB initialized with IndexedDB adapter (client-side)",
-	);
+	if (typeof window !== "undefined") {
+		(window as any).__POUCH_DB_INSTANCE__ = db;
+	}
+
+	console.log("✅ PouchDB initialized with IndexedDB adapter (client-side)");
 
 	return db;
 }

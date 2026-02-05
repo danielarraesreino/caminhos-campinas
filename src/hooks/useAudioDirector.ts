@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { useAudioSystem } from "@/hooks/useAudioSystem";
 import { detectActiveArc } from "@/data/story-arcs";
+import { useAudioSystem } from "@/hooks/useAudioSystem";
 
 export function useAudioDirector() {
 	const gameContext = useGameContext();

@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { Play, MapPin, Newspaper, TrendingUp, Github } from "lucide-react";
-import Link from "next/link";
+import { Github, MapPin, Newspaper, Play, TrendingUp } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 /**
  * Landing Page - Campinas Invisível | Auditoria
- * 
+ *
  * Mantém o propósito político original:
  * - "A Invisibilidade é uma Escolha Política"
  * - Jogo como ferramenta de auditoria social
@@ -15,7 +15,9 @@ import Image from "next/image";
  * - Bifurcação integrada e sutil
  */
 export function LandingPage() {
-	const [userIntent, setUserIntent] = useState<"survival" | "audit" | null>(null);
+	const [userIntent, setUserIntent] = useState<"survival" | "audit" | null>(
+		null,
+	);
 
 	// Se usuário escolheu, redireciona
 	if (userIntent === "survival") {
@@ -80,12 +82,14 @@ export function LandingPage() {
 						</p>
 						<p className="text-slate-200">
 							<span className="font-bold">1.300 vidas</span>,
-							<span className="font-bold"> 362 vagas</span> e uma cidade repleta de{" "}
-							<span className="text-red-400">barreiras invisíveis</span>.
+							<span className="font-bold"> 362 vagas</span> e uma cidade repleta
+							de <span className="text-red-400">barreiras invisíveis</span>.
 						</p>
 						<p className="text-slate-300">
 							Não somos apenas um mapa; somos uma{" "}
-							<strong className="text-white">ferramenta de reconhecimento territorial</strong>{" "}
+							<strong className="text-white">
+								ferramenta de reconhecimento territorial
+							</strong>{" "}
 							que transforma estatísticas em ação direta.
 						</p>
 					</div>
@@ -98,11 +102,14 @@ export function LandingPage() {
 					<div className="text-center mb-12">
 						<h2 className="text-3xl font-black uppercase mb-4">
 							A Invisibilidade é Política de Estado.
-							<span className="block text-red-500 mt-2">O Jogo é a Denúncia.</span>
+							<span className="block text-red-500 mt-2">
+								O Jogo é a Denúncia.
+							</span>
 						</h2>
 						<p className="text-slate-300 text-lg max-w-3xl mx-auto">
-							Simule a jornada de quem vive nas ruas de Campinas. Cada barreira que você
-							enfrenta gera um dado real sobre a falha da rede de proteção social{" "}
+							Simule a jornada de quem vive nas ruas de Campinas. Cada barreira
+							que você enfrenta gera um dado real sobre a falha da rede de
+							proteção social{" "}
 							<span className="text-blue-400 font-mono">(ODS 1, 3 e 11)</span>.
 						</p>
 					</div>
@@ -125,7 +132,8 @@ export function LandingPage() {
 									</h3>
 								</div>
 								<p className="text-yellow-100 leading-relaxed text-sm">
-									Modo sobrevivência com mapa de recursos e rotas otimizadas. 100% offline.
+									Modo sobrevivência com mapa de recursos e rotas otimizadas.
+									100% offline.
 								</p>
 							</div>
 							<div className="relative z-10 mt-4">
@@ -151,7 +159,8 @@ export function LandingPage() {
 									</h3>
 								</div>
 								<p className="text-violet-100 leading-relaxed text-sm">
-									Jogue para gerar telemetria anônima que confronta dados oficiais.
+									Jogue para gerar telemetria anônima que confronta dados
+									oficiais.
 								</p>
 							</div>
 							<div className="relative z-10 mt-4">
@@ -178,8 +187,8 @@ export function LandingPage() {
 							</div>
 							<h3 className="text-xl font-bold">Você Joga</h3>
 							<p className="text-slate-300">
-								Cada escolha no jogo simula uma barreira real: falta de documentos,
-								violência institucional ou arquitetura hostil.
+								Cada escolha no jogo simula uma barreira real: falta de
+								documentos, violência institucional ou arquitetura hostil.
 							</p>
 						</div>
 
@@ -189,8 +198,8 @@ export function LandingPage() {
 							</div>
 							<h3 className="text-xl font-bold">O App Audita</h3>
 							<p className="text-slate-300">
-								Suas decisões geram estatísticas anônimas que confrontamos com os dados
-								oficiais da Prefeitura e da FEAC.
+								Suas decisões geram estatísticas anônimas que confrontamos com
+								os dados oficiais da Prefeitura e da FEAC.
 							</p>
 						</div>
 
@@ -200,103 +209,205 @@ export function LandingPage() {
 							</div>
 							<h3 className="text-xl font-bold">A Cidade Muda</h3>
 							<p className="text-slate-300">
-								Usamos esses registros para pressionar por políticas públicas reais e
-								integrar dados ao ecossistema Wikimedia.
+								Usamos esses registros para pressionar por políticas públicas
+								reais e integrar dados ao ecossistema Wikimedia.
 							</p>
 						</div>
 					</div>
 				</div>
 			</section>
 
-			{/* Links Rápidos */}
-			<section className="relative z-10 container mx-auto px-4 py-12">
-				<div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
-					<Link
-						href="/transparencia"
-						className="group p-6 bg-slate-800/50 border border-slate-700 rounded-xl hover:border-blue-500 transition-all"
-					>
-						<div className="flex items-center gap-3 mb-3">
-							<TrendingUp className="text-blue-400" size={24} />
-							<h3 className="text-xl font-bold">Abismo dos Números</h3>
+			{/* Pilares da Iniciativa - NOVO PORTAL */}
+			<section className="relative z-10 container mx-auto px-4 py-20">
+				<div className="max-w-6xl mx-auto">
+					<div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
+						<div className="space-y-2">
+							<span className="text-yellow-500 font-mono text-xs uppercase tracking-[0.3em]">
+								Ecossistema
+							</span>
+							<h2 className="text-4xl font-black uppercase tracking-tighter leading-none">
+								Os Quatro Pilares
+								<br />
+								<span className="text-zinc-500">do Caminhos Campinas.</span>
+							</h2>
 						</div>
-						<p className="text-slate-400">
-							1.300 oficiais vs 3.000 invisíveis. Veja a auditoria real da rede de
-							acolhimento de Campinas.
+						<p className="text-zinc-400 max-w-md text-sm leading-relaxed">
+							Muito além de um jogo, somos uma infraestrutura cívica que combina
+							tecnologia, dados e mobilização direta para transformar a
+							realidade socioterritorial da cidade.
 						</p>
-					</Link>
+					</div>
 
-					<Link
-						href="/jornal"
-						className="group p-6 bg-slate-800/50 border border-slate-700 rounded-xl hover:border-yellow-500 transition-all"
-					>
-						<div className="flex items-center gap-3 mb-3">
-							<Newspaper className="text-yellow-400" size={24} />
-							<h3 className="text-xl font-bold">Jornal da Rua</h3>
-						</div>
-						<p className="text-slate-400">
-							"Quanto vale sua cabeça?". Investigações sobre a "Matemática Viciada" da
-							assistência social.
-						</p>
-					</Link>
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+						{/* Pillar 1: Sobrevivência */}
+						<Link
+							href="/recursos"
+							className="group p-6 bg-zinc-900/40 border border-zinc-800 rounded-2xl hover:border-yellow-500/50 hover:bg-zinc-900/60 transition-all flex flex-col justify-between h-full"
+						>
+							<div className="space-y-4">
+								<div className="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-500 border border-yellow-500/20 group-hover:scale-110 transition-transform">
+									<MapPin size={24} />
+								</div>
+								<h3 className="text-xl font-bold uppercase tracking-tight text-white italic">
+									Sobrevivência
+								</h3>
+								<p className="text-zinc-400 text-sm leading-snug">
+									Guia de recursos offline, mapa de serviços e educação sobre
+									direitos básicos para quem está na rua.
+								</p>
+							</div>
+							<div className="mt-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-yellow-500 group-hover:translate-x-2 transition-transform">
+								Acessar Guia <Play size={10} className="fill-current" />
+							</div>
+						</Link>
+
+						{/* Pillar 2: Auditoria */}
+						<Link
+							href="/transparencia"
+							className="group p-6 bg-zinc-900/40 border border-zinc-800 rounded-2xl hover:border-blue-500/50 hover:bg-zinc-900/60 transition-all flex flex-col justify-between h-full"
+						>
+							<div className="space-y-4">
+								<div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 border border-blue-500/20 group-hover:scale-110 transition-transform">
+									<TrendingUp size={24} />
+								</div>
+								<h3 className="text-xl font-bold uppercase tracking-tight text-white italic">
+									Auditoria
+								</h3>
+								<p className="text-zinc-400 text-sm leading-snug">
+									Portal de transparência e visualização do "Abismo dos
+									Números". Dados que geram pressão política.
+								</p>
+							</div>
+							<div className="mt-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-400 group-hover:translate-x-2 transition-transform">
+								Ver Transparência <Play size={10} className="fill-current" />
+							</div>
+						</Link>
+
+						{/* Pillar 3: Voz */}
+						<Link
+							href="/jornal"
+							className="group p-6 bg-zinc-900/40 border border-zinc-800 rounded-2xl hover:border-red-500/50 hover:bg-zinc-900/60 transition-all flex flex-col justify-between h-full"
+						>
+							<div className="space-y-4">
+								<div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20 group-hover:scale-110 transition-transform">
+									<Newspaper size={24} />
+								</div>
+								<h3 className="text-xl font-bold uppercase tracking-tight text-white italic">
+									Voz própria
+								</h3>
+								<p className="text-zinc-400 text-sm leading-snug">
+									O Jornal da Rua e coletor de dilemas. Narrativas diretas de
+									quem vive a cidade de forma invisível.
+								</p>
+							</div>
+							<div className="mt-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-500 group-hover:translate-x-2 transition-transform">
+								Ler Jornal <Play size={10} className="fill-current" />
+							</div>
+						</Link>
+
+						{/* Pillar 4: Rede */}
+						<Link
+							href="/hub"
+							className="group p-6 bg-zinc-900/40 border border-zinc-800 rounded-2xl hover:border-zinc-500 hover:bg-zinc-900/60 transition-all flex flex-col justify-between h-full"
+						>
+							<div className="space-y-4">
+								<div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-zinc-400 border border-zinc-700 group-hover:scale-110 transition-transform">
+									<MapPin size={24} />
+								</div>
+								<h3 className="text-xl font-bold uppercase tracking-tight text-white italic">
+									Rede Viva
+								</h3>
+								<p className="text-zinc-400 text-sm leading-snug">
+									Hub de parceiros, formação para agilizadores sociais e
+									ecossistema de impacto ESG em Campinas.
+								</p>
+							</div>
+							<div className="mt-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:translate-x-2 transition-transform">
+								Conhecer Hub <Play size={10} className="fill-current" />
+							</div>
+						</Link>
+					</div>
 				</div>
 			</section>
 
 			{/* Footer - Dados Soberanos */}
-			<footer className="relative z-10 border-t border-slate-800 py-12">
+			<footer className="relative z-10 border-t border-zinc-900 py-16 bg-black">
 				<div className="container mx-auto px-4">
-					<div className="max-w-4xl mx-auto space-y-8">
-						<div className="grid md:grid-cols-3 gap-8 text-sm">
-							<div>
-								<h4 className="font-bold mb-2 text-white">Dados Soberanos</h4>
-								<p className="text-slate-400">
-									Baseado no Censo Pop Rua 2024 e no Decreto Federal 7.053/2009. Auditoria
-									cidadã em tempo real.
+					<div className="max-w-4xl mx-auto space-y-12">
+						<div className="grid md:grid-cols-3 gap-12 text-sm">
+							<div className="space-y-4">
+								<h4 className="font-black uppercase tracking-widest text-xs text-zinc-500">
+									Dados Soberanos
+								</h4>
+								<p className="text-zinc-400 leading-relaxed font-medium">
+									Baseado no Censo Pop Rua 2024 e no Decreto Federal 7.053/2009.
+									Auditoria cidadã em tempo real integrada ao Wikidata.
 								</p>
 							</div>
-							<div>
-								<h4 className="font-bold mb-2 text-white">Campinas / DDD 019</h4>
-								<p className="text-slate-400">
-									Focado na realidade socioterritorial da Região Metropolitana de Campinas.
+							<div className="space-y-4">
+								<h4 className="font-black uppercase tracking-widest text-xs text-zinc-500">
+									Território / DDD 019
+								</h4>
+								<p className="text-zinc-400 leading-relaxed font-medium">
+									Focado na realidade socioterritorial da Região Metropolitana
+									de Campinas. Uma cidade de 1.2M de habitantes.
 								</p>
 							</div>
-							<div>
-								<h4 className="font-bold mb-2 text-white">Versão 0.19.0 (Beta)</h4>
-								<p className="text-slate-400">© 2025 Coletivo A Rua Tem Voz</p>
+							<div className="space-y-4">
+								<h4 className="font-black uppercase tracking-widest text-xs text-zinc-500">
+									Soberania Tecnológica
+								</h4>
+								<p className="text-zinc-400 leading-relaxed font-medium">
+									Código Aberto, Offline-first e Zero Rastreamento. A tecnologia
+									como instrumento de emancipação coletiva.
+								</p>
 							</div>
 						</div>
 
-						<div className="flex flex-wrap gap-4 justify-center text-sm text-slate-400">
-							<Link href="/sobre" className="hover:text-white transition-colors">
-								Institucional & Impacto
+						<div className="flex flex-wrap gap-x-8 gap-y-4 justify-center text-[10px] font-black uppercase tracking-[0.25em] text-zinc-600 border-y border-zinc-900 py-8">
+							<Link
+								href="/sobre"
+								className="hover:text-white transition-colors"
+							>
+								Institucional
 							</Link>
-							<Link href="/parcerias" className="hover:text-white transition-colors">
-								Para Empresas (ESG)
+							<Link
+								href="/parcerias"
+								className="hover:text-white transition-colors"
+							>
+								ESG & Parcerias
 							</Link>
-							<Link href="/curso" className="hover:text-white transition-colors">
-								Curso Agilizadores
+							<Link
+								href="/curso"
+								className="hover:text-white transition-colors"
+							>
+								Formação
 							</Link>
-							<Link href="/transparencia" className="hover:text-white transition-colors">
-								Portal da Transparência
+							<Link
+								href="/transparencia"
+								className="hover:text-white transition-colors"
+							>
+								Transparência
 							</Link>
 						</div>
 
 						<div className="text-center space-y-2">
-							<p className="text-slate-400 text-xs">
+							<p className="text-zinc-500 text-xs">
 								Desenvolvido por{" "}
 								<a
 									href="https://github.com/danielarraesreino"
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-white hover:text-blue-400 inline-flex items-center gap-1"
+									className="text-white hover:text-blue-400 inline-flex items-center gap-1 font-bold"
 								>
 									Daniel (Japa/Oclinhos) <Github size={14} />
 								</a>
 							</p>
-							<p className="text-slate-500 text-xs">
+							<p className="text-zinc-600 text-[10px] uppercase tracking-widest font-black">
 								Vibe Coding ⚡ Inovação Social
 							</p>
-							<p className="text-slate-500 text-xs">
-								Tecnologia como instrumento de emancipação.
+							<p className="text-zinc-600 text-[10px] italic">
+								"Informar é o primeiro passo para a libertação."
 							</p>
 						</div>
 					</div>

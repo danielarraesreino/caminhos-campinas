@@ -8,6 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ClientLayoutWrapper } from "@/app/ClientLayoutWrapper";
 import { Providers } from "@/components/Providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { UrbanServiceSchema } from "@/components/seo/UrbanServiceSchema";
 import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
 import { GameProvider } from "@/contexts/GameContext";
 import { ModalQueueProvider } from "@/contexts/ModalQueueContext";
@@ -15,7 +16,6 @@ import { ServicesProvider } from "@/contexts/ServicesContext";
 import { StartupLogger } from "@/features/debug/StartupLogger";
 import { GameEffectsLayer } from "@/features/ui/GameEffectsLayer";
 import { SurvivalModeProvider } from "@/features/ui/SurvivalModeContext";
-import { UrbanServiceSchema } from "@/components/seo/UrbanServiceSchema";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",

@@ -124,7 +124,7 @@ class TelemetryService {
 			const exportData = {
 				telemetry: this.events,
 				suggestions: suggestions,
-				exportedAt: new Date().toISOString()
+				exportedAt: new Date().toISOString(),
 			};
 
 			const jsonString = JSON.stringify(exportData, null, 2);

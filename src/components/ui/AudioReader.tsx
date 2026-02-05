@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Pause, Volume2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useModalQueue } from "@/contexts/ModalQueueContext";
 
 interface AudioReaderProps {
@@ -33,7 +33,9 @@ export function AudioReader({ text, className = "" }: AudioReaderProps) {
 			// [NEW] Sanitize text: prevent empty strings or undefined from reaching the engine
 			const cleanText = (text || "").trim();
 			if (!cleanText) {
-				console.warn("[AudioReader] Narrowed speech attempted with empty text.");
+				console.warn(
+					"[AudioReader] Narrowed speech attempted with empty text.",
+				);
 				return;
 			}
 

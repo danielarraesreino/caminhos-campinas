@@ -67,7 +67,9 @@ export default function ParceriasPage() {
 										<Building2 size={32} />
 									</div>
 									<div>
-										<CardTitle className="text-white">Investimento Social Corporativo</CardTitle>
+										<CardTitle className="text-white">
+											Investimento Social Corporativo
+										</CardTitle>
 										<CardDescription className="text-slate-400">
 											Receba relatórios de impacto ODS 1, 3 e 10.
 										</CardDescription>
@@ -78,16 +80,26 @@ export default function ParceriasPage() {
 								<div className="grid grid-cols-2 gap-4">
 									<div className="space-y-2">
 										<Label className="text-slate-300">Nome da Empresa</Label>
-										<Input className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600" placeholder="Ex: Tech Solutions Ltda" />
+										<Input
+											className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600"
+											placeholder="Ex: Tech Solutions Ltda"
+										/>
 									</div>
 									<div className="space-y-2">
 										<Label className="text-slate-300">CNPJ</Label>
-										<Input className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600" placeholder="00.000.000/0001-91" />
+										<Input
+											className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600"
+											placeholder="00.000.000/0001-91"
+										/>
 									</div>
 								</div>
 								<div className="space-y-2">
 									<Label className="text-slate-300">E-mail Corporativo</Label>
-									<Input className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600" type="email" placeholder="contato@empresa.com.br" />
+									<Input
+										className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600"
+										type="email"
+										placeholder="contato@empresa.com.br"
+									/>
 								</div>
 								<div className="space-y-2">
 									<Label className="text-slate-300">Interesse Principal</Label>
@@ -115,7 +127,9 @@ export default function ParceriasPage() {
 										<GraduationCap size={32} />
 									</div>
 									<div>
-										<CardTitle className="text-white">Voluntariado Técnico</CardTitle>
+										<CardTitle className="text-white">
+											Voluntariado Técnico
+										</CardTitle>
 										<CardDescription className="text-slate-400">
 											Doe horas de conhecimento (Psicologia, Direito, Tech).
 										</CardDescription>
@@ -125,16 +139,25 @@ export default function ParceriasPage() {
 							<CardContent className="space-y-4">
 								<div className="space-y-2">
 									<Label className="text-slate-300">Nome Completo</Label>
-									<Input className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600" placeholder="Seu nome" />
+									<Input
+										className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600"
+										placeholder="Seu nome"
+									/>
 								</div>
 								<div className="grid grid-cols-2 gap-4">
 									<div className="space-y-2">
 										<Label className="text-slate-300">Área de Atuação</Label>
-										<Input className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600" placeholder="Ex: Psicólogo, Dev, Advogado" />
+										<Input
+											className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600"
+											placeholder="Ex: Psicólogo, Dev, Advogado"
+										/>
 									</div>
 									<div className="space-y-2">
 										<Label className="text-slate-300">WhatsApp</Label>
-										<Input className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600" placeholder="(19) 99999-9999" />
+										<Input
+											className="bg-slate-950 border-slate-800 text-white placeholder:text-slate-600"
+											placeholder="(19) 99999-9999"
+										/>
 									</div>
 								</div>
 								<div className="space-y-2">

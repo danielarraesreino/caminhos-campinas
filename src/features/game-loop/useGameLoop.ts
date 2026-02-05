@@ -106,7 +106,7 @@ export function useGameLoop() {
 		if (userPosition && lastPosition) {
 			const dist = Math.sqrt(
 				(userPosition[0] - lastPosition[0]) ** 2 +
-				(userPosition[1] - lastPosition[1]) ** 2,
+					(userPosition[1] - lastPosition[1]) ** 2,
 			);
 			if (dist < 0.001) {
 				setTimeInLocation((prev) => prev + 1);
@@ -123,7 +123,7 @@ export function useGameLoop() {
 		if (userPosition) {
 			const distToCenter = Math.sqrt(
 				(userPosition[0] - CENTER_COORDS.lat) ** 2 +
-				(userPosition[1] - CENTER_COORDS.lng) ** 2,
+					(userPosition[1] - CENTER_COORDS.lng) ** 2,
 			);
 			if (distToCenter < 0.005 && timeInLocation >= IDLE_THRESHOLD) {
 				setActiveDilemma("enquadro_13_maio");
@@ -148,65 +148,68 @@ export function useGameLoop() {
 		// 🛡️ Guard: Wait for ecosystem and avatar
 		if (!hasHydrated || isPaused || !avatar) return;
 
-		const interval = setInterval(() => {
-			let hngDecay = 2;
-			const hygDecay = 1;
-			let enrDecay = 1;
-			let snyDecay = 0.5 * getSanityDecayMultiplier(socialStigma);
+		const interval = setInterval(
+			() => {
+				let hngDecay = 2;
+				const hygDecay = 1;
+				let enrDecay = 1;
+				let snyDecay = 0.5 * getSanityDecayMultiplier(socialStigma);
 
-			if (avatar) {
-				if (avatar.ageRange === "jovem") hngDecay += 0.1;
-				if (avatar.ageRange === "idoso") enrDecay += 0.1;
-				if (avatar.timeOnStreet === "recente") snyDecay += 0.1;
-				if (avatar.timeOnStreet === "veterano") {
-					snyDecay = Math.max(0, snyDecay - 0.2);
-					modifyStat("health", -0.2);
-				}
-
-				const totalWeight = inventory.reduce(
-					(acc: number, i: { weight: number }) => acc + i.weight,
-					0,
-				);
-				if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM")
-					enrDecay += 0.3;
-
-				if (activeBuffs.includes("DESMOTIVADO")) {
-					enrDecay *= 2.0;
-				}
-
-				if (isRaining && !isAtShelter) {
-					snyDecay += 1;
-					hngDecay += 0.5;
-					modifyStat("health", -0.5);
-				}
-
-				// [DEMO_MODE] Reduce sanity decay
-				if (DEMO_MODE) {
-					snyDecay *= 0.5;
-				}
-
-				modifyStat("hunger", -hngDecay);
-				modifyStat("hygiene", -hygDecay);
-				modifyStat("energy", -enrDecay);
-				modifyStat("sanity", -snyDecay);
-				modifyStat("phoneBattery", -5);
-
-				// Haptic Feedback for critical decay
-				if (snyDecay > 1 || hngDecay > 3) triggerWarning();
-
-				const rand = processRandomEvents({ dignity, workTool });
-				if (rand) {
-					if (rand.workTool) setWorkTool(rand.workTool);
-					if (rand.dignity) {
-						modifyStat("dignity", rand.dignity - dignity);
-						triggerImpact(); // Bad event
+				if (avatar) {
+					if (avatar.ageRange === "jovem") hngDecay += 0.1;
+					if (avatar.ageRange === "idoso") enrDecay += 0.1;
+					if (avatar.timeOnStreet === "recente") snyDecay += 0.1;
+					if (avatar.timeOnStreet === "veterano") {
+						snyDecay = Math.max(0, snyDecay - 0.2);
+						modifyStat("health", -0.2);
 					}
-				}
 
-				checkBattery();
-				advanceTime(1);
-			}
-		}, DEMO_MODE ? 30000 : 10000); // 30s for Demo
+					const totalWeight = inventory.reduce(
+						(acc: number, i: { weight: number }) => acc + i.weight,
+						0,
+					);
+					if (totalWeight > 10 && workTool.type !== "CARRINHO_RECICLAGEM")
+						enrDecay += 0.3;
+
+					if (activeBuffs.includes("DESMOTIVADO")) {
+						enrDecay *= 2.0;
+					}
+
+					if (isRaining && !isAtShelter) {
+						snyDecay += 1;
+						hngDecay += 0.5;
+						modifyStat("health", -0.5);
+					}
+
+					// [DEMO_MODE] Reduce sanity decay
+					if (DEMO_MODE) {
+						snyDecay *= 0.5;
+					}
+
+					modifyStat("hunger", -hngDecay);
+					modifyStat("hygiene", -hygDecay);
+					modifyStat("energy", -enrDecay);
+					modifyStat("sanity", -snyDecay);
+					modifyStat("phoneBattery", -5);
+
+					// Haptic Feedback for critical decay
+					if (snyDecay > 1 || hngDecay > 3) triggerWarning();
+
+					const rand = processRandomEvents({ dignity, workTool });
+					if (rand) {
+						if (rand.workTool) setWorkTool(rand.workTool);
+						if (rand.dignity) {
+							modifyStat("dignity", rand.dignity - dignity);
+							triggerImpact(); // Bad event
+						}
+					}
+
+					checkBattery();
+					advanceTime(1);
+				}
+			},
+			DEMO_MODE ? 30000 : 10000,
+		); // 30s for Demo
 		return () => clearInterval(interval);
 	}, [
 		socialStigma,
@@ -286,6 +289,7 @@ export function useGameLoop() {
 					activeBuffs,
 					documents,
 					flags,
+					tutorialActive: false, // [FIX] Explicitly pass false to unblock dilemmas
 				});
 
 				if (triggered) {

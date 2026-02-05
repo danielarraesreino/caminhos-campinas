@@ -36,16 +36,18 @@ export function RealitySwitcher() {
 				onClick={toggleReality}
 				className={`
 					relative flex items-center justify-center w-16 h-16 rounded-full shadow-2xl transition-all duration-500 transform hover:scale-110
-					${isGameMode
-						? "bg-gradient-to-br from-amber-400 to-orange-600 hover:shadow-orange-500/50 ring-4 ring-orange-400/30"
-						: "bg-gradient-to-br from-slate-800 to-slate-950 hover:shadow-slate-500/50 ring-4 ring-slate-400/30"
+					${
+						isGameMode
+							? "bg-gradient-to-br from-amber-400 to-orange-600 hover:shadow-orange-500/50 ring-4 ring-orange-400/30"
+							: "bg-gradient-to-br from-slate-800 to-slate-950 hover:shadow-slate-500/50 ring-4 ring-slate-400/30"
 					}
 				`}
 				title={isGameMode ? "Voltar para Realidade" : "Entrar na Simulação"}
 			>
 				<div
-					className={`absolute inset-0 rounded-full animate-spin-slow opacity-20 ${isGameMode ? 'bg-[url("/texture-noise.svg")]' : ""
-						}`}
+					className={`absolute inset-0 rounded-full animate-spin-slow opacity-20 ${
+						isGameMode ? 'bg-[url("/texture-noise.svg")]' : ""
+					}`}
 				/>
 
 				<div className="relative z-10 text-white">

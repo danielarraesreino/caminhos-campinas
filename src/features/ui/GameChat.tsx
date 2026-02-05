@@ -59,28 +59,33 @@ export function GameChat({
 		}
 	}, []);
 
-	const chat = useChat({
+	// biome-ignore lint/suspicious/noExplicitAny: AI SDK types are complex
+	const { messages, setMessages, isLoading, append, reload } = useChat({
 		api: "/api/chat",
 		initialMessages: initialMessages || [],
 		onError: (err: any) => {
-			console.error("Chat error details:", err);
+			console.error("[GameChat] useChat error:", err);
 			setIsThinking(false);
 		},
-		onFinish: (message: any) => {
+		onFinish: (response: any) => {
 			setIsThinking(false);
-			if (message?.content) {
-				speak(message.content);
+			// The content might be in response.message.content or just response.content
+			// depending on the version of AI SDK. 
+			const content = response?.message?.content || response?.content;
+			if (content) {
+				speak(content);
 			}
 		},
-	} as any);
-
-	const { messages, setMessages, isLoading, append } = chat as any;
+	} as any) as any;
 
 	// [DEBUG] Log hook status
 	useEffect(() => {
-		console.log("[GameChat] useChat keys:", Object.keys(chat));
-		console.log("[GameChat] append type:", typeof append);
-	}, [chat, append]);
+		console.log("[GameChat] Hook state:", {
+			hasMessages: !!messages,
+			hasAppend: typeof append === "function",
+			isLoading,
+		});
+	}, [messages, append, isLoading]);
 
 	useEffect(() => {
 		if (messages.length > 0) {
@@ -170,52 +175,35 @@ export function GameChat({
 			setIsThinking(true);
 
 			try {
-				// [FIX] Safety check for useChat append function
-				if (!append || typeof append !== "function") {
-					console.error(
-						"[GameChat] AI SDK error: append is not a function/available",
-						{
-							chatKeys: Object.keys(chat || {}),
+				if (append && typeof append === "function") {
+					await append({
+						role: "user",
+						content: text,
+						data: {
+							gameState: {
+								health: gameState.health,
+								hunger: gameState.hunger,
+								hygiene: gameState.hygiene,
+								money: gameState.money,
+								time: gameState.time,
+								location: userLocation,
+							},
 						},
-					);
-
-					// Graceful fallback: Simulate a local response to keep immersion
+					});
+				} else {
+					// Manually update messages if append is missing
 					const userMsg = {
 						id: Date.now().toString(),
 						role: "user",
 						content: text,
 					};
-					const fallbackSysMsg = {
-						id: (Date.now() + 1).toString(),
-						role: "assistant", // "system" role isn't displayed by useChat default usually
-						content: "*Sinal fraco... tente novamente.*",
-					};
+					setMessages((prev: any[]) => [...prev, userMsg]);
+					console.warn("[GameChat] append missing, using manual message update");
 
-					// Manually update messages if possible, or just stop thinking
-					// NOTE: setMessages from useChat might not work if the hook is broken,
-					// but it's worth trying if available
-					if (typeof setMessages === "function") {
-						setMessages((prev: any[]) => [...prev, userMsg, fallbackSysMsg]);
-					}
-
+					// If we can't use append, the user is stuck. 
+					// Try to call the API directly or just show an error.
 					setIsThinking(false);
-					return;
 				}
-
-				await append({
-					role: "user",
-					content: text,
-					data: {
-						gameState: {
-							health: gameState.health,
-							hunger: gameState.hunger,
-							hygiene: gameState.hygiene,
-							money: gameState.money,
-							time: gameState.time,
-							location: userLocation,
-						},
-					},
-				});
 			} catch (err) {
 				console.error("Error appending message:", err);
 				setIsThinking(false);
@@ -228,7 +216,8 @@ export function GameChat({
 			gameState,
 			setMessages,
 			speak,
-			chat,
+			append,
+			reload,
 		],
 	);
 
@@ -333,11 +322,10 @@ export function GameChat({
 						onMouseUp={() => stopListening()}
 						onTouchStart={() => startListening()}
 						onTouchEnd={() => stopListening()}
-						className={`flex-1 h-28 rounded-3xl flex flex-col items-center justify-center gap-1 transition-all active:scale-95 shadow-xl border-4 ${
-							isListening
-								? "bg-red-600 border-red-400 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
-								: "bg-zinc-800 border-zinc-700"
-						}`}
+						className={`flex-1 h-28 rounded-3xl flex flex-col items-center justify-center gap-1 transition-all active:scale-95 shadow-xl border-4 ${isListening
+							? "bg-red-600 border-red-400 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
+							: "bg-zinc-800 border-zinc-700"
+							}`}
 					>
 						{isListening ? (
 							<>

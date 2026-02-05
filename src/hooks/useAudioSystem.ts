@@ -122,7 +122,7 @@ export function useAudioSystem(): AudioSystemCallbacks {
 
 				if (options?.fade) {
 					audio.volume = 0;
-					audio.play().catch(() => { });
+					audio.play().catch(() => {});
 
 					const steps = DEFAULT_FADE_DURATION / FADE_STEP_MS;
 					const stepVol = globalVolume / steps;

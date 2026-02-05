@@ -9,8 +9,8 @@ import {
 	Send,
 	User,
 } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -166,30 +166,33 @@ export default function CoursePage() {
 										<button
 											type="button"
 											onClick={() => setContactMethod("whatsapp")}
-											className={`p-2 rounded-lg text-xs font-bold border transition-all ${contactMethod === "whatsapp"
-												? "bg-green-600 border-green-500 text-white"
-												: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
-												}`}
+											className={`p-2 rounded-lg text-xs font-bold border transition-all ${
+												contactMethod === "whatsapp"
+													? "bg-green-600 border-green-500 text-white"
+													: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
+											}`}
 										>
 											Whatsapp
 										</button>
 										<button
 											type="button"
 											onClick={() => setContactMethod("email")}
-											className={`p-2 rounded-lg text-xs font-bold border transition-all ${contactMethod === "email"
-												? "bg-blue-600 border-blue-500 text-white"
-												: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
-												}`}
+											className={`p-2 rounded-lg text-xs font-bold border transition-all ${
+												contactMethod === "email"
+													? "bg-blue-600 border-blue-500 text-white"
+													: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
+											}`}
 										>
 											E-mail
 										</button>
 										<button
 											type="button"
 											onClick={() => setContactMethod("proxy")}
-											className={`p-2 rounded-lg text-xs font-bold border transition-all ${contactMethod === "proxy"
-												? "bg-purple-600 border-purple-500 text-white"
-												: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
-												}`}
+											className={`p-2 rounded-lg text-xs font-bold border transition-all ${
+												contactMethod === "proxy"
+													? "bg-purple-600 border-purple-500 text-white"
+													: "bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700"
+											}`}
 										>
 											Recado
 										</button>
