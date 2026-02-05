@@ -18,6 +18,7 @@ export const hubService = {
 		const url = status ? `/api/partners?status=${status}` : "/api/partners";
 		const response = await fetch(url);
 		if (!response.ok) throw new Error("Falha ao buscar parceiros");
-		return response.json();
+		const data = await response.json();
+		return data.partners || [];
 	},
 };

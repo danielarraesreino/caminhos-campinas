@@ -16,22 +16,19 @@ export default function SugerirPage() {
 		setMounted(true);
 	}, []);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!text.trim()) return;
 
+		setSaveStatus("idle");
 		try {
-			const existing = localStorage.getItem("user_suggestions");
-			const suggestions = existing ? JSON.parse(existing) : [];
+			const response = await fetch("/api/stories", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ content: text }),
+			});
 
-			const newSuggestion = {
-				id: crypto.randomUUID(),
-				text: text,
-				timestamp: new Date().toISOString(),
-			};
-
-			suggestions.push(newSuggestion);
-			localStorage.setItem("user_suggestions", JSON.stringify(suggestions));
+			if (!response.ok) throw new Error("Falha ao salvar história");
 
 			setSaveStatus("success");
 			setText("");

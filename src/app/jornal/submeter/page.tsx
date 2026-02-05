@@ -7,15 +7,33 @@ import { useState } from "react";
 export default function SubmeterJornalPage() {
 	const [loading, setLoading] = useState(false);
 	const [success, setSuccess] = useState(false);
+	const [formData, setFormData] = useState({
+		title: "",
+		category: "RELATO" as "DENUNCIA" | "RELATO" | "POESIA",
+		content: "",
+	});
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (!formData.content.trim()) return;
 		setLoading(true);
-		// Simulating API call for now (or connect to our new API if ready)
-		setTimeout(() => {
-			setLoading(false);
+
+		try {
+			const response = await fetch("/api/posts", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(formData),
+			});
+
+			if (!response.ok) throw new Error("Erro ao submeter relato");
+
 			setSuccess(true);
-		}, 1500);
+		} catch (err) {
+			console.error(err);
+			alert("Erro ao enviar. Tente novamente.");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	if (success) {
@@ -71,6 +89,10 @@ export default function SubmeterJornalPage() {
 						<input
 							id="post-title"
 							type="text"
+							value={formData.title}
+							onChange={(e) =>
+								setFormData({ ...formData, title: e.target.value })
+							}
 							className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
 							placeholder="Ex: O frio da Aquidaban..."
 						/>
@@ -85,6 +107,13 @@ export default function SubmeterJornalPage() {
 						</label>
 						<select
 							id="post-category"
+							value={formData.category}
+							onChange={(e) =>
+								setFormData({
+									...formData,
+									category: e.target.value as any,
+								})
+							}
 							className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
 						>
 							<option value="DENUNCIA">Denúncia</option>
@@ -103,6 +132,10 @@ export default function SubmeterJornalPage() {
 						<textarea
 							id="post-content"
 							required
+							value={formData.content}
+							onChange={(e) =>
+								setFormData({ ...formData, content: e.target.value })
+							}
 							rows={8}
 							className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
 							placeholder="Escreva aqui..."
