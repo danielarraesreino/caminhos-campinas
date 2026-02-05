@@ -429,7 +429,7 @@ export default function ResourcesPage() {
 	}, [activeCategory, displayedServices, searchQuery, categories]);
 
 	return (
-		<div className="min-h-screen bg-black font-sans text-white pb-24 pt-4 px-4">
+		<div className="min-h-screen bg-black font-sans text-white pb-24 pt-24 px-4">
 			{/* High Contrast Header */}
 			<header className="mb-6 flex items-center justify-between border-b border-zinc-800 pb-4">
 				<div>
@@ -462,7 +462,7 @@ export default function ResourcesPage() {
 					/>
 				</button>
 			</header>
-			<div className="sticky top-0 z-30 -mx-4 px-4 py-4 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800 mb-6 shadow-xl">
+			<div className="sticky top-20 z-30 -mx-4 px-4 py-4 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800 mb-6 shadow-xl">
 				{/* [NEW] Search Bar with Voice Input */}
 				<div className="flex gap-2 mb-4">
 					<div className="flex-1 relative">

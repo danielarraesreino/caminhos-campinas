@@ -17,7 +17,7 @@ export default function HubPage() {
 	}, []);
 
 	return (
-		<div className="min-h-screen bg-slate-950 text-white p-8">
+		<div className="min-h-screen bg-slate-950 text-white p-8 pt-24">
 			<h1 className="text-4xl font-black uppercase tracking-tighter mb-4 text-white">
 				Censo da Solidariedade{" "}
 				<span className="text-slate-500 text-sm">| Hub</span>
