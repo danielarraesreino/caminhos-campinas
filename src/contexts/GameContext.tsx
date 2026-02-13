@@ -91,8 +91,8 @@ const INITIAL_STATE: GameState = {
 	score: 0,
 	security: 0,
 	history: [],
+	activeArcId: null,
 	hasHydrated: true,
-	tutorialActive: false, // Start with tutorial inactive for tests
 };
 
 // --- Reducer ---
@@ -266,6 +266,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case "SET_EMPLOYED_FORMAL":
 			return { ...state, employed_formal: action.payload };
 
+		case "SET_ACTIVE_ARC":
+			return { ...state, activeArcId: action.payload };
+
 		case "LOG_EVENT":
 			return { ...state, history: [...state.history, action.payload] };
 
@@ -288,15 +291,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			if (/(doen|saude|dor|medic|hospital|upa)/.test(text))
 				newThermometer.saude++;
 
-			return {
-				...state,
-				socialThermometer: newThermometer,
-			};
+			return { ...state, socialThermometer: newThermometer };
 		}
-
-		case "SET_TUTORIAL_ACTIVE":
-			if (state.tutorialActive === action.payload) return state;
-			return { ...state, tutorialActive: action.payload };
 
 		default:
 			return state;
@@ -332,9 +328,9 @@ export interface GameContextType extends GameState {
 	updateDocuments: (updates: Partial<GameState["documents"]>) => void;
 	setEmployedFormal: (isEmployed: boolean) => void;
 	logEvent: (event: GameEvent) => void;
+	setActiveArc: (arcId: string | null) => void;
 	setFlag: (key: string, value: boolean) => void;
 	registerOccurrence: (text: string) => void;
-	setTutorialActive: (isActive: boolean) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -641,6 +637,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		dispatch({ type: "COMPLETE_PDU_STAGE", payload: { stageId } });
 	}, []);
 
+	const setActiveArc = useCallback((arcId: string | null) => {
+		dispatch({ type: "SET_ACTIVE_ARC", payload: arcId });
+	}, []);
+
 	const value = useMemo(
 		() => ({
 			...state,
@@ -677,9 +677,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				dispatch({ type: "SET_FLAG", payload: { key, value } }),
 			registerOccurrence: (text: string) =>
 				dispatch({ type: "REGISTER_OCCURRENCE", payload: text }),
-			tutorialActive: state.tutorialActive, // [NEW] Expose tutorial state
-			setTutorialActive: (isActive: boolean) =>
-				dispatch({ type: "SET_TUTORIAL_ACTIVE", payload: isActive }),
+			setActiveArc,
 			hasHydrated, // [CRITICAL] Export hydration status
 		}),
 		[
@@ -705,6 +703,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			initPDU,
 			updatePduStage,
 			completePduStage,
+			setActiveArc,
 			hasHydrated,
 		],
 	);

@@ -56,7 +56,7 @@ const DEMO_MODE = false;
  */
 const getConfiscationChance = () => {
 	// [DEMO_MODE] Disable 'O Rapa' (confiscation) to avoid frustration
-	return DEMO_MODE ? 0 : 0.02;
+	return DEMO_MODE ? 0 : 0.01;
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: legacy workTool type
@@ -193,9 +193,16 @@ export function useGameLoop() {
 		const interval = setInterval(
 			() => {
 				let hngDecay = 2;
-				const hygDecay = 1;
+				let hygDecay = 1;
 				let enrDecay = 1;
 				let snyDecay = 0.5 * getSanityDecayMultiplier(socialStigma);
+
+				// [PDU MODE] Reduce decay when in PDU program (mode acolhido)
+				if (pdu.isActive) {
+					hngDecay *= 0.5;
+					hygDecay *= 0.5;
+					console.log("[GameLoop] PDU ativo - decaimento reduzido em 50%");
+				}
 
 				if (avatar) {
 					if (avatar.ageRange === "jovem") hngDecay += 0.1;
@@ -270,6 +277,7 @@ export function useGameLoop() {
 		hasHydrated,
 		triggerImpact,
 		triggerWarning,
+		pdu,
 	]);
 
 	useEffect(() => {
@@ -280,16 +288,18 @@ export function useGameLoop() {
 			hasHydrated &&
 			(lastHourRef.current === null || time !== lastHourRef.current)
 		) {
-			// [CRITICAL] Use real local time for dilemas condizentes com a interação
-			const currentRealHour = new Date().getHours();
 			console.log(
-				`[GameLoop] Triggering systemic event check for real hour ${currentRealHour}. (State hour: ${time})`,
+				`[GameLoop] 🕒 Hour changed to ${time}. Triggering systemic event check.`,
 			);
-			checkSystemicEvents(currentRealHour);
+			checkSystemicEvents(time);
 			lastHourRef.current = time;
 
-			if (Math.random() < 0.2) setIsRaining(true);
-			else setIsRaining(false);
+			if (Math.random() < 0.2) {
+				console.log("[GameLoop] 🌧️ Rain started");
+				setIsRaining(true);
+			} else {
+				setIsRaining(false);
+			}
 		}
 
 		function checkSystemicEvents(currentHour: number) {
@@ -331,7 +341,6 @@ export function useGameLoop() {
 					activeBuffs,
 					documents,
 					flags,
-					tutorialActive: false, // [FIX] Explicitly pass false to unblock dilemmas
 				});
 
 				if (triggered) {

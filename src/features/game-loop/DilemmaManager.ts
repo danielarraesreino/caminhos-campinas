@@ -79,26 +79,12 @@ export class DilemmaManager {
 		state: Partial<GameState> & {
 			userPosition: [number, number] | null;
 			timeInLocation: number;
-			tutorialActive?: boolean; // [NEW] Optional for backward compat, but key for fix
 		},
 	): Dilemma | null {
-		const {
-			day = 1,
-			time = 8,
-			avatar,
-			userPosition,
-			activeDilemmaId,
-			tutorialActive,
-		} = state;
-
-		// [CRITICAL] Block all dilemmas if tutorial is active
-		if (tutorialActive) {
-			console.log("[DilemmaManager] Dilemmas blocked: Tutorial is active.");
-			return null;
-		}
+		const { day = 1, time = 8, avatar, userPosition, activeDilemmaId } = state;
 
 		console.log(
-			`[DilemmaManager] Checking for triggered dilemmas. Day: ${day}, Time: ${time}, Active: ${activeDilemmaId}, Total dilemmas: ${this.dilemmas.length}`,
+			`[DilemmaManager] Checking for triggered dilemmas. Day: ${day}, Time: ${time}, Active: ${activeDilemmaId}, Total dilemmas: ${this.dilemmas.length} `,
 		);
 
 		if (activeDilemmaId) return null;
@@ -106,7 +92,7 @@ export class DilemmaManager {
 		// 0. Priority: Hardcoded Systemic Triggers (RealityAtlas Based)
 		if (day === 1 && !this.resolvedIds.has("intro_acordar_praca")) {
 			console.log(
-				`[DilemmaManager] Triggering intro_acordar_praca (Day 1, Time: ${time})`,
+				`[DilemmaManager] Triggering intro_acordar_praca(Day 1, Time: ${time})`,
 			);
 			const introDilemma = this.getDilemmaById("intro_acordar_praca");
 			if (introDilemma) {
@@ -186,11 +172,17 @@ export class DilemmaManager {
 			if (this.resolvedIds.has(dilemma.id) && !dilemma.repeatable) continue;
 
 			if (dilemma.prerequisite && !this.resolvedIds.has(dilemma.prerequisite)) {
+				console.log(
+					`[DilemmaManager] Dilemma '${dilemma.id}' skipped: missing prerequisite '${dilemma.prerequisite}'`,
+				);
 				continue;
 			}
 
 			// 2.1 New Deterministic Condition System
 			if (!this.checkConditions(dilemma, state)) {
+				console.log(
+					`[DilemmaManager] Dilemma '${dilemma.id}' skipped due to conditions.`,
+				);
 				continue;
 			}
 
@@ -214,7 +206,7 @@ export class DilemmaManager {
 		);
 		if (candidates.length > 0) {
 			console.log(
-				`[DilemmaManager] Candidate IDs:`,
+				`[DilemmaManager] Candidate IDs: `,
 				candidates.map((d) => d.id),
 			);
 		}
@@ -229,7 +221,7 @@ export class DilemmaManager {
 			(d) => d.trigger.type === "CHAIN_STEP",
 		);
 		if (chainCandidate) {
-			console.log(`[Director] Prioritizing Chain: ${chainCandidate.id}`);
+			console.log(`[Director] Prioritizing Chain: ${chainCandidate.id} `);
 			return chainCandidate;
 		}
 
@@ -276,7 +268,7 @@ export class DilemmaManager {
 			);
 			if (sameArcCandidate) {
 				console.log(
-					`[Director] Prioritizing same-arc dilemma: ${sameArcCandidate.id} (Arc: ${activeArc.id})`,
+					`[Director] Prioritizing same - arc dilemma: ${sameArcCandidate.id} (Arc: ${activeArc.id})`,
 				);
 				return sameArcCandidate;
 			}
@@ -305,7 +297,7 @@ export class DilemmaManager {
 		// Let's pick a random candidate from what's left to ensure variety.
 		const randomIndex = Math.floor(Math.random() * candidates.length);
 		const selected = candidates[randomIndex];
-		console.log(`[DilemmaManager] Selected dilemma: ${selected?.id}`);
+		console.log(`[DilemmaManager] Selected dilemma: ${selected?.id} `);
 		return selected;
 	}
 
@@ -345,244 +337,6 @@ export class DilemmaManager {
 		}
 
 		return modified;
-	}
-
-	private isTriggered(dilemma: Dilemma, state: Partial<GameState>): boolean {
-		if (!dilemma.trigger) return false;
-		const { type, value, statusCondition } = dilemma.trigger;
-		const { hunger, hygiene, socialStigma, userPosition, phoneBattery } = state;
-
-		// Note: timeInLocation is handled by the caller or added to state if needed
-
-		switch (type) {
-			case "RANDOM":
-				if (
-					dilemma.trigger.condition &&
-					typeof dilemma.trigger.condition === "string"
-				) {
-					if (
-						!this.checkConditionExpression(dilemma.trigger.condition, state)
-					) {
-						return false;
-					}
-				}
-				return Math.random() < (value as number);
-			case "HUNGER_LOW":
-				return (hunger || 0) < (value as number);
-			case "HYGIENE_LOW":
-				return (hygiene || 0) < (value as number);
-			case "SOCIAL_STIGMA_HIGH":
-				return (socialStigma || 0) > (value as number);
-			case "STORYLINE_START":
-				// Checks if avatar ethnicity matches target value (e.g., "PERFIL_NEGRO")
-				if (value === "PERFIL_NEGRO" && state.avatar) {
-					return (
-						state.avatar.ethnicity === "preto" ||
-						state.avatar.ethnicity === "pardo"
-					);
-				}
-				return false;
-			case "CHAIN_STEP":
-				if (dilemma.trigger?.prev_id) {
-					// Check if previous dilemma was resolved
-					const prevResolved = this.resolvedIds.has(dilemma.trigger.prev_id);
-					if (!prevResolved) return false;
-
-					// Check specific conditions
-					if (dilemma.trigger.condition === "slept_outside") {
-						return !state.isAtShelter;
-					}
-					if (dilemma.trigger.condition === "no_docs") {
-						return (
-							!state.documents?.hasRG &&
-							(state.resolvedDilemmas?.includes(dilemma.trigger.prev_id) ||
-								false)
-						);
-					}
-					if (dilemma.trigger.condition === "accepted_help") {
-						// Check if "ACCEPTED_HELP" buff is active (added in previous step)
-						return state.activeBuffs?.includes("ACCEPTED_HELP") || false;
-					}
-					return true;
-				}
-				return false;
-			case "LOCATION_IDLE": {
-				// biome-ignore lint/suspicious/noExplicitAny: dynamic state access
-				const timeInLoc = (state as any).timeInLocation || 0;
-				// NEW: Check dynamic conditions
-				if (
-					dilemma.trigger.condition &&
-					typeof dilemma.trigger.condition === "string"
-				) {
-					if (
-						!this.checkConditionExpression(dilemma.trigger.condition, state)
-					) {
-						return false;
-					}
-				}
-
-				if (timeInLoc >= (value as number)) {
-					// Logic copied from view...
-					if (dilemma.location_trigger && userPosition) {
-						// re-using calc
-						const dist = this.calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							dilemma.location_trigger.lat,
-							dilemma.location_trigger.lng,
-						);
-						return dist * 1000 <= (dilemma.location_trigger.radius || 50);
-					}
-					if (dilemma.id === "enquadro_13_maio" && userPosition) {
-						const dist = this.calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							REALITY_ATLAS.LOCATIONS.CENTRO.coords.lat,
-							REALITY_ATLAS.LOCATIONS.CENTRO.coords.lng,
-						);
-						return dist < 0.005;
-					}
-					return true;
-				}
-				break;
-			}
-			case "CHAIN":
-				return false; // Chains are triggered manually via nextDilemmaId or events
-			case "STATUS":
-				if (statusCondition?.battery !== undefined) {
-					return (phoneBattery || 0) <= statusCondition.battery;
-				}
-				if (statusCondition?.health !== undefined) {
-					return (state.health || 0) <= statusCondition.health;
-				}
-				// [NEW] Support for generic attribute checking (e.g. citizenship)
-				if (dilemma.trigger.attribute) {
-					const attr = dilemma.trigger.attribute;
-					// biome-ignore lint/suspicious/noExplicitAny: dynamic access
-					const currentVal = (state as any)[attr];
-					if (currentVal !== undefined) {
-						// Default to >= for positive stats like citizenship, unless specified otherwise
-						// The JSON uses value: 40 for citizenship. Assuming >= check for "Unlock".
-						return currentVal >= (value as number);
-					}
-				}
-				break;
-			case "LOCATION":
-				// [NEW] Evaluate string conditions for LOCATION type triggers (e.g. Arc 2)
-				if (
-					dilemma.trigger.condition &&
-					typeof dilemma.trigger.condition === "string"
-				) {
-					if (
-						!this.checkConditionExpression(dilemma.trigger.condition, state)
-					) {
-						return false;
-					}
-				}
-
-				// Check if location matches (value = LOCATION_ID)
-				if (typeof value === "string" && value === "BOM_PRATO") {
-					// Hardcoded location check for Arc 2 MVP
-					// Bom Prato Centro aprox coords
-					const bpLat = -22.9099; // Example
-					const bpLng = -47.0626;
-					if (userPosition) {
-						const dist = this.calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							bpLat,
-							bpLng,
-						);
-						return dist < 0.05; // 50m
-					}
-				}
-				// For SAMIM_BONFIM (Arc 2 - Refined)
-				if (typeof value === "string" && value === "SAMIM_BONFIM") {
-					const samimLat = -22.9035;
-					const samimLng = -47.0689;
-					if (userPosition) {
-						const dist = this.calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							samimLat,
-							samimLng,
-						);
-						return dist < 0.05;
-					}
-				}
-				// For POUPATEMPO
-				if (typeof value === "string" && value === "POUPATEMPO_CENTRO") {
-					const poupaLat = -22.9055;
-					const poupaLng = -47.0608;
-					if (userPosition) {
-						const dist = this.calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							poupaLat,
-							poupaLng,
-						);
-						return dist < 0.05;
-					}
-				}
-
-				// For Centro Pop (Rua José Paulino aprox)
-				if (typeof value === "string" && value === "Centro Pop") {
-					const cpLat = -22.9; // Generic placeholder logic
-					const cpLng = -47.06;
-					if (userPosition) {
-						const dist = this.calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							cpLat,
-							cpLng,
-						);
-						return dist < 0.1; // 100m
-					}
-				}
-
-				// For CRAS (Generic - use Center as proxy or specific address if known)
-				if (typeof value === "string" && value === "CRAS") {
-					// Using a central logic for MVP
-					if (userPosition) {
-						// Trigger if near Center for now
-						const dist = this.calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							REALITY_ATLAS.LOCATIONS.CENTRO.coords.lat,
-							REALITY_ATLAS.LOCATIONS.CENTRO.coords.lng,
-						);
-						return dist < 0.5; // 500m logic
-					}
-				}
-
-				// For CONSULTORIO_RUA (Arc 3)
-				if (typeof value === "string" && value === "CONSULTORIO_RUA") {
-					const consLat = -22.8765;
-					const consLng = -47.052;
-					if (userPosition) {
-						// Larger radius for "Van" logic (simulating widespread presence or just loose check)
-						const dist = this.calculateDistance(
-							userPosition[0],
-							userPosition[1],
-							consLat,
-							consLng,
-						);
-						return dist < 0.1; // 100m radius
-					}
-				}
-
-				if (dilemma.location_trigger && userPosition) {
-					const dist = this.calculateDistance(
-						userPosition[0],
-						userPosition[1],
-						dilemma.location_trigger.lat,
-						dilemma.location_trigger.lng,
-					);
-					return dist * 1000 <= (dilemma.location_trigger.radius || 50);
-				}
-				break;
-		}
-		return false;
 	}
 
 	// Safe evaluator for condition strings
@@ -796,7 +550,7 @@ export class DilemmaManager {
 				if (time >= 9 && time < 10.5) {
 					// Between breakfast and lunch
 					bomPratoOption.label = "Esperar o almoço no Bom Prato";
-					bomPratoOption.consequence = `O Bom Prato está fechado agora. O café acabou às 9h e o almoço só abre às 10h30. Você espera na praça, sentindo a fome apertar.`;
+					bomPratoOption.consequence = `O Bom Prato está fechado agora.O café acabou às 9h e o almoço só abre às 10h30.Você espera na praça, sentindo a fome apertar.`;
 					bomPratoOption.effect = {
 						hunger: -5,
 						energy: -10,
@@ -807,7 +561,7 @@ export class DilemmaManager {
 				} else if (time >= 14 && time < 17) {
 					// Between lunch and dinner
 					bomPratoOption.label = "Caminhar até o Bom Prato (fechado)";
-					bomPratoOption.consequence = `O Bom Prato está fechado. O almoço terminou às 14h e o jantar só abre às 17h. ${hoursUntil}h de espera pela frente.`;
+					bomPratoOption.consequence = `O Bom Prato está fechado.O almoço terminou às 14h e o jantar só abre às 17h.${hoursUntil}h de espera pela frente.`;
 					bomPratoOption.effect = { energy: -5, sanity: -5 };
 				} else if (time >= 18 && time < 24) {
 					// After dinner closes
@@ -818,7 +572,7 @@ export class DilemmaManager {
 				} else {
 					// Very early morning (before 7h)
 					bomPratoOption.label = `Esperar o ${mealName} (abre em ${hoursUntil}h)`;
-					bomPratoOption.consequence = `Ainda é cedo. O Bom Prato só abre às 7h. Você aguarda o dia clarear.`;
+					bomPratoOption.consequence = `Ainda é cedo.O Bom Prato só abre às 7h.Você aguarda o dia clarear.`;
 					bomPratoOption.effect = { energy: -5 };
 				}
 			}
@@ -826,7 +580,7 @@ export class DilemmaManager {
 
 		// Log the adaptation for debugging
 		console.log(
-			`[DilemmaManager] Adapted intro dilemma for time ${time}. Current meal: ${currentMeal}, Next meal: ${nextMeal.meal} in ${nextMeal.hoursUntil.toFixed(1)}h`,
+			`[DilemmaManager] Adapted intro dilemma for time ${time}.Current meal: ${currentMeal}, Next meal: ${nextMeal.meal} in ${nextMeal.hoursUntil.toFixed(1)} h`,
 		);
 
 		return modified;

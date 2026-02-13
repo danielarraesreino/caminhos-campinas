@@ -59,12 +59,14 @@ export default function SugerirPage() {
 
 				<form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-6">
 					<div className="space-y-2 flex-1 flex flex-col">
-						<h2 className="text-slate-300 font-bold text-lg" id="story-label">
+						<label
+							htmlFor="story"
+							className="text-slate-300 font-bold text-lg block"
+						>
 							O que aconteceu com você hoje?
-						</h2>
+						</label>
 						<textarea
 							id="story"
-							aria-labelledby="story-label"
 							value={text}
 							onChange={(e) => setText(e.target.value)}
 							placeholder="Conte sua história, um dilema que viveu ou uma observação da rua..."
@@ -75,11 +77,16 @@ export default function SugerirPage() {
 					<Button
 						type="submit"
 						disabled={!text.trim() || saveStatus === "success"}
-						aria-label={saveStatus === "success" ? "História enviada com sucesso" : "Salvar história permanentemente"}
-						className={`w-full py-10 text-xl font-bold transition-all ${saveStatus === "success"
+						aria-label={
+							saveStatus === "success"
+								? "História enviada com sucesso"
+								: "Salvar história permanentemente"
+						}
+						className={`w-full py-10 text-xl font-bold transition-all text-white ${
+							saveStatus === "success"
 								? "bg-green-600 hover:bg-green-700 ring-2 ring-green-500 ring-offset-2 ring-offset-slate-950"
 								: "bg-blue-600 hover:bg-blue-700 active:scale-95"
-							}`}
+						}`}
 					>
 						{saveStatus === "success" ? (
 							<span className="flex items-center gap-2 animate-in zoom-in spin-in-12">
@@ -87,7 +94,8 @@ export default function SugerirPage() {
 							</span>
 						) : (
 							<span className="flex items-center gap-2">
-								<Save className="mr-2 w-7 h-7" aria-hidden="true" /> Salvar História
+								<Save className="mr-2 w-7 h-7" aria-hidden="true" /> Salvar
+								História
 							</span>
 						)}
 					</Button>

@@ -82,6 +82,7 @@ export default function ApoiePage() {
 								value={0}
 								className="h-3 bg-slate-800"
 								indicatorClassName="bg-green-500"
+								aria-label="Progresso da meta de arrecadação"
 							/>
 						</div>
 

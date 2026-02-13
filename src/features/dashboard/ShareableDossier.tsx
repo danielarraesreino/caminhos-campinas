@@ -117,7 +117,7 @@ export function ShareableDossier({
 							Sobrevivência:
 						</span>
 						<span className="text-white font-bold">
-							{stats.daysSurvived} DIAS
+							{stats.daysSurvived} {stats.daysSurvived === 1 ? "DIA" : "DIAS"}
 						</span>
 					</div>
 					<div className="flex justify-between">

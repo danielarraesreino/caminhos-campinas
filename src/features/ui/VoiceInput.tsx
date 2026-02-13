@@ -69,6 +69,9 @@ export function VoiceInput({ onTranscription, disabled }: VoiceInputProps) {
 			disabled={disabled}
 			className={`transition-all ${isListening ? "animate-pulse ring-2 ring-red-500" : ""}`}
 			title={isListening ? "Parar gravação" : "Falar (Voz)"}
+			aria-label={
+				isListening ? "Parar reconhecimento de voz" : "Iniciar busca por voz"
+			}
 		>
 			{isListening ? (
 				<Square className="h-4 w-4" />

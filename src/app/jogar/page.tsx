@@ -1,7 +1,9 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { useModalQueue } from "@/contexts/ModalQueueContext";
 import { AudioDirector } from "@/features/audio/AudioDirector";
 import { ImpactReport } from "@/features/dashboard/ImpactReport";
 import {
@@ -18,47 +20,57 @@ import { EffectsOverlay } from "@/features/ui/EffectsOverlay";
 import { GameChat } from "@/features/ui/GameChat";
 import { GameHUD } from "@/features/ui/GameHUD";
 
-import { OnboardingTutorial } from "@/features/ui/OnboardingTutorial";
 import { VoiceReporter } from "@/features/ui/VoiceReporter";
 import { useAudioDirector } from "@/hooks/useAudioDirector";
 import { useEventEngine } from "@/hooks/useEventEngine";
 
 export default function GamePage() {
+	// [NEW] Capture arc parameter from URL
+	const searchParams = useSearchParams();
+	const arcParam = searchParams?.get("arc");
+
 	useGameLoop();
 	useAudioDirector(); // [NEW] Immersive Audio System
 	const { activeDilemma, resolveDilemma, clearActiveDilemma, triggerDilemma } =
 		useEventEngine();
 	const gameState = useGameContext();
-	const { criticalHealth, sanity, resetGame } = gameState;
+	const { criticalHealth, sanity, resetGame, setActiveArc } = gameState;
 	const [gameOverResult, setGameOverResult] = useState<GameOverResult | null>(
 		null,
 	);
 	const [isChatOpen, setIsChatOpen] = useState(false);
 	const [isVoiceOpen, setIsVoiceOpen] = useState(false);
 	const [isLocationsOpen, setIsLocationsOpen] = useState(false);
-	const [showTutorial, setShowTutorial] = useState(false);
 
 	// [FIX] Move hooks to the top level to avoid Rules of Hooks violations (Previous render vs Next render)
 
-	useEffect(() => {
-		// Check if tutorial was seen
-		const tutorialSeen = localStorage.getItem("pop_rua_tutorial_seen");
-		if (!tutorialSeen) {
-			setShowTutorial(true);
-			gameState.setPaused(true);
-		}
-	}, [gameState.setPaused]);
+	// [NEW] ModalQueue integration
+	const { processQueue, canShowModal } = useModalQueue();
 
-	// Unpause when tutorial closes (only if no dilemma is active)
+	// Unpause when dilemma closes
 	useEffect(() => {
-		// [FIX] Guard against redundant updates to prevent infinite loops
-
-		if (showTutorial && !gameState.isPaused) {
-			gameState.setPaused(true);
-		} else if (!showTutorial && !activeDilemma && gameState.isPaused) {
+		if (!activeDilemma && gameState.isPaused) {
 			gameState.setPaused(false);
 		}
-	}, [showTutorial, activeDilemma, gameState.isPaused, gameState.setPaused]);
+	}, [activeDilemma, gameState.isPaused, gameState.setPaused]);
+
+	// [NEW] Set active arc from URL parameter
+	useEffect(() => {
+		if (arcParam && !gameState.activeArcId) {
+			console.log(`[GamePage] Setting active arc from URL: ${arcParam}`);
+			setActiveArc(arcParam);
+		}
+	}, [arcParam, gameState.activeArcId, setActiveArc]);
+
+	// [NEW] Process Modal Queue
+	useEffect(() => {
+		if (!activeDilemma && canShowModal()) {
+			const nextDilemma = processQueue();
+			if (nextDilemma) {
+				triggerDilemma(nextDilemma.id);
+			}
+		}
+	}, [activeDilemma, canShowModal, processQueue, triggerDilemma]);
 
 	// [FIX] Ensure Chat closes when a Dilemma starts (so the Modal isn't hidden behind the Chat)
 	useEffect(() => {
@@ -162,10 +174,6 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 			aria-label="Ambiente de Jogo"
 		>
 			<h1 className="sr-only">Caminhos Campinas - Jornada de Sobrevivência</h1>
-			<OnboardingTutorial
-				isOpen={showTutorial}
-				onClose={() => setShowTutorial(false)}
-			/>
 
 			{/* World Container - applies degradation only to the game world, not UI overlays */}
 			<div className={`absolute inset-0 z-0 ${degradationClasses}`}>
@@ -204,10 +212,11 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 					<div className="w-full h-[60vh] md:w-[400px] md:h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 relative">
 						<button
 							type="button"
-							className="absolute top-2 right-2 p-2 z-10 text-slate-400 hover:text-white"
+							className="absolute top-2 right-2 p-3 min-w-[44px] min-h-[44px] z-10 text-slate-400 hover:text-white flex items-center justify-center font-bold"
 							onClick={() => setIsChatOpen(false)}
+							aria-label="Fechar chat de ação"
 						>
-							[X]
+							X
 						</button>
 						<GameChat onDilemmaTriggered={triggerDilemma} />
 					</div>
@@ -231,8 +240,9 @@ Você volta mais experiente. Dessa vez, será diferente?`,
 							</h2>
 							<button
 								type="button"
-								className="text-zinc-500 hover:text-white transition-colors"
+								className="text-zinc-500 hover:text-white transition-colors px-4 py-2 min-h-[40px] text-[10px] font-black uppercase tracking-widest"
 								onClick={() => setIsLocationsOpen(false)}
+								aria-label="Fechar Atlas de Realidade"
 							>
 								FECHAR
 							</button>

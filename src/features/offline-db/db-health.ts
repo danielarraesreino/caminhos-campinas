@@ -105,7 +105,7 @@ export async function initDBWithRetry(
 
 			// AbortError - retry with exponential backoff
 			if (err.name === "AbortError" && attempt < maxRetries) {
-				const backoffMs = 1000 * 2 ** (attempt - 1); // 1s, 2s, 4s
+				const backoffMs = 1000 * 2 ** (attempt - 1);
 				console.warn(
 					`[DB Health] ⚠️ AbortError detected. Retrying in ${backoffMs}ms... (${attempt}/${maxRetries})`,
 				);
@@ -114,34 +114,22 @@ export async function initDBWithRetry(
 				continue;
 			}
 
-			// QuotaExceededError - cannot retry
-			if (err.name === "QuotaExceededError") {
-				console.error("[DB Health] ❌ Quota exceeded. Cannot initialize.");
-				healthStatus.state = "error";
-				healthStatus.lastError = err;
-
-				// Suggest clearing old data
-				await checkQuota();
-				throw new Error(
-					`IndexedDB quota exceeded. Used: ${healthStatus.quotaUsed} bytes. Consider clearing old data.`,
+			// [NEW] If AbortError persists after max retries, try a repair if safe
+			if (err.name === "AbortError" && attempt === maxRetries) {
+				console.error(
+					"[DB Health] 🚨 AbortError persisted after max retries. Attempting FORCED REPAIR.",
 				);
+				try {
+					await repairDatabase("pop_rua_game_db");
+					console.log(
+						"[DB Health] ✅ Repair successful. Retrying one last time.",
+					);
+					return await initFunction();
+				} catch (repairErr) {
+					console.error("[DB Health] ❌ Forced repair failed:", repairErr);
+					throw err;
+				}
 			}
-
-			// Other errors - fail after max retries
-			console.error(
-				`[DB Health] ❌ Initialization failed (attempt ${attempt}/${maxRetries}):`,
-				err,
-			);
-			healthStatus.state = "error";
-			healthStatus.lastError = err;
-
-			if (attempt === maxRetries) {
-				throw err;
-			}
-
-			// Retry with backoff
-			const backoffMs = 1000 * 2 ** (attempt - 1);
-			await delay(backoffMs);
 		}
 	}
 

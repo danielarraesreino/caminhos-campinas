@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { type Avatar, useGameContext } from "@/contexts/GameContext";
 import { useToast } from "@/contexts/ToastContext";
+import { STORY_ARCS } from "@/data/story-arcs";
 
 interface AvatarCreationProps {
 	onComplete: () => void;
@@ -77,7 +78,7 @@ async function generateAIPortrait(prompt: string): Promise<string> {
 }
 
 export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
-	const { setAvatar, resetGame } = useGameContext();
+	const { setAvatar, resetGame, setActiveArc } = useGameContext();
 	const { showToast } = useToast();
 	const [step, setStep] = useState(1);
 	const [formData, setFormData] = useState<Avatar>({
@@ -89,6 +90,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 		startingSkill: "nenhuma",
 		avatarImage: AVATAR_OPTIONS[0].image,
 	});
+	const [activeArcId, setLocalActiveArcId] = useState<string | null>(null);
 
 	const [isSaving, setIsSaving] = useState(false);
 	const [isGeneratingAI, setIsGeneratingAI] = useState(false);
@@ -96,13 +98,16 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 
 	const handleNext = async () => {
 		console.log("[AvatarCreation] Moving from step", step);
-		if (step < 5) {
+		if (step < 6) {
 			setStep(step + 1);
 		} else {
 			setIsSaving(true);
 			try {
 				await resetGame(); // Ensure DB is cleared first
 				setAvatar(formData);
+				if (activeArcId) {
+					setActiveArc(activeArcId);
+				}
 				// Small delay to ensure state propagation/persistence start
 				await new Promise((resolve) => setTimeout(resolve, 500));
 				onComplete();
@@ -138,7 +143,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 		console.log("[AvatarCreation] Starting AI Generation...");
 		setIsGeneratingAI(true);
 		try {
-			const prompt = `A photo of a ${formData.ageRange} ${formData.gender} person, ${formData.ethnicity} ethnicity, living on the streets of Brazil, realistic, documentary style, natural light.`;
+			const prompt = `A highly realistic, documentary-style portrait of a ${formData.ageRange} person who identifies as ${formData.gender.replace("_", " ")}, ${formData.ethnicity} ethnicity, living on the streets of Campinas, Brazil. Natural lighting, solemn expression, premium photography, shallow depth of field.`;
 			const imageUrl = await generateAIPortrait(prompt);
 			console.log(
 				"[AvatarCreation] AI Generation success, image size:",
@@ -148,8 +153,11 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 			updateField("avatarImage", imageUrl);
 			showToast("Retrato gerado com sucesso!", "success");
 		} catch (error) {
-			console.error("[AvatarCreation] Failed to generate AI image:", error);
-			showToast("Erro ao gerar imagem. Tente novamente.", "error");
+			console.warn("[AvatarCreation] Failed to generate AI image:", error);
+			showToast(
+				"Erro ao gerar retrato IA. Escolha uma foto da galeria ou envie sua própria imagem.",
+				"error",
+			);
 		} finally {
 			console.log("[AvatarCreation] AI Generation finished");
 			setIsGeneratingAI(false);
@@ -176,7 +184,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 				</p>
 
 				<div className="flex justify-center gap-2 mt-8">
-					{[1, 2, 3, 4, 5].map((s) => (
+					{[1, 2, 3, 4, 5, 6].map((s) => (
 						<div
 							key={s}
 							className={`h-1.5 w-10 rounded-full transition-all duration-500 ${step >= s ? "bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]" : "bg-slate-800"}`}
@@ -227,7 +235,9 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 								>
 									<option value="masculino">Masculino</option>
 									<option value="feminino">Feminino</option>
-									<option value="trans">Trans / Travesti</option>
+									<option value="mulher_trans">Mulher Trans</option>
+									<option value="homem_trans">Homem Trans</option>
+									<option value="travesti">Travesti</option>
 									<option value="nao-binario">Não-binário</option>
 								</select>
 							</div>
@@ -447,6 +457,53 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 				)}
 
 				{step === 5 && (
+					<div className="space-y-6 animate-slide-up overflow-y-auto max-h-[400px] pr-2 scrollbar-thin scrollbar-thumb-slate-800">
+						<span className="block text-sm font-black text-slate-400 uppercase tracking-widest mb-4">
+							Escolha seu Caminho (Arco Narrativo)
+						</span>
+						<div className="grid grid-cols-1 gap-4">
+							{Object.values(STORY_ARCS).map((arc) => (
+								<button
+									type="button"
+									key={arc.id}
+									onClick={() => setLocalActiveArcId(arc.id)}
+									className={`p-5 rounded-2xl border-2 text-left transition-all relative group ${activeArcId === arc.id ? "bg-blue-600 border-blue-400 scale-[1.01] shadow-xl" : "bg-slate-800/40 border-slate-800 hover:border-slate-600"}`}
+								>
+									<div className="flex justify-between items-center mb-1">
+										<span
+											className={`font-black text-lg ${activeArcId === arc.id ? "text-white" : "text-slate-200"}`}
+										>
+											{arc.name}
+										</span>
+										<div className="flex gap-1">
+											{arc.ods.map((ods) => (
+												<span
+													key={ods}
+													className="text-[9px] bg-blue-900/50 px-2 py-0.5 rounded text-blue-200 border border-blue-500/30"
+												>
+													{ods}
+												</span>
+											))}
+										</div>
+									</div>
+									<p
+										className={`text-xs leading-relaxed ${activeArcId === arc.id ? "text-blue-100" : "text-slate-400"}`}
+									>
+										{arc.description}
+									</p>
+									{activeArcId === arc.id && (
+										<div className="mt-2 text-[10px] font-bold text-blue-200 uppercase tracking-widest flex items-center gap-2">
+											<div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+											Caminho Selecionado
+										</div>
+									)}
+								</button>
+							))}
+						</div>
+					</div>
+				)}
+
+				{step === 6 && (
 					<div className="space-y-10 animate-slide-up">
 						<div className="flex flex-col md:flex-row gap-10 items-center bg-blue-600/10 border border-blue-500/20 p-10 rounded-[40px]">
 							<div className="relative w-40 h-40 rounded-3xl overflow-hidden border-4 border-blue-500 shadow-2xl flex-none">
@@ -466,7 +523,16 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 									<InfoItem label="Gênero" value={formData.gender} />
 									<InfoItem label="Etnia" value={formData.ethnicity} />
 									<InfoItem label="Idade" value={formData.ageRange} />
-									<InfoItem label="Contexto" value={formData.timeOnStreet} />
+									<InfoItem
+										label="Arco"
+										value={
+											activeArcId
+												? STORY_ARCS[
+														activeArcId.toUpperCase().replace(/-/g, "_")
+													]?.name || activeArcId
+												: "Nenhum"
+										}
+									/>
 								</div>
 							</div>
 						</div>
@@ -502,7 +568,7 @@ export function AvatarCreation({ onComplete, onBack }: AvatarCreationProps) {
 				>
 					{isSaving
 						? "Salvando..."
-						: step === 5
+						: step === 6
 							? "Iniciar Jornada"
 							: "Próximo Passo"}{" "}
 					<ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />

@@ -50,16 +50,16 @@ export function InteractiveStatus({
 			<PopoverTrigger asChild>
 				<button
 					type="button"
-					className="flex flex-col items-center gap-1 group w-14 focus:outline-none"
+					className="flex flex-col items-center gap-1.5 group w-20 focus:outline-none"
 					aria-label={label}
 					data-testid={`stat-${label.toLowerCase()}`}
 				>
-					<div className="flex items-center gap-1">
+					<div className="flex items-center gap-1.5">
 						<Icon
-							className={`h-4 w-4 ${displayColor} transition-transform group-active:scale-95`}
+							className={`h-6 w-6 ${displayColor} transition-transform group-active:scale-95`}
 						/>
 						<span
-							className={`text-[10px] font-bold ${isCurrency ? "text-emerald-400" : "text-slate-200"}`}
+							className={`text-sm font-bold ${isCurrency ? "text-emerald-400" : "text-slate-200"}`}
 						>
 							{displayValue}
 						</span>
@@ -68,7 +68,7 @@ export function InteractiveStatus({
 					{!isCurrency && (
 						<Progress
 							value={progressValue}
-							className="h-1 w-full bg-slate-800"
+							className="h-1.5 w-full bg-slate-800"
 							indicatorClassName={progressColor}
 						/>
 					)}

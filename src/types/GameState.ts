@@ -43,7 +43,13 @@ export interface ODSMetadata {
 
 export interface Avatar {
 	name: string;
-	gender: "masculino" | "feminino" | "trans" | "nao-binario";
+	gender:
+		| "masculino"
+		| "feminino"
+		| "mulher_trans"
+		| "homem_trans"
+		| "travesti"
+		| "nao-binario";
 	ethnicity: "branco" | "preto" | "pardo" | "indigena";
 	ageRange: "jovem" | "adulto" | "idoso";
 	timeOnStreet: "recente" | "veterano";
@@ -131,8 +137,8 @@ export interface GameState {
 	score: number; // Legacy score
 	security: number; // 0-100 (Moradia/Segurança)
 	history: GameEvent[];
+	activeArcId: string | null;
 	hasHydrated: boolean;
-	tutorialActive?: boolean; // [NEW] Tutorial Block
 }
 
 export interface GameEvent {
@@ -168,8 +174,8 @@ export type GameAction =
 	| { type: "SET_EMPLOYED_FORMAL"; payload: boolean }
 	| { type: "LOG_EVENT"; payload: GameEvent }
 	| { type: "SET_FLAG"; payload: { key: string; value: boolean } }
-	| { type: "REGISTER_OCCURRENCE"; payload: string }
-	| { type: "SET_TUTORIAL_ACTIVE"; payload: boolean };
+	| { type: "SET_ACTIVE_ARC"; payload: string | null }
+	| { type: "REGISTER_OCCURRENCE"; payload: string };
 export interface RiskFactor {
 	id: string;
 	label: string;

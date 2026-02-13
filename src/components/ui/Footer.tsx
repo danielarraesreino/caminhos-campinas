@@ -7,10 +7,14 @@ export function Footer() {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex flex-col md:flex-row justify-between items-center gap-8">
 					<div className="text-center md:text-left">
-						<h2 className="text-white text-lg font-bold mb-2">
-							Caminhos Campinas
-						</h2>
-						<p className="text-sm max-w-xs">
+						<div className="flex justify-center md:justify-start mb-4">
+							<img
+								src="/logo-cropped.png"
+								alt="Logo Caminhos Campinas"
+								className="w-24 h-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
+							/>
+						</div>
+						<p className="text-sm max-w-xs mt-4">
 							Uma iniciativa para transformar a realidade das ruas através da
 							tecnologia social.
 						</p>
@@ -20,32 +24,32 @@ export function Footer() {
 						<span className="text-sm font-bold text-slate-200 mb-4 uppercase tracking-wider">
 							Institucional & Impacto
 						</span>
-						<nav className="flex flex-col gap-1 text-sm">
+						<nav className="flex flex-col gap-2 text-sm">
 							<a
 								href="/parceiros"
-								className="text-slate-300 hover:text-blue-400 transition-colors py-1.5"
-								aria-label="Para Empresas (ESG)"
+								className="text-slate-300 hover:text-blue-400 transition-colors py-2 min-h-[32px] flex items-center"
+								aria-label="Ir para Parceiros e ESG"
 							>
 								Para Empresas (ESG)
 							</a>
 							<a
 								href="/curso"
-								className="text-slate-300 hover:text-yellow-400 transition-colors py-1.5"
-								aria-label="Curso Agilizadores"
+								className="text-slate-300 hover:text-yellow-400 transition-colors py-2 min-h-[32px] flex items-center"
+								aria-label="Ir para Curso de Agilizadores"
 							>
 								Curso Agilizadores
 							</a>
 							<a
 								href="/transparencia"
-								className="text-slate-300 hover:text-emerald-400 transition-colors py-1.5"
-								aria-label="Portal da Transparência"
+								className="text-slate-300 hover:text-emerald-400 transition-colors py-2 min-h-[32px] flex items-center"
+								aria-label="Ir para Portal da Transparência"
 							>
 								Portal da Transparência
 							</a>
 							<a
 								href="/auditoria/validar"
-								className="text-slate-300 hover:text-red-400 transition-colors text-xs mt-2 py-2 block"
-								aria-label="Área Técnica (Acesso Restrito)"
+								className="text-slate-300 hover:text-red-400 transition-colors text-xs mt-2 py-3 min-h-[40px] flex items-center"
+								aria-label="Área Técnica e Acesso Restrito"
 							>
 								Área Técnica (Restrito)
 							</a>

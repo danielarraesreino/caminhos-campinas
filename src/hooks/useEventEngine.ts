@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useGameContext } from "@/contexts/GameContext";
+import { STORY_ARCS } from "@/data/story-arcs";
 import { GAME_DILEMMAS } from "@/features/game-loop/dilemmas";
 
 export function useEventEngine() {
@@ -23,9 +24,28 @@ export function useEventEngine() {
 		updateDocuments,
 		setEmployedFormal,
 		setFlag,
+		activeArcId,
+		history,
 	} = useGameContext();
 
 	const activeDilemma = GAME_DILEMMAS.find((d) => d.id === activeDilemmaId);
+
+	// [NEW] Force first dilemma of selected arc if new game
+	useEffect(() => {
+		if (activeArcId && history.length === 0 && !activeDilemmaId) {
+			// Convert arc ID to STORY_ARCS key format
+			const arcKey = activeArcId.toUpperCase().replace(/-/g, "_");
+			const arc = STORY_ARCS[arcKey];
+
+			if (arc?.dilemmaSequence && arc.dilemmaSequence.length > 0) {
+				const firstDilemma = arc.dilemmaSequence[0];
+				console.log(
+					`[EventEngine] Iniciando arco "${arc.name}" com primeiro dilema: ${firstDilemma}`,
+				);
+				setActiveDilemma(firstDilemma);
+			}
+		}
+	}, [activeArcId, history.length, activeDilemmaId, setActiveDilemma]);
 
 	// Limpeza de Dilemas obsoletos ou IDs que não existem na versão atual
 	useEffect(() => {

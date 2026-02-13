@@ -187,7 +187,7 @@ export function ImpactReport({ onRestart, gameOverResult }: ImpactReportProps) {
 						violations: violations.length,
 						barriers: barriers.length,
 						workStatus,
-						daysSurvived: Math.floor(state.time / 24),
+						daysSurvived: state.day,
 					}}
 					history={history}
 					avatarName={

@@ -25,7 +25,7 @@ export function SyncButton() {
 				try {
 					const parsed = JSON.parse(telemetryStored);
 					if (Array.isArray(parsed)) telemetryCount = parsed.length;
-				} catch (_e) { }
+				} catch (_e) {}
 			}
 
 			// Check suggestions
@@ -35,7 +35,7 @@ export function SyncButton() {
 				try {
 					const parsed = JSON.parse(suggestionsStored);
 					if (Array.isArray(parsed)) suggestionsCount = parsed.length;
-				} catch (_e) { }
+				} catch (_e) {}
 			}
 
 			setHasData(telemetryCount > 0 || suggestionsCount > 0);
@@ -126,12 +126,18 @@ export function SyncButton() {
 				size="sm"
 				onClick={handleSync}
 				disabled={isSyncing || (!hasData && status !== "success")}
-				aria-label={isSyncing ? "Sincronizando dados..." : "Sincronizar dados salvos offline"}
-				className={`relative h-10 gap-2 transition-all ${hasData
+				aria-label={
+					isSyncing
+						? "Sincronizando dados..."
+						: "Sincronizar dados salvos offline"
+				}
+				className={`relative h-10 gap-2 transition-all ${
+					hasData
 						? "border-blue-500/50 text-blue-400 hover:bg-blue-950/30"
 						: "opacity-70"
-					} ${status === "success" ? "border-green-500 text-green-400" : ""} ${status === "error" ? "border-red-500 text-red-400" : ""
-					}`}
+				} ${status === "success" ? "border-green-500 text-green-400" : ""} ${
+					status === "error" ? "border-red-500 text-red-400" : ""
+				}`}
 			>
 				{isSyncing ? (
 					<RefreshCw className="w-4 h-4 animate-spin" />
@@ -159,12 +165,13 @@ export function SyncButton() {
 
 			{msg && (
 				<span
-					className={`text-xs font-mono animate-in fade-in slide-in-from-left-2 ${status === "error"
+					className={`text-xs font-mono animate-in fade-in slide-in-from-left-2 ${
+						status === "error"
 							? "text-red-400"
 							: status === "success"
 								? "text-green-400"
 								: "text-slate-400"
-						}`}
+					}`}
 				>
 					{msg}
 				</span>

@@ -193,6 +193,7 @@ const MapCore = memo(function MapCore({
 								color: strokeColor,
 								weight: 2,
 							}}
+							aria-label={`Zona de direito negado com ${point.count} ocorrência${point.count > 1 ? "s" : ""}`}
 						>
 							<Popup>
 								<div className="text-center p-2">
@@ -217,7 +218,11 @@ const MapCore = memo(function MapCore({
 
 			{/* User Marker */}
 			{userPosition && (
-				<Marker position={userPosition} icon={UserIcon}>
+				<Marker
+					position={userPosition}
+					icon={UserIcon}
+					aria-label="Sua localização atual no mapa"
+				>
 					<Popup>
 						<strong>Você está aqui</strong>
 					</Popup>
@@ -235,6 +240,7 @@ const MapCore = memo(function MapCore({
 						key={res.id}
 						position={[res.lat, res.lng]}
 						icon={getIconForType(res.type)}
+						aria-label={`${res.name} - ${res.type}`}
 					>
 						<Popup>
 							<div className="flex flex-col gap-2 min-w-[200px]">

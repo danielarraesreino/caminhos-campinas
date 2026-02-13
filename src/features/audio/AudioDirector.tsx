@@ -14,8 +14,7 @@ export function AudioDirector() {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isMuted, setIsMuted] = useState(false);
 	const [audioProgress, setAudioProgress] = useState(0);
-
-	// Synthesizer ref
+	// Logic to trigger ambience track
 	const synth = useRef<SpeechSynthesis | null>(null);
 	const utterance = useRef<SpeechSynthesisUtterance | null>(null);
 

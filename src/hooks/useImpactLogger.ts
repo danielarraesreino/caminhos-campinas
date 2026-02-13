@@ -4,12 +4,22 @@ import type { DilemmaOption } from "@/features/game-loop/dilemma-types";
 export const useImpactLogger = () => {
 	const { logEvent } = useGameContext();
 
-	const auditResolution = (dilemmaId: string, choice: DilemmaOption) => {
-		const effects = choice.effect;
-		const consequence = choice.consequence || "";
+	const auditResolution = (
+		dilemmaId: string,
+		choice: DilemmaOption,
+		outcome: "success" | "failure" = "success",
+	) => {
+		// biome-ignore lint/suspicious/noExplicitAny: complex dilemma effects
+		const effects: any =
+			outcome === "failure" && choice.effect_failure
+				? choice.effect_failure
+				: choice.effect;
+		const consequence =
+			(outcome === "failure" && choice.consequence_failure) ||
+			choice.consequence ||
+			"";
 
 		// 1. Auditoria de Violência de Estado (O Rapa/Polícia)
-		// Detecta perda de inventário ('CLEARED' ou inventoryRemove)
 		if (effects?.clearInventory || effects?.inventoryRemove) {
 			const isRapa =
 				dilemmaId.includes("rapa") ||
@@ -29,7 +39,6 @@ export const useImpactLogger = () => {
 		}
 
 		// 2. Auditoria de Trabalho (O Suor Invisível)
-		// Detecta job_denied via Buff ou flag employed_formal
 		if (
 			effects?.addBuff === "JOB_DENIED" ||
 			effects?.addBuff === "SOCIAL_REJECTION"
@@ -45,7 +54,6 @@ export const useImpactLogger = () => {
 		}
 
 		// 3. Auditoria de Burocracia (Fome/Documento)
-		// Se a fome aumenta significativamente e o contexto envolve documentos
 		if (
 			effects?.hunger &&
 			effects.hunger > 10 &&
@@ -72,6 +80,30 @@ export const useImpactLogger = () => {
 				tags: ["ODS_3", "PORTA_GIRATORIA", "FALTA_MORADIA"],
 				description:
 					"Eficácia da Política Pública: Recaída pós-internação devido à ausência de moradia ('Housing First') na alta médica.",
+			});
+		}
+
+		// 5. Auditoria de Dignidade (Violência Simbólica / Preconceito)
+		if (effects?.dignity && effects.dignity <= -15) {
+			logEvent({
+				id: `violation_dignity_${dilemmaId}_${Date.now()}`,
+				type: "VIOLATION",
+				timestamp: Date.now(),
+				tags: ["ODS_10", "APOROFOBIA", "HUMILHACAO"],
+				description:
+					"Violência Simbólica: Humilhação pública ou tratamento degradante que corrói a dignidade humana e a saúde mental.",
+			});
+		}
+
+		// 6. Auditoria de Saúde Mental (Trauma)
+		if (effects?.sanity && effects.sanity <= -15) {
+			logEvent({
+				id: `barrier_sanity_${dilemmaId}_${Date.now()}`,
+				type: "BARRIER",
+				timestamp: Date.now(),
+				tags: ["ODS_3", "SAUDE_MENTAL", "TRAUMA"],
+				description:
+					"Impacto Psicológico: A jornada de exclusão gera traumas profundos que dificultam a retomada de vínculos e autonomia.",
 			});
 		}
 	};

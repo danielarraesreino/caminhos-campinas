@@ -5,7 +5,14 @@ import { z } from "zod";
 export const AvatarSchema = z.object({
 	name: z.string().default("Unknown"),
 	gender: z
-		.enum(["masculino", "feminino", "trans", "nao-binario"])
+		.enum([
+			"masculino",
+			"feminino",
+			"mulher_trans",
+			"homem_trans",
+			"travesti",
+			"nao-binario",
+		])
 		.default("masculino"),
 	ethnicity: z.enum(["branco", "preto", "pardo", "indigena"]).default("pardo"),
 	ageRange: z.enum(["jovem", "adulto", "idoso"]).default("adulto"),
@@ -141,6 +148,7 @@ export const GameStateSchema = z.object({
 	security: z.number().default(0),
 
 	history: z.array(GameEventSchema).default([]),
+	activeArcId: z.string().nullable().default(null),
 });
 
 // For PouchDB

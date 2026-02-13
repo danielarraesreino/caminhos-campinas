@@ -11,12 +11,14 @@ import {
 	Mic,
 	Package,
 	Shield,
+	User,
 	Volume2,
 	VolumeX,
 	Wallet,
 	Wifi,
 	WifiOff,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/contexts/GameContext";
@@ -86,6 +88,7 @@ export function GameHUD({
 		pdu,
 		addBuff,
 		removeBuff,
+		avatar,
 	} = useGameContext();
 
 	const stigmaAlert = socialStigma > 80;
@@ -194,20 +197,45 @@ export function GameHUD({
 						<button
 							type="button"
 							onClick={handleToggleMute}
-							className={`ml-1 p-1 rounded-md transition-all ${
+							className={`ml-1 p-2 min-w-[32px] min-h-[32px] rounded-md transition-all flex items-center justify-center ${
 								isMuted
 									? "text-red-400 hover:bg-red-900/30"
 									: "text-emerald-400 hover:bg-emerald-900/30"
 							}`}
-							aria-label={isMuted ? "Ativar som" : "Desativar som"}
+							aria-label={
+								isMuted ? "Ativar som do jogo" : "Desativar som do jogo"
+							}
 						>
 							{isMuted ? (
-								<VolumeX className="w-4 h-4" aria-hidden="true" />
+								<VolumeX className="w-5 h-5" aria-hidden="true" />
 							) : (
-								<Volume2 className="w-4 h-4" aria-hidden="true" />
+								<Volume2 className="w-5 h-5" aria-hidden="true" />
 							)}
 						</button>
 					</div>
+
+					{/* AVATAR - Right Side */}
+					{avatar && (
+						<div className="flex items-center gap-2">
+							<div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-700 bg-slate-800 flex items-center justify-center">
+								{avatar.avatarImage ? (
+									<Image
+										src={avatar.avatarImage}
+										alt={avatar.name || "Avatar"}
+										width={48}
+										height={48}
+										className="object-cover w-full h-full"
+										onError={(e) => {
+											// Fallback to User icon if image fails
+											e.currentTarget.style.display = "none";
+										}}
+									/>
+								) : (
+									<User className="w-6 h-6 text-slate-500" />
+								)}
+							</div>
+						</div>
+					)}
 				</div>
 			</header>
 
@@ -250,11 +278,11 @@ export function GameHUD({
 				<Button
 					size="icon"
 					className="h-12 w-12 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-lg transition-transform active:scale-95 relative"
-					title="Cofre Digital (Meus Documentos)"
+					aria-label="Cofre Digital: Visualizar meus documentos salvos"
 					onClick={() => setIsCofreOpen(true)}
 				>
 					<div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
-					<Shield className="h-5 w-5 text-blue-400" />
+					<Shield className="h-6 w-6 text-blue-400" />
 				</Button>
 
 				<CofreDrawer
@@ -264,11 +292,11 @@ export function GameHUD({
 
 				<Button
 					size="icon"
-					className="h-10 w-10 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-lg transition-transform active:scale-95"
+					className="h-12 w-12 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-lg transition-transform active:scale-95 flex items-center justify-center p-0"
 					onClick={onToggleMenu}
-					title="Guia de Recursos"
+					aria-label="Abrir Guia de Recursos de Apoio"
 				>
-					<Package className="h-4 w-4 text-slate-300" />
+					<Package className="h-5 w-5 text-slate-300" />
 				</Button>
 			</div>
 		</div>

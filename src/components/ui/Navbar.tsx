@@ -153,19 +153,13 @@ export function Navbar() {
 						className="flex items-center gap-3 group shrink-0"
 						aria-label="Voltar para a página inicial do Caminhos Campinas"
 					>
-						<div
-							className="w-9 h-9 bg-zinc-900 border border-zinc-700/50 group-hover:border-yellow-500/50 rounded-xl flex items-center justify-center font-black text-white transition-all shadow-2xl"
-							aria-hidden="true"
-						>
-							CC
-						</div>
-						<div className="flex flex-col">
-							<span className="font-black text-xs uppercase tracking-[0.3em] text-zinc-400 leading-none group-hover:text-zinc-200 transition-colors">
-								Caminhos
-							</span>
-							<span className="font-black text-lg uppercase tracking-tighter text-white leading-none">
-								Campinas
-							</span>
+						<div className="relative group-hover:scale-105 transition-transform duration-300">
+							<div className="absolute -inset-2 bg-yellow-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+							<img
+								src="/logo-cropped.png"
+								alt="Logo Caminhos Campinas"
+								className="w-12 h-12 object-contain relative z-10"
+							/>
 						</div>
 					</Link>
 
@@ -183,9 +177,9 @@ export function Navbar() {
 							<div key={section.id} className="relative group">
 								<button
 									type="button"
-									aria-label={`Menu ${section.label}`}
+									aria-label={`Abrir menu de sub-seções para ${section.label}`}
 									aria-expanded="false"
-									className="flex items-center gap-2 text-zinc-400 hover:text-white px-3 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
+									className="flex items-center gap-2 text-zinc-400 hover:text-white px-3 py-3 min-h-[44px] rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
 								>
 									{section.label}
 									<ChevronDown className="w-3 h-3 opacity-50 group-hover:rotate-180 transition-transform" />
@@ -195,7 +189,8 @@ export function Navbar() {
 										<Link
 											key={link.href}
 											href={link.href}
-											className={`flex items-center gap-3 px-4 py-2.5 text-xs font-bold ${link.color || "text-zinc-400"} hover:bg-zinc-900 hover:text-white transition-colors`}
+											className={`flex items-center gap-3 px-4 py-3 min-h-[40px] text-xs font-bold ${link.color || "text-zinc-400"} hover:bg-zinc-900 hover:text-white transition-colors`}
+											aria-label={`Ir para ${link.label}`}
 										>
 											{link.icon}
 											{link.label}
@@ -319,10 +314,11 @@ export function Navbar() {
 											key={link.href}
 											href={link.href}
 											onClick={() => setIsOpen(false)}
-											className={`flex items-center gap-4 px-4 py-4 rounded-2xl text-base font-bold transition-all ${link.color
+											className={`flex items-center gap-4 px-4 py-4 rounded-2xl text-base font-bold transition-all ${
+												link.color
 													? "bg-yellow-500/5 text-yellow-500 border border-yellow-500/10"
 													: "text-zinc-300 bg-zinc-900/40 border border-zinc-800/50"
-												}`}
+											}`}
 										>
 											<div className="p-2 bg-black rounded-lg border border-zinc-800">
 												{link.icon}

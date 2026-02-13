@@ -8,11 +8,11 @@ test.describe("Exclusão Digital e Resiliência", () => {
 		context,
 		gameState, // custom fixture
 	}) => {
-		// Inject state and reload (at root)
-		await gameState.injectGameState();
-
 		// Navigate to game page where HUD is visible
 		await page.goto("/jogar");
+
+		// Inject state and reload (at root)
+		await gameState.injectGameState();
 
 		// [FIX 3] Wait for game initialization (critical for fixtures)
 		await page.waitForSelector('body[data-game-ready="true"]', {
@@ -42,9 +42,9 @@ test.describe("Exclusão Digital e Resiliência", () => {
 		page,
 		gameState,
 	}) => {
+		await page.goto("/jogar");
 		// Inject state
 		await gameState.injectGameState();
-		await page.goto("/jogar");
 
 		// [FIX 3] Wait for game initialization (critical for fixtures)
 		await page.waitForSelector('body[data-game-ready="true"]', {

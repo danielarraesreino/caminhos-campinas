@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ClientLayoutWrapper } from "@/app/ClientLayoutWrapper";
+import { VLibrasWidget } from "@/components/accessibility/VLibrasWidget";
 import { Providers } from "@/components/Providers";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { UrbanServiceSchema } from "@/components/seo/UrbanServiceSchema";
@@ -54,7 +55,7 @@ export default function RootLayout({
 				<Providers>
 					<SurvivalModeProvider>
 						<GameProvider>
-							<ModalQueueProvider tutorialActive={false}>
+							<ModalQueueProvider>
 								<ServicesProvider>
 									<GameEffectsLayer />
 									<ClientLayoutWrapper>{children}</ClientLayoutWrapper>
@@ -70,6 +71,9 @@ export default function RootLayout({
 						</GameProvider>
 					</SurvivalModeProvider>
 				</Providers>
+
+				{/* VLibras Widget - Acessibilidade Libras */}
+				<VLibrasWidget />
 			</body>
 		</html>
 	);

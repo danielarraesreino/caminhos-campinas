@@ -1,7 +1,7 @@
 "use client";
 
 import { ExternalLink, MessageSquare, X } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -37,7 +37,7 @@ export function DilemmaModal({
 	const [selectedOption, setSelectedOption] = useState<number | null>(null);
 	const [outcome, setOutcome] = useState<"success" | "failure" | null>(null);
 	const [isPending, startTransition] = useTransition();
-	const { playAmbience, stopAmbience, playSfx } = useAudioSystem();
+	const { playAmbience, stopAmbience } = useAudioSystem();
 	const { triggerClick } = useHaptics();
 	const { trackDilemmaDecision } = useODSTracker();
 	const { auditResolution } = useImpactLogger();
@@ -67,7 +67,13 @@ export function DilemmaModal({
 		window.speechSynthesis.onvoiceschanged = loadVoices;
 	}, []);
 
-	const toggleSpeech = () => {
+	const currentOption = dilemma
+		? selectedOption !== null
+			? dilemma.options[selectedOption]
+			: null
+		: null;
+
+	const toggleSpeech = useCallback(() => {
 		if (isSpeaking) {
 			window.speechSynthesis.cancel();
 			setIsSpeaking(false);
@@ -95,31 +101,51 @@ export function DilemmaModal({
 			setIsSpeaking(true);
 			setAudioPlaying(true);
 		}
-	};
+	}, [isSpeaking, currentOption, outcome, dilemma, voice, setAudioPlaying]);
 
 	const toggleZoom = () => {
 		setZoomLevel((prev) => (prev >= 1.4 ? 1 : prev + 0.2));
 	};
 
+	// [NEW] Prevent infinite loop for auto-play
+	const hasAutoPlayedRef = useRef<string | null>(null);
+
 	// 🔊 AUDIO FIRST: Efeitos sonoros quando o dilema aparece
 	useEffect(() => {
-		if (dilemma) {
-			// Tocar SFX de alerta quando dilema abre
-			playSfx("click");
+		if (dilemma && hasAutoPlayedRef.current !== dilemma.id) {
+			hasAutoPlayedRef.current = dilemma.id;
 
 			// Tocar ambiente específico do dilema se existir
 			if (dilemma.audioId) {
 				playAmbience(dilemma.audioId);
 			}
-		}
 
-		return () => {
-			if (dilemma?.audioId) {
-				stopAmbience();
-			}
-			window.speechSynthesis.cancel();
-		};
-	}, [dilemma, dilemma?.audioId, playAmbience, stopAmbience, playSfx]);
+			// [NEW] Auto-play TTS for the dilemma
+			// ⏳ Small delay to ensure voices are loaded and browser is ready
+			const ttsTimer = setTimeout(() => {
+				toggleSpeech();
+			}, 500);
+
+			return () => {
+				clearTimeout(ttsTimer);
+				if (dilemma.audioId) {
+					stopAmbience();
+				}
+				window.speechSynthesis.cancel();
+			};
+		}
+	}, [dilemma, playAmbience, stopAmbience, toggleSpeech]);
+
+	// [NEW] Auto-play TTS for Consequences (Outcome)
+	useEffect(() => {
+		if (outcome && currentOption) {
+			// Pequeno delay para garantir que o estado visual atualizou e para separar da ação de clique
+			const consequenceTimer = setTimeout(() => {
+				toggleSpeech();
+			}, 300);
+			return () => clearTimeout(consequenceTimer);
+		}
+	}, [outcome, currentOption, toggleSpeech]);
 
 	if (!dilemma) return null;
 
@@ -152,7 +178,7 @@ export function DilemmaModal({
 				);
 
 				// [NEW] Sociological Audit (Middleware)
-				auditResolution(dilemma.id, option);
+				auditResolution(dilemma.id, option, result);
 			} catch (error) {
 				console.error("Error in dilemma option select:", error);
 				// Fallback: Just close if everything fails? Or show error?
@@ -171,9 +197,6 @@ export function DilemmaModal({
 		setOutcome(null);
 		stopAmbience(); // Ensure audio stops when closing/continuing
 	};
-
-	const currentOption =
-		selectedOption !== null ? dilemma.options[selectedOption] : null;
 
 	// Determine text to show based on outcome
 	let feedbackText = "";
@@ -208,29 +231,33 @@ export function DilemmaModal({
 					<button
 						type="button"
 						onClick={toggleZoom}
-						className="bg-slate-900/80 hover:bg-slate-800 text-slate-300 p-1.5 rounded transition-colors border border-slate-700"
-						aria-label="Aumentar texto"
+						className="bg-slate-900/80 hover:bg-slate-800 text-slate-300 p-2.5 min-w-[32px] min-h-[32px] rounded transition-colors border border-slate-700 flex items-center justify-center font-bold text-xs"
+						aria-label="Aumentar tamanho do texto para melhor leitura"
 						title="Aumentar texto"
 					>
-						<span className="text-xs font-bold">A+</span>
+						A+
 					</button>
 
 					{/* TTS Button */}
 					<button
 						type="button"
 						onClick={toggleSpeech}
-						className={`p-1.5 rounded transition-colors border ${
+						className={`p-2.5 min-w-[32px] min-h-[32px] rounded transition-colors border flex items-center justify-center ${
 							isSpeaking
 								? "bg-blue-900/50 border-blue-500 text-blue-400"
 								: "bg-slate-900/80 border-slate-700 text-slate-300 hover:bg-slate-800"
 						}`}
-						aria-label="Ler texto em voz alta"
+						aria-label={
+							isSpeaking
+								? "Parar leitura em voz alta"
+								: "Ouvir texto do dilema em voz alta"
+						}
 						title="Ouvir Dilema"
 					>
 						{isSpeaking ? (
-							<span className="animate-pulse">🔊</span>
+							<span className="animate-pulse text-sm">🔊</span>
 						) : (
-							<span>🔈</span>
+							<span className="text-sm">🔈</span>
 						)}
 					</button>
 
@@ -239,11 +266,11 @@ export function DilemmaModal({
 						<button
 							type="button"
 							onClick={onOpenChat}
-							className="bg-slate-900/80 hover:bg-slate-800 text-slate-300 p-1.5 rounded transition-colors border border-slate-700"
-							aria-label="Abrir Chat"
+							className="bg-slate-900/80 hover:bg-slate-800 text-slate-300 p-2.5 min-w-[32px] min-h-[32px] rounded transition-colors border border-slate-700 flex items-center justify-center"
+							aria-label="Falar com o mestre do jogo para conselhos"
 							title="Consultar Mestre"
 						>
-							<MessageSquare size={14} />
+							<MessageSquare size={16} />
 						</button>
 					)}
 				</div>
@@ -252,10 +279,10 @@ export function DilemmaModal({
 				<button
 					type="button"
 					onClick={handleContinue}
-					className="absolute top-4 right-3 text-slate-500 hover:text-white transition-colors p-1.5 z-20"
-					aria-label="Fechar modal"
+					className="absolute top-4 right-3 text-slate-500 hover:text-white transition-colors p-2.5 min-w-[32px] min-h-[32px] z-20 flex items-center justify-center"
+					aria-label="Fechar este diálogo e voltar ao jogo"
 				>
-					<X size={18} />
+					<X size={20} />
 				</button>
 
 				<div className="p-8 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">

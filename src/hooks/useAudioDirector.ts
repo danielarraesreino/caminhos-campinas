@@ -28,7 +28,8 @@ export function useAudioDirector() {
 		return () => document.removeEventListener("click", interactHandler);
 	}, []);
 
-	// 1. Cycle Day/Night & Traffic & Director Intensity
+	const lastVolumeRef = useRef(-1); // [NEW] Prevent volume loop
+
 	useEffect(() => {
 		// 🛡️ Guard: Wait for data
 		if (!hasHydrated) return;
@@ -114,7 +115,11 @@ export function useAudioDirector() {
 			targetVolume = 0.8; // Noise/Confusion
 		}
 
-		setVolume(targetVolume);
+		// [FIX] Loop Prevention: Only update if volume changed significantly
+		if (Math.abs(lastVolumeRef.current - targetVolume) > 0.05) {
+			setVolume(targetVolume);
+			lastVolumeRef.current = targetVolume;
+		}
 
 		// Logic to trigger ambience track
 		try {
@@ -127,9 +132,10 @@ export function useAudioDirector() {
 		health,
 		sanity,
 		activeDilemmaId,
+		hasHydrated,
 		playAmbience,
 		setVolume,
-		hasHydrated,
+		// playAmbience e setVolume removidos para evitar loop infinito se não forem estáveis
 	]);
 
 	// 2. Event Triggers (One-shot SFX)

@@ -15,7 +15,6 @@ import type { Dilemma } from "@/features/game-loop/dilemma-types";
  *
  * Gerencia a fila de eventos visuais/sonoros para evitar sobreposição caótica.
  * Garante que apenas UM modal esteja ativo por vez, respeitando:
- * - Tutorial ativo (tutorialActive)
  * - Narração de áudio em andamento (audioPlaying)
  * - Cooldown de 2 segundos entre modais
  */
@@ -48,15 +47,16 @@ interface ModalQueueContextValue {
 
 const ModalQueueContext = createContext<ModalQueueContextValue | null>(null);
 
+import { useGameContext } from "./GameContext";
+
 interface ModalQueueProviderProps {
 	children: ReactNode;
-	tutorialActive?: boolean; // Integração com GameContext
 }
 
-export function ModalQueueProvider({
-	children,
-	tutorialActive = false,
-}: ModalQueueProviderProps) {
+export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
+	// [FIX] Sync with real GameContext state
+	const _gameContext = useGameContext();
+
 	const [pendingEvents, setPendingEvents] = useState<QueuedEvent[]>([]);
 	const [activeModal, setActiveModalState] = useState<ModalType>(null);
 	const [audioPlaying, setAudioPlaying] = useState(false);
@@ -69,11 +69,6 @@ export function ModalQueueProvider({
 	 * Verifica se um modal pode ser exibido
 	 */
 	const canShowModal = useCallback((): boolean => {
-		if (tutorialActive) {
-			console.log("[ModalQueue] Blocked: Tutorial is active");
-			return false;
-		}
-
 		if (activeModal !== null) {
 			console.log(
 				`[ModalQueue] Blocked: Modal '${activeModal}' is already open`,
@@ -95,7 +90,7 @@ export function ModalQueueProvider({
 		}
 
 		return true;
-	}, [tutorialActive, activeModal, audioPlaying, lastModalClosedAt]);
+	}, [activeModal, audioPlaying, lastModalClosedAt]);
 
 	/**
 	 * Adiciona um dilema à fila com prioridade
@@ -175,26 +170,8 @@ export function ModalQueueProvider({
 		console.log("[ModalQueue] Queue cleared");
 	}, []);
 
-	/**
-	 * Auto-processamento da fila quando as condições mudam
-	 */
-	useEffect(() => {
-		if (canShowModal() && pendingEvents.length > 0) {
-			// Aguardar um tick para evitar race conditions
-			const timer = setTimeout(() => {
-				const nextDilemma = processQueue();
-				if (nextDilemma) {
-					// O componente DilemmaModal deve escutar esta mudança
-					// e exibir o modal automaticamente
-					console.log(
-						`[ModalQueue] Auto-processing dilemma '${nextDilemma.id}'`,
-					);
-				}
-			}, 100);
-
-			return () => clearTimeout(timer);
-		}
-	}, [canShowModal, pendingEvents.length, processQueue]);
+	// Auto-processing was removed to prevent dilemma leak.
+	// Dilemmas are now manually dequeued by the GamePage.
 
 	const value: ModalQueueContextValue = {
 		pendingEvents,

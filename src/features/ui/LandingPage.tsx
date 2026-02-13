@@ -1,9 +1,17 @@
 "use client";
 
-import { Github, MapPin, Newspaper, Play, TrendingUp } from "lucide-react";
+import {
+	BookOpen,
+	Github,
+	MapPin,
+	Newspaper,
+	Play,
+	TrendingUp,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { STORY_ARCS } from "@/data/story-arcs";
 
 /**
  * Landing Page - Campinas Invisível | Auditoria
@@ -18,11 +26,15 @@ export function LandingPage() {
 	const [userIntent, setUserIntent] = useState<"survival" | "audit" | null>(
 		null,
 	);
+	const [selectedArc, setSelectedArc] = useState<string | null>(null);
 
 	// Se usuário escolheu, redireciona
 	if (userIntent === "survival") {
 		// Pop rua: Direto pro jogo com modo survival
-		window.location.href = "/jogar?mode=survival";
+		const url = selectedArc
+			? `/jogar?mode=survival&arc=${selectedArc}`
+			: "/jogar?mode=survival";
+		window.location.href = url;
 		return (
 			<div className="min-h-screen bg-black flex items-center justify-center">
 				<div className="text-yellow-400 text-lg font-bold">
@@ -34,7 +46,8 @@ export function LandingPage() {
 
 	if (userIntent === "audit") {
 		// Público geral: Jogo com contexto de auditoria
-		window.location.href = "/jogar";
+		const url = selectedArc ? `/jogar?arc=${selectedArc}` : "/jogar";
+		window.location.href = url;
 		return (
 			<div className="min-h-screen bg-slate-950 flex items-center justify-center">
 				<div className="text-violet-400 text-lg font-bold">
@@ -95,6 +108,88 @@ export function LandingPage() {
 					</div>
 				</div>
 			</header>
+
+			{/* NOVA SEÇÃO: Explore Cenários Reais */}
+			<section className="relative z-10 container mx-auto px-4 py-12">
+				<div className="max-w-5xl mx-auto">
+					<div className="text-center mb-8">
+						<div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600/20 border border-blue-500 rounded-full text-blue-300 text-sm font-mono uppercase tracking-wider mb-4">
+							<BookOpen size={16} aria-hidden="true" />
+							Escolha sua Jornada
+						</div>
+						<h2 className="text-3xl font-black uppercase mb-3">
+							Explore Cenários Reais
+						</h2>
+						<p className="text-slate-300 text-base max-w-2xl mx-auto">
+							Cada arco narrativo é baseado em dados do Censo Pop Rua 2024.
+							Escolha um caminho temático ou deixe o jogo decidir.
+						</p>
+					</div>
+
+					{/* Grid de Arcos */}
+					<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+						{Object.values(STORY_ARCS)
+							.slice(0, 6)
+							.map((arc) => (
+								<button
+									key={arc.id}
+									type="button"
+									onClick={() =>
+										setSelectedArc(selectedArc === arc.id ? null : arc.id)
+									}
+									className={`group relative p-5 bg-gradient-to-br from-slate-900/80 to-black border-2 rounded-xl hover:scale-[1.02] transition-all text-left ${
+										selectedArc === arc.id
+											? "border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.3)]"
+											: "border-slate-800 hover:border-slate-600"
+									}`}
+								>
+									{selectedArc === arc.id && (
+										<div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-black">
+											✓
+										</div>
+									)}
+
+									<div className="space-y-3">
+										<h3
+											className={`text-lg font-black uppercase tracking-tight ${
+												selectedArc === arc.id ? "text-blue-400" : "text-white"
+											}`}
+										>
+											{arc.name}
+										</h3>
+
+										<p className="text-slate-400 text-sm leading-snug line-clamp-2">
+											{arc.description}
+										</p>
+
+										<div className="flex flex-wrap gap-1">
+											{arc.ods.map((ods) => (
+												<span
+													key={ods}
+													className="text-[9px] bg-blue-900/50 px-2 py-0.5 rounded text-blue-300 border border-blue-500/30 font-mono"
+												>
+													{ods}
+												</span>
+											))}
+										</div>
+
+										<div className="text-[10px] text-slate-500 italic">
+											{arc.theme}
+										</div>
+									</div>
+								</button>
+							))}
+					</div>
+
+					<div className="text-center">
+						<p className="text-slate-500 text-xs">
+							{selectedArc
+								? `Arco "${STORY_ARCS[selectedArc.toUpperCase().replace(/-/g, "_")]?.name}" selecionado`
+								: "Nenhum arco selecionado (jogo escolherá aleatoriamente)"}
+						</p>
+					</div>
+				</div>
+			</section>
 
 			{/* Bifurcação Integrada - TODOS JOGAM */}
 			<section className="relative z-10 container mx-auto px-4 py-12">
@@ -222,16 +317,16 @@ export function LandingPage() {
 				<div className="max-w-6xl mx-auto">
 					<div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
 						<div className="space-y-2">
-							<span className="text-yellow-500 font-mono text-xs uppercase tracking-[0.3em]">
+							<span className="text-yellow-400 font-mono text-xs uppercase tracking-[0.3em]">
 								Ecossistema
 							</span>
 							<h2 className="text-4xl font-black uppercase tracking-tighter leading-none">
 								Os Quatro Pilares
 								<br />
-								<span className="text-zinc-500">do Caminhos Campinas.</span>
+								<span className="text-zinc-400">do Caminhos Campinas.</span>
 							</h2>
 						</div>
-						<p className="text-zinc-400 max-w-md text-sm leading-relaxed">
+						<p className="text-zinc-300 max-w-md text-sm leading-relaxed">
 							Muito além de um jogo, somos uma infraestrutura cívica que combina
 							tecnologia, dados e mobilização direta para transformar a
 							realidade socioterritorial da cidade.
@@ -336,35 +431,35 @@ export function LandingPage() {
 					<div className="max-w-4xl mx-auto space-y-12">
 						<div className="grid md:grid-cols-3 gap-12 text-sm">
 							<div className="space-y-4">
-								<h4 className="font-black uppercase tracking-widest text-xs text-zinc-500">
+								<h4 className="font-black uppercase tracking-widest text-xs text-zinc-400">
 									Dados Soberanos
 								</h4>
-								<p className="text-zinc-400 leading-relaxed font-medium">
+								<p className="text-zinc-300 leading-relaxed font-medium">
 									Baseado no Censo Pop Rua 2024 e no Decreto Federal 7.053/2009.
 									Auditoria cidadã em tempo real integrada ao Wikidata.
 								</p>
 							</div>
 							<div className="space-y-4">
-								<h4 className="font-black uppercase tracking-widest text-xs text-zinc-500">
+								<h4 className="font-black uppercase tracking-widest text-xs text-zinc-400">
 									Território / DDD 019
 								</h4>
-								<p className="text-zinc-400 leading-relaxed font-medium">
+								<p className="text-zinc-300 leading-relaxed font-medium">
 									Focado na realidade socioterritorial da Região Metropolitana
 									de Campinas. Uma cidade de 1.2M de habitantes.
 								</p>
 							</div>
 							<div className="space-y-4">
-								<h4 className="font-black uppercase tracking-widest text-xs text-zinc-500">
+								<h4 className="font-black uppercase tracking-widest text-xs text-zinc-400">
 									Soberania Tecnológica
 								</h4>
-								<p className="text-zinc-400 leading-relaxed font-medium">
+								<p className="text-zinc-300 leading-relaxed font-medium">
 									Código Aberto, Offline-first e Zero Rastreamento. A tecnologia
 									como instrumento de emancipação coletiva.
 								</p>
 							</div>
 						</div>
 
-						<div className="flex flex-wrap gap-x-8 gap-y-4 justify-center text-[10px] font-black uppercase tracking-[0.25em] text-zinc-600 border-y border-zinc-900 py-8">
+						<div className="flex flex-wrap gap-x-8 gap-y-4 justify-center text-[10px] font-black uppercase tracking-[0.25em] text-zinc-400 border-y border-zinc-900 py-8">
 							<Link
 								href="/sobre"
 								className="hover:text-white transition-colors"

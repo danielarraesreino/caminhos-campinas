@@ -473,6 +473,7 @@ export default function ResourcesPage() {
 						<input
 							type="text"
 							placeholder="Buscar serviços..."
+							aria-label="Buscar serviços por nome, endereço ou categoria"
 							value={searchQuery}
 							onChange={(e) => setSearchQuery(e.target.value)}
 							className="w-full bg-zinc-900 border border-zinc-800 rounded-lg pl-10 pr-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-yellow-500/50"

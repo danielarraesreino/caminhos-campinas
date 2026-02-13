@@ -91,10 +91,15 @@ export function useAudioSystem(): AudioSystemCallbacks {
 				audio.volume = globalVolume;
 				audio
 					.play()
-					.catch((e) => console.warn("Pending audio play failed:", e));
+					.catch((e) =>
+						console.warn(
+							"Pending audio play failed (user interaction required):",
+							e,
+						),
+					);
 				globalAmbience = audio;
 			} catch (err) {
-				console.error("Audio init error:", err);
+				console.warn("Audio init error:", err);
 			}
 			setPendingTrack(null);
 		}
@@ -144,7 +149,7 @@ export function useAudioSystem(): AudioSystemCallbacks {
 				}
 				globalAmbience = audio;
 			} catch (err) {
-				console.error("Audio play runtime error:", err);
+				console.warn("Audio play runtime error:", err);
 			}
 		},
 		[isInitialized, stopAmbience],
@@ -155,9 +160,11 @@ export function useAudioSystem(): AudioSystemCallbacks {
 			const mappedId = TRACK_MAP[trackId] || trackId;
 			const audio = new Audio(`/sounds/${mappedId}.wav`);
 			audio.volume = globalVolume;
-			audio.play().catch((e) => console.warn("SFX fail:", e));
+			audio
+				.play()
+				.catch((e) => console.warn("SFX fail (user interaction required):", e));
 		} catch (err) {
-			console.error("SFX runtime error:", err);
+			console.warn("SFX runtime error:", err);
 		}
 	}, []);
 

@@ -19,7 +19,10 @@ export async function GET() {
 		return NextResponse.json(stories);
 	} catch (error) {
 		console.error("Error fetching stories:", error);
-		return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 },
+		);
 	}
 }
 
