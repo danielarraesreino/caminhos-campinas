@@ -1,9 +1,10 @@
-const CACHE_NAME = "caminhos-campinas-v2";
+const CACHE_NAME = "caminhos-campinas-v3";
 const AUDIO_CACHE = "caminhos-audio-v1";
 
 const ASSETS_TO_CACHE = [
 	"/",
 	"/manifest.json",
+	"/logo-cropped.png",
 	"/globe.svg",
 	"/vercel.svg",
 	"/data/services-campinas.json", // Garante que os dados do mapa fiquem offline
