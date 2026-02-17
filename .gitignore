@@ -42,13 +42,14 @@ yarn-error.log*
 next-env.d.ts
 # Secrets
 *.json
-client_secret*.json
-caminhoscampinas*.json
 !package.json
 !package-lock.json
 !tsconfig.json
-!src/data/*.json
 !biome.json
-.env*.local
+!src/data/*.json
+.env
+.env.local
+**/service-account*.json
+**/*key*.json
 
 /src/generated/prisma

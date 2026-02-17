@@ -41,6 +41,8 @@ export default function GamePage() {
 	const [isChatOpen, setIsChatOpen] = useState(false);
 	const [isVoiceOpen, setIsVoiceOpen] = useState(false);
 	const [isLocationsOpen, setIsLocationsOpen] = useState(false);
+	// [NEW] Estado local para travar o loop de Game Over
+	const [isProcessingGameOver, setIsProcessingGameOver] = useState(false);
 
 	// [FIX] Move hooks to the top level to avoid Rules of Hooks violations (Previous render vs Next render)
 
@@ -72,6 +74,22 @@ export default function GamePage() {
 		}
 	}, [activeDilemma, canShowModal, processQueue, triggerDilemma]);
 
+	// [DEBUG] External Trigger for Dilemmas (e.g., from Console)
+	useEffect(() => {
+		const handleTrigger = (event: Event) => {
+			const customEvent = event as CustomEvent;
+			if (customEvent.detail?.id) {
+				console.log(
+					`[GamePage] Manual trigger received: ${customEvent.detail.id}`,
+				);
+				triggerDilemma(customEvent.detail.id);
+			}
+		};
+
+		window.addEventListener("trigger-dilemma", handleTrigger);
+		return () => window.removeEventListener("trigger-dilemma", handleTrigger);
+	}, [triggerDilemma]);
+
 	// [FIX] Ensure Chat closes when a Dilemma starts (so the Modal isn't hidden behind the Chat)
 	useEffect(() => {
 		if (activeDilemma) {
@@ -79,14 +97,16 @@ export default function GamePage() {
 		}
 	}, [activeDilemma]);
 
+	// [SUBSTITUIÇÃO] useEffect de Game Over corrigido
 	useEffect(() => {
-		const result = checkGameOver(gameState);
-		if (result.isGameOver && !gameOverResult) {
-			setGameOverResult(result);
+		// [FIX] Guard 1: Prevenir re-entrância
+		if (isProcessingGameOver || gameOverResult?.isGameOver) {
+			return;
 		}
 
-		// [NEW] Handle Endings (Manual Triggers from Dilemma Action)
-		if (gameState.activeDilemmaId === "CREDITS_SCREEN" && !gameOverResult) {
+		// [FIX] Guard 2: Verificar condições de vitória manual primeiro
+		if (gameState.activeDilemmaId === "CREDITS_SCREEN") {
+			setIsProcessingGameOver(true);
 			setGameOverResult({
 				isGameOver: true,
 				reason: "VITÓRIA_SOCIAL",
@@ -105,39 +125,45 @@ Obrigado por jogar Caminhos.`,
 					socialStigmaFinal: gameState.socialStigma,
 				},
 			});
-		} else if (
-			gameState.activeDilemmaId === "RESTART_GAME" &&
-			!gameOverResult
-		) {
-			setGameOverResult({
-				isGameOver: true,
-				reason: "FIM_CICLO",
-				narrative: `O CICLO RECOMEÇA.
-
-"A rua é um moinho... vai te moendo até queimar."
-Muitos saem, mas a gravidade da exclusão puxa de volta.
-
-Você volta mais experiente. Dessa vez, será diferente?`,
-				statistics: {
-					daysSurvived: gameState.day,
-					moneyEarned: gameState.money,
-					dignityFinal: gameState.dignity,
-					socialStigmaFinal: gameState.socialStigma,
-				},
-			});
+			return;
 		}
-	}, [gameState, gameOverResult]);
+
+		// [FIX] Guard 3: Verificar derrota por stats APENAS se avatar existe
+		if (gameState.avatar) {
+			const result = checkGameOver(gameState);
+			if (result.isGameOver) {
+				setIsProcessingGameOver(true);
+				setGameOverResult(result);
+			}
+		}
+	}, [
+		// [FIX] Dependências específicas, não o objeto gameState inteiro
+		gameState.activeDilemmaId,
+		gameState.avatar,
+		gameState.day,
+		gameState.money,
+		gameState.dignity,
+		gameState.socialStigma,
+		gameOverResult,
+		isProcessingGameOver,
+		checkGameOver, // ← Certifique-se que é memoizado no context
+	]);
+
+	// [FIX] Remover useEffect conflitante de morte (já unificado acima)
 
 	// Dead state reset check from previous step
-	useEffect(() => {
-		if (gameState.avatar && (gameState.health <= 0 || gameState.sanity <= 0)) {
-			resetGame();
-		}
-	}, [gameState.avatar, gameState.health, gameState.sanity, resetGame]);
+	// [REMOVIDO] useEffect conflitante de reset por morte
+	// A lógica agora está centralizada no useEffect acima
 
 	const handleRestart = () => {
+		// [FIX] Limpeza Completa e Atômica
+		setIsProcessingGameOver(false);
 		setGameOverResult(null);
-		resetGame();
+		clearActiveDilemma();
+
+		setTimeout(() => {
+			resetGame();
+		}, 100);
 	};
 
 	if (!gameState.avatar) {

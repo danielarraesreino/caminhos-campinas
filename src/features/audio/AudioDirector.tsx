@@ -8,7 +8,7 @@ import { detectActiveArc } from "@/data/story-arcs";
 import type { Dilemma } from "@/features/game-loop/dilemma-types";
 
 export function AudioDirector() {
-	const { setAudioPlaying } = useModalQueue();
+	// const { setAudioPlaying } = useModalQueue();
 	const { activeDilemmaId, hasHydrated } = useGameContext();
 	const [activeDilemma, setActiveDilemma] = useState<Dilemma | null>(null);
 	const [isPlaying, setIsPlaying] = useState(false);
@@ -22,10 +22,10 @@ export function AudioDirector() {
 		if (synth.current) {
 			synth.current.cancel();
 			setIsPlaying(false);
-			setAudioPlaying(false);
+			// setAudioPlaying(false);
 			setAudioProgress(0);
 		}
-	}, [setAudioPlaying]);
+	}, []);
 
 	const playNarration = useCallback(
 		(text: string, _voiceName: string | null) => {
@@ -43,14 +43,14 @@ export function AudioDirector() {
 
 				u.onstart = () => {
 					setIsPlaying(true);
-					setAudioPlaying(true);
+					// setAudioPlaying(true);
 					setAudioProgress(0);
 				};
 
 				u.onerror = (e) => {
 					console.warn("Speech error:", e);
 					setIsPlaying(false);
-					setAudioPlaying(false);
+					// setAudioPlaying(false);
 				};
 
 				// Fake progress simulation
@@ -70,7 +70,7 @@ export function AudioDirector() {
 				u.onend = () => {
 					clearInterval(progressInterval);
 					setIsPlaying(false);
-					setAudioPlaying(false);
+					// setAudioPlaying(false);
 					setAudioProgress(100);
 				};
 
@@ -79,7 +79,7 @@ export function AudioDirector() {
 				}
 			}, 500);
 		},
-		[isMuted, cancelSpeech, setAudioPlaying],
+		[isMuted, cancelSpeech],
 	);
 
 	// Load dilemma data when ID changes

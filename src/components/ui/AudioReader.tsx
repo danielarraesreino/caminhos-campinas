@@ -13,7 +13,7 @@ export function AudioReader({ text, className = "" }: AudioReaderProps) {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isSupported, setIsSupported] = useState(false);
 	const [_u, setU] = useState<SpeechSynthesisUtterance | null>(null);
-	const { setAudioPlaying } = useModalQueue();
+	// const { setAudioPlaying } = useModalQueue();
 
 	useEffect(() => {
 		if (typeof window !== "undefined" && "speechSynthesis" in window) {
@@ -28,7 +28,7 @@ export function AudioReader({ text, className = "" }: AudioReaderProps) {
 			// [FIX] Explicitly cancel all narrations immediately
 			window.speechSynthesis.cancel();
 			setIsPlaying(false);
-			setAudioPlaying(false);
+			// setAudioPlaying(false);
 		} else {
 			// [NEW] Sanitize text: prevent empty strings or undefined from reaching the engine
 			const cleanText = (text || "").trim();
@@ -48,19 +48,19 @@ export function AudioReader({ text, className = "" }: AudioReaderProps) {
 
 			utterance.onstart = () => {
 				setIsPlaying(true);
-				setAudioPlaying(true);
+				// setAudioPlaying(true);
 			};
 
 			utterance.onend = () => {
 				setIsPlaying(false);
-				setAudioPlaying(false);
+				// setAudioPlaying(false);
 			};
 
 			utterance.onerror = (e) => {
 				// [FIX] Always reset state on error to prevent blocking the ModalQueue
 				console.error("SpeechSynthesis Error:", e);
 				setIsPlaying(false);
-				setAudioPlaying(false);
+				// setAudioPlaying(false);
 
 				// Optional: Force a global cancel on error just in case
 				if (typeof window !== "undefined") {

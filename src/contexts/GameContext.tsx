@@ -92,6 +92,7 @@ const INITIAL_STATE: GameState = {
 	security: 0,
 	history: [],
 	activeArcId: null,
+	isProcessingGameOver: false,
 	hasHydrated: true,
 };
 
@@ -268,6 +269,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
 		case "SET_ACTIVE_ARC":
 			return { ...state, activeArcId: action.payload };
+		case "SET_PROCESSING_GAME_OVER":
+			return { ...state, isProcessingGameOver: action.payload };
 
 		case "LOG_EVENT":
 			return { ...state, history: [...state.history, action.payload] };
@@ -328,9 +331,10 @@ export interface GameContextType extends GameState {
 	updateDocuments: (updates: Partial<GameState["documents"]>) => void;
 	setEmployedFormal: (isEmployed: boolean) => void;
 	logEvent: (event: GameEvent) => void;
-	setActiveArc: (arcId: string | null) => void;
 	setFlag: (key: string, value: boolean) => void;
+	setIsProcessingGameOver: (value: boolean) => void;
 	registerOccurrence: (text: string) => void;
+	setActiveArc: (arcId: string | null) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -396,7 +400,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				console.log("✅ Game State Hydrated & Validated", savedData);
 				dispatch({
 					type: "SET_STATE",
-					payload: { ...savedData, hasHydrated: true } as GameState,
+					payload: {
+						...INITIAL_STATE,
+						...savedData,
+						hasHydrated: true,
+					} as GameState,
 				});
 			} catch (err) {
 				const error = err as { status?: number };
@@ -467,6 +475,26 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 						amount: amount - state.phoneBattery,
 					},
 				});
+			};
+
+			// [NEW] Global Debug Object for manual testing
+			(window as any).__GAME_DEBUG__ = {
+				modifyStat: (stat: string, amount: number) => {
+					dispatch({
+						type: "MODIFY_STAT",
+						payload: { stat: stat as any, amount },
+					});
+				},
+				setState: (newState: Partial<GameState>) => {
+					dispatch({
+						type: "SET_STATE",
+						payload: { ...state, ...newState } as GameState,
+					});
+				},
+				triggerDilemma: (id: string) => {
+					dispatch({ type: "SET_ACTIVE_DILEMMA", payload: id });
+				},
+				reset: () => resetGame(),
 			};
 
 			// biome-ignore lint/suspicious/noExplicitAny: debug global
@@ -641,6 +669,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		dispatch({ type: "SET_ACTIVE_ARC", payload: arcId });
 	}, []);
 
+	const setIsProcessingGameOver = useCallback((value: boolean) => {
+		dispatch({ type: "SET_PROCESSING_GAME_OVER", payload: value });
+	}, []);
+
 	const value = useMemo(
 		() => ({
 			...state,
@@ -678,6 +710,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			registerOccurrence: (text: string) =>
 				dispatch({ type: "REGISTER_OCCURRENCE", payload: text }),
 			setActiveArc,
+			setIsProcessingGameOver,
 			hasHydrated, // [CRITICAL] Export hydration status
 		}),
 		[

@@ -41,8 +41,6 @@ export function DilemmaModal({
 	const { triggerClick } = useHaptics();
 	const { trackDilemmaDecision } = useODSTracker();
 	const { auditResolution } = useImpactLogger();
-	const { setAudioPlaying, audioPlaying } = useModalQueue();
-
 	// A11y States
 	const [zoomLevel, setZoomLevel] = useState(1); // 1 = 100%, 1.2 = 120%
 	const [isSpeaking, setIsSpeaking] = useState(false);
@@ -77,7 +75,6 @@ export function DilemmaModal({
 		if (isSpeaking) {
 			window.speechSynthesis.cancel();
 			setIsSpeaking(false);
-			setAudioPlaying(false);
 		} else {
 			const textToRead = currentOption
 				? outcome === "failure" && currentOption.consequence_failure
@@ -95,13 +92,11 @@ export function DilemmaModal({
 
 			utterance.onend = () => {
 				setIsSpeaking(false);
-				setAudioPlaying(false);
 			};
 			window.speechSynthesis.speak(utterance);
 			setIsSpeaking(true);
-			setAudioPlaying(true);
 		}
-	}, [isSpeaking, currentOption, outcome, dilemma, voice, setAudioPlaying]);
+	}, [isSpeaking, currentOption, outcome, dilemma, voice]);
 
 	const toggleZoom = () => {
 		setZoomLevel((prev) => (prev >= 1.4 ? 1 : prev + 0.2));
@@ -412,7 +407,7 @@ export function DilemmaModal({
 										style={{
 											fontSize: `${Math.max(0.875, zoomLevel * 0.8)}rem`,
 										}} // Scale button text slightly less aggresive
-										disabled={isPending || audioPlaying}
+										disabled={isPending || isSpeaking}
 										onClick={() => handleOptionSelect(index)}
 									>
 										<div

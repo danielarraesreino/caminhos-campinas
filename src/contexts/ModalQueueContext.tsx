@@ -5,7 +5,8 @@ import {
 	type ReactNode,
 	useCallback,
 	useContext,
-	useEffect,
+	useMemo,
+	useRef,
 	useState,
 } from "react";
 import type { Dilemma } from "@/features/game-loop/dilemma-types";
@@ -13,10 +14,8 @@ import type { Dilemma } from "@/features/game-loop/dilemma-types";
 /**
  * MODAL QUEUE MANAGER
  *
- * Gerencia a fila de eventos visuais/sonoros para evitar sobreposição caótica.
- * Garante que apenas UM modal esteja ativo por vez, respeitando:
- * - Narração de áudio em andamento (audioPlaying)
- * - Cooldown de 2 segundos entre modais
+ * Gerencia a fila de eventos visuais para evitar sobreposição caótica.
+ * Garante que apenas UM modal esteja ativo por vez.
  */
 
 export type ModalType = "tutorial" | "dilemma" | "chat" | "gameover" | null;
@@ -31,14 +30,12 @@ interface ModalQueueContextValue {
 	// Estado da Fila
 	pendingEvents: QueuedEvent[];
 	activeModal: ModalType;
-	audioPlaying: boolean;
-	isUIBlocked: boolean;
+	isUIBlocked: boolean; // Agora reflete apenas se há modal ativo
 
 	// Controle de Modais
 	enqueueDilemma: (dilemma: Dilemma, priority?: number) => void;
 	processQueue: () => Dilemma | null;
 	setActiveModal: (type: ModalType) => void;
-	setAudioPlaying: (playing: boolean) => void;
 
 	// Consulta de Estado
 	canShowModal: () => boolean;
@@ -54,13 +51,15 @@ interface ModalQueueProviderProps {
 }
 
 export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
-	// [FIX] Sync with real GameContext state
 	const _gameContext = useGameContext();
 
 	const [pendingEvents, setPendingEvents] = useState<QueuedEvent[]>([]);
 	const [activeModal, setActiveModalState] = useState<ModalType>(null);
-	const [audioPlaying, setAudioPlaying] = useState(false);
 	const [lastModalClosedAt, setLastModalClosedAt] = useState<number>(0);
+
+	// Refs para controle de fluxo
+	const isProcessingRef = useRef(false);
+	const lastQueueUpdateRef = useRef<number>(0);
 
 	// Cooldown de 2 segundos entre modais
 	const MODAL_COOLDOWN_MS = 2000;
@@ -69,15 +68,15 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 	 * Verifica se um modal pode ser exibido
 	 */
 	const canShowModal = useCallback((): boolean => {
+		// Guard: Prevenir se estiver processando
+		if (isProcessingRef.current) {
+			return false;
+		}
+
 		if (activeModal !== null) {
 			console.log(
 				`[ModalQueue] Blocked: Modal '${activeModal}' is already open`,
 			);
-			return false;
-		}
-
-		if (audioPlaying) {
-			console.log("[ModalQueue] Blocked: Audio narration is playing");
 			return false;
 		}
 
@@ -90,7 +89,7 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 		}
 
 		return true;
-	}, [activeModal, audioPlaying, lastModalClosedAt]);
+	}, [activeModal, lastModalClosedAt]);
 
 	/**
 	 * Adiciona um dilema à fila com prioridade
@@ -123,9 +122,14 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 	 * Processa a fila e retorna o próximo dilema a ser exibido
 	 */
 	const processQueue = useCallback((): Dilemma | null => {
-		// Strict Audio blocking: If audio is playing, absolutely do not process queue
-		if (audioPlaying) {
-			console.log("[ModalQueue] Blocked: Audio is playing (Strict Check)");
+		// Guard 1: Prevenir re-entrância
+		if (isProcessingRef.current) {
+			return null;
+		}
+
+		// Guard 2: Throttle entre processamentos (100ms mínimo)
+		const now = Date.now();
+		if (now - lastQueueUpdateRef.current < 100) {
 			return null;
 		}
 
@@ -133,19 +137,25 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 			return null;
 		}
 
-		const nextEvent = pendingEvents[0];
-		setPendingEvents((prev) => prev.slice(1));
+		isProcessingRef.current = true;
+		lastQueueUpdateRef.current = now;
 
-		console.log(
-			`[ModalQueue] Processing dilemma '${nextEvent.dilemma.id}' from queue`,
-		);
-		return nextEvent.dilemma;
-	}, [canShowModal, pendingEvents, audioPlaying]);
+		try {
+			const nextEvent = pendingEvents[0];
+			setPendingEvents((prev) => prev.slice(1));
 
-	// Debug Audio State
-	useEffect(() => {
-		console.log(`[ModalQueue] Audio playing state changed: ${audioPlaying}`);
-	}, [audioPlaying]);
+			console.log(
+				`[ModalQueue] Processing dilemma '${nextEvent.dilemma.id}' from queue`,
+			);
+
+			return nextEvent.dilemma;
+		} finally {
+			// Liberar lock com pequeno delay
+			setTimeout(() => {
+				isProcessingRef.current = false;
+			}, 50);
+		}
+	}, [canShowModal, pendingEvents]);
 
 	/**
 	 * Define o tipo de modal ativo
@@ -170,21 +180,27 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 		console.log("[ModalQueue] Queue cleared");
 	}, []);
 
-	// Auto-processing was removed to prevent dilemma leak.
-	// Dilemmas are now manually dequeued by the GamePage.
-
-	const value: ModalQueueContextValue = {
-		pendingEvents,
-		activeModal,
-		audioPlaying,
-		isUIBlocked: audioPlaying || activeModal !== null,
-		enqueueDilemma,
-		processQueue,
-		setActiveModal,
-		setAudioPlaying,
-		canShowModal,
-		clearQueue,
-	};
+	const value = useMemo(
+		() => ({
+			pendingEvents,
+			activeModal,
+			isUIBlocked: activeModal !== null,
+			enqueueDilemma,
+			processQueue,
+			setActiveModal,
+			canShowModal,
+			clearQueue,
+		}),
+		[
+			pendingEvents,
+			activeModal,
+			enqueueDilemma,
+			processQueue,
+			setActiveModal,
+			canShowModal,
+			clearQueue,
+		],
+	);
 
 	return (
 		<ModalQueueContext.Provider value={value}>

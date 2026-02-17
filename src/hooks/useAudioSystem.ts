@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
-// Global Audio State (Module Level)
+// Global Audio State (Module Level) for Singleton behavior across component unmounts
 let globalAmbience: HTMLAudioElement | null = null;
 let globalVolume = 0.5;
 let fadeInterval: NodeJS.Timeout | null = null;
@@ -16,6 +16,7 @@ interface AudioSystemCallbacks {
 	stopAmbience: (options?: { fade?: boolean }) => void;
 	setVolume: (volume: number) => void;
 	initAudio: () => void;
+	isPlaying: boolean;
 }
 
 // Track Mapping
@@ -29,17 +30,19 @@ const TRACK_MAP: Record<string, string> = {
 	clique: "click",
 
 	// NOVOS - Atmosfera Narrativa (com fallbacks)
-	heartbeat: "rain_heavy", // TODO: substituir por heartbeat_stress.mp3
-	phone_ring: "click", // TODO: substituir por phone_ringing_distance.mp3
-	bureaucracy: "traffic", // TODO: substituir por office_papers_typing.mp3
-	street_noise: "traffic", // Vozes, movimento - usa traffic como fallback
-	despair: "rain_heavy", // Vento vazio, solidão - usa rain como fallback
+	heartbeat: "rain_heavy",
+	phone_ring: "click",
+	bureaucracy: "traffic",
+	street_noise: "traffic",
+	despair: "rain_heavy",
 };
 
 export function useAudioSystem(): AudioSystemCallbacks {
-	const [pendingTrack, setPendingTrack] = useState<string | null>(null);
+	// [FIX] Use Refs for internal tracking to stay out of render cycle
+	const currentAmbienceRef = useRef<string | null>(null);
+	// We still use some state for UI reactivity if needed, but carefully
+	const [isPlaying, setIsPlaying] = useState(false);
 	const [isInitialized, setIsInitialized] = useState(false);
-	const [, setLocalVolume] = useState(globalVolume);
 
 	const initAudio = useCallback(() => {
 		if (isInitialized) return;
@@ -47,6 +50,11 @@ export function useAudioSystem(): AudioSystemCallbacks {
 	}, [isInitialized]);
 
 	const stopAmbience = useCallback((options?: { fade?: boolean }) => {
+		currentAmbienceRef.current = null;
+
+		// Guard: Only update state if it changes
+		setIsPlaying((prev) => (prev ? false : prev));
+
 		if (!globalAmbience) return;
 
 		if (options?.fade) {
@@ -72,54 +80,34 @@ export function useAudioSystem(): AudioSystemCallbacks {
 		}
 	}, []);
 
-	// Effect to play pending track once initialized
-	useEffect(() => {
-		if (isInitialized && pendingTrack) {
-			const mappedId = TRACK_MAP[pendingTrack] || pendingTrack;
-			const src = `/sounds/${mappedId}.wav`;
-
-			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
-				setPendingTrack(null);
-				return;
-			}
-
-			stopAmbience();
-
-			try {
-				const audio = new Audio(src);
-				audio.loop = true;
-				audio.volume = globalVolume;
-				audio
-					.play()
-					.catch((e) =>
-						console.warn(
-							"Pending audio play failed (user interaction required):",
-							e,
-						),
-					);
-				globalAmbience = audio;
-			} catch (err) {
-				console.warn("Audio init error:", err);
-			}
-			setPendingTrack(null);
-		}
-	}, [isInitialized, pendingTrack, stopAmbience]);
-
 	const playAmbience = useCallback(
 		(trackId: string, options?: { fade?: boolean }) => {
-			if (!isInitialized) {
-				setPendingTrack(trackId);
-				return;
+			if (!isInitialized) return;
+
+			// [FIX] Guard: Block duplicate calls for same track
+			if (currentAmbienceRef.current === trackId) {
+				// Ensure global matches reality (recovery)
+				if (globalAmbience && !globalAmbience.paused) return;
 			}
+
+			currentAmbienceRef.current = trackId;
+			setIsPlaying((prev) => (!prev ? true : prev));
 
 			const mappedId = TRACK_MAP[trackId] || trackId;
 			const src = `/sounds/${mappedId}.wav`;
 
+			// Check actual audio element
 			if (globalAmbience?.src.endsWith(src) && !globalAmbience.paused) {
 				return;
 			}
 
-			stopAmbience(options);
+			// Stop previous
+			if (globalAmbience) {
+				// Instant stop of previous if switching, or let stopAmbience handle it?
+				// To force switch, we stop current logic.
+				if (fadeInterval) clearInterval(fadeInterval);
+				globalAmbience.pause();
+			}
 
 			try {
 				const audio = new Audio(src);
@@ -152,7 +140,7 @@ export function useAudioSystem(): AudioSystemCallbacks {
 				console.warn("Audio play runtime error:", err);
 			}
 		},
-		[isInitialized, stopAmbience],
+		[isInitialized],
 	);
 
 	const playSfx = useCallback((trackId: string) => {
@@ -170,7 +158,6 @@ export function useAudioSystem(): AudioSystemCallbacks {
 
 	const setVolume = useCallback((vol: number) => {
 		globalVolume = vol;
-		setLocalVolume(vol);
 		if (globalAmbience) {
 			globalAmbience.volume = vol;
 		}
@@ -182,5 +169,6 @@ export function useAudioSystem(): AudioSystemCallbacks {
 		stopAmbience,
 		setVolume,
 		initAudio,
+		isPlaying,
 	};
 }

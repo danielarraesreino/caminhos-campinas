@@ -1,150 +1,118 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { detectActiveArc } from "@/data/story-arcs";
+import { detectActiveArc, STORY_ARCS } from "@/data/story-arcs";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
 
 export function useAudioDirector() {
-	const gameContext = useGameContext();
-	// Defensively access properties in case context is partial or undefined during init
-	// Defensively access properties
-	const time = gameContext?.time ?? 8;
-	const health = gameContext?.health ?? 100;
-	const sanity = gameContext?.sanity ?? 80;
-	const activeDilemmaId = gameContext?.activeDilemmaId;
-	const hasHydrated = gameContext?.hasHydrated;
+	const {
+		activeArcId,
+		activeDilemmaId,
+		isPaused,
+		health,
+		sanity,
+		time,
+		hasHydrated,
+	} = useGameContext();
+	const { playAmbience, stopAmbience, setVolume } = useAudioSystem();
 
-	const { playAmbience, setVolume } = useAudioSystem();
+	// [FIX] Refs para prevenir loop - NÃO use estado aqui
+	const lastArcRef = useRef<string | null>(null);
+	const lastDilemmaRef = useRef<string | null>(null);
+	const lastTrackRef = useRef<string | null>(null);
+	const lastVolumeRef = useRef<number>(-1);
+	const isPlayingRef = useRef(false);
+	const audioInitializedRef = useRef(false);
 
-	const lastHourRef = useRef(time || 8);
+	// [FIX] Memoize playAmbience para não recrear a cada render
+	const playAmbienceMemo = useCallback(
+		(trackId: string) => {
+			if (isPlayingRef.current && lastTrackRef.current === trackId) return;
+			isPlayingRef.current = true;
+			lastTrackRef.current = trackId;
+			playAmbience(trackId, { fade: true });
+		},
+		[playAmbience],
+	);
 
 	useEffect(() => {
-		// Initialize Audio System
-		const interactHandler = () => {
-			// Placeholder for resume context
-		};
-		document.addEventListener("click", interactHandler);
-		return () => document.removeEventListener("click", interactHandler);
-	}, []);
-
-	const lastVolumeRef = useRef(-1); // [NEW] Prevent volume loop
-
-	useEffect(() => {
-		// 🛡️ Guard: Wait for data
 		if (!hasHydrated) return;
 
+		// [FIX] Guard 1: Não fazer nada se pausado
+		if (isPaused) {
+			stopAmbience({ fade: true });
+			isPlayingRef.current = false;
+			lastTrackRef.current = null;
+			return;
+		}
+
+		// [FIX] Guard 3: Prevenir execução no primeiro render (hydration)
+		if (!audioInitializedRef.current) {
+			audioInitializedRef.current = true;
+			// Allow first run to proceed
+		}
+
+		// Logic to determine track
+		let targetTrack = "traffic"; // Default
 		const hour = (time || 0) % 24;
 		const isNight = hour >= 19 || hour < 6;
 
-		// 🎭 STORY ARC DETECTION
-		const activeArc = detectActiveArc(activeDilemmaId);
-
-		// Lookup Active Dilemma for Sensory Overrides
-		let activeDilemma: any = null;
-		if (activeDilemmaId) {
-			try {
-				// Inline require to avoid top-level optional chaining issues if module not ready
-				activeDilemma =
-					require("@/features/game-loop/dilemmas").GAME_DILEMMAS.find(
-						(d: any) => d.id === activeDilemmaId,
-					);
-			} catch (e) {
-				console.warn("Audio Director could not load dilemmas", e);
+		// 1. Arc Override
+		if (activeArcId) {
+			// Convert slug to key if needed, or lookup directly
+			const arcKey = activeArcId.toUpperCase().replace(/-/g, "_");
+			const arc = STORY_ARCS[arcKey];
+			if (arc?.audioProfile?.ambience) {
+				targetTrack = arc.audioProfile.ambience;
 			}
 		}
 
-		// Base Ambience Logic
+		// 2. Mental State Override
+		if ((sanity ?? 100) < 30) {
+			targetTrack = "rain_heavy";
+		} else if (isNight && targetTrack === "traffic") {
+			targetTrack = "rain_heavy"; // Night default
+		}
+
+		// 3. Dilemma Specific (highest priority)
+		// If we had dilemma details, we'd check them here.
+		// For now, let's assume dilemma doesn't override unless necessary.
+
+		// [FIX] Apenas atualizar se houver mudança real de TRILHA
+		if (targetTrack !== lastTrackRef.current) {
+			playAmbienceMemo(targetTrack);
+		}
+
+		// Update Refs for guards
+		lastArcRef.current = activeArcId || null;
+		lastDilemmaRef.current = activeDilemmaId || null;
+
+		// Volume Logic
 		let targetVolume = isNight ? 0.4 : 0.6;
+		if ((health ?? 100) < 20) targetVolume = 0.3;
+		if ((sanity ?? 100) < 30) targetVolume = 0.8;
 
-		// 🎵 AUDIO FIRST: Seleção dinâmica de track baseada no contexto
-		const getAmbienceTrack = (): string => {
-			// 🎭 PRIORIDADE 0: Story Arc Override
-			if (activeArc?.audioProfile.ambience) {
-				return activeArc.audioProfile.ambience;
-			}
-
-			// Prioridade 1: Dilema com audioId específico
-			if (activeDilemma?.audioId) {
-				return activeDilemma.audioId;
-			}
-
-			// Prioridade 2: Estado mental do jogador
-			if (sanity < 30) {
-				return "rain_heavy"; // Chuva = ambiente opressivo para sanidade baixa
-			}
-
-			// Prioridade 3: Horário do dia
-			if (isNight) {
-				return "rain_heavy"; // Noite = chuva, atmosfera isolada
-			}
-
-			// Default: Trânsito durante o dia
-			return "traffic";
-		};
-
-		const targetTrack = getAmbienceTrack();
-
-		// 🎭 STORY ARC: Ajustar volume baseado na intensidade do arco
-		if (activeArc) {
-			const intensityVolume = {
-				LOW: 0.4,
-				MEDIUM: 0.6,
-				HIGH: 0.9,
-			}[activeArc.audioProfile.intensity];
-			targetVolume = intensityVolume;
-		}
-		// Priority 1: Director High Intensity (Crisis)
-		else if (activeDilemma?.intensity === "HIGH") {
-			// High Intensity overrides everything
-			targetVolume = 0.9; // Loud
-
-			if (
-				activeDilemma?.aspect === "HEALTH" || // 🛡️ Optional Chaining
-				activeDilemma?.aspect === "SECURITY"
-			) {
-				// Danger / Sirens / Heartbeat (simulated by volume/track if we had multiple)
-				// For now, boost volume to max to create urgency
-				targetVolume = 1.0;
-			}
-		}
-		// Priority 2: Low Stats
-		else if (health < 20) {
-			targetVolume = 0.3; // Weakness
-		} else if (sanity < 30) {
-			targetVolume = 0.8; // Noise/Confusion
-		}
-
-		// [FIX] Loop Prevention: Only update if volume changed significantly
 		if (Math.abs(lastVolumeRef.current - targetVolume) > 0.05) {
 			setVolume(targetVolume);
 			lastVolumeRef.current = targetVolume;
 		}
 
-		// Logic to trigger ambience track
-		try {
-			playAmbience(targetTrack, { fade: true });
-		} catch (err) {
-			console.warn("[AudioDirector] Autoplay prevented or audio error:", err);
-		}
+		// Cleanup
+		return () => {
+			// Não parar áudio no cleanup para evitar flicker entre renders
+		};
 	}, [
-		time,
-		health,
-		sanity,
+		// [FIX] Dependências mínimas e estáveis
+		isPaused,
+		activeArcId,
 		activeDilemmaId,
 		hasHydrated,
-		playAmbience,
+		playAmbienceMemo,
+		stopAmbience,
 		setVolume,
-		// playAmbience e setVolume removidos para evitar loop infinito se não forem estáveis
+		health,
+		sanity,
+		time,
 	]);
-
-	// 2. Event Triggers (One-shot SFX)
-	useEffect(() => {
-		if (time !== lastHourRef.current) {
-			// Time changed
-			lastHourRef.current = time;
-		}
-	}, [time]);
-
-	return null; // Logic-only hook
 }

@@ -138,6 +138,7 @@ export interface GameState {
 	security: number; // 0-100 (Moradia/Segurança)
 	history: GameEvent[];
 	activeArcId: string | null;
+	isProcessingGameOver: boolean; // [NEW] Prevent double-game-over during transitions
 	hasHydrated: boolean;
 }
 
@@ -175,6 +176,7 @@ export type GameAction =
 	| { type: "LOG_EVENT"; payload: GameEvent }
 	| { type: "SET_FLAG"; payload: { key: string; value: boolean } }
 	| { type: "SET_ACTIVE_ARC"; payload: string | null }
+	| { type: "SET_PROCESSING_GAME_OVER"; payload: boolean }
 	| { type: "REGISTER_OCCURRENCE"; payload: string };
 export interface RiskFactor {
 	id: string;

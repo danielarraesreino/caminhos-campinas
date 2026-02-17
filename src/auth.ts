@@ -4,7 +4,17 @@ import Google from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	providers: [
-		Google,
+		Google({
+			clientId: process.env.AUTH_GOOGLE_ID,
+			clientSecret: process.env.AUTH_GOOGLE_SECRET,
+			authorization: {
+				params: {
+					prompt: "consent",
+					access_type: "offline",
+					response_type: "code",
+				},
+			},
+		}),
 		Credentials({
 			name: "Anônimo",
 			credentials: {},
@@ -30,8 +40,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			}
 			return session;
 		},
+		// ADICIONAR callback de debug
+		async redirect({ url, baseUrl }) {
+			console.log("[OAuth] Redirect:", url, baseUrl);
+			return url.startsWith(baseUrl) ? url : baseUrl;
+		},
 	},
 	pages: {
 		signIn: "/login",
+		// ADICIONAR página de erro
+		error: "/login?error=oauth",
 	},
 });
