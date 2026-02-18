@@ -13,6 +13,7 @@ import { UrbanServiceSchema } from "@/components/seo/UrbanServiceSchema";
 import { RealitySwitcher } from "@/components/ui/RealitySwitcher";
 import { GameProvider } from "@/contexts/GameContext";
 import { ModalQueueProvider } from "@/contexts/ModalQueueContext";
+import { NarrationProvider } from "@/contexts/NarrationContext";
 import { ServicesProvider } from "@/contexts/ServicesContext";
 import { StartupLogger } from "@/features/debug/StartupLogger";
 import { GameEffectsLayer } from "@/features/ui/GameEffectsLayer";
@@ -57,15 +58,17 @@ export default function RootLayout({
 						<GameProvider>
 							<ModalQueueProvider>
 								<ServicesProvider>
-									<GameEffectsLayer />
-									<ClientLayoutWrapper>{children}</ClientLayoutWrapper>
-									<SpeedInsights />
-									<Clarity />
-									<Analytics />
-									<ServiceWorkerRegister />
-									<UrbanServiceSchema />
-									<RealitySwitcher />
-									<StartupLogger />
+									<NarrationProvider>
+										<GameEffectsLayer />
+										<ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+										<SpeedInsights />
+										<Clarity />
+										<Analytics />
+										<ServiceWorkerRegister />
+										<UrbanServiceSchema />
+										<RealitySwitcher />
+										<StartupLogger />
+									</NarrationProvider>
 								</ServicesProvider>
 							</ModalQueueProvider>
 						</GameProvider>

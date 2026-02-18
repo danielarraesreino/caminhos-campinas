@@ -1,136 +1,74 @@
 "use client";
 
 import { Mic, SkipForward, Volume2, VolumeX } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { useModalQueue } from "@/contexts/ModalQueueContext";
+import { useNarration } from "@/contexts/NarrationContext";
 import { detectActiveArc } from "@/data/story-arcs";
 import type { Dilemma } from "@/features/game-loop/dilemma-types";
 
 export function AudioDirector() {
-	// const { setAudioPlaying } = useModalQueue();
 	const { activeDilemmaId, hasHydrated } = useGameContext();
 	const [activeDilemma, setActiveDilemma] = useState<Dilemma | null>(null);
-	const [isPlaying, setIsPlaying] = useState(false);
+	const { isNarrating, currentText, clearNarrationQueue } = useNarration();
 	const [isMuted, setIsMuted] = useState(false);
 	const [audioProgress, setAudioProgress] = useState(0);
-	// Logic to trigger ambience track
-	const synth = useRef<SpeechSynthesis | null>(null);
-	const utterance = useRef<SpeechSynthesisUtterance | null>(null);
 
-	const cancelSpeech = useCallback(() => {
-		if (synth.current) {
-			synth.current.cancel();
-			setIsPlaying(false);
-			// setAudioPlaying(false);
-			setAudioProgress(0);
+	// AudioDirector now delegates narration to NarrationContext
+	// but can still show progress for the current text if needed.
+	// Progress simulation can be moved to context or kept here if we track duration.
+	useEffect(() => {
+		if (isNarrating && currentText) {
+			const estimatedDuration = (currentText.length / 15) * 1000;
+			const startTime = Date.now();
+			const interval = setInterval(() => {
+				const elapsed = Date.now() - startTime;
+				const p = Math.min(99, (elapsed / estimatedDuration) * 100);
+				setAudioProgress(p);
+			}, 100);
+			return () => clearInterval(interval);
 		}
-	}, []);
+		setAudioProgress(0);
+	}, [isNarrating, currentText]);
 
-	const playNarration = useCallback(
-		(text: string, _voiceName: string | null) => {
-			if (!synth.current || isMuted) return;
-
-			cancelSpeech();
-
-			// Short delay before starting
-			setTimeout(() => {
-				const u = new SpeechSynthesisUtterance(text);
-				utterance.current = u;
-				u.lang = "pt-BR";
-				u.rate = 1.05; // Slightly faster
-				u.pitch = 1.0;
-
-				u.onstart = () => {
-					setIsPlaying(true);
-					// setAudioPlaying(true);
-					setAudioProgress(0);
-				};
-
-				u.onerror = (e) => {
-					console.warn("Speech error:", e);
-					setIsPlaying(false);
-					// setAudioPlaying(false);
-				};
-
-				// Fake progress simulation
-				const estimatedDuration = (text.length / 15) * 1000;
-				const startTime = Date.now();
-
-				const progressInterval = setInterval(() => {
-					if (!synth.current?.speaking) {
-						clearInterval(progressInterval);
-						return;
-					}
-					const elapsed = Date.now() - startTime;
-					const p = Math.min(99, (elapsed / estimatedDuration) * 100);
-					setAudioProgress(p);
-				}, 100);
-
-				u.onend = () => {
-					clearInterval(progressInterval);
-					setIsPlaying(false);
-					// setAudioPlaying(false);
-					setAudioProgress(100);
-				};
-
-				if (synth.current) {
-					synth.current.speak(u);
-				}
-			}, 500);
-		},
-		[isMuted, cancelSpeech],
-	);
-
-	// Load dilemma data when ID changes
+	// Load dilemma data when ID changes (UI only)
 	useEffect(() => {
 		if (!activeDilemmaId || !hasHydrated) {
 			setActiveDilemma(null);
-			cancelSpeech();
 			return;
 		}
 
 		try {
-			// Dynamic import or require to get dilemma data
 			const allDilemmas =
 				require("@/features/game-loop/dilemmas").GAME_DILEMMAS;
 			const found = allDilemmas.find((d: Dilemma) => d.id === activeDilemmaId);
 			if (found) {
 				setActiveDilemma(found);
-				playNarration(found.text || found.description, found.audioId || null);
 			}
 		} catch (e) {
-			console.error("Failed to load dilemma for audio:", e);
+			console.error("Failed to load dilemma for audio UI:", e);
 		}
-	}, [activeDilemmaId, hasHydrated, cancelSpeech, playNarration]);
+	}, [activeDilemmaId, hasHydrated]);
 
 	// Detect active Story Arc
 	const activeArc = detectActiveArc(activeDilemmaId);
 
-	// Initialize Synth
+	// Cleanup
 	useEffect(() => {
-		if (typeof window !== "undefined") {
-			synth.current = window.speechSynthesis;
-		}
-
-		// Cleanup
 		return () => {
-			cancelSpeech();
+			clearNarrationQueue();
 		};
-	}, [cancelSpeech]);
+	}, [clearNarrationQueue]);
 
 	const handleSkip = () => {
-		cancelSpeech();
+		clearNarrationQueue();
 		setAudioProgress(100);
 	};
 
 	const toggleMute = () => {
 		setIsMuted(!isMuted);
 		if (!isMuted) {
-			// Muting
-			cancelSpeech();
-		} else {
-			// Unmuting
+			clearNarrationQueue();
 		}
 	};
 
@@ -146,7 +84,7 @@ export function AudioDirector() {
 				bg-neutral-900/95 border-t-4 border-amber-500
 				w-full max-w-lg rounded-t-xl shadow-2xl
 				transform transition-all duration-500 ease-out
-				${isPlaying ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
+				${isNarrating ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
 			`}
 			>
 				{/* Progress Bar (Visual Timer) */}
@@ -160,11 +98,11 @@ export function AudioDirector() {
 				<div className="p-4 flex items-center gap-4">
 					{/* Speaker Icon / Animation */}
 					<div className="relative w-12 h-12 flex-shrink-0 flex items-center justify-center bg-neutral-800 rounded-full border border-neutral-700">
-						{isPlaying ? (
+						{isNarrating ? (
 							<div className="absolute inset-0 rounded-full animate-ping bg-amber-500/20" />
 						) : null}
 						<Mic
-							className={`text-amber-500 ${isPlaying ? "animate-pulse" : ""}`}
+							className={`text-amber-500 ${isNarrating ? "animate-pulse" : ""}`}
 							size={24}
 						/>
 					</div>

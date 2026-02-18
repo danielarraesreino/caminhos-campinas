@@ -5,7 +5,7 @@ export class GameMasterAgent extends BaseAgent {
 	name = "GameMasterAgent";
 	description = "O Sistema - Gerenciador de Regras e Lógica de Jogo";
 
-	protected getSystemPrompt(context: AgentContext): string {
+	protected getSystemPrompt(_context: AgentContext): string {
 		// This prompt is focused on game mechanics, rules, and debugging help if needed.
 		return `
       You are the Game Master System for "Caminhos Campinas".

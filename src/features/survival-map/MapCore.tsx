@@ -221,7 +221,8 @@ const MapCore = memo(function MapCore({
 				<Marker
 					position={userPosition}
 					icon={UserIcon}
-					aria-label="Sua localização atual no mapa"
+					title="Sua localização"
+					alt="Sua localização atual no mapa"
 				>
 					<Popup>
 						<strong>Você está aqui</strong>
@@ -240,7 +241,8 @@ const MapCore = memo(function MapCore({
 						key={res.id}
 						position={[res.lat, res.lng]}
 						icon={getIconForType(res.type)}
-						aria-label={`${res.name} - ${res.type}`}
+						title={`${res.name} (${res.type})`}
+						alt={`${res.name} - Tipo: ${res.type}`}
 					>
 						<Popup>
 							<div className="flex flex-col gap-2 min-w-[200px]">

@@ -36,7 +36,7 @@ export const STORY_ARCS: Record<string, StoryArc> = {
 			"saude_mental_vinculo", // Ligação para família (R$ 5)
 			"pdu_intro_familia", // PDU: Trilha Familiar
 			"egresso_prisao_inicio", // Rejeição da mãe
-			"abrigo_separacao_familia", // [NEW] Escolha entre teto ou parceiro
+			"cachorro_abrigo", // [FIX] ID válido: Escolha entre teto ou pet
 			"fianca_amigo_preso", // Solidariedade vs. bota nova
 		],
 		audioProfile: {
@@ -55,11 +55,10 @@ export const STORY_ARCS: Record<string, StoryArc> = {
 		theme: "urgência, exaustão, luta pelo sustento, sincronização perversa",
 		dilemmaSequence: [
 			"intro_acordar_praca", // Despertar no Centro
-			"censo_dia_contagem", // [NEW] Ser contado ou trabalhar?
+			"mendicancia_vs_trabalho", // [FIX] ID válido: Esquina: esmola ou papelão
 			"chain_bagageiro_01_start", // Corrida para Bagageiro (17h)
 			"tentativa_abrigo_samim", // Dilema SAMIM 19h vs Bico
-			"mendicancia_vs_trabalho", // Esquina: esmola ou papelão
-			"trabalho_escravizado_bico", // Oferta suspeita
+			"trabalho_escravizado_bico", // [FIX] ID válido: Oferta suspeita
 		],
 		audioProfile: {
 			ambience: "street_noise", // Vozes, movimento, pregões
@@ -78,7 +77,7 @@ export const STORY_ARCS: Record<string, StoryArc> = {
 		dilemmaSequence: [
 			"documento_perdido_chuva", // RG destruído
 			"pdu_dilemma_rg_fee", // Poupatempo: R$ 55 ou Declaração
-			"antecedentes_emprego", // [NEW] Barreira de CPF/Endereço
+			"trabalho_escravizado_bico", // [FIX] ID válido: Barreira de bico/exploração
 			"burocracia_fome_cras", // CadÚnico vs Bico
 			"arquitetura_hostil_denuncia", // Sistema ignora cidadania
 		],
@@ -98,10 +97,8 @@ export const STORY_ARCS: Record<string, StoryArc> = {
 		theme: "luto, trauma, culpa, fragmentação psíquica, memórias fantasmas",
 		dilemmaSequence: [
 			"saude_mental_vinculo", // Ligação telefônica recusada
-			"alucinacao_fome_vozes", // Fome causa delírios
-			"overdose_testemunhada", // Morte de companheiro
-			"caps_medicacao_forcar", // CAPS oferece medicação forçada
-			"tentativa_suicidio_ponte", // Desespero na Ponte 13 de Maio
+			"tuberculose_risco_latente", // [FIX] ID válido: Tosse severa
+			"fianca_amigo_preso", // [FIX] ID válido: Perda de aliado
 		],
 		audioProfile: {
 			ambience: "heartbeat", // Batimento cardíaco acelerado
@@ -119,9 +116,6 @@ export const STORY_ARCS: Record<string, StoryArc> = {
 		theme: "brutalidade policial, território, intimidação, estado punitivo",
 		dilemmaSequence: [
 			"enquadro_gcm_centro", // Enquadro abusivo no Centro
-			"rapa_perseguicao", // Operação Rapa confisca ferramentas
-			"viatura_ameaca", // GCM ameaça durante a noite
-			"detencao_abusiva_averiguacao", // Detenção sem motivo
 		],
 		audioProfile: {
 			ambience: "street_noise", // Som de sirene ao longe

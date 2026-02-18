@@ -2,7 +2,6 @@
 
 import { Pause, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useModalQueue } from "@/contexts/ModalQueueContext";
 
 interface AudioReaderProps {
 	text: string;

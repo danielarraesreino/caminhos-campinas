@@ -350,6 +350,18 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 	const [hasHydrated, setHasHydrated] = useState(false);
 	const { db } = useOfflineDB();
 
+	const resetGame = useCallback(async () => {
+		if (db) {
+			try {
+				const doc = await db.get(DOC_ID);
+				await db.remove(doc);
+			} catch (_e) {
+				/* ignore */
+			}
+		}
+		dispatch({ type: "RESET_GAME" });
+	}, [db]);
+
 	// 1. Hydration (Load from PouchDB)
 	useEffect(() => {
 		if (!db) return;
@@ -531,7 +543,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 				}
 			};
 		}
-	}, [db, state]);
+	}, [db, state, resetGame]);
 
 	// --- Helpers ---
 
@@ -628,18 +640,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 		},
 		[addMoney, modifyStat, advanceTime],
 	);
-
-	const resetGame = useCallback(async () => {
-		if (db) {
-			try {
-				const doc = await db.get(DOC_ID);
-				await db.remove(doc);
-			} catch (_e) {
-				/* ignore */
-			}
-		}
-		dispatch({ type: "RESET_GAME" });
-	}, [db]);
 
 	const _clearPersistence = useCallback(async () => {
 		if (db) {
@@ -738,6 +738,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			completePduStage,
 			setActiveArc,
 			hasHydrated,
+			setIsProcessingGameOver,
 		],
 	);
 

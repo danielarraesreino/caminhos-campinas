@@ -146,7 +146,7 @@ Obrigado por jogar Caminhos.`,
 		gameState.socialStigma,
 		gameOverResult,
 		isProcessingGameOver,
-		checkGameOver, // ← Certifique-se que é memoizado no context
+		gameState,
 	]);
 
 	// [FIX] Remover useEffect conflitante de morte (já unificado acima)
@@ -209,7 +209,6 @@ Obrigado por jogar Caminhos.`,
 				</div>
 
 				{/* CAMADA 40: HUD e Controles (Sobre o mapa, mas sob modais) */}
-				{/* O HUD agora encapsula a barra superior e os botões flutuantes */}
 				<div className="relative z-40 w-full h-full pointer-events-none">
 					<GameHUD
 						onToggleChat={() => setIsChatOpen(!isChatOpen)}
@@ -222,19 +221,21 @@ Obrigado por jogar Caminhos.`,
 				</div>
 			</div>
 
-			{/* CAMADA 50: Modais de Decisão e Chat (Bloqueantes ou Interativos) */}
-			{/* WALKIE-TALKIE MODE: AudioGuard handles strict blocking */}
+			{/* CAMADA 50: DilemmaModal (Prioridade sobre HUD) */}
 			{activeDilemma && (
-				<DilemmaModal
-					dilemma={activeDilemma}
-					onResolve={resolveDilemma}
-					onClose={clearActiveDilemma}
-					onOpenChat={() => setIsChatOpen(true)}
-				/>
+				<div className="fixed inset-0 z-50">
+					<DilemmaModal
+						dilemma={activeDilemma}
+						onResolve={resolveDilemma}
+						onClose={clearActiveDilemma}
+						onOpenChat={() => setIsChatOpen(true)}
+					/>
+				</div>
 			)}
 
-			{isChatOpen && (
-				<div className="fixed inset-0 z-[150] flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">
+			{/* CAMADA 60: Chat (Fecha quando dilema abre) */}
+			{isChatOpen && !activeDilemma && (
+				<div className="fixed inset-0 z-60 flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">
 					<div className="w-full h-[60vh] md:w-[400px] md:h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 relative">
 						<button
 							type="button"
@@ -249,16 +250,18 @@ Obrigado por jogar Caminhos.`,
 				</div>
 			)}
 
+			{/* CAMADA 70: VoiceReporter */}
 			{isVoiceOpen && (
-				<div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+				<div className="fixed inset-0 z-70 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
 					<VoiceReporter onClose={() => setIsVoiceOpen(false)} />
 				</div>
 			)}
 
 			<AudioDirector />
 
+			{/* CAMADA 80: LocationList (Atlas) */}
 			{isLocationsOpen && (
-				<div className="fixed inset-0 z-[150] flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">
+				<div className="fixed inset-0 z-80 flex items-end justify-center sm:items-center p-4 bg-black/50 backdrop-blur-sm">
 					<div className="w-full h-[80vh] md:w-[500px] md:h-[600px] bg-zinc-950 border border-zinc-800 rounded-t-2xl md:rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 relative">
 						<header className="p-4 border-b border-zinc-900 flex justify-between items-center bg-zinc-950/50 backdrop-blur-md sticky top-0 z-10">
 							<h2 className="text-zinc-100 font-bold uppercase tracking-widest text-xs">
@@ -280,9 +283,9 @@ Obrigado por jogar Caminhos.`,
 				</div>
 			)}
 
-			{/* CAMADA 60: Game Over (Prioridade Máxima) */}
+			{/* CAMADA 100: Game Over (Prioridade Máxima) */}
 			{gameOverResult?.isGameOver && (
-				<div className="absolute inset-0 z-[160] bg-slate-950">
+				<div className="fixed inset-0 z-100 bg-slate-950">
 					<ImpactReport
 						onRestart={handleRestart}
 						gameOverResult={gameOverResult}

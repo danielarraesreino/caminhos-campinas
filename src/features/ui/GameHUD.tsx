@@ -248,31 +248,34 @@ export function GameHUD({
 			<div className="pointer-events-auto fixed bottom-6 right-4 flex flex-col gap-3 z-50">
 				<Button
 					size="icon"
-					className="h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/50 border border-blue-400 transition-transform active:scale-95"
+					className="h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/50 border border-blue-400 transition-transform active:scale-95 flex flex-col items-center justify-center"
 					onClick={onToggleChat}
 					disabled={phoneBattery <= 0}
 					aria-label="Abrir Chat de Ação"
 				>
-					<Mic className="h-5 w-5 text-white" />
+					<Mic className="h-5 w-5 text-white" aria-hidden="true" />
+					<span className="sr-only">Chat</span>
 				</Button>
 
 				<Button
 					size="icon"
-					className="h-12 w-12 rounded-full bg-amber-600 hover:bg-amber-500 shadow-lg shadow-amber-900/50 border border-amber-400 transition-transform active:scale-95"
+					className="h-12 w-12 rounded-full bg-amber-600 hover:bg-amber-500 shadow-lg shadow-amber-900/50 border border-amber-400 transition-transform active:scale-95 flex flex-col items-center justify-center"
 					onClick={onToggleVoice}
 					disabled={phoneBattery <= 0}
-					aria-label="Reportar Ocorrência"
+					aria-label="Relatar Ocorrência: Megafone de voz"
 				>
-					<Megaphone className="h-5 w-5 text-white" />
+					<Megaphone className="h-5 w-5 text-white" aria-hidden="true" />
+					<span className="sr-only">Relatar</span>
 				</Button>
 
 				<Button
 					size="icon"
-					className="h-12 w-12 rounded-full bg-slate-100 hover:bg-white shadow-lg shadow-white/10 border border-zinc-400 transition-transform active:scale-95"
+					className="h-12 w-12 rounded-full bg-slate-100 hover:bg-white shadow-lg shadow-white/10 border border-zinc-400 transition-transform active:scale-95 flex flex-col items-center justify-center"
 					onClick={onToggleLocations}
-					aria-label="Explorar Locais"
+					aria-label="Explorar Locais: Mapa de serviços"
 				>
-					<MapPin className="h-5 w-5 text-zinc-950" />
+					<MapPin className="h-5 w-5 text-zinc-950" aria-hidden="true" />
+					<span className="sr-only">Mapa</span>
 				</Button>
 
 				<Button
@@ -292,11 +295,12 @@ export function GameHUD({
 
 				<Button
 					size="icon"
-					className="h-12 w-12 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-lg transition-transform active:scale-95 flex items-center justify-center p-0"
+					className="h-12 w-12 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 shadow-lg transition-transform active:scale-95 flex flex-col items-center justify-center"
 					onClick={onToggleMenu}
-					aria-label="Abrir Guia de Recursos de Apoio"
+					aria-label="Abrir Guia de Recursos de Apoio: Mochila de itens"
 				>
-					<Package className="h-5 w-5 text-slate-300" />
+					<Package className="h-5 w-5 text-slate-300" aria-hidden="true" />
+					<span className="sr-only">Guia</span>
 				</Button>
 			</div>
 		</div>

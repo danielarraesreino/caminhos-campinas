@@ -42,7 +42,8 @@ export default function CoursePage() {
 			<div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
 				<Image
 					src="/images/sobrio/simulador.png"
-					alt="Fundo Curso - Realismo Sóbrio"
+					alt=""
+					aria-hidden="true"
 					fill
 					priority
 					className="object-cover"
@@ -58,7 +59,10 @@ export default function CoursePage() {
 						href="/"
 						className="p-2 hover:bg-slate-900 rounded-full transition-colors group"
 					>
-						<ArrowLeft className="w-6 h-6 text-slate-400 group-hover:text-white" />
+						<ArrowLeft
+							className="w-6 h-6 text-slate-400 group-hover:text-white"
+							aria-hidden="true"
+						/>
 					</Link>
 					<div>
 						<h1 className="text-3xl font-black uppercase tracking-tighter text-white">
@@ -91,8 +95,11 @@ export default function CoursePage() {
 
 						<section className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
 							<h3 className="font-bold text-white flex items-center gap-2">
-								<BookOpen className="w-5 h-5 text-blue-400" />O que você vai
-								aprender:
+								<BookOpen
+									className="w-5 h-5 text-blue-400"
+									aria-hidden="true"
+								/>
+								O que você vai aprender:
 							</h3>
 							<ul className="space-y-3 text-sm text-slate-400">
 								<li className="flex items-start gap-3">
@@ -114,7 +121,8 @@ export default function CoursePage() {
 									download
 									className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg text-sm font-bold transition-colors w-full border border-slate-700 hover:border-slate-600"
 								>
-									<Download className="w-4 h-4" /> Baixar Ementa Completa (.txt)
+									<Download className="w-4 h-4" aria-hidden="true" /> Baixar
+									Ementa Completa (.txt)
 								</a>
 							</div>
 						</section>
@@ -134,7 +142,7 @@ export default function CoursePage() {
 						{submitted ? (
 							<div className="bg-emerald-500/10 border border-emerald-500/20 p-6 rounded-xl text-center space-y-2 animate-in fade-in zoom-in">
 								<div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-2 text-emerald-400">
-									<Send size={24} />
+									<Send size={24} aria-hidden="true" />
 								</div>
 								<h4 className="font-bold text-white">Inscrição Enviada!</h4>
 								<p className="text-sm text-emerald-200">
@@ -204,7 +212,10 @@ export default function CoursePage() {
 										<div className="space-y-2 animate-in slide-in-from-left-2">
 											<Label htmlFor="phone">Seu Whatsapp</Label>
 											<div className="relative">
-												<Phone className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+												<Phone
+													className="absolute left-3 top-2.5 h-4 w-4 text-slate-500"
+													aria-hidden="true"
+												/>
 												<Input
 													id="phone"
 													type="tel"
@@ -236,7 +247,10 @@ export default function CoursePage() {
 													Nome da Pessoa de Referência
 												</Label>
 												<div className="relative">
-													<User className="absolute left-3 top-2.5 h-4 w-4 text-purple-500" />
+													<User
+														className="absolute left-3 top-2.5 h-4 w-4 text-purple-500"
+														aria-hidden="true"
+													/>
 													<Input
 														id="proxyName"
 														placeholder="Ex: Maria (Assistente Social)"
@@ -253,7 +267,10 @@ export default function CoursePage() {
 													Local de Referência (Serviço)
 												</Label>
 												<div className="relative">
-													<HardHat className="absolute left-3 top-2.5 h-4 w-4 text-purple-500" />
+													<HardHat
+														className="absolute left-3 top-2.5 h-4 w-4 text-purple-500"
+														aria-hidden="true"
+													/>
 													<Select required>
 														<SelectTrigger
 															id="proxyService"

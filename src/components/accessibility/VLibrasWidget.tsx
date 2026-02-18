@@ -20,13 +20,14 @@ export function VLibrasWidget() {
 	useEffect(() => {
 		// Ensure VLibras initializes after script loads
 		const initVLibras = () => {
-			if (typeof window !== "undefined" && (window as any).VLibras) {
+			if (typeof window !== "undefined" && "VLibras" in window) {
+				// biome-ignore lint/suspicious/noExplicitAny: External legacy script
 				new (window as any).VLibras.Widget("https://vlibras.gov.br/app");
 			}
 		};
 
 		// Try to initialize if script already loaded
-		if ((window as any).VLibras) {
+		if (typeof window !== "undefined" && "VLibras" in window) {
 			initVLibras();
 		}
 	}, []);
@@ -46,7 +47,8 @@ export function VLibrasWidget() {
 				src="https://vlibras.gov.br/app/vlibras-plugin.js"
 				strategy="afterInteractive"
 				onLoad={() => {
-					if (typeof window !== "undefined" && (window as any).VLibras) {
+					if (typeof window !== "undefined" && "VLibras" in window) {
+						// biome-ignore lint/suspicious/noExplicitAny: External legacy script
 						new (window as any).VLibras.Widget("https://vlibras.gov.br/app");
 					}
 				}}

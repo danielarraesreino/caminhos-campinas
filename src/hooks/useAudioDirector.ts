@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { useGameContext } from "@/contexts/GameContext";
-import { detectActiveArc, STORY_ARCS } from "@/data/story-arcs";
+import { STORY_ARCS } from "@/data/story-arcs";
 import { useAudioSystem } from "@/hooks/useAudioSystem";
 
 export function useAudioDirector() {

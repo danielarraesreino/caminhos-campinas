@@ -38,7 +38,7 @@ describe("AgentOrchestrator", () => {
 
 describe("NarrativeAgent", () => {
 	it("should generate correct system prompt with game state", () => {
-		const agent = new NarrativeAgent();
+		const _agent = new NarrativeAgent();
 		// Access protected method via any or test public interface if refactored
 		// For now, we trust the integration or we can expose it for testing
 		// Since it's protected, we can't call getSystemPrompt directly in TS without casting

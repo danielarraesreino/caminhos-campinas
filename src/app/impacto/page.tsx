@@ -1,6 +1,7 @@
 "use client";
 import {
 	AlertTriangle,
+	ArrowRight,
 	Droplets,
 	Heart,
 	Home,
@@ -9,6 +10,7 @@ import {
 	Utensils,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useGameContext } from "@/contexts/GameContext";
 import { CENSUS_REALITY } from "@/data/census-reality";
@@ -514,7 +516,27 @@ export default function ImpactPage() {
 				</div>
 
 				{/* ODS Explainer - Contexto Global */}
-				<div className="mt-12">
+				<div className="mt-12 space-y-8">
+					<div className="bg-gradient-to-r from-blue-900/20 to-emerald-900/20 border border-blue-500/30 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8">
+						<div className="space-y-2">
+							<h2 className="text-3xl font-black uppercase tracking-tighter text-white">
+								Análise de Cobertura ODS 2030
+							</h2>
+							<p className="text-slate-300 max-w-xl">
+								Acesse o relatório completo de como o Caminhos Campinas endereça
+								cada uma das metas globais da ONU para a população de rua.
+							</p>
+						</div>
+						<Link
+							href="/impacto/ods"
+							className="group relative px-8 py-4 bg-white text-black font-black uppercase tracking-widest text-sm rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+						>
+							<span className="relative z-10 flex items-center gap-2">
+								Ver Relatório Completo{" "}
+								<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+							</span>
+						</Link>
+					</div>
 					<ODSExplainer />
 				</div>
 			</div>

@@ -10,7 +10,7 @@ export interface AgentContext {
 
 export interface AgentResponse {
 	response: Response;
-	metadata?: Record<string, any>;
+	metadata?: Record<string, unknown>;
 }
 
 export interface Agent {

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	ArrowRight,
 	BookOpen,
 	Github,
 	MapPin,
@@ -63,7 +64,8 @@ export function LandingPage() {
 			<div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
 				<Image
 					src="/images/sobrio/landing.png"
-					alt="Fundo Realismo Sóbrio - Campinas"
+					alt=""
+					aria-hidden="true"
 					fill
 					priority
 					className="object-cover"
@@ -71,6 +73,34 @@ export function LandingPage() {
 				/>
 				<div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/80 to-black" />
 			</div>
+			{/* DESTAQUE ODS 2030 */}
+			<section className="relative z-10 container mx-auto px-4 -mt-12 mb-12">
+				<div className="max-w-4xl mx-auto bg-gradient-to-r from-emerald-900/40 to-blue-900/40 border border-[#00e5a0]/30 p-6 md:p-10 rounded-3xl backdrop-blur-md shadow-[0_0_50px_rgba(0,229,160,0.1)] flex flex-col md:flex-row items-center justify-between gap-8 group">
+					<div className="space-y-3">
+						<div className="flex items-center gap-2 mb-2 font-mono text-[10px] tracking-[3px] text-[#00e5a0] uppercase">
+							<TrendingUp size={14} /> Novo: Avaliação de Impacto
+						</div>
+						<h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-white">
+							Caminhos Campinas <br />
+							<span className="text-[#00e5a0]">×</span> ODS 2030
+						</h2>
+						<p className="text-slate-300 max-w-lg text-sm md:text-base leading-relaxed">
+							Veja como cada ação no jogo se conecta às metas globais da ONU
+							para a erradicação da pobreza e redução de desigualdades.
+						</p>
+					</div>
+					<Link
+						href="/impacto/ods"
+						className="group relative px-8 py-4 bg-[#00e5a0] text-black font-black uppercase tracking-widest text-sm rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+					>
+						<span className="relative z-10 flex items-center gap-2">
+							Ver Relatório ODS{" "}
+							<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+						</span>
+					</Link>
+				</div>
+			</section>
+
 			{/* Hero Section - Texto Original Político */}
 			<header className="relative z-10 container mx-auto px-4 py-16 md:py-24">
 				<div className="max-w-4xl mx-auto text-center space-y-8">

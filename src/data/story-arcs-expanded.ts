@@ -79,7 +79,7 @@ export const ARC_TERRITORIO: StoryArc = {
 	theme:
 		"território, pertencimento, comunidade, resistência, identidade, ocupação, memória do lugar",
 	dilemmaSequence: [
-		"descobrir_praca_segura", // Encontrar local de descanso
+		"intro_acordar_praca", // [FIX] ID válido: Encontrar local de descanso
 		"ritual_matinal_praca", // Estabelecer rotina no território
 		"conflito_comerciantes_vizinhos", // Tensão com moradores locais
 		"defesa_morador_ameacado", // Proteger companheiro de agressão

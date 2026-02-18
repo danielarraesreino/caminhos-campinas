@@ -14,7 +14,8 @@ export default function SobrePage() {
 			<div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
 				<Image
 					src="/images/sobrio/landing.png"
-					alt="Fundo Sobre - Realismo Sóbrio"
+					alt=""
+					aria-hidden="true"
 					fill
 					priority
 					className="object-cover"
@@ -29,7 +30,10 @@ export default function SobrePage() {
 						href="/"
 						className="p-2 hover:bg-slate-900 rounded-full transition-colors group"
 					>
-						<ArrowLeft className="w-6 h-6 text-slate-300 group-hover:text-white" />
+						<ArrowLeft
+							className="w-6 h-6 text-slate-300 group-hover:text-white"
+							aria-hidden="true"
+						/>
 					</Link>
 					<div>
 						<h1 className="text-3xl font-black uppercase tracking-tighter text-white">
@@ -84,7 +88,10 @@ export default function SobrePage() {
 
 				<section className="grid md:grid-cols-2 gap-6">
 					<div className="bg-blue-900/20 border border-blue-800/50 p-6 rounded-xl">
-						<BookOpen className="w-8 h-8 text-blue-400 mb-4" />
+						<BookOpen
+							className="w-8 h-8 text-blue-400 mb-4"
+							aria-hidden="true"
+						/>
 						<h3 className="font-bold text-xl text-white mb-2">Fundamentação</h3>
 						<p className="text-slate-400 text-sm">
 							Inspirado na pedagogia de Paulo Freire, utilizamos a tecnologia
@@ -92,7 +99,10 @@ export default function SobrePage() {
 						</p>
 					</div>
 					<div className="bg-purple-900/20 border border-purple-800/50 p-6 rounded-xl">
-						<Target className="w-8 h-8 text-purple-400 mb-4" />
+						<Target
+							className="w-8 h-8 text-purple-400 mb-4"
+							aria-hidden="true"
+						/>
 						<h3 className="font-bold text-xl text-white mb-2">ODS ONU</h3>
 						<p className="text-slate-400 text-sm">
 							Alinhado aos objetivos 1 (Erradicação da Pobreza) e 10 (Redução
@@ -126,7 +136,7 @@ export default function SobrePage() {
 								)
 							}
 						>
-							<FileText className="w-5 h-5" />
+							<FileText className="w-5 h-5" aria-hidden="true" />
 							Baixar Projeto Pedagógico Original (.DOCX)
 						</EcoButton>
 					</div>

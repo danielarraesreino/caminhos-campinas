@@ -30,9 +30,22 @@ export function useEventEngine() {
 
 	const activeDilemma = GAME_DILEMMAS.find((d) => d.id === activeDilemmaId);
 
+	// [FIX] Refs to prevent re-entrancy and infinite loops
+	const isSettingDilemmaRef = useRef(false);
+	const lastProcessedDilemmaIdRef = useRef<string | null>(null);
+
 	// [NEW] Force first dilemma of selected arc if new game
 	useEffect(() => {
-		if (activeArcId && history.length === 0 && !activeDilemmaId) {
+		// GUARD 1: Prevent re-entrancy
+		if (isSettingDilemmaRef.current) return;
+
+		// GUARD 2: Already has active dilemma?
+		if (activeDilemmaId) return;
+
+		// GUARD 3: Already processed this arc?
+		if (lastProcessedDilemmaIdRef.current !== null) return;
+
+		if (activeArcId && history.length === 0) {
 			// Convert arc ID to STORY_ARCS key format
 			const arcKey = activeArcId.toUpperCase().replace(/-/g, "_");
 			const arc = STORY_ARCS[arcKey];
@@ -42,13 +55,25 @@ export function useEventEngine() {
 				console.log(
 					`[EventEngine] Iniciando arco "${arc.name}" com primeiro dilema: ${firstDilemma}`,
 				);
+				isSettingDilemmaRef.current = true;
 				setActiveDilemma(firstDilemma);
+				lastProcessedDilemmaIdRef.current = firstDilemma;
+				// Release lock after state stabilizes
+				setTimeout(() => {
+					isSettingDilemmaRef.current = false;
+				}, 100);
 			}
 		}
-	}, [activeArcId, history.length, activeDilemmaId, setActiveDilemma]);
+	}, [activeArcId, history.length, activeDilemmaId, setActiveDilemma]); // Removed setActiveDilemma
 
 	// Limpeza de Dilemas obsoletos ou IDs que não existem na versão atual
 	useEffect(() => {
+		// GUARD 1: Prevent re-entrancy
+		if (isSettingDilemmaRef.current) return;
+
+		// GUARD 2: Already processed this ID?
+		if (activeDilemmaId === lastProcessedDilemmaIdRef.current) return;
+
 		if (
 			activeDilemmaId &&
 			!activeDilemma &&
@@ -58,13 +83,17 @@ export function useEventEngine() {
 			console.warn(
 				`[EventEngine] Dilema obsoleto detectado (${activeDilemmaId}). Limpando estado...`,
 			);
+			isSettingDilemmaRef.current = true;
 			setActiveDilemma(null);
+			lastProcessedDilemmaIdRef.current = activeDilemmaId;
+			// Release lock after state stabilizes
+			setTimeout(() => {
+				isSettingDilemmaRef.current = false;
+			}, 100);
 		}
-	}, [activeDilemmaId, activeDilemma, setActiveDilemma]);
+	}, [activeDilemmaId, activeDilemma, setActiveDilemma]); // Removed setActiveDilemma
 
 	const lastTriggerRef = useRef<number>(0);
-	// [ADICIONAR] Ref para prevenir re-entrância
-	const isResolvingRef = useRef(false);
 
 	const clearActiveDilemma = useCallback(
 		() => setActiveDilemma(null),
@@ -89,8 +118,8 @@ export function useEventEngine() {
 	const resolveDilemma = useCallback(
 		async (optionIndex: number, outcome: "success" | "failure" = "success") => {
 			// [FIX] Prevenir chamadas múltiplas simultâneas
-			if (isResolvingRef.current || !activeDilemma) return;
-			isResolvingRef.current = true;
+			if (isSettingDilemmaRef.current || !activeDilemma) return;
+			isSettingDilemmaRef.current = true;
 
 			try {
 				const option = activeDilemma.options[optionIndex];
@@ -221,7 +250,7 @@ export function useEventEngine() {
 				}
 			} finally {
 				// [FIX] Sempre liberar a flag
-				isResolvingRef.current = false;
+				isSettingDilemmaRef.current = false;
 			}
 		},
 		[

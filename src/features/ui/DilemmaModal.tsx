@@ -11,7 +11,7 @@ import {
 	DialogHeader,
 } from "@/components/ui/dialog";
 import { InteractiveText } from "@/components/ui/InteractiveText";
-import { useModalQueue } from "@/contexts/ModalQueueContext";
+import { useNarration } from "@/contexts/NarrationContext";
 import type {
 	Dilemma,
 	DilemmaOption,
@@ -41,29 +41,13 @@ export function DilemmaModal({
 	const { triggerClick } = useHaptics();
 	const { trackDilemmaDecision } = useODSTracker();
 	const { auditResolution } = useImpactLogger();
+
+	// Narration Context
+	const { addToNarrationQueue, clearNarrationQueue, isNarrating } =
+		useNarration();
+
 	// A11y States
 	const [zoomLevel, setZoomLevel] = useState(1); // 1 = 100%, 1.2 = 120%
-	const [isSpeaking, setIsSpeaking] = useState(false);
-	const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
-
-	// Load Voices
-	useEffect(() => {
-		const loadVoices = () => {
-			const availableVoices = window.speechSynthesis.getVoices();
-			// Prioritize Google or Neural voices for better quality
-			const ptVoice = availableVoices.find(
-				(v) =>
-					v.lang.includes("pt-BR") &&
-					(v.name.includes("Google") || v.name.includes("Neural")),
-			);
-			// Fallback to any pt-BR
-			const genericPt = availableVoices.find((v) => v.lang.includes("pt-BR"));
-			setVoice(ptVoice || genericPt || null);
-		};
-
-		loadVoices();
-		window.speechSynthesis.onvoiceschanged = loadVoices;
-	}, []);
 
 	const currentOption = dilemma
 		? selectedOption !== null
@@ -72,31 +56,39 @@ export function DilemmaModal({
 		: null;
 
 	const toggleSpeech = useCallback(() => {
-		if (isSpeaking) {
-			window.speechSynthesis.cancel();
-			setIsSpeaking(false);
+		if (isNarrating) {
+			clearNarrationQueue();
 		} else {
-			const textToRead = currentOption
-				? outcome === "failure" && currentOption.consequence_failure
-					? currentOption.consequence_failure
-					: currentOption.consequence
-				: `${dilemma?.description}. ${dilemma?.source_fact ? `Fato: ${dilemma.source_fact}` : ""}`;
-
-			const utterance = new SpeechSynthesisUtterance(textToRead);
-			utterance.lang = "pt-BR";
-			if (voice) utterance.voice = voice;
-
-			// Tweak rate/pitch for better naturalness
-			utterance.rate = 1.1;
-			utterance.pitch = 1.0;
-
-			utterance.onend = () => {
-				setIsSpeaking(false);
-			};
-			window.speechSynthesis.speak(utterance);
-			setIsSpeaking(true);
+			if (currentOption) {
+				const text =
+					outcome === "failure" && currentOption.consequence_failure
+						? currentOption.consequence_failure
+						: currentOption.consequence;
+				addToNarrationQueue(text);
+			} else if (dilemma) {
+				// Queue full sequence
+				addToNarrationQueue(dilemma.title);
+				addToNarrationQueue(dilemma.description);
+				if (dilemma.source_fact)
+					addToNarrationQueue(`Fato verificado: ${dilemma.source_fact}`);
+				if (dilemma.ods && dilemma.ods.length > 0) {
+					addToNarrationQueue(`Compromisso Global: ${dilemma.ods.join(", ")}`);
+				}
+				if (dilemma.legal_reference) {
+					addToNarrationQueue(
+						`Seu direito: ${dilemma.legal_reference.law}. ${dilemma.legal_reference.summary}`,
+					);
+				}
+			}
 		}
-	}, [isSpeaking, currentOption, outcome, dilemma, voice]);
+	}, [
+		isNarrating,
+		clearNarrationQueue,
+		addToNarrationQueue,
+		currentOption,
+		outcome,
+		dilemma,
+	]);
 
 	const toggleZoom = () => {
 		setZoomLevel((prev) => (prev >= 1.4 ? 1 : prev + 0.2));
@@ -115,10 +107,21 @@ export function DilemmaModal({
 				playAmbience(dilemma.audioId);
 			}
 
-			// [NEW] Auto-play TTS for the dilemma
-			// ⏳ Small delay to ensure voices are loaded and browser is ready
+			// [NEW] Auto-play TTS sequence for the dilemma
 			const ttsTimer = setTimeout(() => {
-				toggleSpeech();
+				clearNarrationQueue();
+				addToNarrationQueue(dilemma.title);
+				addToNarrationQueue(dilemma.description);
+				if (dilemma.source_fact)
+					addToNarrationQueue(`Fato verificado: ${dilemma.source_fact}`);
+				if (dilemma.ods && dilemma.ods.length > 0) {
+					addToNarrationQueue(`Compromisso Global: ${dilemma.ods.join(", ")}`);
+				}
+				if (dilemma.legal_reference) {
+					addToNarrationQueue(
+						`Seu direito: ${dilemma.legal_reference.law}. ${dilemma.legal_reference.summary}`,
+					);
+				}
 			}, 500);
 
 			return () => {
@@ -126,21 +129,31 @@ export function DilemmaModal({
 				if (dilemma.audioId) {
 					stopAmbience();
 				}
-				window.speechSynthesis.cancel();
+				clearNarrationQueue();
 			};
 		}
-	}, [dilemma, playAmbience, stopAmbience, toggleSpeech]);
+	}, [
+		dilemma,
+		playAmbience,
+		stopAmbience,
+		clearNarrationQueue,
+		addToNarrationQueue,
+	]);
 
 	// [NEW] Auto-play TTS for Consequences (Outcome)
 	useEffect(() => {
 		if (outcome && currentOption) {
-			// Pequeno delay para garantir que o estado visual atualizou e para separar da ação de clique
 			const consequenceTimer = setTimeout(() => {
-				toggleSpeech();
+				clearNarrationQueue();
+				const text =
+					outcome === "failure" && currentOption.consequence_failure
+						? currentOption.consequence_failure
+						: currentOption.consequence;
+				addToNarrationQueue(text);
 			}, 300);
 			return () => clearTimeout(consequenceTimer);
 		}
-	}, [outcome, currentOption, toggleSpeech]);
+	}, [outcome, currentOption, clearNarrationQueue, addToNarrationQueue]);
 
 	if (!dilemma) return null;
 
@@ -238,21 +251,25 @@ export function DilemmaModal({
 						type="button"
 						onClick={toggleSpeech}
 						className={`p-2.5 min-w-[32px] min-h-[32px] rounded transition-colors border flex items-center justify-center ${
-							isSpeaking
+							isNarrating
 								? "bg-blue-900/50 border-blue-500 text-blue-400"
 								: "bg-slate-900/80 border-slate-700 text-slate-300 hover:bg-slate-800"
 						}`}
 						aria-label={
-							isSpeaking
+							isNarrating
 								? "Parar leitura em voz alta"
 								: "Ouvir texto do dilema em voz alta"
 						}
 						title="Ouvir Dilema"
 					>
-						{isSpeaking ? (
-							<span className="animate-pulse text-sm">🔊</span>
+						{isNarrating ? (
+							<span className="animate-pulse text-sm" aria-hidden="true">
+								🔊
+							</span>
 						) : (
-							<span className="text-sm">🔈</span>
+							<span className="text-sm" aria-hidden="true">
+								🔈
+							</span>
 						)}
 					</button>
 
@@ -265,7 +282,7 @@ export function DilemmaModal({
 							aria-label="Falar com o mestre do jogo para conselhos"
 							title="Consultar Mestre"
 						>
-							<MessageSquare size={16} />
+							<MessageSquare size={16} aria-hidden="true" />
 						</button>
 					)}
 				</div>
@@ -277,7 +294,7 @@ export function DilemmaModal({
 					className="absolute top-4 right-3 text-slate-500 hover:text-white transition-colors p-2.5 min-w-[32px] min-h-[32px] z-20 flex items-center justify-center"
 					aria-label="Fechar este diálogo e voltar ao jogo"
 				>
-					<X size={20} />
+					<X size={20} aria-hidden="true" />
 				</button>
 
 				<div className="p-8 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
@@ -399,31 +416,38 @@ export function DilemmaModal({
 						{!currentOption && (
 							<div className="flex flex-col gap-3">
 								{dilemma.options.map((option: DilemmaOption, index: number) => (
-									<Button
-										key={option.label}
-										type="button"
-										variant="outline"
-										className="justify-between h-auto py-4 px-5 text-left whitespace-normal border-slate-800 bg-slate-950/50 text-slate-300 hover:bg-slate-900 hover:text-white transition-all font-mono text-sm uppercase tracking-widest rounded group"
-										style={{
-											fontSize: `${Math.max(0.875, zoomLevel * 0.8)}rem`,
-										}} // Scale button text slightly less aggresive
-										disabled={isPending || isSpeaking}
-										onClick={() => handleOptionSelect(index)}
-									>
-										<div
-											className={`flex items-center ${isPending ? "opacity-50" : ""}`}
+									<div key={index}>
+										<Button
+											key={option.label}
+											type="button"
+											variant="outline"
+											className="justify-between h-auto py-4 px-5 text-left whitespace-normal border-slate-800 bg-slate-950/50 text-slate-300 hover:bg-slate-900 hover:text-white transition-all font-mono text-sm uppercase tracking-widest rounded group"
+											style={{
+												fontSize: `${Math.max(0.875, zoomLevel * 0.8)}rem`,
+											}} // Scale button text slightly less aggresive
+											disabled={isPending || isNarrating}
+											onClick={() => handleOptionSelect(index)}
+											aria-label={`Opção ${index + 1}: ${option.label}`}
+											aria-describedby={`option-consequence-${index}`}
 										>
-											<span className="mr-3 opacity-0 group-hover:opacity-100 text-blue-400 transition-opacity font-bold">
-												{">> "}
-											</span>
-											{option.label}
+											<div
+												className={`flex items-center ${isPending ? "opacity-50" : ""}`}
+											>
+												<span className="mr-3 opacity-0 group-hover:opacity-100 text-blue-400 transition-opacity font-bold">
+													{">> "}
+												</span>
+												{option.label}
+											</div>
+											{option.risk && option.risk > 0 && (
+												<span className="text-xs text-red-400 font-bold ml-2 bg-red-950/50 px-2 py-1 rounded border border-red-900/50">
+													⚠️ {option.risk}% RISCO
+												</span>
+											)}
+										</Button>
+										<div id={`option-consequence-${index}`} className="sr-only">
+											Consequência: {option.consequence}
 										</div>
-										{option.risk && option.risk > 0 && (
-											<span className="text-xs text-red-400 font-bold ml-2 bg-red-950/50 px-2 py-1 rounded border border-red-900/50">
-												⚠️ {option.risk}% RISCO
-											</span>
-										)}
-									</Button>
+									</div>
 								))}
 							</div>
 						)}

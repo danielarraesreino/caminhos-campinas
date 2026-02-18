@@ -82,7 +82,8 @@ export function Footer() {
 						<div className="relative">
 							<NextImage
 								src="/daniel_dev.jpg"
-								alt="Daniel (Japa)"
+								alt=""
+								aria-hidden="true"
 								width={80}
 								height={80}
 								className="rounded-full border-2 border-slate-600 group-hover:border-blue-500 transition-colors object-cover object-center"

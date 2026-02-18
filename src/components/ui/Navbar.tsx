@@ -166,7 +166,7 @@ export function Navbar() {
 					{/* 2. DESKTOP MENU */}
 					<div className="hidden lg:flex items-center gap-2">
 						<Link href="/jogar">
-							<Button className="bg-yellow-600 hover:bg-yellow-500 text-black font-black uppercase tracking-widest text-[10px] h-10 px-8 rounded-xl mr-4 shadow-[0_0_20px_rgba(234,179,8,0.2)]">
+							<Button className="bg-yellow-600 hover:bg-yellow-500 text-black font-black uppercase tracking-widest text-[10px] h-11 px-8 rounded-xl mr-4 shadow-[0_0_20px_rgba(234,179,8,0.2)]">
 								Intervir
 							</Button>
 						</Link>
@@ -220,7 +220,7 @@ export function Navbar() {
 							<Button
 								variant="ghost"
 								size="icon"
-								className="text-zinc-400 hover:text-yellow-500 hover:bg-zinc-900 rounded-xl h-10 w-10"
+								className="text-zinc-400 hover:text-yellow-500 hover:bg-zinc-900 rounded-xl h-11 w-11"
 								aria-label="Configurações e Centro de Controle"
 							>
 								<Settings className="w-4 h-4" />
@@ -276,7 +276,7 @@ export function Navbar() {
 						<button
 							type="button"
 							onClick={() => setIsOpen(!isOpen)}
-							className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white"
+							className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white min-w-[44px] min-h-[44px] flex items-center justify-center"
 							aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
 						>
 							{isOpen ? (

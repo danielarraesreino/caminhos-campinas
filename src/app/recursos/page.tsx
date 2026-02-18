@@ -141,8 +141,8 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 			)}
 
 			{service.opening_hours && (
-				<p className="text-xs text-zinc-500 font-mono mb-2 bg-black/30 w-fit px-2 py-1 rounded">
-					🕒 {service.opening_hours}
+				<p className="text-xs text-muted-foreground font-mono mb-2 bg-black/30 w-fit px-2 py-1 rounded">
+					<span aria-hidden="true">🕒</span> {service.opening_hours}
 				</p>
 			)}
 
@@ -216,7 +216,9 @@ function ServiceCard({ service }: { service: ServiceLocation }) {
 				>
 					{service.action_type === "link" ? (
 						<>
-							<div className="w-4 h-4">🔗</div>
+							<div className="w-4 h-4" aria-hidden="true">
+								🔗
+							</div>
 							Acessar Curso
 						</>
 					) : (
@@ -443,7 +445,8 @@ export default function ResourcesPage() {
 						<p className="text-zinc-400 text-sm">
 							{isOffline ? (
 								<span className="flex items-center gap-2 text-red-500 font-bold animate-pulse">
-									<AlertTriangle className="w-4 h-4" /> MODO OFFLINE
+									<AlertTriangle className="w-4 h-4" aria-hidden="true" /> MODO
+									OFFLINE
 								</span>
 							) : (
 								<span className="flex items-center gap-2 text-green-500 text-xs">
@@ -462,6 +465,7 @@ export default function ResourcesPage() {
 				>
 					<RefreshCw
 						className={`w-6 h-6 text-zinc-400 ${loading ? "animate-spin" : ""}`}
+						aria-hidden="true"
 					/>
 				</button>
 			</header>
@@ -469,7 +473,10 @@ export default function ResourcesPage() {
 				{/* [NEW] Search Bar with Voice Input */}
 				<div className="flex gap-2 mb-4">
 					<div className="flex-1 relative">
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+						<Search
+							className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500"
+							aria-hidden="true"
+						/>
 						<input
 							type="text"
 							placeholder="Buscar serviços..."
@@ -526,7 +533,7 @@ export default function ResourcesPage() {
 					className="bg-red-600 text-white p-3 rounded-full animate-pulse"
 					aria-label="Ligar para emergência 192"
 				>
-					<Phone className="w-6 h-6" />
+					<Phone className="w-6 h-6" aria-hidden="true" />
 				</a>
 			</div>
 
@@ -606,7 +613,10 @@ export default function ResourcesPage() {
 					))
 				) : (
 					<div className="text-center py-10 opacity-50">
-						<Search className="w-12 h-12 mx-auto mb-4 text-zinc-600" />
+						<Search
+							className="w-12 h-12 mx-auto mb-4 text-zinc-600"
+							aria-hidden="true"
+						/>
 						<p>Nenhum serviço encontrado nesta categoria.</p>
 						<button
 							type="button"

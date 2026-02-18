@@ -11,7 +11,8 @@ export default function DemoModePage() {
 			<div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
 				<Image
 					src="/images/sobrio/impacto.png"
-					alt="Fundo Demo Mode - Realismo Sóbrio"
+					alt=""
+					aria-hidden="true"
 					fill
 					priority
 					className="object-cover"
@@ -24,7 +25,11 @@ export default function DemoModePage() {
 				{/* Hero Section */}
 				<section className="text-center max-w-3xl mx-auto space-y-6">
 					<div className="inline-flex items-center gap-2 bg-purple-900/30 border border-purple-800 px-4 py-2 rounded-full mb-4">
-						<Gamepad2 className="text-purple-400" size={20} />
+						<Gamepad2
+							className="text-purple-400"
+							size={20}
+							aria-hidden="true"
+						/>
 						<span className="text-purple-300 text-sm font-semibold uppercase tracking-wide">
 							Modo Demonstração
 						</span>
@@ -43,7 +48,8 @@ export default function DemoModePage() {
 				{/* What is DEMO_MODE */}
 				<section className="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-2xl p-8 space-y-4">
 					<h2 className="text-3xl font-bold text-white flex items-center gap-3">
-						<Shield className="text-purple-400" size={32} />O que é o DEMO_MODE?
+						<Shield className="text-purple-400" size={32} aria-hidden="true" />O
+						que é o DEMO_MODE?
 					</h2>
 
 					<p className="text-slate-200 leading-relaxed">
@@ -68,7 +74,7 @@ export default function DemoModePage() {
 				<section className="grid grid-cols-1 md:grid-cols-3 gap-6">
 					<div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border border-purple-800 p-6 rounded-2xl">
 						<div className="bg-purple-900/30 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-purple-400">
-							<Shield size={24} />
+							<Shield size={24} aria-hidden="true" />
 						</div>
 						<h3 className="text-xl font-bold text-white mb-2">
 							1. Confisco Desativado
@@ -87,7 +93,7 @@ export default function DemoModePage() {
 
 					<div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border border-purple-800 p-6 rounded-2xl">
 						<div className="bg-purple-900/30 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-purple-400">
-							<Zap size={24} />
+							<Zap size={24} aria-hidden="true" />
 						</div>
 						<h3 className="text-xl font-bold text-white mb-2">
 							2. Decay Reduzido
@@ -106,7 +112,7 @@ export default function DemoModePage() {
 
 					<div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border border-purple-800 p-6 rounded-2xl">
 						<div className="bg-purple-900/30 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-purple-400">
-							<Gamepad2 size={24} />
+							<Gamepad2 size={24} aria-hidden="true" />
 						</div>
 						<h3 className="text-xl font-bold text-white mb-2">
 							3. Tempo Mais Lento
@@ -159,6 +165,7 @@ export default function DemoModePage() {
 						<AlertCircle
 							className="text-amber-400 flex-shrink-0 mt-1"
 							size={24}
+							aria-hidden="true"
 						/>
 						<div className="space-y-2">
 							<h3 className="text-xl font-bold text-white">
@@ -194,11 +201,16 @@ export default function DemoModePage() {
 
 					<div className="bg-black/50 border border-purple-700/50 rounded-xl p-6 flex justify-center">
 						<div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-900/80 to-pink-900/80 px-3 py-1 rounded-full border border-purple-500/50 shadow-lg shadow-purple-900/50">
-							<Gamepad2 className="w-3.5 h-3.5 text-purple-300" />
+							<Gamepad2
+								className="w-3.5 h-3.5 text-purple-300"
+								aria-hidden="true"
+							/>
 							<span className="text-purple-200 font-bold text-[10px] uppercase tracking-wider">
 								Modo Demo
 							</span>
-							<span className="text-xs">ℹ️</span>
+							<span className="text-xs" aria-hidden="true">
+								ℹ️
+							</span>
 						</div>
 					</div>
 

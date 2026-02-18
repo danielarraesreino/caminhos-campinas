@@ -11,7 +11,8 @@ export default function AuditoriaPage() {
 			<div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
 				<Image
 					src="/images/sobrio/impacto.png"
-					alt="Fundo Auditoria - Realismo Sóbrio"
+					alt=""
+					aria-hidden="true"
 					fill
 					priority
 					className="object-cover"
@@ -24,7 +25,7 @@ export default function AuditoriaPage() {
 				{/* Hero Section */}
 				<section className="text-center max-w-3xl mx-auto space-y-6">
 					<div className="inline-flex items-center gap-2 bg-blue-900/30 border border-blue-800 px-4 py-2 rounded-full mb-4">
-						<Shield className="text-blue-400" size={20} />
+						<Shield className="text-blue-400" size={20} aria-hidden="true" />
 						<span className="text-blue-300 text-sm font-semibold uppercase tracking-wide">
 							Modo Auditor Social
 						</span>
@@ -44,8 +45,12 @@ export default function AuditoriaPage() {
 				{/* What is Auditor Social */}
 				<section className="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-2xl p-8 space-y-6">
 					<h2 className="text-3xl font-bold text-white flex items-center gap-3">
-						<FileSearch className="text-blue-400" size={32} />O que é o Auditor
-						Social?
+						<FileSearch
+							className="text-blue-400"
+							size={32}
+							aria-hidden="true"
+						/>
+						O que é o Auditor Social?
 					</h2>
 
 					<div className="space-y-4 text-slate-200 leading-relaxed">
@@ -73,7 +78,7 @@ export default function AuditoriaPage() {
 				<section className="grid grid-cols-1 md:grid-cols-3 gap-6">
 					<div className="bg-slate-900/80 backdrop-blur-sm border border-slate-800 p-6 rounded-2xl hover:border-blue-700 transition-colors">
 						<div className="bg-blue-900/30 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-blue-400">
-							<FileSearch size={24} />
+							<FileSearch size={24} aria-hidden="true" />
 						</div>
 						<h3 className="text-xl font-bold text-white mb-2">
 							1. Explore o Conteúdo
@@ -86,7 +91,7 @@ export default function AuditoriaPage() {
 
 					<div className="bg-slate-900/80 backdrop-blur-sm border border-slate-800 p-6 rounded-2xl hover:border-blue-700 transition-colors">
 						<div className="bg-blue-900/30 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-blue-400">
-							<CheckCircle2 size={24} />
+							<CheckCircle2 size={24} aria-hidden="true" />
 						</div>
 						<h3 className="text-xl font-bold text-white mb-2">
 							2. Valide ou Reporte
@@ -99,7 +104,7 @@ export default function AuditoriaPage() {
 
 					<div className="bg-slate-900/80 backdrop-blur-sm border border-slate-800 p-6 rounded-2xl hover:border-blue-700 transition-colors">
 						<div className="bg-blue-900/30 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-blue-400">
-							<TrendingUp size={24} />
+							<TrendingUp size={24} aria-hidden="true" />
 						</div>
 						<h3 className="text-xl font-bold text-white mb-2">
 							3. Contribua para Melhoria
@@ -128,7 +133,7 @@ export default function AuditoriaPage() {
 							href="/auditoria/validar"
 							className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-400 text-white font-bold px-8 py-4 rounded-full transition-all shadow-lg hover:shadow-blue-500/20 transform hover:-translate-y-1"
 						>
-							<Shield size={20} />
+							<Shield size={20} aria-hidden="true" />
 							Acessar Ferramenta de Validação
 						</Link>
 
