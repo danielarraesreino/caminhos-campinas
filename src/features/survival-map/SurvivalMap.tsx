@@ -17,20 +17,20 @@ const MapCore = dynamic(() => import("./MapCore"), {
 
 // Define a custom type guard ensuring coords is [number, number]
 const hasValidCoords = (
-	// biome-ignore lint/suspicious/noExplicitAny: External data validation
-	s: any,
+	s: unknown,
 ): s is {
 	coords: [number, number];
 	id: string;
 	name: string;
 	type: string;
 } => {
+	if (!s || typeof s !== "object") return false;
+	const obj = s as Record<string, unknown>;
 	return (
-		s &&
-		Array.isArray(s.coords) &&
-		s.coords.length === 2 &&
-		s.coords[0] != null &&
-		s.coords[1] != null
+		Array.isArray(obj.coords) &&
+		obj.coords.length === 2 &&
+		obj.coords[0] != null &&
+		obj.coords[1] != null
 	);
 };
 
@@ -135,7 +135,7 @@ export function SurvivalMap() {
 	}, [interactionMessage]);
 
 	const handleInteraction = useCallback(
-		(res: any) => {
+		(res: { name: string; type: string }) => {
 			console.log("Interagindo com:", res.name);
 			const type = res.type.toUpperCase();
 			// Interaction logic mapping - Portuguese Only

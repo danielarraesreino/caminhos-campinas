@@ -8,6 +8,7 @@ import {
 	Newspaper,
 	Play,
 	TrendingUp,
+	Users,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -59,7 +60,7 @@ export function LandingPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-black text-white relative overflow-hidden">
+		<div className="min-h-screen bg-black text-white relative overflow-hidden pt-16">
 			{/* Background Image - Realismo Sóbrio */}
 			<div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
 				<Image
@@ -73,35 +74,7 @@ export function LandingPage() {
 				/>
 				<div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/80 to-black" />
 			</div>
-			{/* DESTAQUE ODS 2030 */}
-			<section className="relative z-10 container mx-auto px-4 -mt-12 mb-12">
-				<div className="max-w-4xl mx-auto bg-gradient-to-r from-emerald-900/40 to-blue-900/40 border border-[#00e5a0]/30 p-6 md:p-10 rounded-3xl backdrop-blur-md shadow-[0_0_50px_rgba(0,229,160,0.1)] flex flex-col md:flex-row items-center justify-between gap-8 group">
-					<div className="space-y-3">
-						<div className="flex items-center gap-2 mb-2 font-mono text-[10px] tracking-[3px] text-[#00e5a0] uppercase">
-							<TrendingUp size={14} /> Novo: Avaliação de Impacto
-						</div>
-						<h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-white">
-							Caminhos Campinas <br />
-							<span className="text-[#00e5a0]">×</span> ODS 2030
-						</h2>
-						<p className="text-slate-300 max-w-lg text-sm md:text-base leading-relaxed">
-							Veja como cada ação no jogo se conecta às metas globais da ONU
-							para a erradicação da pobreza e redução de desigualdades.
-						</p>
-					</div>
-					<Link
-						href="/impacto/ods"
-						className="group relative px-8 py-4 bg-[#00e5a0] text-black font-black uppercase tracking-widest text-sm rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
-					>
-						<span className="relative z-10 flex items-center gap-2">
-							Ver Relatório ODS{" "}
-							<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-						</span>
-					</Link>
-				</div>
-			</section>
 
-			{/* Hero Section - Texto Original Político */}
 			<header className="relative z-10 container mx-auto px-4 py-16 md:py-24">
 				<div className="max-w-4xl mx-auto text-center space-y-8">
 					<div className="inline-block px-4 py-2 bg-red-600/20 border border-red-600 rounded-full text-red-400 text-sm font-mono uppercase tracking-wider">
@@ -138,6 +111,116 @@ export function LandingPage() {
 					</div>
 				</div>
 			</header>
+
+			{/* SPOTLIGHT SECTION - Novo Portfólio de Conteúdo */}
+			<section className="relative z-10 container mx-auto px-4 py-12 -mt-10">
+				<div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+					{/* ODS Spotlight */}
+					<Link
+						href="/impacto/ods"
+						className="group relative overflow-hidden bg-gradient-to-br from-emerald-950/40 via-black to-black border border-emerald-500/30 p-8 rounded-[2.5rem] backdrop-blur-md hover:border-emerald-500/60 transition-all duration-500 flex flex-col justify-between min-h-[320px]"
+					>
+						<div className="absolute top-0 right-0 p-8 text-emerald-500/20 group-hover:text-emerald-500/40 transition-colors duration-500">
+							<TrendingUp size={120} strokeWidth={1} />
+						</div>
+						<div className="relative z-10 space-y-4">
+							<div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-emerald-400 uppercase bg-emerald-400/10 w-fit px-3 py-1 rounded-full border border-emerald-400/20">
+								Impacto Global
+							</div>
+							<h3 className="text-3xl font-black uppercase tracking-tighter leading-none">
+								ODS 2030 <br />
+								<span className="text-emerald-400">Cobertura</span>
+							</h3>
+							<p className="text-zinc-400 text-sm leading-relaxed max-w-[200px]">
+								Análise detalhada da interseção entre o projeto e as metas da
+								ONU.
+							</p>
+						</div>
+						<div className="relative z-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#00e5a0]">
+							Explorar Relatório{" "}
+							<ArrowRight
+								size={14}
+								className="group-hover:translate-x-2 transition-transform"
+							/>
+						</div>
+					</Link>
+
+					{/* Journal/Voice Spotlight */}
+					<Link
+						href="/jornal"
+						className="relative overflow-hidden bg-gradient-to-br from-red-950/40 via-black to-black border border-red-500/30 p-8 rounded-[2.5rem] backdrop-blur-md hover:border-red-500/60 transition-all duration-500 flex flex-col justify-between min-h-[320px] group"
+					>
+						<div className="absolute top-0 right-0 p-8 text-red-500/20 group-hover:text-red-500/40 transition-colors duration-500">
+							<Newspaper size={120} strokeWidth={1} />
+						</div>
+						<div className="relative z-10 space-y-4">
+							<div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-red-400 uppercase bg-red-400/10 w-fit px-3 py-1 rounded-full border border-red-400/20">
+								Voz Própria
+							</div>
+							<h3 className="text-3xl font-black uppercase tracking-tighter leading-none text-white">
+								Jornal <br />
+								<span className="text-red-500 italic">da Rua</span>
+							</h3>
+							<div className="border-l-2 border-red-500/50 pl-4 py-1">
+								<p className="text-zinc-300 text-xs italic line-clamp-2">
+									"A cidade nos vê como sombra, mas temos nome e história..."
+								</p>
+							</div>
+						</div>
+						<div className="relative z-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-500">
+							Ler Narrativas{" "}
+							<ArrowRight
+								size={14}
+								className="group-hover:translate-x-2 transition-transform"
+							/>
+						</div>
+					</Link>
+
+					{/* Audit Spotlight */}
+					<div className="relative overflow-hidden bg-gradient-to-br from-blue-950/40 via-black to-black border border-blue-500/30 p-8 rounded-[2.5rem] backdrop-blur-md hover:border-blue-500/60 transition-all duration-500 flex flex-col justify-between min-h-[320px] group">
+						<div className="absolute top-0 right-0 p-8 text-blue-500/20 group-hover:text-blue-500/40 transition-colors duration-500">
+							<MapPin size={120} strokeWidth={1} />
+						</div>
+						<div className="relative z-10 space-y-4">
+							<div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-blue-400 uppercase bg-blue-400/10 w-fit px-3 py-1 rounded-full border border-blue-400/20">
+								Auditoria Social
+							</div>
+							<h3 className="text-3xl font-black uppercase tracking-tighter leading-none text-white">
+								Termômetro <br />
+								<span className="text-blue-500">Social</span>
+							</h3>
+							<div className="flex gap-4">
+								<div className="text-center">
+									<div className="text-2xl font-black text-white leading-none">
+										1.3k
+									</div>
+									<div className="text-[10px] uppercase text-zinc-500 font-bold">
+										Vidas
+									</div>
+								</div>
+								<div className="text-center border-l border-zinc-800 pl-4">
+									<div className="text-2xl font-black text-blue-400 leading-none">
+										82%
+									</div>
+									<div className="text-[10px] uppercase text-zinc-500 font-bold">
+										Confiança
+									</div>
+								</div>
+							</div>
+						</div>
+						<Link
+							href="/transparencia"
+							className="relative z-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-400"
+						>
+							Ver Transparência{" "}
+							<ArrowRight
+								size={14}
+								className="group-hover:translate-x-2 transition-transform"
+							/>
+						</Link>
+					</div>
+				</div>
+			</section>
 
 			{/* NOVA SEÇÃO: Explore Cenários Reais */}
 			<section className="relative z-10 container mx-auto px-4 py-12">
@@ -437,7 +520,7 @@ export function LandingPage() {
 						>
 							<div className="space-y-4">
 								<div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-zinc-400 border border-zinc-700 group-hover:scale-110 transition-transform">
-									<MapPin size={24} />
+									<Users size={24} />
 								</div>
 								<h3 className="text-xl font-bold uppercase tracking-tight text-white italic">
 									Rede Viva

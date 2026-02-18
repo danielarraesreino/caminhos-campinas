@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { GameState } from "@/types/GameState";
 import { AgentOrchestrator } from "./AgentOrchestrator";
 import { GameMasterAgent } from "./GameMasterAgent";
 import { NarrativeAgent } from "./NarrativeAgent";
@@ -49,14 +50,15 @@ describe("NarrativeAgent", () => {
 				health: 50,
 				hunger: 80,
 				money: 200,
-			} as any,
+			} as unknown as GameState,
 		};
 
 		// We can't easily test protected methods without a test subclass or @ts-expect-error
 		// Let's create a Test subclass to expose it
 		class TestNarrativeAgent extends NarrativeAgent {
-			public testGetSystemPrompt(ctx: any) {
-				return this.getSystemPrompt(ctx);
+			public testGetSystemPrompt(ctx: unknown) {
+				// biome-ignore lint/suspicious/noExplicitAny: Test helper for protected property
+				return this.getSystemPrompt(ctx as any);
 			}
 		}
 

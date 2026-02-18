@@ -301,7 +301,6 @@ export class DilemmaManager {
 		return selected;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: Dilemma data contains any in options effects
 	private applyDynamicModifiers(
 		dilemma: Dilemma,
 		avatar: Avatar | null,
