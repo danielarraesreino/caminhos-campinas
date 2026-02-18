@@ -81,6 +81,17 @@ export function LandingPage() {
 						Infraestrutura Cívica
 					</div>
 
+					<div className="flex justify-center gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 scale-90 md:scale-100">
+						<div className="flex items-center gap-2">
+							<span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+							ODS 11: 82% COBERTA
+						</div>
+						<div className="flex items-center gap-2">
+							<span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
+							MONITORAMENTO ATIVO
+						</div>
+					</div>
+
 					<h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight">
 						Campinas
 						<span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">
@@ -250,11 +261,10 @@ export function LandingPage() {
 									onClick={() =>
 										setSelectedArc(selectedArc === arc.id ? null : arc.id)
 									}
-									className={`group relative p-5 bg-gradient-to-br from-slate-900/80 to-black border-2 rounded-xl hover:scale-[1.02] transition-all text-left ${
-										selectedArc === arc.id
+									className={`group relative p-5 bg-gradient-to-br from-slate-900/80 to-black border-2 rounded-xl hover:scale-[1.02] transition-all text-left ${selectedArc === arc.id
 											? "border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.3)]"
 											: "border-slate-800 hover:border-slate-600"
-									}`}
+										}`}
 								>
 									{selectedArc === arc.id && (
 										<div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-black">
@@ -264,9 +274,8 @@ export function LandingPage() {
 
 									<div className="space-y-3">
 										<h3
-											className={`text-lg font-black uppercase tracking-tight ${
-												selectedArc === arc.id ? "text-blue-400" : "text-white"
-											}`}
+											className={`text-lg font-black uppercase tracking-tight ${selectedArc === arc.id ? "text-blue-400" : "text-white"
+												}`}
 										>
 											{arc.name}
 										</h3>
