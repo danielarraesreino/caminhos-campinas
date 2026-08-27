@@ -8,10 +8,16 @@ import EDUCATION_DATA from "@/data/services-education.json";
 import EXPANSION_DATA from "@/data/services-expansion.json";
 
 // Helper to safely get array from JSON import (handles ES modules default export if needed)
-// biome-ignore lint/suspicious/noExplicitAny: JSON imports can be unpredictable in build
-const safeArray = (data: any): any[] => {
-	if (Array.isArray(data)) return data;
-	if (data && Array.isArray(data.default)) return data.default;
+const safeArray = <T,>(data: unknown): T[] => {
+	if (Array.isArray(data)) return data as T[];
+	if (
+		data &&
+		typeof data === "object" &&
+		"default" in data &&
+		Array.isArray((data as Record<string, unknown>).default)
+	) {
+		return (data as Record<string, unknown>).default as T[];
+	}
 	return [];
 };
 
@@ -19,10 +25,10 @@ const safeArray = (data: any): any[] => {
 const ALL_SERVICES_MAP = new Map<string, ServiceLocation>();
 
 // 1. Process Base Services
-safeArray(SERVICES_DATA).forEach((s) => {
+safeArray<Partial<ServiceLocation>>(SERVICES_DATA).forEach((s) => {
 	if (s && typeof s === "object" && s.id) {
 		ALL_SERVICES_MAP.set(s.id, {
-			...s,
+			...(s as ServiceLocation),
 			type: s.type as ServiceType,
 			effects: s.effects || {},
 		});
@@ -30,13 +36,13 @@ safeArray(SERVICES_DATA).forEach((s) => {
 });
 
 // 2. Process Education Services (overrides/augments)
-safeArray(EDUCATION_DATA).forEach((s) => {
+safeArray<Partial<ServiceLocation>>(EDUCATION_DATA).forEach((s) => {
 	if (s && typeof s === "object" && s.id) {
 		// If it already exists, education might be an extra metadata layer
 		const existing = ALL_SERVICES_MAP.get(s.id);
 		ALL_SERVICES_MAP.set(s.id, {
 			...existing,
-			...s,
+			...(s as ServiceLocation),
 			type: "EDUCATION" as ServiceType,
 			category: "Educação Online",
 			coords:
@@ -48,12 +54,13 @@ safeArray(EDUCATION_DATA).forEach((s) => {
 });
 
 // 3. Process Expansion Services (overrides/augments)
-safeArray(EXPANSION_DATA).forEach((s) => {
+// biome-ignore lint/suspicious/noExplicitAny: Raw JSON type differs slightly
+safeArray<any>(EXPANSION_DATA).forEach((s) => {
 	if (s && typeof s === "object" && s.id) {
 		const existing = ALL_SERVICES_MAP.get(s.id);
 		ALL_SERVICES_MAP.set(s.id, {
 			...existing,
-			...s,
+			...(s as ServiceLocation),
 			coords: (s.coordinates || existing?.coords) as [number, number],
 			requirements: s.requirements || existing?.requirements || [],
 			effects: s.effects || existing?.effects || {},
