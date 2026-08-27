@@ -74,17 +74,11 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 		}
 
 		if (activeModal !== null) {
-			console.log(
-				`[ModalQueue] Blocked: Modal '${activeModal}' is already open`,
-			);
 			return false;
 		}
 
 		const timeSinceLastModal = Date.now() - lastModalClosedAt;
 		if (timeSinceLastModal < MODAL_COOLDOWN_MS) {
-			console.log(
-				`[ModalQueue] Cooldown: ${MODAL_COOLDOWN_MS - timeSinceLastModal}ms remaining`,
-			);
 			return false;
 		}
 
@@ -112,10 +106,6 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 			});
 			return updated;
 		});
-
-		console.log(
-			`[ModalQueue] Enqueued dilemma '${dilemma.id}' with priority ${priority}`,
-		);
 	}, []);
 
 	/**
@@ -144,10 +134,6 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 			const nextEvent = pendingEvents[0];
 			setPendingEvents((prev) => prev.slice(1));
 
-			console.log(
-				`[ModalQueue] Processing dilemma '${nextEvent.dilemma.id}' from queue`,
-			);
-
 			return nextEvent.dilemma;
 		} finally {
 			// Liberar lock com pequeno delay
@@ -166,9 +152,6 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 		if (type === null) {
 			// Modal fechado - registrar timestamp para cooldown
 			setLastModalClosedAt(Date.now());
-			console.log("[ModalQueue] Modal closed, starting cooldown");
-		} else {
-			console.log(`[ModalQueue] Modal opened: ${type}`);
 		}
 	}, []);
 
@@ -177,7 +160,6 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 	 */
 	const clearQueue = useCallback(() => {
 		setPendingEvents([]);
-		console.log("[ModalQueue] Queue cleared");
 	}, []);
 
 	const value = useMemo(
