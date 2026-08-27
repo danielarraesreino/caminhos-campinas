@@ -18,6 +18,8 @@ import type { Dilemma } from "@/features/game-loop/dilemma-types";
  * Garante que apenas UM modal esteja ativo por vez.
  */
 
+const DEBUG = process.env.NODE_ENV === "development";
+
 export type ModalType = "tutorial" | "dilemma" | "chat" | "gameover" | null;
 
 interface QueuedEvent {
@@ -74,17 +76,21 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 		}
 
 		if (activeModal !== null) {
-			console.log(
-				`[ModalQueue] Blocked: Modal '${activeModal}' is already open`,
-			);
+			if (DEBUG) {
+				console.log(
+					`[ModalQueue] Blocked: Modal '${activeModal}' is already open`,
+				);
+			}
 			return false;
 		}
 
 		const timeSinceLastModal = Date.now() - lastModalClosedAt;
 		if (timeSinceLastModal < MODAL_COOLDOWN_MS) {
-			console.log(
-				`[ModalQueue] Cooldown: ${MODAL_COOLDOWN_MS - timeSinceLastModal}ms remaining`,
-			);
+			if (DEBUG) {
+				console.log(
+					`[ModalQueue] Cooldown: ${MODAL_COOLDOWN_MS - timeSinceLastModal}ms remaining`,
+				);
+			}
 			return false;
 		}
 
@@ -113,9 +119,11 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 			return updated;
 		});
 
-		console.log(
-			`[ModalQueue] Enqueued dilemma '${dilemma.id}' with priority ${priority}`,
-		);
+		if (DEBUG) {
+			console.log(
+				`[ModalQueue] Enqueued dilemma '${dilemma.id}' with priority ${priority}`,
+			);
+		}
 	}, []);
 
 	/**
@@ -144,9 +152,11 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 			const nextEvent = pendingEvents[0];
 			setPendingEvents((prev) => prev.slice(1));
 
-			console.log(
-				`[ModalQueue] Processing dilemma '${nextEvent.dilemma.id}' from queue`,
-			);
+			if (DEBUG) {
+				console.log(
+					`[ModalQueue] Processing dilemma '${nextEvent.dilemma.id}' from queue`,
+				);
+			}
 
 			return nextEvent.dilemma;
 		} finally {
@@ -166,9 +176,13 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 		if (type === null) {
 			// Modal fechado - registrar timestamp para cooldown
 			setLastModalClosedAt(Date.now());
-			console.log("[ModalQueue] Modal closed, starting cooldown");
+			if (DEBUG) {
+				console.log("[ModalQueue] Modal closed, starting cooldown");
+			}
 		} else {
-			console.log(`[ModalQueue] Modal opened: ${type}`);
+			if (DEBUG) {
+				console.log(`[ModalQueue] Modal opened: ${type}`);
+			}
 		}
 	}, []);
 
@@ -177,7 +191,9 @@ export function ModalQueueProvider({ children }: ModalQueueProviderProps) {
 	 */
 	const clearQueue = useCallback(() => {
 		setPendingEvents([]);
-		console.log("[ModalQueue] Queue cleared");
+		if (DEBUG) {
+			console.log("[ModalQueue] Queue cleared");
+		}
 	}, []);
 
 	const value = useMemo(
