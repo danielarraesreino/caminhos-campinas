@@ -104,6 +104,7 @@ export default function HubCadastroPage() {
 		const loadPartners = async () => {
 			const data = await hubService.getPartners();
 			// Map to local interface
+			// biome-ignore lint/suspicious/noExplicitAny: API shape
 			const mapped = data.map((p: any) => ({
 				id: p.id,
 				name: p.name,
@@ -174,11 +175,13 @@ export default function HubCadastroPage() {
 			alert("Cadastro realizado com sucesso! Aguardando aprovação.");
 			// Refresh list
 			const data = await hubService.getPartners();
+			// biome-ignore lint/suspicious/noExplicitAny: API shape
 			const mapped = data.map((p: any) => ({
 				id: p.id,
 				name: p.name,
 				type: "ONG" as const,
 				address: p.address,
+				// biome-ignore lint/suspicious/noExplicitAny: API legacy shape
 				whatsapp: (p as any).phone || "",
 				// biome-ignore lint/suspicious/noExplicitAny: Cast for legacy partner data
 				services: p.services as any,

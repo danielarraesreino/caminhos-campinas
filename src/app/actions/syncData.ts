@@ -10,7 +10,9 @@ type SyncResult = {
 };
 
 export async function syncOfflineData(
+	// biome-ignore lint/suspicious/noExplicitAny: offline sync generic structure
 	telemetryEvents: any[],
+	// biome-ignore lint/suspicious/noExplicitAny: offline sync generic structure
 	userStories: any[],
 ): Promise<SyncResult> {
 	console.log("Starting sync...", {

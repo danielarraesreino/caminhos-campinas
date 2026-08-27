@@ -18,6 +18,7 @@ const MOCK_DILEMMA = {
 export default function ValidacaoAuditPage() {
 	const { data: session, status } = useSession();
 	const router = useRouter();
+	// biome-ignore lint/suspicious/noExplicitAny: mock data
 	const [dilemma, _setDilemma] = useState<any>(MOCK_DILEMMA);
 	const [feedback, setFeedback] = useState<"pass" | "fail" | null>(null);
 	const [comment, setComment] = useState("");

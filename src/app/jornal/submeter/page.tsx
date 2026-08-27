@@ -111,6 +111,7 @@ export default function SubmeterJornalPage() {
 							onChange={(e) =>
 								setFormData({
 									...formData,
+									// biome-ignore lint/suspicious/noExplicitAny: generic form category
 									category: e.target.value as any,
 								})
 							}

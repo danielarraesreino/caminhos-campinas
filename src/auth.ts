@@ -5,7 +5,9 @@ import Google from "next-auth/providers/google";
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	providers: [
 		Google({
+			// biome-ignore lint/style/noNonNullAssertion: Required by NextAuth config
 			clientId: process.env.AUTH_GOOGLE_ID!,
+			// biome-ignore lint/style/noNonNullAssertion: Required by NextAuth config
 			clientSecret: process.env.AUTH_GOOGLE_SECRET!,
 			authorization: {
 				params: {

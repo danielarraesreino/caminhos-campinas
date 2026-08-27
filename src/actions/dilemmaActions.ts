@@ -3,6 +3,7 @@
 import { supabase } from "@/lib/supabaseClient";
 
 export async function submitDilemmaSuggestion(
+	// biome-ignore lint/suspicious/noExplicitAny: action server state
 	_prevState: any,
 	formData: FormData,
 ) {

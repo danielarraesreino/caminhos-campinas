@@ -321,7 +321,9 @@ function ODSCard({
 	description,
 	coverage,
 	gap,
+	// biome-ignore lint/suspicious/noExplicitAny: props
 }: any) {
+	// biome-ignore lint/suspicious/noExplicitAny: config map
 	const colorMap: any = {
 		green: "border-[#00e5a0] text-[#00e5a0]",
 		orange: "border-[#f5a623] text-[#f5a623]",
@@ -369,6 +371,7 @@ function ODSCard({
 	);
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: props
 function ExpansionCard({ num, title, description, opportunity }: any) {
 	return (
 		<div className="bg-[#111318] border border-[#1e2330] p-8 hover:bg-[#161a24] transition-all border-l-[#ff4d6a] border-l-[3px]">
@@ -394,6 +397,7 @@ function ExpansionCard({ num, title, description, opportunity }: any) {
 	);
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: props
 function HighlightCard({ icon, title, description }: any) {
 	return (
 		<div className="bg-[#111318] border border-[#1e2330] border-t-[#00e5a0] border-t-2 p-6 hover:-translate-y-1 transition-all duration-300">
@@ -406,6 +410,7 @@ function HighlightCard({ icon, title, description }: any) {
 	);
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: props
 function RoadmapItem({ num, title, description }: any) {
 	return (
 		<div className="flex gap-6 items-start">
