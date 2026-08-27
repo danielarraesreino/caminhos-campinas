@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach, vi, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DilemmaCache } from "@/utils/dilemmaCache";
 
 describe("DilemmaCache Cleanup Logic", () => {
@@ -94,7 +94,9 @@ describe("DilemmaCache Cleanup Logic", () => {
 
 		// All 6 valid keys should remain.
 		for (let i = 6; i <= 11; i++) {
-			expect(localStorage.getItem(`dilemma_cache_valid_key_${i}`)).not.toBeNull();
+			expect(
+				localStorage.getItem(`dilemma_cache_valid_key_${i}`),
+			).not.toBeNull();
 		}
 	});
 });
