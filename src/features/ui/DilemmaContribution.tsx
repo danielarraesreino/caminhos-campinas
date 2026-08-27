@@ -5,7 +5,6 @@ import { useRef, useState } from "react";
 import { EcoButton } from "@/components/ui/EcoButton";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/contexts/ToastContext";
-// import { uploadUserDilemma } from "@/services/hostingerUpload";
 
 export function DilemmaContribution() {
 	const { showToast } = useToast();
@@ -66,14 +65,7 @@ export function DilemmaContribution() {
 		}
 
 		setIsUploading(true);
-		// Create a text blob if audio is missing, just to satisfy the function signature if needed
-		// But our function requires Blob. If no audio, let's send an empty one or handle logic.
-		// For now, let's assume text-only is fine if we pass an empty blob or change service.
-		// Our service expects Blob. Let's send an empty text blob if no audio.
-		const _finalAudio =
-			audioBlob || new Blob(["no-audio"], { type: "text/plain" });
 
-		// const result = await uploadUserDilemma(finalAudio, text, contact);
 		console.log("Saving dilemma contribution locally (Offline Mode)", {
 			text,
 			contact,
