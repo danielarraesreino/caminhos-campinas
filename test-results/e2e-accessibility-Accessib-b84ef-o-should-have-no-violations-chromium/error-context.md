@@ -1,0 +1,356 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation "Navegação Principal" [ref=e2]:
+    - generic [ref=e4]:
+      - link "Voltar para a página inicial do Caminhos Campinas" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Logo Caminhos Campinas" [ref=e8]
+      - generic [ref=e9]:
+        - link "Intervir" [ref=e10] [cursor=pointer]:
+          - /url: /jogar
+          - button "Intervir" [ref=e11]
+        - button "Abrir menu de sub-seções para Sobrevivência" [ref=e14]:
+          - text: Sobrevivência
+          - img [ref=e15]
+        - button "Abrir menu de sub-seções para Auditoria" [ref=e18]:
+          - text: Auditoria
+          - img [ref=e19]
+        - button "Abrir menu de sub-seções para Voz & Ação" [ref=e22]:
+          - text: Voz & Ação
+          - img [ref=e23]
+        - link "Rede" [ref=e26] [cursor=pointer]:
+          - /url: /hub
+          - button "Rede" [ref=e27]:
+            - img
+            - text: Rede
+        - generic [ref=e28]:
+          - button "Sincronizar dados salvos offline" [disabled]:
+            - img
+            - generic: Sincronizar
+        - button "Configurações e Centro de Controle" [ref=e30]:
+          - img
+        - img [ref=e32]
+  - main [ref=e36]:
+    - main "Painel de Impacto Social" [ref=e37]:
+      - generic:
+        - img "Fundo Dashboard - Realismo Sóbrio"
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - heading "Painel de Inteligência Social" [level=1] [ref=e41]
+            - paragraph [ref=e42]: "O \"Abismo de Números\": Contrastando a realidade das ruas com os indicadores oficiais de Campinas através da tecnologia cívica."
+          - generic [ref=e43]:
+            - img "Alerta de emergência" [ref=e45]
+            - generic [ref=e47]:
+              - heading "Estado de Emergência Habitacional" [level=2] [ref=e48]
+              - paragraph [ref=e49]:
+                - text: Campinas possui um déficit real de
+                - strong [ref=e50]: 938 vagas
+                - text: de acolhimento. A invisibilidade é uma falha deliberada do sistema.
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - heading "População Mapeada" [level=3] [ref=e55]
+                - paragraph [ref=e56]: 1.300+
+              - img [ref=e58]
+            - paragraph [ref=e64]: Oficial (Censo 2024)
+          - generic [ref=e65]:
+            - generic [ref=e66]:
+              - generic [ref=e67]:
+                - heading "Déficit Habitacional" [level=3] [ref=e68]
+                - paragraph [ref=e69]: "938"
+              - img [ref=e71]
+            - paragraph [ref=e75]: Vagas Faltantes (SAMIM)
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - heading "Risco de Fome" [level=3] [ref=e79]
+                - paragraph [ref=e80]: 38.5% Fome/Dia
+              - img [ref=e82]
+            - paragraph [ref=e86]: "Alertas Hoje: 0"
+          - generic [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e89]:
+                - heading "Crise Sanitária" [level=3] [ref=e90]
+                - paragraph [ref=e91]: 38%
+              - img [ref=e93]
+            - paragraph [ref=e97]: "Alertas Hoje: 0"
+          - generic [ref=e98]:
+            - generic [ref=e99]:
+              - generic [ref=e100]:
+                - heading "Violência Estatal" [level=3] [ref=e101]
+                - paragraph [ref=e102]: 51.1%
+              - img [ref=e104]
+            - paragraph [ref=e107]: "Alertas Hoje: 0"
+          - generic [ref=e108]:
+            - generic [ref=e109]:
+              - generic [ref=e110]:
+                - heading "Saúde Pop Rua" [level=3] [ref=e111]
+                - paragraph [ref=e112]: 3 Equipes
+              - img [ref=e114]
+            - paragraph [ref=e117]: "Alertas Hoje: 0"
+        - generic [ref=e118]:
+          - 'heading "Guerra dos Números: A Escala da Invisibilidade" [level=2] [ref=e119]':
+            - img [ref=e120]
+            - text: "Guerra dos Números: A Escala da Invisibilidade"
+          - paragraph [ref=e125]: O Censo oficial captura uma "fotografia" de dias específicos. A realidade da rua é um "filme" em movimento constante.
+          - generic [ref=e126]:
+            - generic [ref=e127]:
+              - generic [ref=e128]:
+                - generic [ref=e129]: Censo Oficial (FEAC 2024)
+                - generic [ref=e130]: "1300"
+              - paragraph [ref=e133]: Censo = fotografia de dias específicos (março/abril)
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - generic [ref=e136]: Estimativa Coletivos
+                - generic [ref=e137]: ~3000
+              - paragraph [ref=e140]: Perde quem se esconde (medo da GCM/Conselho Tutelar), trabalha à noite ou viaja
+          - generic [ref=e141]:
+            - generic [ref=e142]:
+              - text: Fator de Subnotificação
+              - paragraph [ref=e143]: 2.3x
+            - generic [ref=e144]:
+              - paragraph [ref=e145]: "Fontes: FEAC 2024 • Cáritas • Coletivo A Rua Tem Voz"
+              - paragraph [ref=e146]: ⚠️ ~1700 pessoas invisíveis para as políticas públicas
+        - generic [ref=e148]:
+          - generic [ref=e149]:
+            - heading "Realidade Paralela" [level=3] [ref=e150]:
+              - img [ref=e151]
+              - text: Realidade Paralela
+            - button "Dados Oficiais" [ref=e153]:
+              - img [ref=e154]
+              - text: Dados Oficiais
+          - generic [ref=e159]:
+            - generic [ref=e160]:
+              - text: Censo Oficial
+              - paragraph [ref=e161]: "1.300"
+              - text: FEAC 2024
+            - generic [ref=e162]:
+              - text: Estimativa ONGs
+              - paragraph [ref=e163]: ~3.000
+              - generic [ref=e164]: +1700 invisíveis
+          - paragraph [ref=e165]: Clique em "Visão ONGs" para revelar a população invisível.
+        - generic [ref=e167]:
+          - heading "A Realidade em Gráficos" [level=2] [ref=e168]: A Realidade em Gráficos
+          - paragraph [ref=e170]: Dados que desmontam o senso comum. Compartilhe nas redes para amplificar a denúncia.
+          - generic [ref=e171]:
+            - generic [ref=e172]:
+              - generic [ref=e173]:
+                - heading "💰 A Economia da Exclusão" [level=3] [ref=e174]
+                - 'button "Compartilhar gráfico: A Economia da Exclusão" [ref=e175]':
+                  - img [ref=e176]
+              - application [ref=e184]:
+                - generic [ref=e190]:
+                  - generic [ref=e192]: AlunoEnsinoMédio
+                  - generic [ref=e194]: Internação(CT)
+              - paragraph [ref=e196]:
+                - strong [ref=e197]: "Incentivo Perverso:"
+                - text: O sistema paga 4x mais para remediar do que para prevenir.
+            - generic [ref=e198]:
+              - generic [ref=e199]:
+                - heading "💪 Quem Realmente Trabalha?" [level=3] [ref=e200]
+                - 'button "Compartilhar gráfico: O Mito da Vadiagem" [ref=e201]':
+                  - img [ref=e202]
+              - application [ref=e210]
+              - generic [ref=e211]:
+                - generic [ref=e212]: Trabalham (70,9%)
+                - generic [ref=e214]: Não (29,1%)
+              - paragraph [ref=e217]:
+                - strong [ref=e218]: "Quebrando o estigma:"
+                - text: A maioria é força de trabalho ativa, mas informal.
+            - generic [ref=e219]:
+              - generic [ref=e220]:
+                - heading "💔 O Gatilho da Rua" [level=3] [ref=e221]
+                - 'button "Compartilhar gráfico: A Rua Começa em Casa" [ref=e222]':
+                  - img [ref=e223]
+              - application [ref=e231]:
+                - generic [ref=e237]:
+                  - generic [ref=e239]: ConflitosFamiliares
+                  - generic [ref=e241]: Drogas/Álcool
+                  - generic [ref=e243]: Desemprego
+                  - generic [ref=e245]: Perda deMoradia
+              - paragraph [ref=e247]:
+                - strong [ref=e248]: "A rua começa em casa:"
+                - text: O rompimento de vínculos supera a droga como causa.
+        - generic [ref=e249]:
+          - generic [ref=e250]:
+            - 'heading "O Abismo dos Números: Capacidade de Acolhimento" [level=2] [ref=e251]':
+              - img [ref=e252]
+              - text: "O Abismo dos Números: Capacidade de Acolhimento"
+            - generic [ref=e255]:
+              - generic [ref=e257]:
+                - generic [ref=e258]: Demanda (1.300+)
+                - generic [ref=e259]: 100%
+              - generic [ref=e262]:
+                - generic [ref=e263]:
+                  - generic [ref=e264]: Oferta (362 Vagas)
+                  - generic [ref=e265]: 27.8%
+                - paragraph [ref=e268]: Déficit de 938 Prontuários sem Teto
+          - generic [ref=e269]:
+            - heading "Análise de Inteligência" [level=2] [ref=e270]
+            - list [ref=e271]:
+              - listitem [ref=e272]:
+                - generic [ref=e273]: "ALERTA SANITÁRIO:"
+                - text: 38% da população simulada foi forçada a usar a rua para necessidades fisiológicas hoje, devido a barreiras em comércios e falta de banheiros públicos 24h.
+              - listitem [ref=e274]:
+                - generic [ref=e275]: "CRÍTICO:"
+                - text: O sistema detectou que a "Barreira do RG" impede 19% da população de acessar o Bom Prato (exige cadastro/documento em alguns casos).
+              - listitem [ref=e276]:
+                - generic [ref=e277]: "OPORTUNIDADE:"
+                - text: O "Consultório na Rua" é o serviço mais eficaz para reduzir danos, mas opera com apenas 3 equipes para 1.557 pessoas.
+        - generic [ref=e278]:
+          - 'heading "Termômetro Social: O que a rua está dizendo hoje?" [level=2] [ref=e279]':
+            - img [ref=e280]
+            - text: "Termômetro Social: O que a rua está dizendo hoje?"
+          - generic [ref=e282]:
+            - generic [ref=e283]:
+              - generic [ref=e284]:
+                - heading "Fome / Segurança Alimentar" [level=4] [ref=e285]
+                - text: Relatos confirmados
+              - generic [ref=e287]: "0"
+            - generic [ref=e288]:
+              - generic [ref=e289]:
+                - heading "Crise Sanitária / Higiene" [level=4] [ref=e290]
+                - text: Relatos confirmados
+              - generic [ref=e292]: "0"
+            - generic [ref=e293]:
+              - generic [ref=e294]:
+                - heading "Violência Institucional" [level=4] [ref=e295]
+                - text: Relatos confirmados
+              - generic [ref=e297]: "0"
+        - generic [ref=e298]:
+          - heading "A Realidade Invisível" [level=2] [ref=e299]: A Realidade Invisível
+          - paragraph [ref=e301]: "Auditoria cruzada: Dados oficiais do Censo Pop Rua 2024 vs. Mitos Sociais. A tecnologia e a violência institucional operam como barreiras invisíveis."
+          - generic [ref=e302]:
+            - generic [ref=e303]:
+              - heading "Barreira Digital (Acesso Negado)" [level=3] [ref=e304]:
+                - img [ref=e306]
+                - text: Barreira Digital (Acesso Negado)
+              - generic [ref=e308]:
+                - generic [ref=e310]:
+                  - generic [ref=e311]: Sem Celular
+                  - generic [ref=e312]: 20%
+                - generic [ref=e315]:
+                  - generic [ref=e316]:
+                    - generic [ref=e317]: Tem Celular, Sem Dados
+                    - generic [ref=e318]: 45%
+                  - paragraph [ref=e321]:
+                    - text: A exigência de agendamento online (Poupatempo/CRAS) bloqueia 45% (Sem dados) + 20% (Sem aparelho) =
+                    - strong [ref=e322]: 65% da população
+                    - text: .
+            - generic [ref=e323]:
+              - heading "Quem agride na rua?" [level=3] [ref=e324]:
+                - img [ref=e326]
+                - text: Quem agride na rua?
+              - generic [ref=e328]:
+                - generic [ref=e329]:
+                  - generic [ref=e330]: 51.1%
+                  - generic [ref=e332]:
+                    - text: Agentes do Estado
+                    - text: (PM, GM)
+                - generic [ref=e333]:
+                  - generic [ref=e334]: 41.8%
+                  - generic [ref=e336]: Sociedade Civil
+              - paragraph [ref=e337]: "ODS 16 Violado: A instituição que deveria proteger é a principal autora da violência."
+            - generic [ref=e338]:
+              - heading "Por que estão na rua?" [level=3] [ref=e339]:
+                - img [ref=e341]
+                - text: Por que estão na rua?
+              - generic [ref=e343]:
+                - generic [ref=e345]:
+                  - generic [ref=e346]: Conflitos Familiares
+                  - generic [ref=e347]: 71.5%
+                - generic [ref=e351]:
+                  - generic [ref=e352]: Álcool/Drogas
+                  - generic [ref=e353]: ~30%
+                - generic [ref=e356]: "\"Aporofobia se baseia no mito do vício. A realidade é o rompimento de vínculos.\""
+        - generic [ref=e357]:
+          - generic [ref=e358]:
+            - generic [ref=e359]:
+              - heading "Análise de Cobertura ODS 2030" [level=2] [ref=e360]
+              - paragraph [ref=e361]: Acesse o relatório completo de como o Caminhos Campinas endereça cada uma das metas globais da ONU para a população de rua.
+            - link "Ver Relatório Completo" [ref=e362] [cursor=pointer]:
+              - /url: /impacto/ods
+              - generic [ref=e363]:
+                - text: Ver Relatório Completo
+                - img [ref=e364]
+          - generic [ref=e366]:
+            - heading "Direitos e Metas Globais (ODS)" [level=2] [ref=e368]:
+              - img [ref=e369]
+              - text: Direitos e Metas Globais (ODS)
+            - paragraph [ref=e372]:
+              - text: "Os Objetivos de Desenvolvimento Sustentável (Agenda 2030) da ONU representam um compromisso global. Para quem vive na rua, porém, essas metas não são apenas estatísticas: são"
+              - strong [ref=e373]: direitos vitais
+              - text: que estão sendo violados diariamente.
+            - generic [ref=e374]:
+              - generic [ref=e375]:
+                - generic [ref=e376]:
+                  - img [ref=e378]
+                  - generic [ref=e381]: "ODS 11.1: Direito à Moradia"
+                - paragraph [ref=e382]: O 'Direito à Cidade' começa com um teto seguro. Sem um endereço ou local de repouso digno, o estado de alerta constante impede qualquer desenvolvimento humano ou cidadania básica.
+              - generic [ref=e383]:
+                - generic [ref=e384]:
+                  - img [ref=e386]
+                  - generic [ref=e388]: "ODS 3: Saúde e Bem-estar"
+                - paragraph [ref=e389]: A vida nas ruas acelera a degradação física e mental. Garantir acesso à saúde (como o Consultório na Rua) é a base para a redução de danos e a preservação da dignidade.
+              - generic [ref=e390]:
+                - generic [ref=e391]:
+                  - img [ref=e393]
+                  - generic [ref=e396]: "ODS 4: Educação de Qualidade"
+                - paragraph [ref=e397]: A autonomia vem pelo conhecimento. Contudo, é uma barreira intransponível tentar estudar ou se capacitar enquanto o corpo luta contra a privação severa de sono e alimentação.
+              - generic [ref=e398]:
+                - generic [ref=e399]:
+                  - img [ref=e401]
+                  - generic [ref=e403]: "ODS 10: Redução das Desigualdades"
+                - paragraph [ref=e404]: Onde o Estado falha na assistência e proteção, o sistema criminal costuma ser a única resposta. Combater a criminalização da pobreza é fundamental para a justiça social.
+              - generic [ref=e405]:
+                - generic [ref=e406]:
+                  - img [ref=e408]
+                  - generic [ref=e411]: "ODS 8: Trabalho Decente"
+                - paragraph [ref=e412]: Programas como o Mão Amiga oferecem bolsa-auxílio e qualificação profissional. É a 'porta de saída' mais concreta, mas exige documentos e encaminhamento técnico.
+              - generic [ref=e413]:
+                - generic [ref=e414]:
+                  - img [ref=e416]
+                  - generic [ref=e418]: "ODS 16: Identidade Legal"
+                - paragraph [ref=e419]: Sem RG ou CPF, não há CadÚnico, Bolsa Família ou emprego formal. O Poupatempo exige agendamento digital - uma barreira para quem não tem celular.
+  - contentinfo [ref=e420]:
+    - generic [ref=e421]:
+      - generic [ref=e422]:
+        - generic [ref=e423]:
+          - img "Logo Caminhos Campinas" [ref=e425]
+          - paragraph [ref=e426]: Uma iniciativa para transformar a realidade das ruas através da tecnologia social.
+        - generic [ref=e427]:
+          - generic [ref=e428]: Institucional & Impacto
+          - navigation [ref=e429]:
+            - link "Ir para Parceiros e ESG" [ref=e430] [cursor=pointer]:
+              - /url: /parceiros
+              - text: Para Empresas (ESG)
+            - link "Ir para Curso de Agilizadores" [ref=e431] [cursor=pointer]:
+              - /url: /curso
+              - text: Curso Agilizadores
+            - link "Ir para Portal da Transparência" [ref=e432] [cursor=pointer]:
+              - /url: /transparencia
+              - text: Portal da Transparência
+            - link "Área Técnica e Acesso Restrito" [ref=e433] [cursor=pointer]:
+              - /url: /auditoria/validar
+              - text: Área Técnica (Restrito)
+        - generic [ref=e434]:
+          - generic [ref=e435]: Siga o Coletivo
+          - link "Siga o Coletivo A Rua Tem Voz no Instagram" [ref=e436] [cursor=pointer]:
+            - /url: https://www.instagram.com/coletivoaruatemvoz
+            - img [ref=e437]
+            - generic [ref=e440]: "@COLETIVOARUATEMVOZ"
+      - generic [ref=e441]:
+        - paragraph [ref=e442]: © 2025 Coletivo A Rua Tem Voz. Tecnologia como instrumento de emancipação.
+        - generic [ref=e443]:
+          - img [ref=e445]
+          - generic [ref=e447]:
+            - paragraph [ref=e448]: Desenvolvido por Daniel (Japa/Oclinhos)
+            - paragraph [ref=e449]: Vibe Coding &boxvh; Inovação Social
+        - paragraph [ref=e450]: "\"Informação é a libertação real, única e verdadeira.\""
+  - alert [ref=e451]
+  - generic [ref=e452]: Conflitos Familiares
+```
