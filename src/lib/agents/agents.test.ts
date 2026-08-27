@@ -1,10 +1,10 @@
+import { streamText } from "ai";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { GameState } from "@/types/GameState";
 import { AgentOrchestrator } from "./AgentOrchestrator";
 import { BaseAgent } from "./BaseAgent";
 import { GameMasterAgent } from "./GameMasterAgent";
 import { NarrativeAgent } from "./NarrativeAgent";
-import { streamText } from "ai";
 
 // Mock streamText to avoid actual API calls
 vi.mock("ai", () => ({
@@ -89,13 +89,17 @@ describe("BaseAgent", () => {
 		// Override the default mock for this specific test
 		vi.mocked(streamText).mockRejectedValueOnce(testError);
 
-		const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+		const consoleErrorSpy = vi
+			.spyOn(console, "error")
+			.mockImplementation(() => {});
 
-		await expect(testAgent.process({ messages: [] })).rejects.toThrow("AI API Error");
+		await expect(testAgent.process({ messages: [] })).rejects.toThrow(
+			"AI API Error",
+		);
 
 		expect(consoleErrorSpy).toHaveBeenCalledWith(
 			"[TestAgent] Error processing request:",
-			testError
+			testError,
 		);
 
 		consoleErrorSpy.mockRestore();
