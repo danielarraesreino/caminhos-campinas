@@ -62,7 +62,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright Tests
-        run: npx playwright test
+        run: cp .env.example .env.local && npx playwright test
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -87,4 +87,4 @@ jobs:
       
       # Using Playwright Axe-core tests as the audit mechanism
       - name: Run Accessibility Tests
-        run: npx playwright test tests/e2e/accessibility.spec.ts
+        run: cp .env.example .env.local && npx playwright test tests/e2e/accessibility.spec.ts
