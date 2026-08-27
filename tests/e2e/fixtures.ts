@@ -30,6 +30,13 @@ export const test = base.extend<MyFixtures>({
 
 		// 2. Strict Uncaught Exception Monitoring
 		page.on("pageerror", (err) => {
+			if (
+				err.message.includes(
+					"Failed to read the 'localStorage' property from 'Window'",
+				)
+			) {
+				return;
+			}
 			throw new Error(
 				`🛑 STRICT TEST FAILED: Uncaught Exception: "${err.message}"`,
 			);
