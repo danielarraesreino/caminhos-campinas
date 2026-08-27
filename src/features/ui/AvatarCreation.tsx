@@ -26,8 +26,6 @@ interface AvatarCreationProps {
 	onBack: () => void;
 }
 
-// import { getAssetUrl } from "@/utils/getAssetUrl";
-
 const AVATAR_OPTIONS = [
 	{
 		id: "avatar_1",
