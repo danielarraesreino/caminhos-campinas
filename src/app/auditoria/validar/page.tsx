@@ -18,7 +18,12 @@ const MOCK_DILEMMA = {
 export default function ValidacaoAuditPage() {
 	const { data: session, status } = useSession();
 	const router = useRouter();
-	const [dilemma, _setDilemma] = useState<any>(MOCK_DILEMMA);
+	const [dilemma, _setDilemma] = useState<{
+		id: string;
+		title: string;
+		description: string;
+		consequence: string;
+	}>(MOCK_DILEMMA);
 	const [feedback, setFeedback] = useState<"pass" | "fail" | null>(null);
 	const [comment, setComment] = useState("");
 	const [submitted, setSubmitted] = useState(false);

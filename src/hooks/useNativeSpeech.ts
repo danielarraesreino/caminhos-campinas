@@ -2,16 +2,52 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+// Web Speech API Types
+interface SpeechRecognitionEvent extends Event {
+	results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+	error: string;
+	message: string;
+}
+
+interface SpeechRecognition extends EventTarget {
+	continuous: boolean;
+	lang: string;
+	interimResults: boolean;
+	onresult:
+		| ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => void)
+		| null;
+	onend: ((this: SpeechRecognition, ev: Event) => void) | null;
+	onerror:
+		| ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => void)
+		| null;
+	start(): void;
+	stop(): void;
+	abort(): void;
+}
+
+interface SpeechRecognitionConstructor {
+	new (): SpeechRecognition;
+}
+
+declare global {
+	interface Window {
+		SpeechRecognition: SpeechRecognitionConstructor | undefined;
+		webkitSpeechRecognition: SpeechRecognitionConstructor | undefined;
+	}
+}
+
 interface UseNativeSpeechOptions {
 	onTranscription?: (text: string) => void;
 	onSpeechEnd?: () => void;
 }
 
 // 🔒 SINGLETON: Global Speech Recognition instance
-// biome-ignore lint/suspicious/noExplicitAny: Web Speech API instance
-let globalRecognitionInstance: any = null;
+let globalRecognitionInstance: SpeechRecognition | null = null;
 
-function getSpeechRecognitionInstance() {
+function getSpeechRecognitionInstance(): SpeechRecognition | null {
 	if (typeof window === "undefined") return null;
 
 	if (globalRecognitionInstance) {
@@ -19,8 +55,7 @@ function getSpeechRecognitionInstance() {
 	}
 
 	const SpeechRecognition =
-		(window as any).SpeechRecognition ||
-		(window as any).webkitSpeechRecognition;
+		window.SpeechRecognition || window.webkitSpeechRecognition;
 
 	if (!SpeechRecognition) return null;
 
@@ -40,7 +75,7 @@ export function useNativeSpeech({
 	const [isListening, setIsListening] = useState(false);
 	const [isSpeaking, setIsSpeaking] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const recognitionRef = useRef<any>(null);
+	const recognitionRef = useRef<SpeechRecognition | null>(null);
 	const synthesisRef = useRef<SpeechSynthesis | null>(null);
 	const isStartingRef = useRef(false); // 🛡️ GUARD: Prevent race conditions
 
@@ -50,7 +85,7 @@ export function useNativeSpeech({
 
 		const recognition = getSpeechRecognitionInstance();
 		if (recognition) {
-			recognition.onresult = (event: any) => {
+			recognition.onresult = (event: SpeechRecognitionEvent) => {
 				const transcript = event.results[0][0].transcript;
 				if (onTranscription) onTranscription(transcript);
 			};
@@ -61,7 +96,7 @@ export function useNativeSpeech({
 				if (onSpeechEnd) onSpeechEnd();
 			};
 
-			recognition.onerror = (event: any) => {
+			recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
 				// ✅ SILENT ABORT: Ignore "aborted" errors (normal cleanup)
 				if (event.error === "aborted") {
 					console.log("[Speech] Recognition aborted (intentional cleanup)");
@@ -116,9 +151,9 @@ export function useNativeSpeech({
 			recognitionRef.current.start();
 			setIsListening(true);
 			setError(null);
-		} catch (e: any) {
+		} catch (e: unknown) {
 			// Handle "already started" error gracefully
-			if (e.message?.includes("already started")) {
+			if (e instanceof Error && e.message.includes("already started")) {
 				console.log("[Speech] Recognition already active");
 			} else {
 				console.error("[Speech] Failed to start recognition:", e);

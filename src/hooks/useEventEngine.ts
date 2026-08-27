@@ -232,7 +232,7 @@ export function useEventEngine() {
 				if (option.pduAction) {
 					const { type, value } = option.pduAction;
 					if (type === "INIT") {
-						initPDU(value as any);
+						initPDU(value as "SOCIAL" | "SAUDE" | "EDUCACAO" | "TRABALHO" | "FINANCAS" | "FAMILIA" | "CONVIVENCIA" | "MORADIA" | "CIDADANIA");
 					} else if (type === "NEXT_STAGE") {
 						updatePduStage(value);
 					} else if (type === "COMPLETE_STAGE") {

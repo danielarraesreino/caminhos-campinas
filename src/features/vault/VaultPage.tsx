@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -83,9 +84,11 @@ export function VaultPage() {
 						title="Desabilitado temporariamente para ajustes de API"
 						disabled
 					>
-						<img
+						<Image
 							src="https://authjs.dev/img/providers/google.svg"
 							alt="Google Logo"
+							width={20}
+							height={20}
 							className="w-5 h-5"
 						/>
 						Entrar com Google (Em Breve)

@@ -9,9 +9,22 @@ type SyncResult = {
 	error?: string;
 };
 
+interface TelemetryEvent {
+	id?: string;
+	type: string;
+	// biome-ignore lint/suspicious/noExplicitAny: Data payload can be anything
+	data?: any;
+	timestamp?: string | number | Date;
+}
+
+interface UserStory {
+	text: string;
+	timestamp?: string | number | Date;
+}
+
 export async function syncOfflineData(
-	telemetryEvents: any[],
-	userStories: any[],
+	telemetryEvents: TelemetryEvent[],
+	userStories: UserStory[],
 ): Promise<SyncResult> {
 	console.log("Starting sync...", {
 		events: telemetryEvents?.length,

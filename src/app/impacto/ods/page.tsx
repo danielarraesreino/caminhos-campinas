@@ -313,6 +313,16 @@ export default function ODSCoveragePage() {
 	);
 }
 
+interface ODSCardProps {
+	num: string;
+	title: string;
+	status: string;
+	statusColor: "green" | "orange" | "red";
+	description: string;
+	coverage: string;
+	gap?: string;
+}
+
 function ODSCard({
 	num,
 	title,
@@ -321,8 +331,8 @@ function ODSCard({
 	description,
 	coverage,
 	gap,
-}: any) {
-	const colorMap: any = {
+}: ODSCardProps) {
+	const colorMap: Record<"green" | "orange" | "red", string> = {
 		green: "border-[#00e5a0] text-[#00e5a0]",
 		orange: "border-[#f5a623] text-[#f5a623]",
 		red: "border-[#ff4d6a] text-[#ff4d6a]",
@@ -369,7 +379,19 @@ function ODSCard({
 	);
 }
 
-function ExpansionCard({ num, title, description, opportunity }: any) {
+interface ExpansionCardProps {
+	num: string;
+	title: string;
+	description: string;
+	opportunity: string;
+}
+
+function ExpansionCard({
+	num,
+	title,
+	description,
+	opportunity,
+}: ExpansionCardProps) {
 	return (
 		<div className="bg-[#111318] border border-[#1e2330] p-8 hover:bg-[#161a24] transition-all border-l-[#ff4d6a] border-l-[3px]">
 			<div className="flex justify-between items-start mb-6">
@@ -394,7 +416,13 @@ function ExpansionCard({ num, title, description, opportunity }: any) {
 	);
 }
 
-function HighlightCard({ icon, title, description }: any) {
+interface HighlightCardProps {
+	icon: React.ReactNode;
+	title: string;
+	description: string;
+}
+
+function HighlightCard({ icon, title, description }: HighlightCardProps) {
 	return (
 		<div className="bg-[#111318] border border-[#1e2330] border-t-[#00e5a0] border-t-2 p-6 hover:-translate-y-1 transition-all duration-300">
 			<div className="mb-4">{icon}</div>
@@ -406,7 +434,13 @@ function HighlightCard({ icon, title, description }: any) {
 	);
 }
 
-function RoadmapItem({ num, title, description }: any) {
+interface RoadmapItemProps {
+	num: string;
+	title: string;
+	description: string;
+}
+
+function RoadmapItem({ num, title, description }: RoadmapItemProps) {
 	return (
 		<div className="flex gap-6 items-start">
 			<div className="font-mono text-3xl font-bold text-[#1e2330] leading-none">
