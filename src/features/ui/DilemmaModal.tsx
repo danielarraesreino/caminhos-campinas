@@ -416,9 +416,8 @@ export function DilemmaModal({
 						{!currentOption && (
 							<div className="flex flex-col gap-3">
 								{dilemma.options.map((option: DilemmaOption, index: number) => (
-									<div key={index}>
+									<div key={option.label}>
 										<Button
-											key={option.label}
 											type="button"
 											variant="outline"
 											className="justify-between h-auto py-4 px-5 text-left whitespace-normal border-slate-800 bg-slate-950/50 text-slate-300 hover:bg-slate-900 hover:text-white transition-all font-mono text-sm uppercase tracking-widest rounded group"
