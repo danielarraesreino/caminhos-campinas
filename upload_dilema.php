@@ -10,8 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// 1. Configuração de Segurança (Defina uma senha forte aqui)
-$SECRET_KEY = "SUA_SENHA_SECRETA_DO_ENV"; 
+// 1. Configuração de Segurança (Use variável de ambiente)
+$SECRET_KEY = getenv('UPLOAD_SECRET_KEY');
+
+if (!$SECRET_KEY) {
+    http_response_code(500);
+    echo json_encode(["status" => "error", "message" => "Erro de configuração do servidor: chave de segurança não definida."]);
+    exit;
+}
 
 // Verifica se a chave enviada pelo jogo bate com a chave daqui
 if (!isset($_POST['key']) || $_POST['key'] !== $SECRET_KEY) {
