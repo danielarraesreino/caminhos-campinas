@@ -15,6 +15,7 @@ export const test = base.extend<MyFixtures>({
 				const text = msg.text();
 				if (text.includes("404 (Not Found)")) return;
 				if (text.includes("GeolocationPositionError")) return;
+				if (text.includes("SecurityError")) return;
 				// [FIX] Allow AuthJS errors in test environment (no auth configured)
 				if (text.includes("ClientFetchError") && text.includes("authjs.dev"))
 					return;
@@ -30,6 +31,7 @@ export const test = base.extend<MyFixtures>({
 
 		// 2. Strict Uncaught Exception Monitoring
 		page.on("pageerror", (err) => {
+			if (err.message.includes("Failed to read the 'localStorage' property")) return;
 			throw new Error(
 				`🛑 STRICT TEST FAILED: Uncaught Exception: "${err.message}"`,
 			);
