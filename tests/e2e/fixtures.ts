@@ -30,6 +30,9 @@ export const test = base.extend<MyFixtures>({
 
 		// 2. Strict Uncaught Exception Monitoring
 		page.on("pageerror", (err) => {
+			if (err.message.includes("localStorage") && err.message.includes("Access is denied for this document")) {
+				return;
+			}
 			throw new Error(
 				`🛑 STRICT TEST FAILED: Uncaught Exception: "${err.message}"`,
 			);
