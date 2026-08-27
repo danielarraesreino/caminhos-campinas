@@ -416,7 +416,7 @@ export function DilemmaModal({
 						{!currentOption && (
 							<div className="flex flex-col gap-3">
 								{dilemma.options.map((option: DilemmaOption, index: number) => (
-									<div key={index}>
+									<div key={option.label || index}>
 										<Button
 											key={option.label}
 											type="button"
