@@ -1,6 +1,8 @@
+import { streamText } from "ai";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { GameState } from "@/types/GameState";
 import { AgentOrchestrator } from "./AgentOrchestrator";
+import { BaseAgent } from "./BaseAgent";
 import { GameMasterAgent } from "./GameMasterAgent";
 import { NarrativeAgent } from "./NarrativeAgent";
 
@@ -68,5 +70,38 @@ describe("NarrativeAgent", () => {
 		expect(prompt).toContain("Vigor: 50%");
 		expect(prompt).toContain("Fome: 80%");
 		expect(prompt).toContain("R$ 200");
+	});
+});
+
+describe("BaseAgent", () => {
+	class TestBaseAgent extends BaseAgent {
+		name = "TestAgent";
+		description = "A test agent";
+		protected getSystemPrompt(): string {
+			return "Test System Prompt";
+		}
+	}
+
+	it("should catch and rethrow errors from AI processing", async () => {
+		const testAgent = new TestBaseAgent();
+		const testError = new Error("AI API Error");
+
+		// Override the default mock for this specific test
+		vi.mocked(streamText).mockRejectedValueOnce(testError);
+
+		const consoleErrorSpy = vi
+			.spyOn(console, "error")
+			.mockImplementation(() => {});
+
+		await expect(testAgent.process({ messages: [] })).rejects.toThrow(
+			"AI API Error",
+		);
+
+		expect(consoleErrorSpy).toHaveBeenCalledWith(
+			"[TestAgent] Error processing request:",
+			testError,
+		);
+
+		consoleErrorSpy.mockRestore();
 	});
 });

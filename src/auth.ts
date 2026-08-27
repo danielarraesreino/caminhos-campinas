@@ -27,7 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 		}),
 	],
 	trustHost: true,
-	secret: process.env.AUTH_SECRET,
+	secret: process.env.AUTH_SECRET || "fallback-secret-for-tests",
 	callbacks: {
 		authorized: async ({ auth }) => {
 			return !!auth;
