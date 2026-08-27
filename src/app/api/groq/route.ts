@@ -1,13 +1,50 @@
 import { groq } from "@ai-sdk/groq";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 import { generateText } from "ai";
 import { type NextRequest, NextResponse } from "next/server";
 
-const GROQ_API_KEY = process.env.GROQ_API_KEY; // SEM NEXT_PUBLIC
+// Initialize Redis if credentials are provided
+const kvUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const kvToken =
+	process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
 
-// Rate limiting simples (em produção, usar Upstash Redis ou Vercel KV)
+let redis: Redis | null = null;
+let ratelimit: Ratelimit | null = null;
+
+if (kvUrl && kvToken) {
+	redis = new Redis({
+		url: kvUrl,
+		token: kvToken,
+	});
+	ratelimit = new Ratelimit({
+		redis: redis,
+		limiter: Ratelimit.slidingWindow(10, "1 m"),
+		analytics: true,
+	});
+}
+
+// Fallback in-memory rate limiting map
 const requestCounts = new Map<string, { count: number; resetTime: number }>();
 
-function checkRateLimit(identifier: string): boolean {
+async function checkRateLimit(identifier: string): Promise<boolean> {
+	if (ratelimit) {
+		try {
+			const { success } = await ratelimit.limit(identifier);
+			return success;
+		} catch (error) {
+			console.error(
+				"[Groq API] Redis rate limit falhou, caindo para in-memory",
+				error,
+			);
+		}
+	} else if (process.env.NODE_ENV === "production") {
+		console.warn(
+			"[Groq API] AVISO: Rate limit distribuído não configurado em produção. Usando in-memory fallback vulnerável a abusos em ambiente serverless.",
+		);
+	}
+
+	// Fallback to in-memory check
 	const now = Date.now();
 	const limit = requestCounts.get(identifier);
 
@@ -28,7 +65,8 @@ function checkRateLimit(identifier: string): boolean {
 export async function POST(req: NextRequest) {
 	try {
 		// Validação da chave de API
-		if (!GROQ_API_KEY) {
+		const groqApiKey = process.env.GROQ_API_KEY;
+		if (!groqApiKey) {
 			console.error("[Groq API] Chave de API não configurada");
 			return NextResponse.json(
 				{ success: false, error: "Configuração do servidor incompleta" },
@@ -41,7 +79,8 @@ export async function POST(req: NextRequest) {
 			req.headers.get("x-forwarded-for") ||
 			req.headers.get("x-real-ip") ||
 			"unknown";
-		if (!checkRateLimit(ip)) {
+		const isAllowed = await checkRateLimit(ip);
+		if (!isAllowed) {
 			return NextResponse.json(
 				{ success: false, error: "Muitas requisições. Aguarde um momento." },
 				{ status: 429 },
