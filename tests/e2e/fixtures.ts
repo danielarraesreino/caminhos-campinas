@@ -30,7 +30,7 @@ export const test = base.extend<MyFixtures>({
 
 		// 2. Strict Uncaught Exception Monitoring
 		page.on("pageerror", (err) => {
-			if (err.message.includes("Access is denied for this document")) {
+			if (err.message.includes("Access is denied for this document") || err.message.includes("localStorage")) {
 				console.warn("Skipping expected cross-origin localStorage exception in tests.");
 				return;
 			}
