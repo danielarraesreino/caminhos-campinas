@@ -490,10 +490,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 			};
 
 			// [NEW] Global Debug Object for manual testing
+			// biome-ignore lint/suspicious/noExplicitAny: Debug object for manual testing
 			(window as any).__GAME_DEBUG__ = {
 				modifyStat: (stat: string, amount: number) => {
 					dispatch({
 						type: "MODIFY_STAT",
+						// biome-ignore lint/suspicious/noExplicitAny: Stat cast for debug testing
 						payload: { stat: stat as any, amount },
 					});
 				},

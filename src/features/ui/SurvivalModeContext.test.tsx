@@ -1,6 +1,6 @@
-import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { useSurvivalMode, SurvivalModeProvider } from "./SurvivalModeContext";
+import { act, renderHook } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { SurvivalModeProvider, useSurvivalMode } from "./SurvivalModeContext";
 
 describe("useSurvivalMode", () => {
 	beforeEach(() => {
@@ -16,7 +16,7 @@ describe("useSurvivalMode", () => {
 
 	it("throws an error when used outside of SurvivalModeProvider", () => {
 		expect(() => renderHook(() => useSurvivalMode())).toThrow(
-			"useSurvivalMode must be used within a SurvivalModeProvider"
+			"useSurvivalMode must be used within a SurvivalModeProvider",
 		);
 	});
 
@@ -41,7 +41,9 @@ describe("useSurvivalMode", () => {
 		});
 
 		expect(result.current.isSurvivalMode).toBe(true);
-		expect(document.documentElement.classList.contains("survival-mode")).toBe(true);
+		expect(document.documentElement.classList.contains("survival-mode")).toBe(
+			true,
+		);
 		expect(localStorage.getItem("survival-mode")).toBe("true");
 
 		act(() => {
@@ -49,7 +51,9 @@ describe("useSurvivalMode", () => {
 		});
 
 		expect(result.current.isSurvivalMode).toBe(false);
-		expect(document.documentElement.classList.contains("survival-mode")).toBe(false);
+		expect(document.documentElement.classList.contains("survival-mode")).toBe(
+			false,
+		);
 		expect(localStorage.getItem("survival-mode")).toBe("false");
 	});
 
@@ -61,6 +65,8 @@ describe("useSurvivalMode", () => {
 		});
 
 		expect(result.current.isSurvivalMode).toBe(true);
-		expect(document.documentElement.classList.contains("survival-mode")).toBe(true);
+		expect(document.documentElement.classList.contains("survival-mode")).toBe(
+			true,
+		);
 	});
 });
