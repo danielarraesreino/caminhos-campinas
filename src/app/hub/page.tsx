@@ -3,8 +3,6 @@ import { useEffect } from "react";
 import partnersData from "@/data/partners.json";
 
 export default function HubPage() {
-	// const { pdu, initPDU } = useGameContext(); // optimization: unused
-
 	// Integrate with PDU: Visiting the Hub initializes the WORK objective checks
 	useEffect(() => {
 		// Only init if player has no objective or is exploring
