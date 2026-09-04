@@ -2,10 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
-	experimental: {
-		// @ts-expect-error: Experimental feature
-		reactCompiler: true,
-	},
+	reactCompiler: true,
 	images: {
 		remotePatterns: [
 			{

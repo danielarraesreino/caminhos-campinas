@@ -104,16 +104,21 @@ export default function HubCadastroPage() {
 		const loadPartners = async () => {
 			const data = await hubService.getPartners();
 			// Map to local interface
+			// biome-ignore lint/suspicious/noExplicitAny: Data comes from an external service with complex types
 			const mapped = data.map((p: any) => ({
-				id: p.id,
-				name: p.name,
+				id: String(p.id),
+				name: String(p.name),
 				type: "ONG" as const,
-				address: p.address || "",
-				whatsapp: p.phone || p.whatsapp || "",
-				services: p.services || [],
+				address: p.address ? String(p.address) : "",
+				whatsapp: p.phone
+					? String(p.phone)
+					: p.whatsapp
+						? String(p.whatsapp)
+						: "",
+				services: Array.isArray(p.services) ? p.services : [],
 				odsLinks: [], // Not supported in DB yet
 				operatingHours: "",
-				description: p.description || "",
+				description: p.description ? String(p.description) : "",
 			}));
 			setPartnersList(mapped);
 		};
@@ -174,17 +179,22 @@ export default function HubCadastroPage() {
 			alert("Cadastro realizado com sucesso! Aguardando aprovação.");
 			// Refresh list
 			const data = await hubService.getPartners();
+			// biome-ignore lint/suspicious/noExplicitAny: Data comes from an external service with complex types
 			const mapped = data.map((p: any) => ({
-				id: p.id,
-				name: p.name,
+				id: String(p.id),
+				name: String(p.name),
 				type: "ONG" as const,
-				address: p.address,
-				whatsapp: (p as any).phone || "",
+				address: p.address ? String(p.address) : "",
+				whatsapp: p.phone
+					? String(p.phone)
+					: p.whatsapp
+						? String(p.whatsapp)
+						: "",
 				// biome-ignore lint/suspicious/noExplicitAny: Cast for legacy partner data
 				services: p.services as any,
 				odsLinks: [],
 				operatingHours: "",
-				description: p.description,
+				description: p.description ? String(p.description) : "",
 			}));
 			setPartnersList(mapped);
 		} catch (err) {

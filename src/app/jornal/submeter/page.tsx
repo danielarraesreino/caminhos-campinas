@@ -111,7 +111,7 @@ export default function SubmeterJornalPage() {
 							onChange={(e) =>
 								setFormData({
 									...formData,
-									category: e.target.value as any,
+									category: e.target.value as "DENUNCIA" | "RELATO" | "POESIA",
 								})
 							}
 							className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"

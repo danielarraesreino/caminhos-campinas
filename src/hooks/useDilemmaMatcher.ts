@@ -52,7 +52,11 @@ export function useDilemmaMatcher() {
 							options: [
 								{
 									label: "Ir para Bom Prato",
-									action: (state: any) => ({
+									action: (state: {
+										hunger: number;
+										money: number;
+										[key: string]: unknown;
+									}) => ({
 										...state,
 										hunger: Math.min(100, state.hunger + 50),
 										money: state.money - 1,
@@ -83,7 +87,10 @@ export function useDilemmaMatcher() {
 							options: [
 								{
 									label: "Buscar atendimento",
-									action: (state: any) => ({
+									action: (state: {
+										health: number;
+										[key: string]: unknown;
+									}) => ({
 										...state,
 										health: Math.min(100, state.health + 20),
 									}),

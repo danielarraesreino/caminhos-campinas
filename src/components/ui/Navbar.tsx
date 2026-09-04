@@ -16,6 +16,7 @@ import {
 	WifiOff,
 	X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -155,9 +156,11 @@ export function Navbar() {
 					>
 						<div className="relative group-hover:scale-105 transition-transform duration-300">
 							<div className="absolute -inset-2 bg-yellow-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-							<img
+							<Image
 								src="/logo-cropped.png"
 								alt="Logo Caminhos Campinas"
+								width={48}
+								height={48}
 								className="w-12 h-12 object-contain relative z-10"
 							/>
 						</div>

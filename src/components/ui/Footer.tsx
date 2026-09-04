@@ -8,9 +8,11 @@ export function Footer() {
 				<div className="flex flex-col md:flex-row justify-between items-center gap-8">
 					<div className="text-center md:text-left">
 						<div className="flex justify-center md:justify-start mb-4">
-							<img
+							<NextImage
 								src="/logo-cropped.png"
 								alt="Logo Caminhos Campinas"
+								width={96}
+								height={96}
 								className="w-24 h-auto object-contain opacity-90 hover:opacity-100 transition-opacity"
 							/>
 						</div>

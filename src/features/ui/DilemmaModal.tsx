@@ -415,40 +415,45 @@ export function DilemmaModal({
 					<div className="mt-8">
 						{!currentOption && (
 							<div className="flex flex-col gap-3">
-								{dilemma.options.map((option: DilemmaOption, index: number) => (
-									<div key={index}>
-										<Button
-											key={option.label}
-											type="button"
-											variant="outline"
-											className="justify-between h-auto py-4 px-5 text-left whitespace-normal border-slate-800 bg-slate-950/50 text-slate-300 hover:bg-slate-900 hover:text-white transition-all font-mono text-sm uppercase tracking-widest rounded group"
-											style={{
-												fontSize: `${Math.max(0.875, zoomLevel * 0.8)}rem`,
-											}} // Scale button text slightly less aggresive
-											disabled={isPending || isNarrating}
-											onClick={() => handleOptionSelect(index)}
-											aria-label={`Opção ${index + 1}: ${option.label}`}
-											aria-describedby={`option-consequence-${index}`}
-										>
-											<div
-												className={`flex items-center ${isPending ? "opacity-50" : ""}`}
+								{dilemma.options.map((option: DilemmaOption, index: number) => {
+									const uniqueId = `option-${index}-${option.label.substring(0, 10).replace(/\s+/g, "-")}`;
+									return (
+										<div key={uniqueId}>
+											<Button
+												type="button"
+												variant="outline"
+												className="justify-between h-auto py-4 px-5 text-left whitespace-normal border-slate-800 bg-slate-950/50 text-slate-300 hover:bg-slate-900 hover:text-white transition-all font-mono text-sm uppercase tracking-widest rounded group"
+												style={{
+													fontSize: `${Math.max(0.875, zoomLevel * 0.8)}rem`,
+												}} // Scale button text slightly less aggresive
+												disabled={isPending || isNarrating}
+												onClick={() => handleOptionSelect(index)}
+												aria-label={`Opção ${index + 1}: ${option.label}`}
+												aria-describedby={`option-consequence-${index}`}
 											>
-												<span className="mr-3 opacity-0 group-hover:opacity-100 text-blue-400 transition-opacity font-bold">
-													{">> "}
-												</span>
-												{option.label}
+												<div
+													className={`flex items-center ${isPending ? "opacity-50" : ""}`}
+												>
+													<span className="mr-3 opacity-0 group-hover:opacity-100 text-blue-400 transition-opacity font-bold">
+														{">> "}
+													</span>
+													{option.label}
+												</div>
+												{option.risk && option.risk > 0 && (
+													<span className="text-xs text-red-400 font-bold ml-2 bg-red-950/50 px-2 py-1 rounded border border-red-900/50">
+														⚠️ {option.risk}% RISCO
+													</span>
+												)}
+											</Button>
+											<div
+												id={`option-consequence-${index}`}
+												className="sr-only"
+											>
+												Consequência: {option.consequence}
 											</div>
-											{option.risk && option.risk > 0 && (
-												<span className="text-xs text-red-400 font-bold ml-2 bg-red-950/50 px-2 py-1 rounded border border-red-900/50">
-													⚠️ {option.risk}% RISCO
-												</span>
-											)}
-										</Button>
-										<div id={`option-consequence-${index}`} className="sr-only">
-											Consequência: {option.consequence}
 										</div>
-									</div>
-								))}
+									);
+								})}
 							</div>
 						)}
 					</div>
